@@ -7,7 +7,7 @@ removed 1 package and audited 1187 packages in 6.053s
 found 7 vulnerabilities (1 moderate, 2 high, 4 critical)
   run `npm audit fix` to fix them, or `npm audit` for details
 
-> ng-visuall@1.0.0 ng /home/ivis/visuall/visuall-artifact-analyzer
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
 > ng "build"
 
 
