@@ -35,3 +35,86 @@ starting runner Prş 16 Şub 2023 15:26:28 +03
 > ng "build"
 
 runner ended Prş 16 Şub 2023 15:26:31 +03
+starting runner Prş 16 Şub 2023 17:02:10 +03
+
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
+> ng "build"
+
+runner ended Prş 16 Şub 2023 17:02:13 +03
+starting runner Prş 16 Şub 2023 17:34:46 +03
+audited 1201 packages in 6.068s
+
+136 packages are looking for funding
+  run `npm fund` for details
+
+found 1 moderate severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
+> ng "build"
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   6.49 MB |
+polyfills.js        | polyfills     | 964.76 kB |
+main.js             | main          | 741.76 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 245.20 kB |
+runtime.js          | runtime       |   6.37 kB |
+
+| Initial Total |   8.78 MB
+
+Build at: 2023-02-16T14:35:29.585Z - Hash: 81876fa7a7e77e2f - Time: 33376ms
+server listening port:  4400
+runner ended Prş 16 Şub 2023 17:36:02 +03
+starting runner Prş 16 Şub 2023 17:36:36 +03
+removed 1 package and audited 1201 packages in 6.077s
+
+136 packages are looking for funding
+  run `npm fund` for details
+
+found 1 moderate severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
+> ng "build"
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   6.49 MB |
+polyfills.js        | polyfills     | 964.76 kB |
+main.js             | main          | 741.76 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 245.20 kB |
+runtime.js          | runtime       |   6.37 kB |
+
+| Initial Total |   8.78 MB
+
+Build at: 2023-02-16T14:37:05.806Z - Hash: 108f089a31520be1 - Time: 19001ms
+server listening port:  4400
+runner ended Prş 16 Şub 2023 17:37:06 +03
+starting runner Prş 16 Şub 2023 17:42:58 +03
+audited 1201 packages in 6.12s
+
+136 packages are looking for funding
+  run `npm fund` for details
+
+found 1 moderate severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
+> ng "build"
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   6.49 MB |
+polyfills.js        | polyfills     | 964.76 kB |
+main.js             | main          | 741.76 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 245.20 kB |
+runtime.js          | runtime       |   6.37 kB |
+
+| Initial Total |   8.78 MB
+
+Build at: 2023-02-16T14:43:26.175Z - Hash: 108f089a31520be1 - Time: 18080ms
+server listening port:  4400
