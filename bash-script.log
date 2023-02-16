@@ -23,3 +23,15 @@ runtime.js          | runtime       |   6.37 kB |
 
 Build at: 2022-11-13T17:07:42.594Z - Hash: 35ca0acbb5aaaa15 - Time: 9350ms
 server listening port:  4400
+starting runner Prş 16 Şub 2023 15:23:45 +03
+
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
+> ng "build"
+
+runner ended Prş 16 Şub 2023 15:23:48 +03
+starting runner Prş 16 Şub 2023 15:26:28 +03
+
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
+> ng "build"
+
+runner ended Prş 16 Şub 2023 15:26:31 +03
