@@ -266,6 +266,8 @@ export class GlobalVariableService {
     }
     return {
       name: 'fcose',
+      //Change the edge length
+      idealEdgeLength: edge => 70,
       randomize: false,
       // whether or not to animate the layout
       animate: true,

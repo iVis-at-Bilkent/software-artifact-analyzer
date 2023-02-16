@@ -17,6 +17,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   edgeClasses: Set<string>;
   selectedClasses: string;
   selectedItemProps: any[];
+  selectedItemPropsURL: any[];
   tableFilled = new Subject<boolean>();
   multiObjTableFilled = new Subject<boolean>();
   clearMultiObjTableFilter = new Subject<boolean>();
@@ -40,6 +41,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
   constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) {
     this.selectedItemProps = [];
+    this.selectedItemPropsURL =[];
   }
 
   ngOnInit() {
@@ -118,6 +120,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
     const selectedNodeCnt = this._g.cy.nodes(':selected').length;
     this.selectedClasses = '';
     this.selectedItemProps.length = 0;
+    this.selectedItemPropsURL.length = 0;
     if (compoundEdges.length < 1 || selectedNodeCnt > 0) {
       return;
     }
@@ -197,6 +200,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
     let selected = this._g.cy.$(':selected').not('.' + CLUSTER_CLASS);
     this.selectedClasses = '';
     this.selectedItemProps.length = 0;
+    this.selectedItemPropsURL.length = 0;
     let hasNode = selected.filter('node').length > 0;
     if (hasNode && selected.filter('edge').length > 0) {
       return;
@@ -217,6 +221,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
     this.selectedClasses = classNames;
     this.selectedItemProps.length = 0;
+    this.selectedItemPropsURL.length = 0;
 
     let propKeys = Object.keys(props);
     // get ordered keys if only one item is selected
@@ -238,6 +243,9 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
           renderedValue = '';
         }
       }
+      if(key === 'url'){
+        this.selectedItemPropsURL.push({ key: renderedKey, val: renderedValue });
+      }
 
       if (key.toLowerCase() === DATE_PROP_START ||
         key.toLowerCase() === DATE_PROP_END) {
@@ -245,7 +253,10 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
         continue;
       }
       renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
-      this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
+      if(key != 'url'){
+        this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
+      }
+      
     }
   }
 

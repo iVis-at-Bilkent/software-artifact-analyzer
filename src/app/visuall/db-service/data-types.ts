@@ -52,9 +52,10 @@ export interface HistoryMetaData {
 }
 
 export interface DbQueryMeta {
-  edgeType?: string | string[];
+  edgeType?: string | string[] | string[][];
   targetType?: string;
   isMultiLength?: boolean;
+  isMultiPart?: boolean;
   isEdgeQuery?: boolean;
 }
 

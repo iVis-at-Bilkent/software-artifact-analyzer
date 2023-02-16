@@ -21,7 +21,8 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     { text: 'Normalized Closeness Centrality', fn: 'closenessCentralityNormalized', arg: '' },
     { text: 'Betweenness Centrality', fn: 'betweennessCentrality', arg: '' },
     { text: 'Normalized Betweenness Centrality', fn: 'betweennessCentralityNormalized', arg: '' },
-    { text: 'Page Rank', fn: 'pageRank', arg: '' }
+    { text: 'Page Rank', fn: 'pageRank', arg: '' },
+    { text: 'Pull requests: Change line of code', fn: 'lineOfCode', arg: '' }
   ];
   isOnSelected = false;
   isDirectedGraph = false;
@@ -259,6 +260,24 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       this.generateBadge4Elem(elems[i], badges);
     }
   }
+  lineOfCode (){
+    let elems = this._g.cy.nodes(this.cySelector);
+    let elemsPr = [];
+    let prs=[];
+    for (let i = 0; i < elems.length; i++) {
+      if ([...elems[i]._private.classes][0] =="PullRequest"){   
+        elemsPr.push(elems[i])
+      }  
+    }
+    for (let i = 0; i < elemsPr.length; i++) {
+      let badges = [0];
+      if ([...elemsPr[i]._private.classes][0] =="PullRequest"){
+        badges = [elemsPr[i]._private.data.changeLineOfCode ];
+        this.generateBadge4Elem(elemsPr[i], badges);
+      }
+      
+    }
+  }
 
   generateBadge4Elem(e, badges: number[]) {
     const div = document.createElement('div');
@@ -274,6 +293,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
         sum += badges[i];
       }
       e.data('__graphTheoreticProp', sum / badges.length);
+      console.log(e.data)
     }
     if (this.isMapNodeSizes) {
       e.removeClass('graphTheoreticDisplay');
@@ -296,7 +316,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     this._g.cy.on('pan zoom resize', positionHandlerFn);
     this.poppedData.push({ popper: div, elem: e, fn: positionHandlerFn, fn2: styleHandlerFn });
   }
-
+  
   private setBadgeCoords(e, div: HTMLDivElement) {
     // let the nodes resize first
     setTimeout(() => {

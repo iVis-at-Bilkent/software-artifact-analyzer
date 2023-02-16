@@ -22,7 +22,7 @@ export class Neo4jDb implements DbService {
     const password = conf.password;
     const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
     this._g.setLoadingStatus(true);
-    const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
+    const timeout = this._g.userPrefs.dbTimeout.getValue() * 10000;
     let q = `CALL apoc.cypher.runTimeboxed("${query}", {}, ${timeout}) YIELD value RETURN value`;
     if (!isTimeboxed) {
       q = query;
@@ -138,7 +138,7 @@ export class Neo4jDb implements DbService {
     if (f2.length > 0) {
       f += f2;
     }
-    this.runQuery(`MATCH (n)-[e]-() ${f} RETURN n,e limit 100`, callback);
+    this.runQuery(`MATCH (n1)-[e]->(n2) RETURN n1, rand() as r,e,n2 ORDER BY r limit 20`, callback);
   }
 
   getFilteringResult(rules: ClassBasedRules, filter: TableFiltering, skip: number, limit: number, type: DbResponseType, callback: (x: GraphResponse | TableResponse) => any) {
@@ -235,7 +235,7 @@ export class Neo4jDb implements DbService {
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     this.runQuery(`CALL neighborhood([${dbIds.join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${isDirected},
-      ${pageSize}, ${currPage}, '${t}', ${isIgnoreCase}, ${orderBy}, ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, ${idf})`, cb, DbResponseType.table, false);
+      ${pageSize}, ${currPage}, '${t}', ${isIgnoreCase}, ${orderBy}, ${orderDir}, [], ${d1}, ${d2}, ${inclusionType}, ${timeout}, ${idf})`, cb, DbResponseType.table, false);
   }
 
   private getPageSize4Backend(): number {

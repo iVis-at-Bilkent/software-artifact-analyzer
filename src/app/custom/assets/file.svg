@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   width="846"
+   height="1100"
+   viewBox="0 0 846 1100"
+   xml:space="preserve"
+   id="svg26"
+   sodipodi:docname="file.svg"
+   inkscape:version="1.2.1 (9c6d41e, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+   id="namedview28"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="false"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="false"
+   inkscape:deskcolor="#d1d1d1"
+   showgrid="false"
+   inkscape:zoom="0.236"
+   inkscape:cx="1188.5593"
+   inkscape:cy="523.30508"
+   inkscape:window-width="1309"
+   inkscape:window-height="775"
+   inkscape:window-x="0"
+   inkscape:window-y="38"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="svg26"
+   showborder="false"
+   borderlayer="false"
+   shape-rendering="auto" />
+<desc
+   id="desc2">Created with Fabric.js 3.5.0</desc>
+<defs
+   id="defs4">
+</defs>
+<rect
+   x="7.7510409"
+   y="2.1175396"
+   width="99.983727%"
+   height="100.83783%"
+   fill="#ffb55a"
+   id="rect6"
+   style="fill:#ffffff;fill-opacity:1;stroke:#6988a5;stroke-width:1.0041;stroke-opacity:1"
+   transform="matrix(0.99998836,-0.00482551,0.0047441,0.99998875,0,0)" />
+<g
+   transform="matrix(52.000934,0,0,42.695651,514.07131,557.20338)"
+   id="947459"
+   style="stroke:#6988a5;stroke-opacity:1">
+<g
+   vector-effect="non-scaling-stroke"
+   id="g23"
+   style="stroke:#6988a5;stroke-opacity:1">
+		<g
+   id="XMLID_407_"
+   style="stroke:#6988a5;stroke-opacity:1"
+   transform="matrix(0.8337032,0,0,1.0007921,-1.6558397,0)">
+<polygon
+   style="opacity:1;fill:none;fill-rule:nonzero;stroke:#6988a5;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+   points="9,12 -9,12 -9,-12 3,-12 9,-6 "
+   id="polygon8" />
+</g>
+		<g
+   transform="matrix(0.8337032,0,0,1.0007921,3.3463795,-9.0071292)"
+   id="XMLID_403_"
+   style="stroke:#6988a5;stroke-opacity:1">
+<polyline
+   style="opacity:1;fill:none;fill-rule:nonzero;stroke:#6988a5;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+   points="-3,-3 -3,3 3,3 "
+   id="polyline11" />
+</g>
+		<g
+   transform="matrix(0.8337032,0,0,1.0007921,-1.6558397,3.0023764)"
+   id="XMLID_401_"
+   style="fill:#6988a5;fill-opacity:1;stroke:#6988a5;stroke-opacity:1">
+<polygon
+   style="opacity:1;fill:#6988a5;fill-opacity:1;fill-rule:nonzero;stroke:#6988a5;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+   points="0,-6 -2,6 0,6 2,-6 "
+   id="polygon14" />
+</g>
+		<g
+   transform="matrix(0.8337032,0,0,1.0007921,1.8873989,3.0023764)"
+   id="XMLID_402_"
+   style="stroke:#6988a5;stroke-opacity:1">
+<polyline
+   style="opacity:1;fill:none;fill-rule:nonzero;stroke:#6988a5;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+   points="-1.25,-3 1.25,0 -1.25,3 "
+   id="polyline17" />
+</g>
+		<g
+   transform="matrix(0.8337032,0,0,1.0007921,-5.1990782,3.0023764)"
+   id="XMLID_409_"
+   style="stroke:#6988a5;stroke-opacity:1">
+<polyline
+   style="opacity:1;fill:none;fill-rule:nonzero;stroke:#6988a5;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+   points="1.25,-3 -1.25,0 1.25,3 "
+   id="polyline20" />
+</g>
+</g>
+</g>
+</svg>

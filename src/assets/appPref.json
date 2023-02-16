@@ -36,6 +36,10 @@
         {
             "wid": 3,
             "color": "#04f06a"
+        },
+        {
+            "wid": 3,
+            "color": "#ff0000"           
         }
     ],
     "currHighlightIdx": 0,

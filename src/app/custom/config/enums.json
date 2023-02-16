@@ -1,17 +1,31 @@
 {
-    "is_adult": {
-        "0": "No",
-        "1": "Yes"
-    },
-    "title_type": {
-        "short": "Short movie",
-        "movie": "Movie",
-        "tvSeries": "TV series",
-        "tvEpisode": "TV episode",
-        "tvMiniSeries": "TV mini-series",
-        "videoGame": "Video game",
-        "tvMovie": "TV movie",
-        "video": "Video",
-        "tvSpecial": "TV special"
-    }
+
+        "issueType": {
+            "Task": "Task",
+            "Sub-task": "Sub-task",
+            "Improvement": "Improvement",
+            "New Feature": "New Feature",
+            "Bug": "Bug",
+            "Wish": "Wish"
+        },
+        "priority": {
+            "Major": "Major",
+            "Blocker": "Blocker",
+            "Critical": "Critical",
+            "Minor": "Minor",
+            "Trivial": "Trivial",
+            "Task": "Task"
+        },
+        "status": {
+            "Done": "Done",
+            "To Do": "To Do",
+            "In Progress": "In Progress"
+        },
+
+
+        "mergeStatus": {
+            "True": "True",
+            "False": "False"
+        }
+
 }

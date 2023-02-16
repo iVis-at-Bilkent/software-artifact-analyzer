@@ -5,9 +5,9 @@
 export const environment = {
   production: false,
   dbConfig: {
-    url: 'http://localhost:7474/db/data/transaction/commit',
+    url: 'http://ivis.cs.bilkent.edu.tr:3004/db/data/transaction/commit',
     username: 'neo4j',
-    password: '123'
+    password: '1234'
   }
 };
 

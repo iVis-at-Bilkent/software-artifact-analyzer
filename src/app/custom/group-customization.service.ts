@@ -13,51 +13,61 @@ export class GroupCustomizationService {
   }
 
   constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) {
-    this._clusteringMethods = [{ name: 'By director', fn: () => { this.clusterByDirector(); } }];
+    this._clusteringMethods = [{ name: 'By developer', fn: () => { this.clusterByDeveloper(); } }];
   }
-
-  clusterByDirector() {
-    let directorEdges = this._g.cy.edges('.DIRECTOR').filter(':visible');
-    let directorIds = new Set<string>();
-    let movie2director = {};
-    for (let i = 0; i < directorEdges.length; i++) {
-      let edgeData = directorEdges[i].data();
-      directorIds.add(edgeData.source);
-      if (movie2director[edgeData.target]) {
-        movie2director[edgeData.target].push(edgeData.source);
+  
+  clusterByDeveloper(ids?: any[]) {
+    let developerEdges = [];
+    this._g.cy.edges().filter(':visible').forEach(element => {
+      if(element._private.source._private.classes.values().next().value=='Developer'){
+        if(ids != null){
+          console.log(element._private.source._private.data.id)
+          console.log(ids)
+          if(ids.includes(element._private.source._private.data.id)){
+            developerEdges.push(element)
+          }
+        }else{
+          developerEdges.push(element)
+        }
+        
+      }
+    });
+    let developerIds = new Set<string>();
+    let commit2developer = {};
+    for (let i = 0; i < developerEdges.length; i++) {
+      let edgeData = developerEdges[i].data();
+      developerIds.add(edgeData.source);
+      if (commit2developer[edgeData.target]) {
+        commit2developer[edgeData.target].push(edgeData.source);
       } else {
-        movie2director[edgeData.target] = [edgeData.source];
+        commit2developer[edgeData.target] = [edgeData.source];
       }
     }
 
     if (this._g.userPrefs.groupingOption.getValue() == GroupingOptionTypes.compound) {
       // add parent nodes
-      for (let id of directorIds) {
-        let name = this._g.cy.$('#' + id).data().name;
+      for (let id of developerIds) {
+        let name = this._g.cy.$('#' + id).data().id;
         // for each director, generate a compound node
-        this._cyService.addParentNode(id);
+        this._cyService.addParentNode(name);
         // add the director to the compound node
         this._g.cy.$('#' + id).move({ parent: 'c' + id });
       }
 
       // assign nodes to parents
-      for (let [k, v] of Object.entries(movie2director)) {
+      for (let [k, v] of Object.entries(commit2developer)) {
         // if a movie has less than 2 directors add, those movies to the cluster of director
-        if (v['length'] < 2) {
           // add movies to the compound node
           this._g.cy.$('#' + k).move({ parent: 'c' + v[0] });
-        }
       }
     } else {
       const clusters = {};
-      for (let id of directorIds) {
+      for (let id of developerIds) {
         clusters[id] = [id];
       }
-      for (let [k, v] of Object.entries(movie2director)) {
+      for (let [k, v] of Object.entries(developerIds)) {
         // if a movie has less than 2 directors add, those movies to the cluster of director
-        if (v['length'] < 2) {
           clusters[v[0]].push(k);
-        }
       }
       this._g.layout.clusters = Object.values(clusters);
     }

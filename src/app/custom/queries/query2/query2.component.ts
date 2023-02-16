@@ -7,34 +7,53 @@ import { Subject } from 'rxjs';
 import { buildIdFilter, getOrderByExpression4Query, getQueryCondition4TxtFilter } from '../query-helper';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 
-export interface ActorCountData {
-  id: number;
-  Actor: string;
-  Count: number;
+//This query is for 
+export interface CommitData {
+  id:string;
+  name:string;
+
 }
 @Component({
-  selector: 'app-query0',
-  templateUrl: './query0.component.html',
-  styleUrls: ['./query0.component.css']
+  selector: 'app-query2',
+  templateUrl: './query2.component.html',
+  styleUrls: ['./query2.component.css']
 })
-export class Query0Component implements OnInit {
-  movieCnt: number;
-  tableFilled = new Subject<boolean>();
+
+export class Query2Component implements OnInit {
+
+  cname: string;
+  cnames: string[];
+  artifacts: string[];
+  artifact: string;
+  options: any;
   tableInput: TableViewInput = {
-    columns: ['Actor', 'Count'], results: [], tableTitle: 'Query Results', isEmphasizeOnHover: true, classNameOfObjects: 'Person', isShowExportAsCSV: true,
+    columns:['name'], results: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
   };
+  tableFilled = new Subject<boolean>();
   tableResponse = null;
   graphResponse = null;
   clearTableFilter = new Subject<boolean>();
 
   constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService) {
+    this.cnames = ['Commit','Issue','Developer','PullRequest','File'];
   }
 
   ngOnInit() {
-    this.movieCnt = 40;
-    this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
+    this.cname = "Issue";
+    this.options = document.getElementById("cname");
+    this.options.addEventListener('change', (event) => {
+      setTimeout(() => {
+        this._dbService.runQuery(`MATCH (n: ${this.cname} )RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
+      }, 0);
+      this.tableInput.results = [];
+      this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
+    });
+
+
   }
+  
+
 
   prepareQuery() {
     this.tableInput.currPage = 1;
@@ -46,48 +65,64 @@ export class Query0Component implements OnInit {
 
   loadTable(skip: number, filter?: TableFiltering) {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
-
     const cb = (x) => {
       const processedTableData = this.preprocessTableData(x);
+      const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
+      let cnt = x.data[0][2];
+      console.log(cnt)
+      if (isClientSidePagination && cnt > limit4clientSidePaginated) {
+        cnt = limit4clientSidePaginated;
+        console.log(cnt)
+      }
       if (isClientSidePagination) {
-        this.fillTable(this.filterTableResponse(processedTableData, filter), x.data[0][3]);
+        this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
+        console.log(cnt)
       } else {
-        this.fillTable(processedTableData, x.data[0][3]);
+        this.fillTable(processedTableData, cnt);
+        console.log(cnt)
       }
       if (!filter) {
         this.tableResponse = processedTableData;
+        console.log(cnt)
       }
     };
     if (isClientSidePagination && filter) {
       this.fillTable(this.filterTableResponse(this.tableResponse, filter), null);
+      console.log("l")
       return;
     }
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
-    const txtCondition = getQueryCondition4TxtFilter(filter, ['n.primary_name', 'degree'], isIgnoreCase);
-    const ui2Db = { 'Actor': 'Actor', 'Count': 'Count' };
-    const orderExpr = getOrderByExpression4Query(filter, 'degree', 'desc', ui2Db);
+    const txtCondition = getQueryCondition4TxtFilter(filter, ['n.name'], isIgnoreCase);
+    const ui2Db = { 'name': 'n.name' };
+    console.log("k")
+    const orderExpr = getOrderByExpression4Query(filter, 'n.name', 'desc', ui2Db);
+    console.log("k")
     const dateFilter = this.getDateRangeCQL();
     let dataCnt = this.tableInput.pageSize;
+    console.log("k")
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
-    }
+    } 
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql = `MATCH (n:Person)-[r:ACTOR|ACTRESS]->(:Title)
-    WHERE ${dateFilter}
-    WITH n, SIZE(COLLECT(r)) as degree
-    WHERE degree >= ${this.movieCnt} ${txtCondition}
-    WITH n, degree ORDER BY ${orderExpr}
-    RETURN collect(ID(n))${r} as id, collect(n.primary_name)${r} as Actor, collect(degree)${r} as Count, size(collect(ID(n))) as totalDataCount`;
+
+    const cql = `MATCH (${this.cname}{id:'${this.artifact}' })-[r]->(n)
+    WHERE  ${dateFilter} ${txtCondition} 
+    WITH DISTINCT n ORDER BY ${orderExpr}
+    RETURN collect(ID(n))${r} as id, n.name as name,  size(collect(ID(n))) as totalDataCount`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
+    console.log("k")
+    
   }
 
   loadGraph(skip: number, filter?: TableFiltering) {
-    if (!this.tableInput.isLoadGraph) {
+    if (!this.tableInput.isLoadGraph) {    
+      console.log("bu")
       return;
-    }
+    } 
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
-
+    
     const cb = (x) => {
+      console.log(x)
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
@@ -101,32 +136,34 @@ export class Query0Component implements OnInit {
       this._cyService.loadElementsFromDatabase(this.filterGraphResponse(this.graphResponse), this.tableInput.isMergeGraph);
       return;
     }
+
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
-    const txtCondition = getQueryCondition4TxtFilter(filter, ['n.primary_name', 'degree'], isIgnoreCase);
-    const ui2Db = { 'Actor': 'n.primary_name', 'Count': 'degree' };
-    const orderExpr = getOrderByExpression4Query(filter, 'degree', 'desc', ui2Db);
+    const txtCondition = getQueryCondition4TxtFilter(filter, ['n.name'], isIgnoreCase);
+    const ui2Db = { 'name': 'n.name' };
+    const orderExpr = getOrderByExpression4Query(filter, 'n.name', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     let dataCnt = this.tableInput.pageSize;
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-    const cql = `MATCH (n:Person)-[r:ACTOR|ACTRESS]->(:Title)
-      WHERE ${dateFilter}  
-      WITH n, SIZE(COLLECT(r)) as degree, COLLECT(r) as edges
-      WHERE degree >= ${this.movieCnt} ${txtCondition}
-      RETURN DISTINCT n, edges, degree 
-      ORDER BY ${orderExpr} SKIP ${skip} LIMIT ${dataCnt}`;
+    const cql =`MATCH (${this.cname}{name:'${this.artifact}' })-[r]->(n)
+    WHERE  ${dateFilter} ${txtCondition}
+    RETURN n,r,${this.cname}
+    SKIP ${skip} LIMIT ${dataCnt}`;
     this._dbService.runQuery(cql, cb);
+   
   }
 
-  fillTable(data: ActorCountData[], totalDataCount: number | null) {
+  fillTable(data: CommitData[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.number, TableDataType.string, TableDataType.number];
-
+    const columnTypes = [ TableDataType.string,TableDataType.string];
+    
     this.tableInput.results = [];
+  
     for (let i = 0; i < data.length; i++) {
       const row: TableData[] = [];
       for (let j = 0; j < uiColumns.length; j++) {
+
         row.push({ type: columnTypes[j], val: data[i][uiColumns[j]] })
       }
       this.tableInput.results.push(row)
@@ -134,52 +171,71 @@ export class Query0Component implements OnInit {
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
+    
     this.tableFilled.next(true);
   }
 
-  getDataForQueryResult(e: TableRowMeta) {
-    const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
-    const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    let s = `Get actors by title counts with: "${new Date(d1).toLocaleString()}", "${new Date(d2).toLocaleString()}", "${this.movieCnt}"`;
-    if (e.tableIdx) {
-      s += ', ' + e.tableIdx.join(',');
+  fillGenres(data) {
+    this.artifacts = [];
+    for (let i = 0; i < data.data.length; i++) {
+      this.artifacts.push(data.data[i].join(''));
+      
     }
-    const cb = (x) => { this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph); this._g.add2GraphHistory(s); };
+  }
+  getDataForQueryResult(e: TableRowMeta) {
+    const cb = (x) => this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
 
     const idFilter = buildIdFilter(e.dbIds);
-    const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
-    const txtCondition = getQueryCondition4TxtFilter(null, ['n.primary_name', 'degree'], isIgnoreCase);
-    const ui2Db = { 'Actor': 'n.primary_name', 'Count': 'degree' };
-    const orderExpr = getOrderByExpression4Query(null, 'degree', 'desc', ui2Db);
+    const ui2Db = { 'name': 'n.name' };
+    const orderExpr = getOrderByExpression4Query(null, 'n.name', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
 
-    let cql = `MATCH (n:Person)-[r:ACTOR|ACTRESS]->(:Title)
-      WHERE ${idFilter} AND ${dateFilter}  
-      WITH n, SIZE(COLLECT(r)) as degree, COLLECT(r) as edges
-      WHERE degree >= ${this.movieCnt} ${txtCondition}
-      RETURN DISTINCT n, edges, degree 
-      ORDER BY ${orderExpr} SKIP 0 LIMIT ${this.tableInput.pageSize}`;
-    this._dbService.runQuery(cql, cb);
 
+    const cql =`MATCH (${this.cname}{name:'${this.artifact}' })-[r]->(n)
+    WHERE  ${dateFilter} ${dateFilter}
+    RETURN n,r,${this.cname}
+    SKIP 0 LIMIT ${this.tableInput.pageSize}`;
+    this._dbService.runQuery(cql, cb); 
   }
 
   filterTable(filter: TableFiltering) {
     this.tableInput.currPage = 1;
-    const skip = filter.skip ? filter.skip : 0;
+    let skip = filter.skip ? filter.skip : 0;
     this.loadTable(skip, filter);
     if (this.tableInput.isLoadGraph) {
       this.loadGraph(skip, filter);
     }
   }
+  private preprocessTableData(data): CommitData[] {
+      
+    
+    const dbColumns = data.columns as string[];
+    const uiColumns = ['id'].concat(this.tableInput.columns);
+    let columnMapping = [];
+    for (let i = 0; i < uiColumns.length; i++) {
+      columnMapping.push(dbColumns.indexOf(uiColumns[i]));
+      
+    }
+    const rawData = data.data[0];
+    const objArr: CommitData[] = [];
+    for (let i = 0; i < rawData[0].length; i++) {
+      const obj = {};
+      for (let j = 0; j < columnMapping.length; j++) {
+        obj[uiColumns[j]] = rawData[columnMapping[j]][i];
+      }
+      objArr.push(obj as CommitData)
+    }
+    return objArr;
+  }
 
-  private filterTableResponse(x: ActorCountData[], filter: TableFiltering): ActorCountData[] {
+  private filterTableResponse(x: CommitData[], filter: TableFiltering): CommitData[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;
       return x.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
     }
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
-    let filtered: ActorCountData[] = [];
+    let filtered: CommitData[] = [];
 
     for (let i = 0; i < x.length; i++) {
       const s = Object.values(x[i]).join('');
@@ -187,9 +243,8 @@ export class Query0Component implements OnInit {
         filtered.push(x[i]);
       }
     }
-
-    // order by
-    if (filter && filter.orderDirection.length > 0) {
+     // order by
+     if (filter && filter.orderDirection.length > 0) {
       const o = filter.orderBy;
       if (filter.orderDirection == 'asc') {
         filtered = filtered.sort((a, b) => { if (!a[o]) return 1; if (!b[o]) return -1; if (a[o] > b[o]) return 1; if (b[o] > a[o]) return -1; return 0 });
@@ -197,28 +252,26 @@ export class Query0Component implements OnInit {
         filtered = filtered.sort((a, b) => { if (!a[o]) return 1; if (!b[o]) return -1; if (a[o] < b[o]) return 1; if (b[o] < a[o]) return -1; return 0 });
       }
     }
-    const skip = filter && filter.skip ? filter.skip : 0;
     if (filter) {
       this.tableInput.resultCnt = filtered.length;
     }
+    const skip = filter && filter.skip ? filter.skip : 0;
     return filtered.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
   }
 
-  // tableInput is already filtered. Use that to filter graph elements.
-  // For this query, we should specifically bring the related nodes and their 1-neighborhood
   private filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
+   
     const nodeIdDict = {};
     for (let i = 0; i < this.tableInput.results.length; i++) {
       nodeIdDict[this.tableInput.results[i][0].val] = true;
     }
-    // add a node if an edge starts with that
+    // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].startNode]) {
-        nodeIdDict[x.edges[i].endNode] = true;
+      if (nodeIdDict[x.edges[i].endNode]) {
+        nodeIdDict[x.edges[i].startNode] = true;
       }
     }
-
     for (let i = 0; i < x.nodes.length; i++) {
       if (nodeIdDict[x.nodes[i].id]) {
         r.nodes.push(x.nodes[i]);
@@ -226,27 +279,7 @@ export class Query0Component implements OnInit {
     }
     return r;
   }
-
-  // zip paralel arrays 
-  private preprocessTableData(data): ActorCountData[] {
-    const dbColumns = data.columns as string[];
-    const uiColumns = ['id'].concat(this.tableInput.columns);
-    let columnMapping = [];
-    for (let i = 0; i < uiColumns.length; i++) {
-      columnMapping.push(dbColumns.indexOf(uiColumns[i]));
-    }
-    const rawData = data.data[0];
-    const objArr: ActorCountData[] = [];
-    for (let i = 0; i < rawData[0].length; i++) {
-      const obj = {};
-      for (let j = 0; j < columnMapping.length; j++) {
-        obj[uiColumns[j]] = rawData[columnMapping[j]][i];
-      }
-      objArr.push(obj as ActorCountData)
-    }
-    return objArr;
-  }
-
+    
   private getDateRangeCQL() {
     const isLimit = this._g.userPrefs.isLimitDbQueries2range.getValue();
     if (!isLimit) {
@@ -254,6 +287,13 @@ export class Query0Component implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `r.act_begin >= ${d1} AND r.act_end <= ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+    console.log(b)
+
+    return `true `;
   }
 }
+ 

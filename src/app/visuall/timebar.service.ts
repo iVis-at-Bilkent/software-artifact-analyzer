@@ -143,6 +143,7 @@ export class TimebarService {
     if (!this._timebarExt) {
       return;
     }
+    console.log(f)
     this._timebarExt.setEventListener('graphRangeChanged', f);
   }
 
