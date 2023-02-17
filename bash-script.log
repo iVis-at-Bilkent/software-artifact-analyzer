@@ -118,3 +118,54 @@ runtime.js          | runtime       |   6.37 kB |
 
 Build at: 2023-02-16T14:43:26.175Z - Hash: 108f089a31520be1 - Time: 18080ms
 server listening port:  4400
+starting runner Cum 17 Şub 2023 14:50:02 +03
+audited 1201 packages in 6.105s
+
+136 packages are looking for funding
+  run `npm fund` for details
+
+found 1 moderate severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
+> ng "build"
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   6.49 MB |
+polyfills.js        | polyfills     | 964.76 kB |
+main.js             | main          | 741.76 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 245.20 kB |
+runtime.js          | runtime       |   6.37 kB |
+
+| Initial Total |   8.78 MB
+
+Build at: 2023-02-17T11:50:20.680Z - Hash: 108f089a31520be1 - Time: 8553ms
+server listening port:  4400
+starting runner Cum 17 Şub 2023 14:50:38 +03
+audited 1201 packages in 6.088s
+
+136 packages are looking for funding
+  run `npm fund` for details
+
+found 1 moderate severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+> ng-visuall@1.0.0 ng /home/ivis/visuall/software-artifact-analyzer
+> ng "build"
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   6.49 MB |
+polyfills.js        | polyfills     | 964.76 kB |
+main.js             | main          | 741.76 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 245.20 kB |
+runtime.js          | runtime       |   6.37 kB |
+
+| Initial Total |   8.78 MB
+
+Build at: 2023-02-17T11:50:56.658Z - Hash: 108f089a31520be1 - Time: 8329ms
+server listening port:  4400
+runner ended Cum 17 Şub 2023 14:50:56 +03
