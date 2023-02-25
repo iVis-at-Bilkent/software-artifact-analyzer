@@ -9,6 +9,8 @@ import { Query4Component } from './queries/query4/query4.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
+import {CommentTabComponent} from "./custom-tabs/comment-tab/comment-tab.component";
+
 
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
@@ -27,7 +29,9 @@ export class CustomizationModule {
   // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }];
   // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }, { component: Dummy2Component, text: 'Dummy2' }];
   static operationTabs: { component: any, text: string }[] = [];
-  static objSubTabs: { component: any, text: string }[] = [];
+  static objSubTabs: { component: any, text: string }[] = [
+    { component: CommentTabComponent, text: 'Comment' }
+  ];
   static mapSubTabs: { component: any, text: string }[] = [];
   static databaseSubTabs: { component: any, text: string }[] = [];
   static settingsSubTabs: { component: any, text: string }[] = [];
@@ -35,6 +39,7 @@ export class CustomizationModule {
     { component: Query1Component, text: 'Get Commits of Developer' },
     { component: Query3Component, text: 'Get Recommended Reviewers' },
     { component: Query4Component, text: 'Get issues that was resolved and closed by the same person' },
+
   ];
   static db: DbService;
   static defaultTimebarMetrics: TimebarMetric[];

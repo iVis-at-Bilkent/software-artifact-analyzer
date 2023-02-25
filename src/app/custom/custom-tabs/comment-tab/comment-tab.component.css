@@ -1,0 +1,69 @@
+
+
+/* Styling for the comment text area */
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+  font-size: 16px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 70%;
+  height: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+  font-size: 16px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+}
+/* Styling for the comment button */
+.my-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.add_photo {
+  background-color: #4f4e50;
+  color: #fff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 2px;
+}
+.add_photo:active {
+  background-color: #4f4e5028;
+  color: #fff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 2px;
+}
+
+/* Styling for the comment button when it's disabled */
+.my-button :active {
+  background-color: #007bff38;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
