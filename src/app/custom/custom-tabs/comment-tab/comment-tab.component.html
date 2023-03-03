@@ -1,6 +1,7 @@
 <div>
   <br>
-  <button class="add_photo" (click)="onAddComment()">Add Graph</button>
+  <p > {{commentParagraph( )}} </p>
+  <button class="add_photo" (click)="onAddComment()">Add</button>
   <div class="form-group">
     <input type="text" id="comment_header" name="comment_header" class="form-control" placeholder="Comment Header" [(ngModel)]="comment_header">
   </div>

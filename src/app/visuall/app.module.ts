@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
-
+import {MatDialog} from '@angular/material/dialog';
+import {MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
@@ -36,9 +37,11 @@ import { SharedModule } from '../shared/shared.module';
 import { CustomizationModule } from '../custom/customization.module';
 import { PanelContainerComponent } from './panel-container/panel-container.component';
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {DialogElementsExample} from './navbar/dialog-elements-example';
 @NgModule({
   declarations: [
+    DialogElementsExample,
     AppComponent,
     NavbarComponent,
     ToolbarComponent,
@@ -67,6 +70,7 @@ import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-m
     LoadGraphFromFileModalComponent,
   ],
   imports: [
+    MatDialogModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
@@ -76,6 +80,7 @@ import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-m
     CustomizationModule,
     SharedModule,
     RouterModule.forRoot([]),
+    BrowserAnimationsModule,
   ],
   providers: [{ provide: APP_BASE_HREF, useValue: "/" }],
   bootstrap: [AppComponent],

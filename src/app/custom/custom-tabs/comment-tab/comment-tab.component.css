@@ -8,9 +8,16 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 5px;
   resize: none;
-  font-size: 16px;
+  font-size: 12px;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+p{
+  color: #333a41;
+  resize: none;
+  font-size: 14px;
+  margin: 1px;
+  padding: 1px;
 }
 
 input {

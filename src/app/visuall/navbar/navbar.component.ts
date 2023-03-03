@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, NgModule, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DbAdapterService } from '../db-service/db-adapter.service';
 import { GlobalVariableService } from '../global-variable.service';
 import { CytoscapeService } from '../cytoscape.service';
@@ -14,7 +14,9 @@ import { SaveProfileModalComponent } from '../popups/save-profile-modal/save-pro
 import { URLLoadService } from '../load-from-url.service';
 import { GroupingOptionTypes } from '../user-preference';
 import { Subscription } from 'rxjs';
-
+import { DialogElementsExample } from './dialog-elements-example';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -22,13 +24,21 @@ import { Subscription } from 'rxjs';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   @ViewChild('file', { static: false }) file;
-
+  @NgModule({
+    imports: [DialogElementsExample],
+    declarations: [DialogElementsExample],
+    providers: [],
+    bootstrap: [DialogElementsExample]
+ })
+ 
   menu: NavbarDropdown[];
   closeResult: string;
   toolName: string;
   toolLogo: string;
   isLoadFile4Graph: boolean = false;
   appDescSubs: Subscription;
+  //addProject: {dropdown: 'Add', actions: [{ txt: 'Load...', id: 'nbi00', fn: 'loadFile', isStd: true }]};
+  
 
   constructor(private _dbService: DbAdapterService, private _cyService: CytoscapeService, private _modalService: NgbModal,
     private _g: GlobalVariableService, private _customizationService: NavbarCustomizationService, private _profile: UserProfileService,

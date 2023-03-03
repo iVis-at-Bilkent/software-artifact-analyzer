@@ -17,7 +17,7 @@ import {CommentTabComponent} from "./custom-tabs/comment-tab/comment-tab.compone
 
 @NgModule({
   // custom components should be inside declarations
-  declarations: [Query1Component, Query2Component,Query3Component,Query4Component],
+  declarations: [Query1Component, Query2Component,Query3Component,Query4Component,CommentTabComponent ],
   // declarations: [AsdComponent],
   imports: [
     CommonModule,
@@ -30,7 +30,7 @@ export class CustomizationModule {
   // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }, { component: Dummy2Component, text: 'Dummy2' }];
   static operationTabs: { component: any, text: string }[] = [];
   static objSubTabs: { component: any, text: string }[] = [
-    { component: CommentTabComponent, text: 'Comment' }
+    { component: CommentTabComponent, text: 'Report' }
   ];
   static mapSubTabs: { component: any, text: string }[] = [];
   static databaseSubTabs: { component: any, text: string }[] = [];

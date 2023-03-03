@@ -2,12 +2,13 @@
 const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const path = require('path');
 const https = require('https');
 const compression = require('compression');
 
 const app = express();
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text({ type: 'text/*' }))
