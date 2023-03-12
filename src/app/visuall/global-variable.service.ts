@@ -41,6 +41,7 @@ export class GlobalVariableService {
   appDescription = new BehaviorSubject<any>(null);
   dataModel = new BehaviorSubject<any>(null);
   enums = new BehaviorSubject<any>(null);
+  initialQuery: string="";
 
   constructor(private _http: HttpClient, private _modalService: NgbModal, private _cyCustomStyle: CyStyleCustomizationService) {
     this.hiddenClasses = new Set([]);

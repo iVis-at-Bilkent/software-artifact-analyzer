@@ -2,6 +2,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer,SafeResourceUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 @Component({
     selector: 'dialog-elements-example-dialog',
     templateUrl: 'dialog-elements-example-dialog.html',
@@ -13,7 +14,7 @@ import { DomSanitizer,SafeResourceUrl } from '@angular/platform-browser';
 export class DialogElementsExampleDialog implements OnInit {
   
   public safeSrc: SafeResourceUrl;  
-  constructor(private elRef: ElementRef, private sanitizer: DomSanitizer) { 
+  constructor(private elRef: ElementRef, private router: Router,private sanitizer: DomSanitizer) { 
   }
 
   ngOnInit() {

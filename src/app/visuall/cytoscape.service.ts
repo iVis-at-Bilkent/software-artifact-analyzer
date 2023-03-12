@@ -557,6 +557,7 @@ export class CytoscapeService {
         anchor.download = 'visuall.png';
         anchor.href = (window.URL).createObjectURL(x);
         anchor.click();
+        return x;
       })
   }
 

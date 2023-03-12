@@ -9,7 +9,7 @@ import { Query4Component } from './queries/query4/query4.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
-import {CommentTabComponent} from "./custom-tabs/comment-tab/comment-tab.component";
+import { ReportComponentComponent } from './report-component/report-component.component';
 
 
 // import { AsdComponent } from './asd/asd.component';
@@ -17,12 +17,12 @@ import {CommentTabComponent} from "./custom-tabs/comment-tab/comment-tab.compone
 
 @NgModule({
   // custom components should be inside declarations
-  declarations: [Query1Component, Query2Component,Query3Component,Query4Component,CommentTabComponent ],
+  declarations: [Query1Component, Query2Component,Query3Component,Query4Component, ReportComponentComponent ],
   // declarations: [AsdComponent],
   imports: [
     CommonModule,
     SharedModule,
-    FormsModule,
+    FormsModule
   ]
 })
 export class CustomizationModule {
@@ -30,7 +30,7 @@ export class CustomizationModule {
   // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }, { component: Dummy2Component, text: 'Dummy2' }];
   static operationTabs: { component: any, text: string }[] = [];
   static objSubTabs: { component: any, text: string }[] = [
-    { component: CommentTabComponent, text: 'Report' }
+    { component: ReportComponentComponent, text: 'Report' }
   ];
   static mapSubTabs: { component: any, text: string }[] = [];
   static databaseSubTabs: { component: any, text: string }[] = [];

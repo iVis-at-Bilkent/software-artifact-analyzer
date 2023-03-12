@@ -1,8 +1,7 @@
-
 {
-    "/api": {
-      "target": "https://saanalyzer.atlassian.net",
-      "secure": false,
-      "changeOrigin": true
-    }
+  "/rest/*": {
+    "target": "https://saanalyzer.atlassian.net",
+    "secure": true,
+    "changeOrigin": true
   }
+}

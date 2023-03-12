@@ -1,0 +1,31 @@
+<div >
+    <div>
+      <div>
+
+      </div>
+      <div *ngFor="let item of addMenu; let i = index" class="form-check-inline form-check va-text">
+        <label>
+          <input type="checkbox"      class="form-check-input ng-valid ng-dirty ng-touched" [checked]="item.value" (change)="onCheckboxChange(item)">
+          {{ item.label }} 
+        </label>
+      </div>
+      <div *ngIf="commentInput.addGithub" > 
+        <div class="form-group flex-pr">
+          <input  type="text" id="commenst_header" name="comment_header" class="form-control va-text comment-header" placeholder="Pull Request Number" [(ngModel)]="pr_name">
+        </div>
+      </div>
+      <div class="form-group flex">
+        <input  type="text" id="commenst_header" name="comment_header" class="form-control va-text comment-header" placeholder="Comment Header" [(ngModel)]="comment_header">
+      </div>
+      <div class="form-group flex">
+        <textarea type="text" id="comment" name="comment" class="form-control va-text comment-body" placeholder="Comment..." [(ngModel)]="comment"></textarea>
+      </div>
+    </div>
+
+      <div *ngIf="dataURL != '' " > 
+        <img src="{{ dataURL}} " />
+      </div>
+
+    <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="onAddComment()" value="Submit">
+    
+  </div>

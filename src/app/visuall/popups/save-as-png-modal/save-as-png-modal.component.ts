@@ -8,8 +8,10 @@ import { CytoscapeService } from '../../cytoscape.service';
   styleUrls: ['./save-as-png-modal.component.css']
 })
 export class SaveAsPngModalComponent implements AfterViewChecked {
-
-  constructor(public activeModal: NgbActiveModal, public _cyService: CytoscapeService) { }
+  png : any;
+  constructor(public activeModal: NgbActiveModal, public _cyService: CytoscapeService) { 
+    
+  }
   @ViewChild('closeBtn', { static: false }) closeBtnRef: ElementRef;
 
   ngAfterViewChecked() {
@@ -17,7 +19,7 @@ export class SaveAsPngModalComponent implements AfterViewChecked {
   }
 
   saveWhole() {
-    this._cyService.saveAsPng(true);
+    this.png = this._cyService.saveAsPng(true);
     this.activeModal.dismiss();
   }
 

@@ -1,0 +1,27 @@
+
+  
+  .dd-item {
+    padding: 0.37rem !important;
+  }
+  
+  .flex{
+    margin-top: 1rem;
+    align-items: center !important;
+  }
+  .flex-pr{
+    margin-top: 1rem;
+    align-items: center !important;
+    display: flex;
+  }
+  .comment-header{
+    height: 2rem !important;
+  }
+
+  .comment-body{
+    min-height: 8rem !important;
+  }
+
+  img {
+    width: 98%;
+
+  }
