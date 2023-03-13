@@ -1,5 +1,5 @@
 export enum TableDataType {
-  string = 0, number = 1, datetime = 2, enum = 3
+  string = 0, number = 1, datetime = 2, enum = 3, button = 4
 }
 
 export interface TableData {
@@ -64,7 +64,8 @@ export function property2TableData(properties, enumMapping, propName: string, pr
       return { val: propVal, type: TableDataType.string };
     }
     return { val: propVal.join(), type: TableDataType.string };
-  } else if (t == 'datetime') {
+  }
+ else if (t == 'datetime') {
     return { val: propVal, type: TableDataType.datetime };
   } else if (t == 'float' || t == 'int') {
     return { val: propVal, type: TableDataType.number };

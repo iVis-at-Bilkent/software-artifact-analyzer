@@ -88,7 +88,10 @@ export class ReportComponentComponent implements OnInit {
   }
   //Github PullRequest Post Comment To Pull Request
   async postCommentPr(prKey: string ) {
-
+    const link = "[You can inspect pull request "+ prKey+" from this link]("+window.location.href+"?name="+prKey+")";
+    const commentBody = {
+      body:  "### "+this.comment_header+"\n"+link+"\n"+this.comment
+    };    
 
     //If add graph is selected
     if( this.commentInput.addGraph){
@@ -97,9 +100,7 @@ export class ReportComponentComponent implements OnInit {
         await this.updateFile().subscribe(response => {
           console.log('Comment posted successfully:', response);
           this.imageUrl = response["content"]["download_url"]
-          const commentBody = {
-            body:  "### "+this.comment_header+"\n"+this.comment+'\n\n![image](' + this.imageUrl + ')'
-          };
+          commentBody.body+='\n\n![image](' + this.imageUrl + ')'
           this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
             console.log('Comment posted successfully:', response);
           }, error => {
@@ -115,9 +116,7 @@ export class ReportComponentComponent implements OnInit {
     }
     //If add reviewer is selected
     else if(this.commentInput.addReviewer){
-      const commentBody = {
-        body:  "### "+this.comment_header+"\n"+this.comment+"\n\n Reviewer Recommendation "
-      };
+      commentBody.body+="\n\n Reviewer Recommendation "
       const cb = (x) => {
         console.log(x)
         let recomendation = '<table>';
@@ -139,7 +138,7 @@ export class ReportComponentComponent implements OnInit {
       MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${prKey}'})
       with collect(file.name) as filenames, collect(dp.name) as dnames
       MATCH (a:Developer)-[r*0..3]-(b:File)
-      WHERE b.name IN filenames
+      WHERE b.name IN filenames and  NOT(a.name IN dnames)
       WITH DISTINCT ID(a) As id,  a.name AS name,  SUM(1.0/size(r)) AS score , filenames as f, dnames as d
       RETURN  id, name, score  ORDER BY score LIMIT 3`;
       this._dbService.runQuery(cql, cb, DbResponseType.table);      
@@ -148,10 +147,7 @@ export class ReportComponentComponent implements OnInit {
     else if(this.commentInput.addReviewer && this.commentInput.addGraph){
 
     }
-    else{
-      const commentBody = {
-        body:  "### "+this.comment_header+"\n"+this.comment
-      };     
+    else{  
       this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
       }, error => {

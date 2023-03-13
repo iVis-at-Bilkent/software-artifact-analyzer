@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as C from 'src/app/visuall/constants';
 import { Neo4jDb } from '../../../visuall/db-service/neo4j-db.service';
 import { CytoscapeService } from '../../../visuall/cytoscape.service';
@@ -36,9 +37,10 @@ export class Query3Component implements OnInit {
   commits = [];
   seeds = [];
   number = 3;
+  assigned:string= ""
   tableFilter: TableFiltering = { orderBy: null, orderDirection: null, txt: '', skip: null };
   tableInput: TableViewInput = {
-    columns: ['name', 'score'], results: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
+    columns: ['name', 'score','assign'], results: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
   };
   tableFilled = new Subject<boolean>();
@@ -48,7 +50,7 @@ export class Query3Component implements OnInit {
   cluster = true;
   algorithm = null;
   
-  constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService ) {
+  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService ) {
     this.prs = [];
     this.developers = [];
     this.scores = [];
@@ -66,7 +68,29 @@ export class Query3Component implements OnInit {
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
   }
+assign(){
+  const url = `https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${this.pr}/assignees`;
+  const headers = {
+    headers: new HttpHeaders({
+      'Authorization': 'Bearer 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',
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+    }
+ ) };
 
+ const body = { assignees: [this.assigned] };
+ return this.http.post(url, body, headers).subscribe(
+  (response) => {
+    console.log('Assignee added successfully:', response);
+  },
+  (error) => {
+    console.error('Error adding Assignee:', error);
+  }
+);
+
+
+
+}
   prepareQuery() {
     this.tableInput.currPage = 1;
     this.clearTableFilter.next(true);
@@ -124,6 +148,16 @@ export class Query3Component implements OnInit {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
+    /* FOR DEM0 PURPOSESSSS
+    const cql = ` MATCH (pr:PullRequest{name:'${this.pr}'})-[*]->(file:File)
+    MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${this.pr}'})
+    with collect(file.name) as filenames, collect(dp.name) as dnames
+    MATCH (a:Developer)-[r*0..3]-(b:File)
+    WHERE b.name IN filenames and  NOT(a.name IN dnames) and ${dateFilter}
+    WITH DISTINCT ID(a) As id,  a.name AS name,  SUM(1.0/size(r)) AS score , filenames as f, dnames as d
+    RETURN  id, name, score  ORDER BY ${orderExpr} LIMIT ${this.number}`;
+    */
+
     const cql = ` MATCH (pr:PullRequest{name:'${this.pr}'})-[*]->(file:File)
     MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${this.pr}'})
     with collect(file.name) as filenames, collect(dp.name) as dnames
@@ -183,10 +217,12 @@ export class Query3Component implements OnInit {
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
       const row: TableData[] = [];
-      for (let j = 0; j < uiColumns.length; j++) {
+      for (let j = 0; j < uiColumns.length -1; j++) {
         row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
       }
+      row.push(); 
       this.tableInput.results.push(row)
+
     }
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
