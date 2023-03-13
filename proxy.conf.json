@@ -1,7 +1,11 @@
 {
   "/rest/*": {
     "target": "https://saanalyzer.atlassian.net",
-    "secure": true,
-    "changeOrigin": true
+    "secure": false,
+    "changeOrigin": true,
+    "headers": {
+      "Access-Control-Allow-Origin": "*"
+
+    }
   }
 }

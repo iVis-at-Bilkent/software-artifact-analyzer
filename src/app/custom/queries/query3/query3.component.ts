@@ -34,6 +34,7 @@ export class Query3Component implements OnInit {
   developers = [];
   scores = [];
   developersName = [];
+  assignees:any[] = [];
   commits = [];
   seeds = [];
   number = 3;
@@ -81,16 +82,15 @@ assign(){
  const body = { assignees: [this.assigned] };
  return this.http.post(url, body, headers).subscribe(
   (response) => {
-    console.log('Assignee added successfully:', response);
+    alert('Assignee '+this.assigned+' added successfully to pull request '+this.pr);
   },
   (error) => {
     console.error('Error adding Assignee:', error);
   }
 );
 
-
-
 }
+
   prepareQuery() {
     this.tableInput.currPage = 1;
     this.clearTableFilter.next(true);

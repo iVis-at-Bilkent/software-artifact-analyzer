@@ -12,6 +12,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { SaveAsPngModalComponent } from '../../visuall/popups/save-as-png-modal/save-as-png-modal.component';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
+
 interface Attachment {
   name: string;
   data: any,
@@ -58,13 +59,15 @@ export class ReportComponentComponent implements OnInit {
   //Jira Issue Post Comment
   postCommentIssue(issueKey: string, comment: string) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ATATT3xFfGF0Q7Xy_IIXd_zm6pkAwJplPakSgOR6mcOwPLm4JkIJiFhjQCVphphyjFC4yPIWh2FXKcarDtv4NrKXifVKsxdHY6hwvbdA2HYJShHO8lL5MGdOWtUV1rmgKkxrf4PvZnJwksaSFZK0a-DHsxI5ok8wBZzkLbL0RdNbyti8ONkGIZU=AC56D540` // Replace accessToken with your actual access token
+      "Authorization":"Basic bGFyYS5tZXJkb2xAdWcuYmlsa2VudC5lZHUudHI6QVRBVFQzeEZmR0YwYjc1Y0tVR1B3Ykd5SFR6S3ppdTlSN09qbTBBb2ZnUkZBWVoxR0xZS2xDU0dFR1RsNGRDd1psSzdEQlhwMnVHd3BoSUxoVmE1Zk95V19ldXdCWUNCLU1GdWczT0NZZFZlYzhqRHFaYnlGYzEzaHhEVXREUl9KY094MmZYaTQ4UFRRRWZ5Mkp2N0ZPUmJaMjRSNE82SnJkdEhKc0c2WGJxX1ctc0tlVkVOa2dRPTUxRTgzRkE4",
+      "X-XSRF-TOKEN": "0208468e-1db3-4e34-9d34-4cf405d708e7_4221842a76dd916459c6aa9fce229477d533bf1b_lin",
+
     });
 
     const body = {
-      body: comment
+      body: "comment"
     };
-    this.http.post(`/rest/api/2/issue/${issueKey}/comment`, body, { headers }).subscribe(
+    this.http.post('/rest/api/2/issue/'+issueKey+'/comment', body, { headers }).subscribe(
       (response) => {
         console.log('Comment added successfully:', response);
       },
@@ -88,9 +91,8 @@ export class ReportComponentComponent implements OnInit {
   }
   //Github PullRequest Post Comment To Pull Request
   async postCommentPr(prKey: string ) {
-    const link = "[You can inspect pull request "+ prKey+" from this link]("+window.location.href+"?name="+prKey+")";
     const commentBody = {
-      body:  "### "+this.comment_header+"\n"+link+"\n"+this.comment
+      body:  "### "+this.comment_header+"\n"+this.comment
     };    
 
     //If add graph is selected
@@ -114,39 +116,7 @@ export class ReportComponentComponent implements OnInit {
         console.error('Error getting ssh:', error);
       });
     }
-    //If add reviewer is selected
-    else if(this.commentInput.addReviewer){
-      commentBody.body+="\n\n Reviewer Recommendation "
-      const cb = (x) => {
-        console.log(x)
-        let recomendation = '<table>';
-        // Generate table header
-        recomendation += '<thead><tr><th>Name</th><th>Score</th></tr></thead>';
-        // Generate table body
-        recomendation += '<tbody>';
-        x.data.forEach(data => {
-          recomendation += `<tr><td>${data[1]}</td><td>${data[0]}</td></tr>`;
-        });
-        recomendation += '</tbody></table>';
-        
-        commentBody.body = commentBody.body +recomendation
 
-        console.log(commentBody.body)
-
-      }
-      const cql = ` MATCH (pr:PullRequest{name:'${prKey}'})-[*]->(file:File)
-      MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${prKey}'})
-      with collect(file.name) as filenames, collect(dp.name) as dnames
-      MATCH (a:Developer)-[r*0..3]-(b:File)
-      WHERE b.name IN filenames and  NOT(a.name IN dnames)
-      WITH DISTINCT ID(a) As id,  a.name AS name,  SUM(1.0/size(r)) AS score , filenames as f, dnames as d
-      RETURN  id, name, score  ORDER BY score LIMIT 3`;
-      this._dbService.runQuery(cql, cb, DbResponseType.table);      
-
-    }
-    else if(this.commentInput.addReviewer && this.commentInput.addGraph){
-
-    }
     else{  
       this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
@@ -155,7 +125,41 @@ export class ReportComponentComponent implements OnInit {
       });     
     }
 
+  }  
 
+  async postCommentCommit(commitKey: string ) {
+    const commentBody = {
+      body:  "### "+this.comment_header+"\n"+this.comment
+    };   
+    console.log(this._g.cy.$(':selected')[0]._private.data) 
+    if( this.commentInput.addGraph){
+      this.http.get(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/contents/image.png`, this.httpOptions).subscribe(async response => {
+        this.sha_github = response["sha"];
+        await this.updateFile().subscribe(response => {
+          console.log('Comment posted successfully:', response);
+          this.imageUrl = response["content"]["download_url"]
+          commentBody.body+='\n\n![image](' + this.imageUrl + ')'
+          this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commit/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
+            console.log('Comment posted successfully:', response);
+          }, error => {
+            console.error('Error posting comment:', error);
+          });
+          console.log(commentBody.body)
+        }, error => {
+          console.error('Error updating image:', error);
+        });
+      }, error => {
+        console.error('Error getting ssh:', error);
+      });
+    }
+
+    else{  
+      this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commit/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
+        console.log('Comment posted successfully:', response);
+      }, error => {
+        console.error('Error posting comment:', error);
+      });     
+    }
   }  
 
   onAddComment() {
@@ -164,7 +168,8 @@ export class ReportComponentComponent implements OnInit {
       this.postCommentIssue("SAA-3", "Bu bir deneme")
     }
     else if (this.className == "Commit") {
-
+      let commitKey = this._g.cy.$(':selected')[0]._private.data.name
+      this.postCommentCommit(commitKey)
     }
     else if (this.className == "PullRequest") {     
       let prKey = this._g.cy.$(':selected')[0]._private.data.name
@@ -201,12 +206,18 @@ export class ReportComponentComponent implements OnInit {
 
   ngOnInit() {
     let name = ""
+    
     setInterval(() => {
       if (this._g.cy.$(':selected')[0]) {
 
         
         if( this._g.cy.$(':selected')[0]._private.data.name != name){
+          this.comment = ""
+          this.comment_header =""
           name = this._g.cy.$(':selected')[0]._private.data.name
+          const link = "[You can inspect artifact "+ name+" from this link](http://"+window.location.hostname+":"+window.location.port+"/?name="+name+")";
+          console.log(link)
+          this.comment = link+"\n"+this.comment     
           this.commentInput = {
             addGraph: false, 
             addAnomaly: false, 
@@ -392,3 +403,8 @@ export class ReportComponentComponent implements OnInit {
 
 
 }
+
+
+
+
+
