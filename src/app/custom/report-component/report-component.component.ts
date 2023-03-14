@@ -142,11 +142,11 @@ export class ReportComponentComponent implements OnInit {
         this.sha_github = response["sha"];
         await this.updateFile().subscribe(response => {
           console.log('Comment posted successfully:', response);
-          alert('Comment posted successfully')
           this.imageUrl = response["content"]["download_url"]
           commentBody.body+='\n\n![image](' + this.imageUrl + ')'
-          this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commit/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
+          this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commits/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
             console.log('Comment posted successfully:', response);
+            alert('Comment posted successfully')
           }, error => {
             console.error('Error posting comment:', error);
           });
@@ -160,7 +160,7 @@ export class ReportComponentComponent implements OnInit {
     }
 
     else{  
-      this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commit/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
+      this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commits/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
         alert('Comment posted successfully')
       }, error => {
