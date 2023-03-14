@@ -33,10 +33,6 @@ export class AppComponent {
     });
 
   }
-  getSampleData(callback: (x: GraphResponse) => any) {
-
-    this._dbService.runQuery(`MATCH (n1{name:${this._g.initialQuery}})-[e]->(n2) RETURN n1,n2,e ORDER BY r `, callback);
-  } 
    
 
 }
