@@ -58,6 +58,9 @@ export class ReportComponentComponent implements OnInit {
   
   //Jira Issue Post Comment
   postCommentIssue(issueKey: string, comment: string) {
+    if(this.commentInput){
+
+    }
     const headers = new HttpHeaders({
       "Authorization":"Basic bGFyYS5tZXJkb2xAdWcuYmlsa2VudC5lZHUudHI6QVRBVFQzeEZmR0YwYjc1Y0tVR1B3Ykd5SFR6S3ppdTlSN09qbTBBb2ZnUkZBWVoxR0xZS2xDU0dFR1RsNGRDd1psSzdEQlhwMnVHd3BoSUxoVmE1Zk95V19ldXdCWUNCLU1GdWczT0NZZFZlYzhqRHFaYnlGYzEzaHhEVXREUl9KY094MmZYaTQ4UFRRRWZ5Mkp2N0ZPUmJaMjRSNE82SnJkdEhKc0c2WGJxX1ctc0tlVkVOa2dRPTUxRTgzRkE4",
       "X-XSRF-TOKEN": "0208468e-1db3-4e34-9d34-4cf405d708e7_4221842a76dd916459c6aa9fce229477d533bf1b_lin",
@@ -101,6 +104,7 @@ export class ReportComponentComponent implements OnInit {
         this.sha_github = response["sha"];
         await this.updateFile().subscribe(response => {
           console.log('Comment posted successfully:', response);
+          alert('Comment posted successfully')
           this.imageUrl = response["content"]["download_url"]
           commentBody.body+='\n\n![image](' + this.imageUrl + ')'
           this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
@@ -120,6 +124,7 @@ export class ReportComponentComponent implements OnInit {
     else{  
       this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
+        alert('Comment posted successfully')
       }, error => {
         console.error('Error posting comment:', error);
       });     
@@ -137,6 +142,7 @@ export class ReportComponentComponent implements OnInit {
         this.sha_github = response["sha"];
         await this.updateFile().subscribe(response => {
           console.log('Comment posted successfully:', response);
+          alert('Comment posted successfully')
           this.imageUrl = response["content"]["download_url"]
           commentBody.body+='\n\n![image](' + this.imageUrl + ')'
           this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commit/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
@@ -156,6 +162,7 @@ export class ReportComponentComponent implements OnInit {
     else{  
       this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commit/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
+        alert('Comment posted successfully')
       }, error => {
         console.error('Error posting comment:', error);
       });     
@@ -183,6 +190,9 @@ export class ReportComponentComponent implements OnInit {
     else if (this.className == "Developer") {
       if(this.commentInput.addGithub){
          this.postCommentPr( this.pr_name)     
+      }
+      else if (this.commentInput.addJira){
+        this.postCommentIssue("SAA-3", "Bu bir deneme")
       }
     }
     else {
@@ -231,7 +241,7 @@ export class ReportComponentComponent implements OnInit {
         if (this.className == "Issue") {
           this.addMenu = [
             { label: 'Add Graph', value: this.commentInput.addGraph, function: "addGraph()" },
-            { label: 'Add Anomaly', value: this.commentInput.addAnomaly, name: "addAnomaly()" },
+            { label: 'Add Anomaly', value: this.commentInput.addAnomaly, function: "addAnomaly()" },
           ]
         }
         else if (this.className == "Commit") {
@@ -362,9 +372,19 @@ export class ReportComponentComponent implements OnInit {
     }
 
   }
+  
   addAnomaly() {
+    console.log("x")
     if (!this.commentInput.addAnomaly) {
       this.commentInput.addAnomaly = true;
+      this.comment =this.comment + "No anomaly found"
+      const cb = (x) => {
+        console.log(x)
+      };
+      const cql = ` MATCH (n:Developer)-[r]->(issue:Issue)
+      WHERE issue.resolver= n.name and issue.closer = n.name 
+      RETURN  ID(n) as id,  n.name AS Developer, Collect(distinct issue.name) AS Issues, count(distinct issue.name) as Count `;
+      this._dbService.runQuery(cql, cb, DbResponseType.table);   
     }
     else {
       this.commentInput.addAnomaly = false
@@ -374,7 +394,8 @@ export class ReportComponentComponent implements OnInit {
   addJira() {
     if (!this.commentInput.addJira) {
       console.log(this._g.initialQuery)
-
+      this.commentInput.addJira = true
+  
     }
     else {
       this.commentInput.addJira = false
