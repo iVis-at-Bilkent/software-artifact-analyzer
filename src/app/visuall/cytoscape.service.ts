@@ -240,6 +240,66 @@ export class CytoscapeService {
     }
     return false;
   }
+  loadElementsFromDatabaseInitial(data: GraphResponse) {
+    if (!data || !data.nodes || !data.edges) {
+      this._g.showErrorModal('Empty Graph', 'Empty response from database!')
+      return;
+    }
+    const nodes = data.nodes;
+    const edges = data.edges;
+
+    let current = this._g.cy.nodes(':visible');
+    let elemIds: string[] = [];
+    let cyNodes = [];
+    for (let i = 0; i < nodes.length; i++) {
+      let cyNodeId = 'n' + nodes[i].id;
+      cyNodes.push(this.createCyNode(nodes[i], cyNodeId));
+      elemIds.push(cyNodeId);
+    }
+
+    let cyEdges = [];
+    let collapsedEdgeIds = {};
+    for (let i = 0; i < edges.length; i++) {
+      let cyEdgeId = 'e' + edges[i].id;
+      if (collapsedEdgeIds[cyEdgeId]) {
+        elemIds.push(collapsedEdgeIds[cyEdgeId]);
+        continue;
+      }
+      cyEdges.push(this.createCyEdge(edges[i], cyEdgeId));
+      elemIds.push(cyEdgeId)
+    }
+
+    this._g.switchLayoutRandomization(true);
+    let prevElems = this._g.cy.$(':visible');
+    const wasEmpty = this._g.cy.elements().length < 2;
+
+    this._g.cy.add(cyNodes);
+    const filteredCyEdges = []
+    for (let i = 0; i < cyEdges.length; i++) {
+      const sId = cyEdges[i].data.source;
+      const eId = cyEdges[i].data.target;
+      if ((this._g.cy.$id(sId).length < 1 && !nodes.find(x => x.id == sId)) || (this._g.cy.$id(eId).length < 1 && !nodes.find(x => x.id == eId))) {
+        continue;
+      }
+      filteredCyEdges.push(cyEdges[i]);
+    }
+    const addedEdges = this._g.cy.add(filteredCyEdges);
+
+    let compoundEdgeIds = Object.values(collapsedEdgeIds) as string[];
+    if (this._g.userPrefs.isCollapseMultiEdgesOnLoad.getValue()) {
+      this.collapseMultiEdges(addedEdges, false);
+    }
+    let compoundEdgeIds2 = this._g.cy.edges('.' + C.COLLAPSED_EDGE_CLASS).map(x => x.id());
+    elemIds.push(...C.arrayDiff(compoundEdgeIds, compoundEdgeIds2));
+
+    this._g.applyClassFiltering();
+    const hasNew = this.hasNewElem(elemIds, prevElems);
+    if (hasNew) {
+      this._g.performLayout(true);
+    }
+    this.highlightElems(false, elemIds);
+    this._g.isLoadFromDB = true;
+  }
 
   collapseMultiEdges(edges2collapse?: any, isSetFlag = true) {
     if (!edges2collapse) {

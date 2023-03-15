@@ -19,20 +19,21 @@ export class AppComponent {
     };
     
     this.route.queryParamMap.subscribe(params => {
-      this.paramValue = params.get('name');
-      console.log(this.paramValue); 
-      this._g.initialQuery = this.paramValue;
-      const cb = (x) => {
-          this._cyService.loadElementsFromDatabase(x, false);
-
-      };
-      
-      if(this.paramValue != ""){
-        this._dbService.runQuery(`MATCH (n1{name:'${this._g.initialQuery}'})-[e]-(n2) RETURN n1,n2,e `,cb);
+      if( params.get('name')){
+        this.paramValue = params.get('name');
+        console.log(this.paramValue); 
+        this._g.initialQuery = this.paramValue.toString();
+        if(this.paramValue != ""){ 
+          const isClientSidePagination =
+          this._g.userPrefs.queryResultPagination.getValue() == "Client";
+          const cb = (x) => {
+            this._cyService.loadElementsFromDatabaseInitial(x);
+        };  
+          this._dbService.runQuery(`MATCH (n1{name:'${this.paramValue}'})-[e]-(n2) RETURN n1,n2,e `,cb);
+        }
       }
     });
 
   }
-   
 
 }
