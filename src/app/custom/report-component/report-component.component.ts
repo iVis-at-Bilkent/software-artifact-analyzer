@@ -61,6 +61,8 @@ export class ReportComponentComponent implements OnInit {
     if(this.commentInput){
 
     }
+    
+    /*
     const headers = new HttpHeaders({
       "Authorization":"Basic bGFyYS5tZXJkb2xAdWcuYmlsa2VudC5lZHUudHI6QVRBVFQzeEZmR0YwYjc1Y0tVR1B3Ykd5SFR6S3ppdTlSN09qbTBBb2ZnUkZBWVoxR0xZS2xDU0dFR1RsNGRDd1psSzdEQlhwMnVHd3BoSUxoVmE1Zk95V19ldXdCWUNCLU1GdWczT0NZZFZlYzhqRHFaYnlGYzEzaHhEVXREUl9KY094MmZYaTQ4UFRRRWZ5Mkp2N0ZPUmJaMjRSNE82SnJkdEhKc0c2WGJxX1ctc0tlVkVOa2dRPTUxRTgzRkE4",
       "X-XSRF-TOKEN": "0208468e-1db3-4e34-9d34-4cf405d708e7_4221842a76dd916459c6aa9fce229477d533bf1b_lin",
@@ -78,6 +80,7 @@ export class ReportComponentComponent implements OnInit {
         console.error('Error adding comment:', error);
       }
     );
+    */
   }
 
 

@@ -46,6 +46,9 @@
           <th scope="col">
             #
           </th>
+          <th scope="col" *ngIf="params.isSelect">
+            <span>  Select</span>
+          </th>   
           <th scope="col" *ngFor="let col of params.columns | slice:0:columnLimit; let i = index;">
             <a href="#" class="table-header" (click)="columnClicked(i)">
               {{params.isReplace_inHeaders ? (col | replace : '[_]' : ' ') : col }}
@@ -62,12 +65,17 @@
             <input type="checkbox" class="m-1 cb-table-all" [(ngModel)]="isCheckbox4AllChecked"
               (change)="cb4AllChanged()" />
           </th>
+      
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let r of params.results; let i = index;" (mouseenter)="onMouseEnter(r[0].val)"
           (mouseleave)="onMouseExit(r[0].val)" [ngClass]="{'highlighted-row': hoveredElemId == r[0].val}">
+
           <td scope="row">{{ (params.currPage - 1) * params.pageSize + i + 1 }}</td>
+          <td *ngIf="params.isSelect">
+            <input  type="checkbox" class="m-1 row-cb" (change)="selectChanged(i, $event.target)" />
+          </td>
           <td *ngFor="let e of r | slice:1:columnLimit+1; let j = index;">
             <span *ngIf="e.type == 0 || e.type == 3">
               <ngb-highlight [result]="e.val" [term]="filterTxt"></ngb-highlight>
@@ -80,6 +88,8 @@
             <!-- row-cb class is used in TS, it is useless in CSS -->
             <input type="checkbox" class="m-1 row-cb" (change)="cbChanged(i, $event.target)" />
           </td>
+
+          
         </tr>
       </tbody>
     </table>

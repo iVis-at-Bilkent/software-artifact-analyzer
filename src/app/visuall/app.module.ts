@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterModule } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import {MatDialogModule } from '@angular/material/dialog';
@@ -87,6 +87,8 @@ import {DialogElementsExample} from './navbar/dialog-elements-example';
     RouterModule.forRoot([]),
     BrowserAnimationsModule,
   ],
+  exports: [RouterModule,
+    HttpClientModule],
   providers: [{ provide: APP_BASE_HREF, useValue: "/" }],
   bootstrap: [AppComponent],
   entryComponents: [SaveAsPngModalComponent, QuickHelpModalComponent, AboutModalComponent, ErrorModalComponent]

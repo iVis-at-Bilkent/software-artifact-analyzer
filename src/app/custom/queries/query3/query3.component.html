@@ -14,12 +14,7 @@
   <input type="number" class="va-small-text m-2" [(ngModel)]="number" min="1" max="5" />  
 </div>
 <hr class="dashed">
-<div class="d-flex align-items-center justify-content-left">
-  <label class=" va-text">Assign Developer</label>
-  <input type="string" class="va-small-text m-2" [(ngModel)]="assigned" />  
-  <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="assign()" value="Assign">
-</div>
-<hr class="dashed">
+
 <div class="d-flex align-items-center justify-content-center">
   <div class="form-check form-check-inline m-1">
     <label class=" va-text">Cluster By Developer</label>
@@ -32,7 +27,7 @@
     <input type="checkbox" class="form-check-input" [(ngModel)]="tableInput.isLoadGraph" />
     <label class="form-label va-text">Graph</label>
   </div>
-  <div class="form-check form-check-inline m-1">
+  <div class="form-check form-check-inline m-1" *ngIf="assigned">
     <input type="checkbox" class="form-check-input" [(ngModel)]="tableInput.isMergeGraph" />
     <label class="form-label va-text">Merge</label>
   </div>
@@ -42,3 +37,7 @@
 <app-table-view [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"
   (onFilteringChanged)="filterTable($event)" [clearFilter]="clearTableFilter">
 </app-table-view>
+
+<div class="d-flex align-items-center justify-content-center" *ngIf="assigned">
+  <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="assign()" value="Assign">
+</div>

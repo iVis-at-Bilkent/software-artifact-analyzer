@@ -46,6 +46,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   tableColumnLimitSubs: Subscription;
   hoveredElemId = '-';
   isCheckbox4AllChecked = false;
+  selected: any = {};
 
   @Input() params: TableViewInput;
   @Input() tableFilled = new Subject<boolean>();
@@ -242,6 +243,16 @@ export class TableViewComponent implements OnInit, OnDestroy {
     if (isChecked) {
       this.checkedIdx[idx] = true;
     }
+  }
+
+  selectChanged(idx: number, t: EventTarget) {
+    const isChecked = (<HTMLInputElement>t).checked
+    delete this.selected[idx];
+
+    if (isChecked) {
+      this.selected[idx] = true;
+    }
+    this.params.results2 = this.selected
   }
 
   loadGraph4Checked() {

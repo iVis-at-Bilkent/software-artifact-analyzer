@@ -10,6 +10,7 @@ export interface TableData {
 export interface TableViewInput {
   // first property of every result must be ID
   results: TableData[][];
+  results2: number[];
   columns: string[];
   isLoadGraph: boolean;
   isMergeGraph: boolean;
@@ -28,6 +29,7 @@ export interface TableViewInput {
   isEmphasizeOnHover?: boolean;
   classNameOfObjects?: string;
   classNames?: string[];
+  isSelect?:boolean;
 }
 
 export interface TableFiltering {

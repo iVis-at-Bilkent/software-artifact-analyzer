@@ -26,11 +26,11 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   customSubTabs: { component: any, text: string }[] = CustomizationModule.objSubTabs;
 
   tableInput: TableViewInput = {
-    columns: ['Type', 'Count', 'Selected', 'Hidden'], isHide0: true, results: [], resultCnt: 0, currPage: 1, pageSize: 20, tableTitle: 'Statistics',
+    columns: ['Type', 'Count', 'Selected', 'Hidden'], isHide0: true, results: [],results2: [], resultCnt: 0, currPage: 1, pageSize: 20, tableTitle: 'Statistics',
     isShowExportAsCSV: true, isLoadGraph: true, columnLimit: 5, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true
   };
   multiObjTableInp: TableViewInput = {
-    columns: ['Type'], isHide0: true, results: [], resultCnt: 0, currPage: 1, pageSize: 20, isReplace_inHeaders: true, tableTitle: 'Properties',
+    columns: ['Type'], isHide0: true, results: [],results2: [], resultCnt: 0, currPage: 1, pageSize: 20, isReplace_inHeaders: true, tableTitle: 'Properties',
     isShowExportAsCSV: true, isEmphasizeOnHover: true, isLoadGraph: true, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true
   };
   private NODE_TYPE = '_NODE_';

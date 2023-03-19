@@ -24,7 +24,7 @@ export class Query4Component implements OnInit {
 
   
   tableInput: TableViewInput = {
-    columns: ['Developer','Issues','Count'], results: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
+    columns: ['Developer','Issues','Count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
   };
   tableFilled = new Subject<boolean>();

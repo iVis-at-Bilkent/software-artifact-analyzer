@@ -23,7 +23,7 @@ export class Query1Component implements OnInit {
   developer: string;
   developers: string[];
   tableInput: TableViewInput = {
-    columns:['name'], results: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
+    columns:['name'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
   };
   tableFilled = new Subject<boolean>();

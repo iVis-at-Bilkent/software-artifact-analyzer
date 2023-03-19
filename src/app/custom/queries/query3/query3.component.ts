@@ -34,15 +34,16 @@ export class Query3Component implements OnInit {
   developers = [];
   scores = [];
   developersName = [];
-  assignees:any[] = [];
+  reviewers:string[] = [];
+
   commits = [];
   seeds = [];
   number = 3;
-  assigned:string= ""
+  assigned:boolean= false
   tableFilter: TableFiltering = { orderBy: null, orderDirection: null, txt: '', skip: null };
   tableInput: TableViewInput = {
-    columns: ['name', 'score','assign'], results: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
-    resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
+    columns: ['name', 'score'], results: [],results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
+    resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: false, isNodeData: true, isSelect: true
   };
   tableFilled = new Subject<boolean>();
   tableResponse = null;
@@ -70,7 +71,10 @@ export class Query3Component implements OnInit {
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
   }
 assign(){
-  const url = `https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${this.pr}/assignees`;
+  console.log(this.tableInput.results2)
+  this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
+  console.log(this.reviewers)
+  const url = `https://api.github.com/repos/LaraMerdol/codebanksystemProject/pulls/${this.pr}/requested_reviewers`;
   const headers = {
     headers: new HttpHeaders({
       'Authorization': 'Bearer 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',
@@ -79,13 +83,13 @@ assign(){
     }
  ) };
 
- const body = { assignees: [this.assigned] };
+ const body = { reviewers: this.reviewers };
  return this.http.post(url, body, headers).subscribe(
   (response) => {
-    alert('Assignee '+this.assigned+' added successfully to pull request '+this.pr);
+    alert('Reviewers added successfully to pull request '+this.pr);
   },
   (error) => {
-    console.error('Error adding Assignee:', error);
+    console.error('Error adding Reviewers:', error);
   }
 );
 
@@ -99,6 +103,7 @@ assign(){
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
+    this.assigned = true
     this.developers = [];
     this.developersName = [];
     this.scores = [];
@@ -212,12 +217,12 @@ assign(){
 
   fillTable(data: DeveloperData[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string,TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
       const row: TableData[] = [];
-      for (let j = 0; j < uiColumns.length -1; j++) {
+      for (let j = 0; j < uiColumns.length; j++) {
         row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
       }
       row.push(); 
