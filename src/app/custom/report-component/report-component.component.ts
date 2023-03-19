@@ -89,6 +89,7 @@ export class ReportComponentComponent implements OnInit {
       content:`${this.dataURL.split(",")[1]}`,
       sha: this.sha_github
     };
+
     const options = this.httpOptions;
     return this.http.put(url, body, options);
   }
@@ -176,7 +177,13 @@ export class ReportComponentComponent implements OnInit {
     }
     else if (this.className == "Commit") {
       let commitKey = this._g.cy.$(':selected')[0]._private.data.name
+      //this.postCommentCommit(commitKey)
+      if(this.commentInput.addGithub){
+        this.postCommentPr( this.pr_name)     
+     } 
+     else{
       this.postCommentCommit(commitKey)
+     }
     }
     else if (this.className == "PullRequest") {     
       let prKey = this._g.cy.$(':selected')[0]._private.data.name
@@ -247,6 +254,7 @@ export class ReportComponentComponent implements OnInit {
         else if (this.className == "Commit") {
           this.addMenu = [
             { label: 'Add Graph', value: this.commentInput.addGraph, function: "addGraph()" },
+            { label: 'Pull Request ', value: this.commentInput.addGithub, function: "addGithub()" },
           ]
         }
         else if (this.className == "PullRequest") {
@@ -319,6 +327,7 @@ export class ReportComponentComponent implements OnInit {
       canvas.height = image.height;
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       this.dataURL = canvas.toDataURL('image/png');
+      console.log(this.dataURL.split(",")[1])
     };
   }
   addGraph() {
