@@ -39,7 +39,7 @@ import { PanelContainerComponent } from './panel-container/panel-container.compo
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DialogElementsExample} from './navbar/dialog-elements-example';
-
+import { CookieService } from 'ngx-cookie-service';
 @NgModule({
   declarations: [
     DialogElementsExample,
@@ -89,7 +89,7 @@ import {DialogElementsExample} from './navbar/dialog-elements-example';
   ],
   exports: [RouterModule,
     HttpClientModule],
-  providers: [{ provide: APP_BASE_HREF, useValue: "/" }],
+  providers: [{ provide: APP_BASE_HREF, useValue: "/" },CookieService],
   bootstrap: [AppComponent],
   entryComponents: [SaveAsPngModalComponent, QuickHelpModalComponent, AboutModalComponent, ErrorModalComponent]
 })

@@ -168,7 +168,7 @@ assign(){
     with collect(file.name) as filenames, collect(dp.name) as dnames
     MATCH (a:Developer)-[r*0..3]-(b:File)
     WHERE b.name IN filenames and  NOT(a.name IN dnames) and ${dateFilter}
-    WITH DISTINCT ID(a) As id,  a.name AS name,  SUM(1.0/size(r)) AS score , filenames as f, dnames as d
+    WITH DISTINCT ID(a) As id,  a.name AS name, round(toFloat(SUM(1.0/size(r)) ) * 100)/100 AS score , filenames as f, dnames as d
     RETURN  id, name, score  ORDER BY ${orderExpr} LIMIT ${this.number}`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
 

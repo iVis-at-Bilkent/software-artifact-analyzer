@@ -10,6 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
 import { ReportComponentComponent } from './report-component/report-component.component';
+import { RandomSelectionComponent } from '../shared/random-selection/random-selection.component';
 
 
 // import { AsdComponent } from './asd/asd.component';
@@ -17,7 +18,12 @@ import { ReportComponentComponent } from './report-component/report-component.co
 
 @NgModule({
   // custom components should be inside declarations
-  declarations: [Query1Component, Query2Component,Query3Component,Query4Component, ReportComponentComponent ],
+  declarations: [
+    Query1Component, 
+    Query2Component,
+    Query3Component,
+    Query4Component,
+     ReportComponentComponent],
   // declarations: [AsdComponent],
   imports: [
     CommonModule,
