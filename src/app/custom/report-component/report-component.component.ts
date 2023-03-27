@@ -14,7 +14,9 @@ import { SaveAsPngModalComponent } from '../../visuall/popups/save-as-png-modal/
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
 import { CookieService } from 'ngx-cookie-service';
 import { RandomSelectionComponent } from '../../shared/random-selection/random-selection.component';
-
+import { HttpXsrfTokenExtractor } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 //import api from '@forge/api';
 interface Attachment {
   name: string;
@@ -44,6 +46,7 @@ export class ReportComponentComponent implements OnInit {
   panel: any;
   csrfToken: any;
   prs: string[] = []
+  code: string=""
   commentInput: any = {
     addGraph: false, addAnomaly: false, addJira: false, addGithub: false, addReviewer: false
   };
@@ -54,41 +57,53 @@ export class ReportComponentComponent implements OnInit {
       'Accept': 'application/vnd.github.v3+json'
     })
   };
-  constructor(private cookieService: CookieService, private _dbService: Neo4jDb, private _g: GlobalVariableService, private _cyService: CytoscapeService,
+  constructor( private route: ActivatedRoute, private tokenExtractor: HttpXsrfTokenExtractor, private cookieService: CookieService, private _dbService: Neo4jDb, private _g: GlobalVariableService, private _cyService: CytoscapeService,
     private http: HttpClient, private _modalService: NgbModal) {
     this.selectedItemProps = [];
     this.selectedItemPropsURL = [];
   }
+  afterLogin(){
+    const headers = new HttpHeaders()
+    .set('Content-Type', 'application/json');
+    console.log("geldi")
 
+    // Set the data for the POST request
+    const data = {
+      "grant_type": 'authorization_code',
+      "client_id": 'Gte89X7se0jg0EGuEqZFSwBgQoGDIEhU',
+      "client_secret": 'ATOArGowlE0ILdGC19sGXhYf4nWhlXAqpIdqSyMaEYR_UcCZhNi7jDdl2EOFleUUzOL5DCAFCEB0',
+      "code": this.code,
+      "redirect_uri": 'http://localhost:4400/?name=SAA-3/'
+    };
+
+    // Make the POST request
+    console.log("geldi")
+    this.http.post('/oauth/token', data, { headers }).subscribe(
+      (response) => {
+        console.log('Token:', response);
+      },
+      (error) => {
+        console.error('Error adding comment:', error);
+      })
+  }
+  login() {
+    window.location.href = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=Gte89X7se0jg0EGuEqZFSwBgQoGDIEhU&scope=read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20read%3Ajira-user%20write%3Ajira-work%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=http%3A%2F%2Flocalhost%3A4400%2F%3Fname%3DSAA-3&state=${YOUR_USER_BOUND_VALUE}&response_type=code&prompt=consent';
+  }
 
   //Jira Issue Post Comment
   postCommentIssue(issueKey: string, comment: string) {
-
-    let headers = new HttpHeaders({
-      'Authorization': 'Basic ' + btoa('lara.merdol@ug.bilkent.edu.tr:ATATT3xFfGF05CflbDueb6BFnWmfArTRv6h8OwY08_E_xMLUvHqeiFh4YTfpWtf1CMLS4LASzjVbDe5yZOZNzOBvHuA33tatEQvlmcEk-ST1TzWVIpwud9vKcFkW5F9sNEU-DmxinvwDQ0F1tXeRJ26LfH-gWlXuNzW6K3wyHqonmvyX2rX6n28=F8DD5F05'),
-      'X-Atlassian-Token': 'no-check',
-      'X-XSRF-TOKEN': this.cookieService.get('XSRF-TOKEN')
-    });
-
-    this.http.get('/rest/auth/1/session', { headers: headers }).subscribe(
-      (response) => {
-        console.log('CSRF token obtained:', response);
-        console.log(this.cookieService.get('XSRF-TOKEN'))
-        this.csrfToken = response;
-        console.log(this.csrfToken)
-      },
-      (error) => {
-        console.error('Error obtaining CSRF token:', error);
-      }
-    );
+    const code = this.route.snapshot.queryParamMap.get('code')?this.route.snapshot.queryParamMap.get('code'):"";
+    if(code != ""){
+    const headers = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJraWQiOiJmZTM2ZThkMzZjMTA2N2RjYTgyNTg5MmEiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI4ZTI0ZTQzZC0yM2I2LTQxMTEtOGQ5YS1mZmQxNzM5ZmY1ZWIiLCJzdWIiOiI2M2U3NmRmNTg5NzhkN2E0MzUzZWQzZGQiLCJuYmYiOjE2Nzk5MjUxNzYsImlzcyI6Imh0dHBzOi8vYXRsYXNzaWFuLWFjY291bnQtcHJvZC5wdXMyLmF1dGgwLmNvbS8iLCJpYXQiOjE2Nzk5MjUxNzYsImV4cCI6MTY3OTkyODc3NiwiYXVkIjoiR3RlODlYN3NlMGpnMEVHdUVxWkZTd0JnUW9HRElFaFUiLCJjbGllbnRfaWQiOiJHdGU4OVg3c2UwamcwRUd1RXFaRlN3QmdRb0dESUVoVSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9lbWFpbERvbWFpbiI6InVnLmJpbGtlbnQuZWR1LnRyIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2F0bF90b2tlbl90eXBlIjoiQUNDRVNTIiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL2ZpcnN0UGFydHkiOmZhbHNlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vc2Vzc2lvbl9pZCI6ImIyNDY4ZGY5LWVmZWMtNGMyOS1iMGE2LWNkMTViOGYxNTU3MSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS92ZXJpZmllZCI6dHJ1ZSwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL3N5c3RlbUFjY291bnRFbWFpbCI6IjEzNzUzYWY1LWUyNDgtNGY4My04MDMwLTVlNDliYjY0NTZjZkBjb25uZWN0LmF0bGFzc2lhbi5jb20iLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vcHJvY2Vzc1JlZ2lvbiI6InVzLWVhc3QtMSIsInNjb3BlIjoibWFuYWdlOmppcmEtcHJvamVjdCBtYW5hZ2U6amlyYS1jb25maWd1cmF0aW9uIHJlYWQ6amlyYS13b3JrIG1hbmFnZTpqaXJhLWRhdGEtcHJvdmlkZXIgd3JpdGU6amlyYS13b3JrIG1hbmFnZTpqaXJhLXdlYmhvb2sgcmVhZDpqaXJhLXVzZXIiLCJjbGllbnRfYXV0aF90eXBlIjoiUE9TVCIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9vYXV0aENsaWVudElkIjoiR3RlODlYN3NlMGpnMEVHdUVxWkZTd0JnUW9HRElFaFUiLCJodHRwczovL2F0bGFzc2lhbi5jb20vM2xvIjp0cnVlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vdWp0IjoiOGNkNjQxMGMtMGFiMS00M2Q5LWJmNzAtYWZkZmY2NzA3NzE1IiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3ZlcmlmaWVkIjp0cnVlLCJodHRwczovL2F0bGFzc2lhbi5jb20vc3lzdGVtQWNjb3VudElkIjoiNzEyMDIwOmY3MjM0MDg0LWQwZTMtNDFjMi1hNTQ5LTE4NzI2MTFjMWVmZSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9zeXN0ZW1BY2NvdW50RW1haWxEb21haW4iOiJjb25uZWN0LmF0bGFzc2lhbi5jb20ifQ.nh0fjTjV-6K5MRiUZtX2s0pXtgLhiobI2A5cWkrYQSbqeqoxKdlAKq5QaesJG5Rjixfn8FIVK5C3QpGQYRHBySDMqgpD1F-w2tXvB0Mi_TvhIaZy4piCpNrnlyKpSCErj4cyhL1zVg9dZBitJ1VSOjL6d-HMH3LJ5xSIP3D-fxyyOb-bU1YMDP0_LvA3skt6_je7cLXb-kItK6DTJjA19EPxIGFZ8T2tE00KvNbX5jm6UVIJxR-WwnI6xWHQ7ap0--_y2vwtWCzLzk0ZLC9JX8ydvsLSsxwhfw3GkVkqtyrJChbYwbaYzZAE3vI0XY_C0r2mk2_YNxnHtYY3bfHLGg',
+      }),
+    };
     const body = {
-      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.",
-      "visibility": {
-        "type": "role",
-        "value": "Administrators"
-      }
+      "body": "This is a comment that only administrators can see."
     }
-    this.http.post('/rest/api/2/issue/' + issueKey + '/comment', body, { headers: headers }).subscribe(
+    this.http.post('https://api.atlassian.com/ex/jira/b9404671-23b7-4a57-90ab-7fea46d4ab63/rest/api/2/issue/SAA-3/comment', body, headers).subscribe(
       (response) => {
         console.log('Comment added successfully:', response);
       },
@@ -96,100 +111,12 @@ export class ReportComponentComponent implements OnInit {
         console.error('Error adding comment:', error);
       }
     );
+    }
+    else{
+      this.login();
+    }
+    
 
-
-
-    /*
-    const FORGE_CLIENT_ID = 'uICnmsnD08jMTgm9xyZ2MfSTk1p6L9Ph';
-    const FORGE_CLIENT_SECRET = 'ATOAWG7EwzD30s5DnkurGdpuUOQZX9bGXyx1jduqoW6iOQTTWiwCmChyZVqAgLd8iACF15913E8C';
-    const body = {
-      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis elit. Duis eu justo eget augue iaculis fermentum. Sed semper quam laoreet nisi egestas at posuere augue semper.",
-      "visibility": {
-          "type": "role",
-          "value": "Administrators"
-      }
-   }
-
-   const headers = new HttpHeaders({
-    'Authorization': 'Basic ' + btoa('lara.merdol@ug.bilkent.edu.tr:ATATT3xFfGF05CflbDueb6BFnWmfArTRv6h8OwY08_E_xMLUvHqeiFh4YTfpWtf1CMLS4LASzjVbDe5yZOZNzOBvHuA33tatEQvlmcEk-ST1TzWVIpwud9vKcFkW5F9sNEU-DmxinvwDQ0F1tXeRJ26LfH-gWlXuNzW6K3wyHqonmvyX2rX6n28=F8DD5F05'),
-    'Content-Type':'application/json',
-    'X-Atlassian-Token':'no-check'
-  });   
-
-    console.log(headers)
-    this.http.post('/rest/api/2/issue/'+issueKey+'/comment', body, { headers }).subscribe(
-      (response) => {
-        console.log('Comment added successfully:', response);
-      },
-      (error) => {
-        console.error('Error adding comment:', error);
-      }
-    );
-    */
-
-    /* 
-       const apiKey = 'ATCTT3xFfGN0SUY5iKMsMTWwXBBB2QDacmvjrvCNgsYFn_C83fmLtVSz0NtDFVdJOKtoUe4bxXEzoRJ3M3wr_d2aH7j53g6oNnDv026fJ3nwKB17ix5h1ahN51rgaQTq3r8dxo4T0oMv2Nx28cQtMupv01X-x4X8PoxyQMY9DUG4wQGL7diOcrI=C057C34C';
-     const orgId = 'k7121953-40k5-1j85-72jk-5dcj19b1jk90';
-  
-     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-      'X-Atlassian-User-Token': orgId
-    });
-    */
-    /*
-        (api.asUser() as any).postJira(`/rest/api/2/issue/${issueKey}/comment`, { body: comment }).then((response) => {
-          const comment = {
-            body: 'This is a comment created by Forge app',
-          };
-          (api.asUser() as any).postJira(`/rest/api/2/issue/${issueKey}/comment`, { body: comment }).then((response) => {
-            console.log(response);
-          }).catch((error) => {
-            console.error(error);
-          });
-        }).catch((error) => {
-          console.error(error);
-        });
-    */
-    /*
-      const headers = new HttpHeaders({
-        'Authorization': 'Basic ' + btoa('lara.merdol@ug.bilkent.edu.tr:ATATT3xFfGF05CflbDueb6BFnWmfArTRv6h8OwY08_E_xMLUvHqeiFh4YTfpWtf1CMLS4LASzjVbDe5yZOZNzOBvHuA33tatEQvlmcEk-ST1TzWVIpwud9vKcFkW5F9sNEU-DmxinvwDQ0F1tXeRJ26LfH-gWlXuNzW6K3wyHqonmvyX2rX6n28=F8DD5F05'),
-        'Content-Type': 'application/json'
-      });  
-  
-  */
-
-    /*
-
-        const body = {
-      body: "comment"
-    };
-    this.http.post('https://saanalyzer.atlassian.net/rest/api/2/issue/'+issueKey+'/comment', body, { headers }).subscribe(
-      (response) => {
-        console.log('Comment added successfully:', response);
-      },
-      (error) => {
-        console.error('Error adding comment:', error);
-      }
-    );
-    const headers = new HttpHeaders({
-      "Authorization":"Basic bGFyYS5tZXJkb2xAdWcuYmlsa2VudC5lZHUudHI6QVRBVFQzeEZmR0YwYjc1Y0tVR1B3Ykd5SFR6S3ppdTlSN09qbTBBb2ZnUkZBWVoxR0xZS2xDU0dFR1RsNGRDd1psSzdEQlhwMnVHd3BoSUxoVmE1Zk95V19ldXdCWUNCLU1GdWczT0NZZFZlYzhqRHFaYnlGYzEzaHhEVXREUl9KY094MmZYaTQ4UFRRRWZ5Mkp2N0ZPUmJaMjRSNE82SnJkdEhKc0c2WGJxX1ctc0tlVkVOa2dRPTUxRTgzRkE4",
-      "X-XSRF-TOKEN": "0208468e-1db3-4e34-9d34-4cf405d708e7_4221842a76dd916459c6aa9fce229477d533bf1b_lin",
-
-    });
-
-    const body = {
-      body: "comment"
-    };
-    this.http.post('/rest/api/2/issue/'+issueKey+'/comment', body, { headers }).subscribe(
-      (response) => {
-        console.log('Comment added successfully:', response);
-      },
-      (error) => {
-        console.error('Error adding comment:', error);
-      }
-    );
-    */
 
 
   }
@@ -343,71 +270,71 @@ export class ReportComponentComponent implements OnInit {
     }
   }
   ngOnInit() {
-    
+
     this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
     let name = ""
-      setInterval(() => {      
-        if (this._g.cy.$(':selected')[0]) {
-          if (this._g.cy.$(':selected')[0]._private.data.name != name) {
-            this.comment = ""
-            this.dataURL = ""
-            this.pr_name = ""
-            this.comment_header = ""
-            name =this._g.cy.$(':selected')[0]._private.data.name 
-            const link = "[You can inspect artifact " + name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + ")";
-            console.log(link)
-            this.comment = link + "\n" + this.comment
-            this.commentInput = {
-              addGraph: false,
-              addAnomaly: false,
-              addJira: false,
-              addGithub: false,
-              addReviewer: false,
-            };
-          }
-          this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
-          if (this.className == "Issue") {
-            this.addMenu = [
-              { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
-              { label: 'Anomaly', value: this.commentInput.addAnomaly, function: "addAnomaly()" },
-            ]
-          }
-          else if (this.className == "Commit") {
-            this.addMenu = [        
-              { label: 'On Pull Request ', value: this.commentInput.addGithub, function: "addGithub()" },
-              { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
-            ]
-          }
-          else if (this.className == "PullRequest") {
-            this.addMenu = [
-              { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
-              { label: 'Reviewer Recommendation ', value: this.commentInput.addReviewer, function: "addReviewer()" },
-            ]
-  
-          }
-          else if (this.className == "File") {
-            this.addMenu = [
-              { label: 'On Pull Request ', value: this.commentInput.addGithub, function: "addGithub()" },
-              { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
-            ]
-  
-          } else if (this.className == "Developer") {
-            this.addMenu = [
-              { label: 'On Pull Request ', value: this.commentInput.addGithub, function: "addGithub()" },
-              { label: 'On Issue', value: this.commentInput.addJira, function: "addJira()" },
-              { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
-            ]
-          }
-          else {
-            console.log(this.commentInput)
-            this.addMenu = [
-              { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
-            ]
-          }
-  
+    setInterval(() => {
+      if (this._g.cy.$(':selected')[0]) {
+        if (this._g.cy.$(':selected')[0]._private.data.name != name) {
+          this.comment = ""
+          this.dataURL = ""
+          this.pr_name = ""
+          this.comment_header = ""
+          name = this._g.cy.$(':selected')[0]._private.data.name
+          const link = "[You can inspect artifact " + name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + ")";
+          console.log(link)
+          this.comment = link + "\n" + this.comment
+          this.commentInput = {
+            addGraph: false,
+            addAnomaly: false,
+            addJira: false,
+            addGithub: false,
+            addReviewer: false,
+          };
         }
-      }, 500);
-   
+        this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
+        if (this.className == "Issue") {
+          this.addMenu = [
+            { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
+            { label: 'Anomaly', value: this.commentInput.addAnomaly, function: "addAnomaly()" },
+          ]
+        }
+        else if (this.className == "Commit") {
+          this.addMenu = [
+            { label: 'On Pull Request ', value: this.commentInput.addGithub, function: "addGithub()" },
+            { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
+          ]
+        }
+        else if (this.className == "PullRequest") {
+          this.addMenu = [
+            { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
+            { label: 'Reviewer Recommendation ', value: this.commentInput.addReviewer, function: "addReviewer()" },
+          ]
+
+        }
+        else if (this.className == "File") {
+          this.addMenu = [
+            { label: 'On Pull Request ', value: this.commentInput.addGithub, function: "addGithub()" },
+            { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
+          ]
+
+        } else if (this.className == "Developer") {
+          this.addMenu = [
+            { label: 'On Pull Request ', value: this.commentInput.addGithub, function: "addGithub()" },
+            { label: 'On Issue', value: this.commentInput.addJira, function: "addJira()" },
+            { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
+          ]
+        }
+        else {
+          //console.log(this.commentInput)
+          this.addMenu = [
+            { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
+          ]
+        }
+
+      }
+    }, 500);
+
 
   }
   onCheckboxChange(item: any) {
@@ -472,7 +399,7 @@ export class ReportComponentComponent implements OnInit {
   }
   addReviewer() {
     if (!this.commentInput.addReviewer) {
-        this.commentInput.addReviewer = true;
+      this.commentInput.addReviewer = true;
 
     }
     else {
@@ -506,7 +433,7 @@ export class ReportComponentComponent implements OnInit {
   addGithub() {
     if (!this.commentInput.addGithub) {
       this.commentInput.addGithub = true;
-      
+
       /*
       const developer_name = this._g.cy.$(':selected')[0]._private.data.name
       const pull_request_name = this.pr_name
@@ -525,16 +452,16 @@ export class ReportComponentComponent implements OnInit {
     this.selectedItemProps = selected
   }
 
-  performSelection (){
-    if(this.commentInput.addGithub){
+  performSelection() {
+    if (this.commentInput.addGithub) {
       const developer_name = this._g.cy.$(':selected')[0]._private.data.name
       const pull_request_name = this.pr_name
       this.comment_header = "Report  " + developer_name + " "
     }
-    if(this.commentInput.addGraph){
+    if (this.commentInput.addGraph) {
       this.saveAsPng(true);
     }
-    if(this.commentInput.addReviewer){
+    if (this.commentInput.addReviewer) {
       const cb = (x) => {
         this.reviewerData = x.data;
         console.log(this.reviewerData)
@@ -565,7 +492,7 @@ export class ReportComponentComponent implements OnInit {
       RETURN  id, name, score  ORDER BY score LIMIT 3`;
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     }
-    if(this.commentInput.addJira){
+    if (this.commentInput.addJira) {
       this.comment = this.comment + "No anomaly found"
       const cb = (x) => {
         console.log(x)

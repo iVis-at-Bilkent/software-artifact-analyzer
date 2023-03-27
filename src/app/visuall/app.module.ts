@@ -40,6 +40,7 @@ import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-m
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DialogElementsExample} from './navbar/dialog-elements-example';
 import { CookieService } from 'ngx-cookie-service';
+import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 @NgModule({
   declarations: [
     DialogElementsExample,
@@ -71,6 +72,7 @@ import { CookieService } from 'ngx-cookie-service';
     LoadGraphFromFileModalComponent,
   ],
   imports: [
+    OAuthModule.forRoot(),
     MatDialogModule,
     BrowserModule,
     HttpClientModule,
@@ -89,7 +91,8 @@ import { CookieService } from 'ngx-cookie-service';
   ],
   exports: [RouterModule,
     HttpClientModule],
-  providers: [{ provide: APP_BASE_HREF, useValue: "/" },CookieService],
+  providers: [{ provide: APP_BASE_HREF, useValue: "/" },CookieService,
+  ],
   bootstrap: [AppComponent],
   entryComponents: [SaveAsPngModalComponent, QuickHelpModalComponent, AboutModalComponent, ErrorModalComponent]
 })

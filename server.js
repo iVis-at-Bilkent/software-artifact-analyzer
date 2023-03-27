@@ -13,7 +13,29 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text({ type: 'text/*' }))
 app.use(compression());
+/*
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
+
+app.use('/oauth/*', createProxyMiddleware({
+  target: 'https://auth.atlassian.com',
+  secure:false,
+  changeOrigin: true,
+  followRedirects: true,
+}));
+app.use('/oauth/*', createProxyMiddleware({
+  target: 'https://auth.atlassian.com',
+  secure:false,
+  changeOrigin: true,
+  followRedirects: true,
+}));
+
+app.use('/ex/*', createProxyMiddleware({
+  target: "https://api.atlassian.com",
+  secure:false,
+  changeOrigin: true,
+}));
+*/
 const appPath = '/dist/ng-visuall';
 app.use(express.static(__dirname + appPath));
 

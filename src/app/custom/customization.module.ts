@@ -11,8 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
 import { ReportComponentComponent } from './report-component/report-component.component';
 import { RandomSelectionComponent } from '../shared/random-selection/random-selection.component';
-
-
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+import { BrowserModule } from '@angular/platform-browser';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
@@ -26,11 +27,14 @@ import { RandomSelectionComponent } from '../shared/random-selection/random-sele
      ReportComponentComponent],
   // declarations: [AsdComponent],
   imports: [
+    HttpClientModule,
+    BrowserModule,
     CommonModule,
     SharedModule,
     FormsModule
   ]
 })
+
 export class CustomizationModule {
   // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }];
   // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }, { component: Dummy2Component, text: 'Dummy2' }];
