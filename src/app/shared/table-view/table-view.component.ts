@@ -46,7 +46,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   tableColumnLimitSubs: Subscription;
   hoveredElemId = '-';
   isCheckbox4AllChecked = false;
-  selected: any = {};
+  selected?: any = {};
 
   @Input() params: TableViewInput;
   @Input() tableFilled = new Subject<boolean>();

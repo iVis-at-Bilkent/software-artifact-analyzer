@@ -93,16 +93,18 @@ export class ReportComponentComponent implements OnInit {
   //Jira Issue Post Comment
   postCommentIssue(issueKey: string, comment: string) {
     const code = this.route.snapshot.queryParamMap.get('code')?this.route.snapshot.queryParamMap.get('code'):"";
-    if(code != ""){
+
+    if(code == ""){
+      console.log(code)
     const headers = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJraWQiOiJmZTM2ZThkMzZjMTA2N2RjYTgyNTg5MmEiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI4ZTI0ZTQzZC0yM2I2LTQxMTEtOGQ5YS1mZmQxNzM5ZmY1ZWIiLCJzdWIiOiI2M2U3NmRmNTg5NzhkN2E0MzUzZWQzZGQiLCJuYmYiOjE2Nzk5MjUxNzYsImlzcyI6Imh0dHBzOi8vYXRsYXNzaWFuLWFjY291bnQtcHJvZC5wdXMyLmF1dGgwLmNvbS8iLCJpYXQiOjE2Nzk5MjUxNzYsImV4cCI6MTY3OTkyODc3NiwiYXVkIjoiR3RlODlYN3NlMGpnMEVHdUVxWkZTd0JnUW9HRElFaFUiLCJjbGllbnRfaWQiOiJHdGU4OVg3c2UwamcwRUd1RXFaRlN3QmdRb0dESUVoVSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9lbWFpbERvbWFpbiI6InVnLmJpbGtlbnQuZWR1LnRyIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2F0bF90b2tlbl90eXBlIjoiQUNDRVNTIiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL2ZpcnN0UGFydHkiOmZhbHNlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vc2Vzc2lvbl9pZCI6ImIyNDY4ZGY5LWVmZWMtNGMyOS1iMGE2LWNkMTViOGYxNTU3MSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS92ZXJpZmllZCI6dHJ1ZSwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL3N5c3RlbUFjY291bnRFbWFpbCI6IjEzNzUzYWY1LWUyNDgtNGY4My04MDMwLTVlNDliYjY0NTZjZkBjb25uZWN0LmF0bGFzc2lhbi5jb20iLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vcHJvY2Vzc1JlZ2lvbiI6InVzLWVhc3QtMSIsInNjb3BlIjoibWFuYWdlOmppcmEtcHJvamVjdCBtYW5hZ2U6amlyYS1jb25maWd1cmF0aW9uIHJlYWQ6amlyYS13b3JrIG1hbmFnZTpqaXJhLWRhdGEtcHJvdmlkZXIgd3JpdGU6amlyYS13b3JrIG1hbmFnZTpqaXJhLXdlYmhvb2sgcmVhZDpqaXJhLXVzZXIiLCJjbGllbnRfYXV0aF90eXBlIjoiUE9TVCIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9vYXV0aENsaWVudElkIjoiR3RlODlYN3NlMGpnMEVHdUVxWkZTd0JnUW9HRElFaFUiLCJodHRwczovL2F0bGFzc2lhbi5jb20vM2xvIjp0cnVlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vdWp0IjoiOGNkNjQxMGMtMGFiMS00M2Q5LWJmNzAtYWZkZmY2NzA3NzE1IiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3ZlcmlmaWVkIjp0cnVlLCJodHRwczovL2F0bGFzc2lhbi5jb20vc3lzdGVtQWNjb3VudElkIjoiNzEyMDIwOmY3MjM0MDg0LWQwZTMtNDFjMi1hNTQ5LTE4NzI2MTFjMWVmZSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9zeXN0ZW1BY2NvdW50RW1haWxEb21haW4iOiJjb25uZWN0LmF0bGFzc2lhbi5jb20ifQ.nh0fjTjV-6K5MRiUZtX2s0pXtgLhiobI2A5cWkrYQSbqeqoxKdlAKq5QaesJG5Rjixfn8FIVK5C3QpGQYRHBySDMqgpD1F-w2tXvB0Mi_TvhIaZy4piCpNrnlyKpSCErj4cyhL1zVg9dZBitJ1VSOjL6d-HMH3LJ5xSIP3D-fxyyOb-bU1YMDP0_LvA3skt6_je7cLXb-kItK6DTJjA19EPxIGFZ8T2tE00KvNbX5jm6UVIJxR-WwnI6xWHQ7ap0--_y2vwtWCzLzk0ZLC9JX8ydvsLSsxwhfw3GkVkqtyrJChbYwbaYzZAE3vI0XY_C0r2mk2_YNxnHtYY3bfHLGg',
+        'Authorization': 'Bearer eyJraWQiOiJmZTM2ZThkMzZjMTA2N2RjYTgyNTg5MmEiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI5Y2UzYTVkOS02NTUzLTRjZWYtOGZlYi05ZjMxYjRkY2FiZWYiLCJzdWIiOiI2M2U3NmRmNTg5NzhkN2E0MzUzZWQzZGQiLCJuYmYiOjE2Nzk5NDA1ODYsImlzcyI6Imh0dHBzOi8vYXRsYXNzaWFuLWFjY291bnQtcHJvZC5wdXMyLmF1dGgwLmNvbS8iLCJpYXQiOjE2Nzk5NDA1ODYsImV4cCI6MTY3OTk0NDE4NiwiYXVkIjoiR3RlODlYN3NlMGpnMEVHdUVxWkZTd0JnUW9HRElFaFUiLCJjbGllbnRfaWQiOiJHdGU4OVg3c2UwamcwRUd1RXFaRlN3QmdRb0dESUVoVSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9lbWFpbERvbWFpbiI6InVnLmJpbGtlbnQuZWR1LnRyIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2F0bF90b2tlbl90eXBlIjoiQUNDRVNTIiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL2ZpcnN0UGFydHkiOmZhbHNlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vc2Vzc2lvbl9pZCI6ImIyNDY4ZGY5LWVmZWMtNGMyOS1iMGE2LWNkMTViOGYxNTU3MSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS92ZXJpZmllZCI6dHJ1ZSwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL3N5c3RlbUFjY291bnRFbWFpbCI6IjEzNzUzYWY1LWUyNDgtNGY4My04MDMwLTVlNDliYjY0NTZjZkBjb25uZWN0LmF0bGFzc2lhbi5jb20iLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vdWp0IjoiYTU1Y2MwNGUtNDVmYy00ZTMwLThiYjctNTQ5MjFhOWMyOGU2IiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3Byb2Nlc3NSZWdpb24iOiJ1cy1lYXN0LTEiLCJzY29wZSI6Im1hbmFnZTpqaXJhLXByb2plY3QgbWFuYWdlOmppcmEtY29uZmlndXJhdGlvbiByZWFkOmppcmEtd29yayBtYW5hZ2U6amlyYS1kYXRhLXByb3ZpZGVyIHdyaXRlOmppcmEtd29yayBtYW5hZ2U6amlyYS13ZWJob29rIHJlYWQ6amlyYS11c2VyIiwiY2xpZW50X2F1dGhfdHlwZSI6IlBPU1QiLCJodHRwczovL2F0bGFzc2lhbi5jb20vb2F1dGhDbGllbnRJZCI6Ikd0ZTg5WDdzZTBqZzBFR3VFcVpGU3dCZ1FvR0RJRWhVIiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tLzNsbyI6dHJ1ZSwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3ZlcmlmaWVkIjp0cnVlLCJodHRwczovL2F0bGFzc2lhbi5jb20vc3lzdGVtQWNjb3VudElkIjoiNzEyMDIwOmY3MjM0MDg0LWQwZTMtNDFjMi1hNTQ5LTE4NzI2MTFjMWVmZSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9zeXN0ZW1BY2NvdW50RW1haWxEb21haW4iOiJjb25uZWN0LmF0bGFzc2lhbi5jb20ifQ.WB5P-gCXQiIaTb5gjUmmX1rMy_d2y0XvCe-b786I_ujGsL8H913hCW14N1r3ljs-u40VcK85cdlKTucWEVfi5Xyn4H7ejIEfdU1-eD2Rmkdl7n1lr2HqiEDjotJ6EnJGsNAQLR9X00id2MaRcGpsz-NyEcshfA0HsqhbH50Emy7e7noAp0RkelpW5R0lddqzLeDG82R9eMJ0xiBi1I_1ufBLzigDhMSyBaRPiDGIa28EZZoXUoXrjtecKm-HWaqsFUSP2vSs3wW2FacvDcTkSqBLl-cHJhpN6_1FCjLkry_KSl6RSLW6-Y6uxd_yYIzOoflRVGV9u4tXkmZ9JAKLVA',
       }),
     };
     const body = {
-      "body": "This is a comment that only administrators can see."
-    }
+      body: "h2. " + this.comment_header + "\n" + this.comment
+    };
     this.http.post('https://api.atlassian.com/ex/jira/b9404671-23b7-4a57-90ab-7fea46d4ab63/rest/api/2/issue/SAA-3/comment', body, headers).subscribe(
       (response) => {
         console.log('Comment added successfully:', response);
@@ -115,12 +117,7 @@ export class ReportComponentComponent implements OnInit {
     else{
       this.login();
     }
-    
-
-
-
   }
-
 
   updateFile(): Observable<any> {
     const url = `https://api.github.com/repos/LaraMerdol/codebanksystemProject/contents/image.png`;
@@ -250,8 +247,6 @@ export class ReportComponentComponent implements OnInit {
 
   }
 
-
-
   updateCommentInput() {
     this.commentInput = {
       addGraph: false,
@@ -275,15 +270,23 @@ export class ReportComponentComponent implements OnInit {
     let name = ""
     setInterval(() => {
       if (this._g.cy.$(':selected')[0]) {
+        this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
         if (this._g.cy.$(':selected')[0]._private.data.name != name) {
           this.comment = ""
           this.dataURL = ""
           this.pr_name = ""
           this.comment_header = ""
           name = this._g.cy.$(':selected')[0]._private.data.name
-          const link = "[You can inspect artifact " + name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + ")";
-          console.log(link)
-          this.comment = link + "\n" + this.comment
+          if(this.className == "Issue"){
+            const link = "You can inspect artifact " + name + " from this [ link|http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + "]";
+            this.comment = link + "\n" + this.comment
+            console.log(link)
+          }
+          else{
+            const link = "[You can inspect artifact " + name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + ")";
+            this.comment = link + "\n" + this.comment
+            console.log(link)
+          }
           this.commentInput = {
             addGraph: false,
             addAnomaly: false,
@@ -292,7 +295,7 @@ export class ReportComponentComponent implements OnInit {
             addReviewer: false,
           };
         }
-        this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
+        
         if (this.className == "Issue") {
           this.addMenu = [
             { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
@@ -370,7 +373,6 @@ export class ReportComponentComponent implements OnInit {
   saveAsPng(isWholeGraph: boolean) {
     const options = { bg: 'white', scale: 3, full: isWholeGraph };
     const base64png: string = this._g.cy.png(options);
-
     const image = new Image();
     image.src = base64png;
     image.onload = async () => {
@@ -492,10 +494,11 @@ export class ReportComponentComponent implements OnInit {
       RETURN  id, name, score  ORDER BY score LIMIT 3`;
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     }
-    if (this.commentInput.addJira) {
+    if (this.commentInput.addAnomaly) {
       this.comment = this.comment + "No anomaly found"
       const cb = (x) => {
         console.log(x)
+        
       };
       const cql = ` MATCH (n:Developer)-[r]->(issue:Issue)
       WHERE issue.resolver= n.name and issue.closer = n.name 
