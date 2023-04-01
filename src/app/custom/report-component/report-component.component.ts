@@ -13,7 +13,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { SaveAsPngModalComponent } from '../../visuall/popups/save-as-png-modal/save-as-png-modal.component';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
 import { CookieService } from 'ngx-cookie-service';
-import { RandomSelectionComponent } from '../../shared/random-selection/random-selection.component';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';

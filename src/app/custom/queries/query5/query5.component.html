@@ -1,0 +1,18 @@
+<div class="custom-query">
+    <div class="va-text">
+        <div class="d-flex align-items-center justify-content-center">
+            <select class="form-select tight-select filter-form va-small-text query-select" 
+                [(ngModel)]="anomaly" (change)="changeAnomaly($event)">
+                <option value="">Choose Anomaly</option>
+                <option *ngFor="let item of anomalies" [value]="item.text" >
+                    {{item.text}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div *ngFor="let t of anomalies; let i = index">   
+        <div [style.display]="i == selectedIdx ? 'block !important' : 'none !important'">
+            <ng-container *ngComponentOutlet="t.component"></ng-container>
+        </div>
+    </div>
+</div>

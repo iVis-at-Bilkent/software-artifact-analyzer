@@ -1,7 +1,6 @@
 import { Component, Injectable } from '@angular/core';
 import { NavbarDropdown } from '../visuall/navbar/inavbar';
 import { GlobalVariableService } from '../visuall/global-variable.service';
-import {DialogElementsExample} from './custom-tabs/graph-builder-dialog-tab/dialog-elements-example';
 import { ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatDialogModule} from '@angular/material/dialog';

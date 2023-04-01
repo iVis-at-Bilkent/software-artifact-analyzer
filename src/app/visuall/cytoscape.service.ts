@@ -202,6 +202,7 @@ export class CytoscapeService {
     let compoundEdgeIds2 = this._g.cy.edges('.' + C.COLLAPSED_EDGE_CLASS).map(x => x.id());
     elemIds.push(...C.arrayDiff(compoundEdgeIds, compoundEdgeIds2));
     // elements might already exist but hidden, so show them
+    console.log(elemIds)
     this._g.viewUtils.show(this._g.cy.$(elemIds.map(x => '#' + x).join(',')));
 
     this._g.applyClassFiltering();

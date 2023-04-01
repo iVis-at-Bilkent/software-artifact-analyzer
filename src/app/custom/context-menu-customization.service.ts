@@ -1541,17 +1541,24 @@ export class ContextMenuCustomizationService {
       queryMeta
     );
   }
+  isAnyHidden() {
+    return this._g.cy.$().map(x => x.hidden()).filter(x => x).length > 0;
+  }
   deleteNeighbors(event, historyMeta: HistoryMetaData, queryMeta: DbQueryMeta) {
     const ele = event.target || event.cyTarget;
     const targetNodeId = ele._private.data.id;
     let arr = this._g.cy.nodes().map(x => x.id())
-    console.log(arr)
     this._dbService.getNeighbors(
       [ele.id().substr(1)],
       (x) => {
         x.nodes.forEach(element => {
           if ((`n${element.id}` != targetNodeId) && (!queryMeta.targetType || queryMeta.targetType === element.labels[0])) {
-            this._g.cy.$('#' + `n${element.id}`).select();
+            const edge = this._g.cy.edges(`[source="${targetNodeId}"][target="n${element.id}"]`);
+            const edge2 = this._g.cy.edges(`[source="n${element.id}"][target="${targetNodeId}"]`);
+            if(edge.nonempty() | edge2.nonempty()){
+              this._g.cy.$('#' + `n${element.id}`).select();
+            }
+            
           }
         },
         )

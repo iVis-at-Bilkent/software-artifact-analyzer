@@ -6,14 +6,27 @@ import { Query1Component } from './queries/query1/query1.component';
 import { Query2Component } from './queries/query2/query2.component';
 import { Query3Component } from './queries/query3/query3.component';
 import { Query4Component } from './queries/query4/query4.component';
+import { Query5Component } from './queries/query5/query5.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
 import { ReportComponentComponent } from './report-component/report-component.component';
-import { RandomSelectionComponent } from '../shared/random-selection/random-selection.component';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 import { BrowserModule } from '@angular/platform-browser';
+import { UnassignedBugsComponent } from './anomalies/unassigned-bugs/unassigned-bugs.component';
+import { NoLinkToBugFixingCommitComponent } from './anomalies/no-link-to-bug-fixing-commit/no-link-to-bug-fixing-commit.component';
+import { IgnoredBugsComponent } from './anomalies/ignored-bugs/ignored-bugs.component';
+import { BugsAssignedTeamComponent } from './anomalies/bugs-assigned-team/bugs-assigned-team.component';
+import { MissingPriorityComponent } from './anomalies/missing-priority/missing-priority.component';
+import { NotReferencedDuplicatesComponent } from './anomalies/not-referenced-duplicates/not-referenced-duplicates.component';
+import { MissingEnvironmentInformationComponent } from './anomalies/missing-environment-information/missing-environment-information.component';
+import { ReassignmentBugAssigneeComponent } from './anomalies/reassignment-bug-assignee/reassignment-bug-assignee.component';
+import { NoCommentBugsComponent } from './anomalies/no-comment-bugs/no-comment-bugs.component';
+import { NoAssigneeResolverBugComponent } from './anomalies/no-assignee-resolver-bug/no-assignee-resolver-bug.component';
+import { ClosedReopenPingPongComponent } from './anomalies/closed-reopen-ping-pong/closed-reopen-ping-pong.component';
+import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/same-resolver-closer.component';
+
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
@@ -24,7 +37,20 @@ import { BrowserModule } from '@angular/platform-browser';
     Query2Component,
     Query3Component,
     Query4Component,
-     ReportComponentComponent],
+     ReportComponentComponent,
+     Query5Component,
+     UnassignedBugsComponent,
+     NoLinkToBugFixingCommitComponent,
+     IgnoredBugsComponent,
+     BugsAssignedTeamComponent,
+     MissingPriorityComponent,
+     NotReferencedDuplicatesComponent,
+     MissingEnvironmentInformationComponent,
+     ReassignmentBugAssigneeComponent,
+     NoCommentBugsComponent,
+     NoAssigneeResolverBugComponent,
+     ClosedReopenPingPongComponent,
+     SameResolverCloserComponent],
   // declarations: [AsdComponent],
   imports: [
     HttpClientModule,
@@ -49,7 +75,23 @@ export class CustomizationModule {
     { component: Query1Component, text: 'Get Commits of Developer' },
     { component: Query3Component, text: 'Get Recommended Reviewers' },
     { component: Query4Component, text: 'Get issues that was resolved and closed by the same person' },
+    { component: Query5Component, text: 'Get Anomalies' },
 
+  ];
+  static anomalies:{ component: any, text: string }[] = [
+    { component: UnassignedBugsComponent, text: 'Unassigned Bugs' },
+    { component: NoLinkToBugFixingCommitComponent, text: 'No Link to Bug-Fixing Commit' },
+    { component: IgnoredBugsComponent, text: 'Ignored Bugs' },
+    { component: BugsAssignedTeamComponent, text: 'Bugs Assigned to a Team' },
+    { component: MissingPriorityComponent, text: 'Missing Priority' },
+    { component: NotReferencedDuplicatesComponent, text: 'Not referenced duplicates' },
+    { component: MissingEnvironmentInformationComponent, text: 'Missing Environment Information' },
+    { component: ReassignmentBugAssigneeComponent, text: 'Reassignment of Bug Assignee' },
+    { component: NoCommentBugsComponent, text: 'No comment bugs' },
+    { component: NoAssigneeResolverBugComponent, text: 'Non-Assignee Resolver of Bug' },
+    { component: ClosedReopenPingPongComponent, text: 'Closed-Reopen Ping Pong' },
+    { component: SameResolverCloserComponent, text: 'Same Resolver and Closer' },
+  
   ];
   static db: DbService;
   static defaultTimebarMetrics: TimebarMetric[];
