@@ -103,7 +103,7 @@ export class ContextMenuCustomizationService {
               this.getNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: this._developer_issue, targetType: "Issue" }
+                { edgeType: "REPORTS", targetType: "Issue" }
               );
             },
           },
@@ -115,7 +115,7 @@ export class ContextMenuCustomizationService {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: this._developer_issue, targetType: "Issue" }
+                { edgeType: "REPORTS", targetType: "Issue" }
               );
             },
           },
@@ -647,7 +647,7 @@ export class ContextMenuCustomizationService {
               content: "Hide Reviewer",
               selector: "node.Commit",
               onClickFunction: (x) => {
-                this.getNeighbors(
+                this.deleteNeighbors(
                   x,
                   { isNode: true, customTxt: "Hide Developer: " },
                   {
@@ -1488,7 +1488,7 @@ export class ContextMenuCustomizationService {
           this.getNeighbors(
             x,
             { isNode: true, customTxt: "Show Issues: " },
-            { edgeType: this._file_issue, isMultiLength: true }
+            { edgeType: this._file_issue, isMultiLength: true, targetType: "Issue" }
           );
         },
       },
@@ -1546,6 +1546,7 @@ export class ContextMenuCustomizationService {
   }
   deleteNeighbors(event, historyMeta: HistoryMetaData, queryMeta: DbQueryMeta) {
     const ele = event.target || event.cyTarget;
+    console.log(queryMeta)
     const targetNodeId = ele._private.data.id;
     let arr = this._g.cy.nodes().map(x => x.id())
     this._dbService.getNeighbors(
@@ -1553,10 +1554,16 @@ export class ContextMenuCustomizationService {
       (x) => {
         x.nodes.forEach(element => {
           if ((`n${element.id}` != targetNodeId) && (!queryMeta.targetType || queryMeta.targetType === element.labels[0])) {
-            const edge = this._g.cy.edges(`[source="${targetNodeId}"][target="n${element.id}"]`);
-            const edge2 = this._g.cy.edges(`[source="n${element.id}"][target="${targetNodeId}"]`);
-            if(edge.nonempty() | edge2.nonempty()){
+            if(!queryMeta.isMultiLength){
+              const edge = this._g.cy.edges(`[source="${targetNodeId}"][target="n${element.id}"]`);
+              const edge2 = this._g.cy.edges(`[source="n${element.id}"][target="${targetNodeId}"]`);
+              if(edge.nonempty() | edge2.nonempty()){
+                this._g.cy.$('#' + `n${element.id}`).select();
+              } 
+            }
+            else{
               this._g.cy.$('#' + `n${element.id}`).select();
+              
             }
             
           }
