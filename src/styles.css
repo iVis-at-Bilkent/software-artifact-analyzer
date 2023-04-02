@@ -374,9 +374,10 @@ body {
 }
 
 /* Data Configuration Model */
+
 .mat-dialog-container {
   overflow: hidden !important;
   height: 90% !important;
   width: 100% !important;
-  padding :0 !important; 
+  padding: 0 !important;
 }

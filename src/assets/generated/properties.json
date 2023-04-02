@@ -34,7 +34,8 @@
       "assigner": "string",
       "assignee": "string",
       "resolver": "string",
-      "closer": "closer",
+      "closer": "string",
+      "duplicate": "string",
       "assigneeChangeCount": "integer",
       "reopenCount": "integer"
     },

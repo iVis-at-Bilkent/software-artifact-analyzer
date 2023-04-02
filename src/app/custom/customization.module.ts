@@ -5,7 +5,6 @@ import { DbService } from '../visuall/db-service/data-types';
 import { Query1Component } from './queries/query1/query1.component';
 import { Query2Component } from './queries/query2/query2.component';
 import { Query3Component } from './queries/query3/query3.component';
-import { Query4Component } from './queries/query4/query4.component';
 import { Query5Component } from './queries/query5/query5.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
@@ -36,7 +35,6 @@ import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/sa
     Query1Component, 
     Query2Component,
     Query3Component,
-    Query4Component,
      ReportComponentComponent,
      Query5Component,
      UnassignedBugsComponent,
@@ -74,7 +72,6 @@ export class CustomizationModule {
   static queries: { component: any, text: string }[] = [ 
     { component: Query1Component, text: 'Get Commits of Developer' },
     { component: Query3Component, text: 'Get Recommended Reviewers' },
-    { component: Query4Component, text: 'Get issues that was resolved and closed by the same person' },
     { component: Query5Component, text: 'Get Anomalies' },
 
   ];
