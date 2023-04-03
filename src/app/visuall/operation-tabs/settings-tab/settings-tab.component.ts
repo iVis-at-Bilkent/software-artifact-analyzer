@@ -14,6 +14,7 @@ import { CustomizationModule } from 'src/app/custom/customization.module';
 export class SettingsTabComponent implements OnInit, OnDestroy {
   generalBoolSettings: BoolSetting[];
   timebarBoolSettings: BoolSetting[];
+  anomalyBoolSetting: BoolSetting[];
   highlightWidth: number;
   highlightColor: string;
   timebarPlayingStep: number;
@@ -49,7 +50,11 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   customSubTabs: { component: any, text: string }[] = CustomizationModule.settingsSubTabs;
   loadFromFileSubs: Subscription;
   tabChangeSubs: Subscription;
-
+  anomalyDefaultValues: any={
+    "ignoreBug":1,
+    "assigneeChangeCount":1,
+    "reopenCount":1,
+  }
   constructor(private _g: GlobalVariableService, private _profile: UserProfileService) {
     this.loadFromFileSubs = this._profile.onLoadFromFile.subscribe(x => {
       if (!x) {
@@ -79,6 +84,12 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
       { text: 'Hide disconnected nodes on animation', isEnable: false, path2userPref: 'timebar.isHideDisconnectedNodesOnAnim' },
       { text: 'Maintain graph range on topology changes', isEnable: false, path2userPref: 'timebar.isMaintainGraphRange' }
     ];
+    this.anomalyBoolSetting = [
+      { text: 'Show timebar', isEnable: false, path2userPref: 'timebar.isEnabled' },
+      { text: 'Hide disconnected nodes on animation', isEnable: false, path2userPref: 'timebar.isHideDisconnectedNodesOnAnim' },
+      { text: 'Maintain graph range on topology changes', isEnable: false, path2userPref: 'timebar.isMaintainGraphRange' }
+    ];
+
 
     this.isInit = true;
 
@@ -190,7 +201,10 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
     obj.next(val);
     this._profile.saveUserPrefs();
   }
+  changeAnomalySetting(setting:string) {
+    this._g.anomalyDefaultValues[setting]= this.anomalyDefaultValues[setting];
 
+  }
   onColorSelected(c: string) {
     this.highlightColor = c;
   }

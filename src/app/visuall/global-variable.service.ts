@@ -42,6 +42,11 @@ export class GlobalVariableService {
   dataModel = new BehaviorSubject<any>(null);
   enums = new BehaviorSubject<any>(null);
   initialQuery: string="";
+  anomalyDefaultValues: any={
+    "ignoreBug":1,
+    "assigneeChangeCount":1,
+    "reopenCount":1,
+  }
 
   constructor(private _http: HttpClient, private _modalService: NgbModal, private _cyCustomStyle: CyStyleCustomizationService) {
     this.hiddenClasses = new Set([]);

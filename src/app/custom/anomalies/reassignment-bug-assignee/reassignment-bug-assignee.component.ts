@@ -18,6 +18,7 @@ export interface Anomaly {
   styleUrls: ['./reassignment-bug-assignee.component.css']
 })
 export class ReassignmentBugAssigneeComponent implements OnInit {
+  count :string;
 
   tableInput: TableViewInput = {
     columns: ['issue','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
@@ -32,6 +33,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.count= this._g.anomalyDefaultValues['assigneeChangeCount']
     setTimeout(() => {
       
     }, 0);
@@ -85,7 +87,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     }
 
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql=` MATCH (n:Issue) WHERE n.assigneeChangeCount>=2 and ${dateFilter} 
+    const cql=` MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${dateFilter} 
     RETURN  ID(n) as id,  n.name AS issue,  n.assigneeChangeCount as count ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -114,7 +116,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = ` MATCH (n:Issue) WHERE n.assigneeChangeCount>=2  and ${dateFilter} RETURN n`
+    const cql = ` MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${dateFilter} RETURN n`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -167,7 +169,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     }
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
-    const cql = `  MATCH (n:Issue) WHERE n.assigneeChangeCount>=2 and ${idFilter} RETURN n`
+    const cql = `  MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${idFilter} RETURN n`
     this._dbService.runQuery(cql, cb);
   }
 

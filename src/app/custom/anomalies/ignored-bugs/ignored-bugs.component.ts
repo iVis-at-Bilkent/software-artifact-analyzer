@@ -36,6 +36,7 @@ export class IgnoredBugsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.time = this._g.anomalyDefaultValues['ignoreBug']
     setTimeout(() => {
       
     }, 0);

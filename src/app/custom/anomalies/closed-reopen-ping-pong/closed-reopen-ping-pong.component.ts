@@ -19,7 +19,7 @@ export interface Anomaly {
   styleUrls: ['./closed-reopen-ping-pong.component.css']
 })
 export class ClosedReopenPingPongComponent implements OnInit {
-
+  count:string;
   tableInput: TableViewInput = {
     columns: ['issue','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
@@ -30,6 +30,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
   clearTableFilter = new Subject<boolean>();
 
   constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService) {
+    this.count= this._g.anomalyDefaultValues['reopenCount']
   }
 
   ngOnInit() {
@@ -85,7 +86,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql=` MATCH (n:Issue) WHERE n.reopenCount>=1    and ${dateFilter} 
+    const cql=` MATCH (n:Issue) WHERE n.reopenCount>=${this.count}  and ${dateFilter} 
     RETURN  ID(n) as id,  n.name AS issue,  n.reopenCount as count ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -114,7 +115,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = ` MATCH (n:Issue) WHERE n.reopenCount>=1 and ${dateFilter} RETURN n`
+    const cql = ` MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${dateFilter} RETURN n`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -167,7 +168,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
     }
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
-    const cql = `  MATCH (n:Issue) WHERE n.reopenCount>=1 and ${idFilter} RETURN n`
+    const cql = `  MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${idFilter} RETURN n`
     this._dbService.runQuery(cql, cb);
   }
 
