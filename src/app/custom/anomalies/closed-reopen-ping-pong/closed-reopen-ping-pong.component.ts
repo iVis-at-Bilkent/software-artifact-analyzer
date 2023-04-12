@@ -19,7 +19,7 @@ export interface Anomaly {
   styleUrls: ['./closed-reopen-ping-pong.component.css']
 })
 export class ClosedReopenPingPongComponent implements OnInit {
-  count:string;
+  count:number;
   tableInput: TableViewInput = {
     columns: ['issue','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
@@ -30,7 +30,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
   clearTableFilter = new Subject<boolean>();
 
   constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService) {
-    this.count= this._g.anomalyDefaultValues['reopenCount']
+    this.count=  this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1;
   }
 
   ngOnInit() {
@@ -50,6 +50,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
+    this.count=  this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1;
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       const processedTableData = this.preprocessTableData(x);
@@ -91,6 +92,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
+    this.count=  this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1;
     if (!this.tableInput.isLoadGraph) {    
       return;
     } 
@@ -163,6 +165,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
   }
 
   getDataForQueryResult(e: TableRowMeta) {
+    this.count=  this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1;
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
     }

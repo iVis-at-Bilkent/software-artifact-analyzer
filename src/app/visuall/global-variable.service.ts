@@ -42,16 +42,12 @@ export class GlobalVariableService {
   dataModel = new BehaviorSubject<any>(null);
   enums = new BehaviorSubject<any>(null);
   initialQuery: string="";
-  anomalyDefaultValues: any={
-    "ignoreBug":1,
-    "assigneeChangeCount":1,
-    "reopenCount":1,
-  }
-
+  //The anomaly settings
   constructor(private _http: HttpClient, private _modalService: NgbModal, private _cyCustomStyle: CyStyleCustomizationService) {
     this.hiddenClasses = new Set([]);
     // set user preferences staticly (necessary for rendering html initially)
     this.setUserPrefs(appPref, this.userPrefs);
+
     // set default values dynamically
     this._http.get('./assets/appPref.json').subscribe(x => {
       this.setUserPrefs(x, this.userPrefs);
@@ -134,7 +130,6 @@ export class GlobalVariableService {
     this.layout.randomize = isRandomize;
     this.layoutUtils.setOption('randomize', isRandomize);
   }
-
   applyClassFiltering() {
     let hiddenSelector = '';
     for (let i of this.hiddenClasses) {

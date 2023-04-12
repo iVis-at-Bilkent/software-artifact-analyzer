@@ -18,7 +18,7 @@ export interface Anomaly {
   styleUrls: ['./reassignment-bug-assignee.component.css']
 })
 export class ReassignmentBugAssigneeComponent implements OnInit {
-  count :string;
+  count :number;
 
   tableInput: TableViewInput = {
     columns: ['issue','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
@@ -30,10 +30,11 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
   clearTableFilter = new Subject<boolean>();
 
   constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService) {
+    this.count=  this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1;
   }
 
   ngOnInit() {
-    this.count= this._g.anomalyDefaultValues['assigneeChangeCount']
+    
     setTimeout(() => {
       
     }, 0);
@@ -50,6 +51,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
+    this.count=  this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1;
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       const processedTableData = this.preprocessTableData(x);
@@ -92,6 +94,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
+    this.count=  this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1;
     if (!this.tableInput.isLoadGraph) {    
       return;
     } 
@@ -164,6 +167,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
   }
 
   getDataForQueryResult(e: TableRowMeta) {
+    this.count=  this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1;
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
     }

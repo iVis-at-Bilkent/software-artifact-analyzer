@@ -159,21 +159,21 @@
   <div class="form-inline m-1">
     <label class="va-text">Ignored bug time-frame (month)</label>
     <div class="mx-1">
-      <input type="number" max="100" min="1" (keydown.enter)="changeAnomalySetting('ignoreBug')"
+      <input type="number" max="100" min="1" (keydown.enter)="settingChanged(anomalyDefaultValues.ignoreBug, 'anomalyDefaultValues.ignoreBug')"
         [(ngModel)]="anomalyDefaultValues.ignoreBug" class="form-control inp-3-char std-inp-hei va-small-text">
     </div>
   </div>
   <div class="form-inline m-1">
     <label class="va-text">Assignee change count</label>
     <div class="mx-1">
-      <input type="number" max="100" min="1" (keydown.enter)="changeAnomalySetting('assigneeChangeCount')"
+      <input type="number" max="100" min="1" (keydown.enter)="settingChanged(anomalyDefaultValues.assigneeChangeCount, 'anomalyDefaultValues.assigneeChangeCount')"
         [(ngModel)]="anomalyDefaultValues.assigneeChangeCount" class="form-control inp-3-char std-inp-hei va-small-text">
     </div>
   </div>
   <div class="form-inline m-1">
     <label class="va-text">Reopen count</label>
     <div class="mx-1">
-      <input type="number" max="100" min="1" (keydown.enter)="changeAnomalySetting('reopenCount')"
+      <input type="number" max="100" min="1" (keydown.enter)="settingChanged(anomalyDefaultValues.reopenCount, 'anomalyDefaultValues.reopenCount')"
         [(ngModel)]="anomalyDefaultValues.reopenCount" class="form-control inp-3-char std-inp-hei va-small-text">
     </div>
   </div>

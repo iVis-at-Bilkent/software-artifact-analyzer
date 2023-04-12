@@ -20,7 +20,7 @@ export interface Anomaly {
   styleUrls: ['./ignored-bugs.component.css']
 })
 export class IgnoredBugsComponent implements OnInit {
-  time:number = 10;
+  time:number ;
 
   
   tableInput: TableViewInput = {
@@ -33,10 +33,11 @@ export class IgnoredBugsComponent implements OnInit {
   clearTableFilter = new Subject<boolean>();
 
   constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService) {
+    this.time=  this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1;
   }
 
   ngOnInit() {
-    this.time = this._g.anomalyDefaultValues['ignoreBug']
+    
     setTimeout(() => {
       
     }, 0);
@@ -53,6 +54,7 @@ export class IgnoredBugsComponent implements OnInit {
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
+    this.time = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue()
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       const processedTableData = this.preprocessTableData(x);
@@ -100,6 +102,7 @@ export class IgnoredBugsComponent implements OnInit {
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
+    this.time = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue()
     if (!this.tableInput.isLoadGraph) {    
       return;
     } 
@@ -176,6 +179,7 @@ export class IgnoredBugsComponent implements OnInit {
   }
 
   getDataForQueryResult(e: TableRowMeta) {
+    this.time = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue()
     const cb = (x) => {
       console.log(x)
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);

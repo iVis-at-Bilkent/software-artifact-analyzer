@@ -50,12 +50,17 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   customSubTabs: { component: any, text: string }[] = CustomizationModule.settingsSubTabs;
   loadFromFileSubs: Subscription;
   tabChangeSubs: Subscription;
-  anomalyDefaultValues: any={
-    "ignoreBug":1,
-    "assigneeChangeCount":1,
-    "reopenCount":1,
-  }
-  constructor(private _g: GlobalVariableService, private _profile: UserProfileService) {
+  anomalyDefaultValues:{
+    ignoreBug: number,
+    assigneeChangeCount:number,
+    reopenCount:number,
+  }   
+  constructor(private _g: GlobalVariableService, private _profile: UserProfileService) { 
+    this.anomalyDefaultValues ={
+      ignoreBug:this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1,
+      assigneeChangeCount:this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1,
+      reopenCount:this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1,
+    } 
     this.loadFromFileSubs = this._profile.onLoadFromFile.subscribe(x => {
       if (!x) {
         return;
@@ -67,6 +72,13 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.anomalyDefaultValues ={
+      ignoreBug:this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1,
+      assigneeChangeCount:this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1,
+      reopenCount:this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1,
+    }  
+    //this.anomalyDefaultValues.ignoreBug = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue();
+  
     this.generalBoolSettings = [
       { text: 'Perform layout on changes', isEnable: false, path2userPref: 'isAutoIncrementalLayoutOnChange' },
       { text: 'Emphasize on hover', isEnable: false, path2userPref: 'isHighlightOnHover' },
@@ -110,6 +122,11 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   }
 
   private fillUIFromMemory() {
+    this.anomalyDefaultValues ={
+      ignoreBug:this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1,
+      assigneeChangeCount:this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1,
+      reopenCount:this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1,
+    } 
     // reference variables for shorter text
     const up = this._g.userPrefs;
     const up_t = this._g.userPrefs.timebar;
@@ -200,11 +217,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
     }
     obj.next(val);
     this._profile.saveUserPrefs();
-  }
-  changeAnomalySetting(setting:string) {
-    this._g.anomalyDefaultValues[setting]= this.anomalyDefaultValues[setting];
-
-  }
+    }
   onColorSelected(c: string) {
     this.highlightColor = c;
   }

@@ -753,6 +753,11 @@
     "edgeCollapseLimit": 2,
     "avgNodeSize": 40,
     "objectInclusionType": 0,
+    "anomalyDefaultValues":{
+      "ignoreBug":2,
+      "assigneeChangeCount":2,
+      "reopenCount":2
+    },
     "queryResultPagination": "Client",
     "tilingPadding": 4,
     "timebar": {

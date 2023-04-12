@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { GlobalVariableService } from '../../visuall/global-variable.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { getPropNamesFromObj, DATE_PROP_END, DATE_PROP_START, findTypeOfAttribute, debounce, COLLAPSED_EDGE_CLASS, OBJ_INFO_UPDATE_DELAY, CLUSTER_CLASS, extend } from '../../visuall/constants';
@@ -16,11 +16,17 @@ import { CookieService } from 'ngx-cookie-service';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+//import {  BoolSetting } from '../../visuall/user-preference';
 //import api from '@forge/api';
 interface Attachment {
   name: string;
   data: any,
   type: string;
+}
+export interface BoolSetting {
+  isEnable: boolean;
+  text: string;
+  path2userPref: () => string;
 }
 @Component({
   selector: 'app-report-component',
@@ -33,9 +39,10 @@ export class ReportComponentComponent implements OnInit {
   className: string = ""
   selectedItemProps: any[];
   selectedItemPropsURL: any[];
-  comment: string = '';
+  public comment: string = '';
   comment_header: string;
   pr_name: string = "";
+  issue_name: string = "";
   comment_paragraph: string;
   attachments: Attachment[] = [];
   reviewerData: any[] = [];
@@ -45,9 +52,10 @@ export class ReportComponentComponent implements OnInit {
   panel: any;
   csrfToken: any;
   prs: string[] = []
-  code: string="";
-  cloudId: string="";
-  token: string="";
+  code: string = "";
+  cloudId: string = "";
+  token: string = "";
+  anomalies: BoolSetting[];
   commentInput: any = {
     addGraph: false, addAnomaly: false, addJira: false, addGithub: false, addReviewer: false
   };
@@ -58,35 +66,43 @@ export class ReportComponentComponent implements OnInit {
       'Accept': 'application/vnd.github.v3+json'
     })
   };
-  constructor( private route: ActivatedRoute, private tokenExtractor: HttpXsrfTokenExtractor, private cookieService: CookieService, private _dbService: Neo4jDb, private _g: GlobalVariableService, private _cyService: CytoscapeService,
+  constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute, private tokenExtractor: HttpXsrfTokenExtractor, private cookieService: CookieService, public _dbService: Neo4jDb, private _g: GlobalVariableService, private _cyService: CytoscapeService,
     private http: HttpClient, private _modalService: NgbModal) {
     this.selectedItemProps = [];
     this.selectedItemPropsURL = [];
   }
-  afterLogin(){
+  afterLogin() {
     const headers = new HttpHeaders()
-    .set('Content-Type', 'application/json');
+      .set('Content-Type', 'application/json');
 
     // Set the data for the POST request
+    const body = {
+      "grant_type": "authorization_code",
+      "client_id": "WNeK0URX3suDqJmiz7Wh32vg05gOpimn",
+      "client_secret": "ATOA08WMGp8Rg7CgSRXODWRMgNVOIT4eK3hzkvvgTCRbys0sqx4pP5Tztcap74X3oAF2C4693FF8",
+      "code": this.code,
+      "redirect_uri": "http://localhost:4200/?name=SAA-3"
+    };
+    /*
     const body = {
       "grant_type": "authorization_code",
       "client_id": "Gte89X7se0jg0EGuEqZFSwBgQoGDIEhU",
       "client_secret": "ATOArGowlE0ILdGC19sGXhYf4nWhlXAqpIdqSyMaEYR_UcCZhNi7jDdl2EOFleUUzOL5DCAFCEB0",
       "code": this.code,
-      "redirect_uri": "http://localhost:4400/?name=SAA-3/"
+      "redirect_uri": "http://localhost:4400/?name=SAA-3"
     };
-
+    */
     // Make the POST request
     console.log("geldi")
     this.http.post('https://auth.atlassian.com/oauth/token', body, { headers }).subscribe(
       (response) => {
         console.log('Token:', response);
         this.token = response["access_token"]
-        console.log(this.token )
+        console.log(this.token)
         const options = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+this.token,
+            'Authorization': 'Bearer ' + this.token,
           }),
         };
 
@@ -97,7 +113,7 @@ export class ReportComponentComponent implements OnInit {
             let issueKey = this._g.cy.$(':selected')[0]._private.data.name
             //let issueKey = this._g.cy.$(':selected')[0]._private.data.name
             this.postCommentIssue(issueKey, "Bu bir deneme")
-            
+
           },
           (error) => {
             console.error('Error adding comment:', error);
@@ -108,46 +124,72 @@ export class ReportComponentComponent implements OnInit {
       })
   }
   login() {
-    window.location.href = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=Gte89X7se0jg0EGuEqZFSwBgQoGDIEhU&scope=read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20read%3Ajira-user%20write%3Ajira-work%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=http%3A%2F%2Flocalhost%3A4400%2F%3Fname%3DSAA-3&state=${YOUR_USER_BOUND_VALUE}&response_type=code&prompt=consent';
+    //window.location.href = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=Gte89X7se0jg0EGuEqZFSwBgQoGDIEhU&scope=read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20read%3Ajira-user%20write%3Ajira-work%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=http%3A%2F%2Flocalhost%3A4400%2F%3Fname%3DSAA-3&state=${YOUR_USER_BOUND_VALUE}&response_type=code&prompt=consent';
+    window.location.href = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=WNeK0URX3suDqJmiz7Wh32vg05gOpimn&scope=read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20read%3Ajira-user%20write%3Ajira-work%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2F%3Fname%3DSAA-3&state=${YOUR_USER_BOUND_VALUE}&response_type=code&prompt=consent';
   }
-
   //Jira Issue Post Comment
   postCommentIssue(issueKey: string, comment: string) {
-    this.code = this.route.snapshot.queryParamMap.get('code')?this.route.snapshot.queryParamMap.get('code'):"";
+    this.code = this.route.snapshot.queryParamMap.get('code') ? this.route.snapshot.queryParamMap.get('code') : "";
 
-    if(this.code != ""){
-      if(this.cloudId =="" || this.token =="" ){
+    if (this.code != "") {
+      if (this.cloudId == "" || this.token == "") {
         this.afterLogin()
         console.log(this.code)
       }
-      else{
+      else {
         const headers = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+this.token,
+            'Authorization': 'Bearer ' + this.token,
           }),
         };
         const body = {
           body: "h2. " + this.comment_header + "\n" + this.comment
         };
-        this.http.post('https://api.atlassian.com/ex/jira/'+this.cloudId +'/rest/api/2/issue/'+issueKey+'/comment', body, headers).subscribe(
-          (response) => {
-            console.log('Comment added successfully:', response);
-            alert('Comment posted successfully')
-          },
-          (error) => {
-            console.error('Error adding comment:', error);
-          }
-        );
+        const body2 = {
+          "body": "h2. " + this.comment_header + "\n" + this.comment,
+          "properties": [
+            {
+              "key": "sd.public.comment.image",
+              "value": {
+                "name": "example.png",
+                "data": this.dataURL
+              }
+            }
+          ]
+        };
+        if (this.commentInput.addGraph) {
+          this.http.post('https://api.atlassian.com/ex/jira/' + this.cloudId + '/rest/api/2/issue/' + issueKey + '/comment', body2, headers).subscribe(
+            (response) => {
+              console.log('Comment added successfully:', response);
+              alert('Comment posted successfully')
+            },
+            (error) => {
+              console.error('Error adding comment:', error);
+            }
+          );
+        }
+        else {
+          this.http.post('https://api.atlassian.com/ex/jira/' + this.cloudId + '/rest/api/2/issue/' + issueKey + '/comment', body, headers).subscribe(
+            (response) => {
+              console.log('Comment added successfully:', response);
+              alert('Comment posted successfully')
+            },
+            (error) => {
+              console.error('Error adding comment:', error);
+            }
+          );
+        }
+
       }
 
       // "eyJraWQiOiJmZTM2ZThkMzZjMTA2N2RjYTgyNTg5MmEiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI5Y2UzYTVkOS02NTUzLTRjZWYtOGZlYi05ZjMxYjRkY2FiZWYiLCJzdWIiOiI2M2U3NmRmNTg5NzhkN2E0MzUzZWQzZGQiLCJuYmYiOjE2Nzk5NDA1ODYsImlzcyI6Imh0dHBzOi8vYXRsYXNzaWFuLWFjY291bnQtcHJvZC5wdXMyLmF1dGgwLmNvbS8iLCJpYXQiOjE2Nzk5NDA1ODYsImV4cCI6MTY3OTk0NDE4NiwiYXVkIjoiR3RlODlYN3NlMGpnMEVHdUVxWkZTd0JnUW9HRElFaFUiLCJjbGllbnRfaWQiOiJHdGU4OVg3c2UwamcwRUd1RXFaRlN3QmdRb0dESUVoVSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9lbWFpbERvbWFpbiI6InVnLmJpbGtlbnQuZWR1LnRyIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2F0bF90b2tlbl90eXBlIjoiQUNDRVNTIiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL2ZpcnN0UGFydHkiOmZhbHNlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vc2Vzc2lvbl9pZCI6ImIyNDY4ZGY5LWVmZWMtNGMyOS1iMGE2LWNkMTViOGYxNTU3MSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS92ZXJpZmllZCI6dHJ1ZSwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL3N5c3RlbUFjY291bnRFbWFpbCI6IjEzNzUzYWY1LWUyNDgtNGY4My04MDMwLTVlNDliYjY0NTZjZkBjb25uZWN0LmF0bGFzc2lhbi5jb20iLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vdWp0IjoiYTU1Y2MwNGUtNDVmYy00ZTMwLThiYjctNTQ5MjFhOWMyOGU2IiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3Byb2Nlc3NSZWdpb24iOiJ1cy1lYXN0LTEiLCJzY29wZSI6Im1hbmFnZTpqaXJhLXByb2plY3QgbWFuYWdlOmppcmEtY29uZmlndXJhdGlvbiByZWFkOmppcmEtd29yayBtYW5hZ2U6amlyYS1kYXRhLXByb3ZpZGVyIHdyaXRlOmppcmEtd29yayBtYW5hZ2U6amlyYS13ZWJob29rIHJlYWQ6amlyYS11c2VyIiwiY2xpZW50X2F1dGhfdHlwZSI6IlBPU1QiLCJodHRwczovL2F0bGFzc2lhbi5jb20vb2F1dGhDbGllbnRJZCI6Ikd0ZTg5WDdzZTBqZzBFR3VFcVpGU3dCZ1FvR0RJRWhVIiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tLzNsbyI6dHJ1ZSwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3ZlcmlmaWVkIjp0cnVlLCJodHRwczovL2F0bGFzc2lhbi5jb20vc3lzdGVtQWNjb3VudElkIjoiNzEyMDIwOmY3MjM0MDg0LWQwZTMtNDFjMi1hNTQ5LTE4NzI2MTFjMWVmZSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9zeXN0ZW1BY2NvdW50RW1haWxEb21haW4iOiJjb25uZWN0LmF0bGFzc2lhbi5jb20ifQ.WB5P-gCXQiIaTb5gjUmmX1rMy_d2y0XvCe-b786I_ujGsL8H913hCW14N1r3ljs-u40VcK85cdlKTucWEVfi5Xyn4H7ejIEfdU1-eD2Rmkdl7n1lr2HqiEDjotJ6EnJGsNAQLR9X00id2MaRcGpsz-NyEcshfA0HsqhbH50Emy7e7noAp0RkelpW5R0lddqzLeDG82R9eMJ0xiBi1I_1ufBLzigDhMSyBaRPiDGIa28EZZoXUoXrjtecKm-HWaqsFUSP2vSs3wW2FacvDcTkSqBLl-cHJhpN6_1FCjLkry_KSl6RSLW6-Y6uxd_yYIzOoflRVGV9u4tXkmZ9JAKLVA"
 
-    //b9404671-23b7-4a57-90ab-7fea46d4ab63
-    
+      //b9404671-23b7-4a57-90ab-7fea46d4ab63
+
 
     }
-    else{
+    else {
       this.login();
     }
   }
@@ -208,6 +250,7 @@ export class ReportComponentComponent implements OnInit {
     const commentBody = {
       body: "### " + this.comment_header + "\n" + this.comment
     };
+
     console.log(this._g.cy.$(':selected')[0]._private.data)
     if (this.commentInput.addGraph) {
       this.http.get(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/contents/image.png`, this.httpOptions).subscribe(async response => {
@@ -299,6 +342,17 @@ export class ReportComponentComponent implements OnInit {
     }
   }
   ngOnInit() {
+    this.anomalies = [
+      { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
+      { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
+      { text: 'Ignored Bugs', isEnable: false, path2userPref: this.anomaly3.bind(this) },
+      { text: 'Bugs Assigned to a Team', isEnable: false, path2userPref: this.anomaly4.bind(this) },
+      { text: 'Missing Priority', isEnable: false, path2userPref: this.anomaly5.bind(this) },
+      { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
+      { text: 'No comment bugs', isEnable: false, path2userPref: this.anomaly7.bind(this) },
+      { text: 'Non-Assignee Resolver of Bug', isEnable: false, path2userPref: this.anomaly8.bind(this) },
+      { text: 'Closed-Reopen Ping Pong', isEnable: true, path2userPref: this.anomaly9.bind(this) },
+    ];
 
     this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
     let name = ""
@@ -311,12 +365,12 @@ export class ReportComponentComponent implements OnInit {
           this.pr_name = ""
           this.comment_header = ""
           name = this._g.cy.$(':selected')[0]._private.data.name
-          if(this.className == "Issue"){
+          if (this.className == "Issue") {
             const link = "You can inspect artifact " + name + " from this [ link|http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + "]";
             this.comment = link + "\n" + this.comment
             console.log(link)
           }
-          else{
+          else {
             const link = "[You can inspect artifact " + name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + ")";
             this.comment = link + "\n" + this.comment
             console.log(link)
@@ -329,7 +383,7 @@ export class ReportComponentComponent implements OnInit {
             addReviewer: false,
           };
         }
-        
+
         if (this.className == "Issue") {
           this.addMenu = [
             { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
@@ -372,6 +426,11 @@ export class ReportComponentComponent implements OnInit {
       }
     }, 500);
 
+
+  }
+
+
+  settingChanged(val: any) {
 
   }
   onCheckboxChange(item: any) {
@@ -487,7 +546,58 @@ export class ReportComponentComponent implements OnInit {
     let selected = this._g.cy.$(':selected');
     this.selectedItemProps = selected
   }
+  anomaly9() {
+    return "";
+  }
+  anomaly8() {
+    return "";
 
+  }
+  anomaly7() {
+    return "";
+
+  }
+  anomaly6() {
+    return "";
+
+  }
+  anomaly5() {
+    return "";
+
+  }
+  anomaly4() {
+    return "";
+
+  }
+  anomaly3() {
+    return "";
+
+  }
+  anomaly2() {
+    return "";
+
+  }
+  anomaly1() {
+    const cb = (x) => {
+      const result = x.data[0]
+      console.log(result)
+      if(result[0]){
+        this.comment = this.comment + "\nWe have detected an anomaly in the system.\nAnomaly Found: Unassigned Issue "
+      }  
+      else{
+        this.comment = this.comment + "\nWe have not detected any anomaly."
+
+
+
+      }  
+    };
+    const cql = `MATCH (n:Issue {status: 'Done'})
+    WHERE n.assignee = 'None' AND n.name = '${this.issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    this._dbService.runQuery(cql, cb, DbResponseType.table);
+    return "";
+  }
   performSelection() {
     if (this.commentInput.addGithub) {
       const developer_name = this._g.cy.$(':selected')[0]._private.data.name
@@ -529,18 +639,18 @@ export class ReportComponentComponent implements OnInit {
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     }
     if (this.commentInput.addAnomaly) {
-      this.comment = this.comment + "No anomaly found"
-      const cb = (x) => {
-        console.log(x)
-
-      };
-      const cql = ` MATCH (n:Developer)-[r]->(issue:Issue)
-      WHERE issue.resolver= n.name and issue.closer = n.name 
-      RETURN  ID(n) as id,  n.name AS Developer, Collect(distinct issue.name) AS Issues, count(distinct issue.name) as Count `;
-      this._dbService.runQuery(cql, cb, DbResponseType.table);
-
+      this.issue_name = this._g.cy.$(':selected')[0]._private.data.name;
+      this.anomalies.forEach((anomaly) => {
+        if (anomaly.isEnable) {
+          const queryResult = anomaly.path2userPref()
+          this.comment = this.comment + " " + queryResult
+          //console.log(anomaly.text);
+        }
+      });
     }
+
   }
+
 
 }
 

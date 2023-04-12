@@ -14,6 +14,12 @@ export interface UserPref {
   isCollapseEdgesBasedOnType: BehaviorSubject<boolean>;
   isCollapseMultiEdgesOnLoad: BehaviorSubject<boolean>;
 
+  //Anomaly
+  anomalyDefaultValues:{
+    ignoreBug:BehaviorSubject<number>,
+    assigneeChangeCount:BehaviorSubject<number>,
+    reopenCount:BehaviorSubject<number>,
+  }
   // Show query results using 'Selection', 'Highlight'
   mergedElemIndicator: BehaviorSubject<MergedElemIndicatorTypes>;
   groupingOption: BehaviorSubject<GroupingOptionTypes>;
