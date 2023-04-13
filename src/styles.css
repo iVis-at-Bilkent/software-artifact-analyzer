@@ -377,7 +377,7 @@ body {
 
 .mat-dialog-container {
   overflow: hidden !important;
-  height: 90% !important;
+  height: 80% !important;
   width: 100% !important;
   padding: 0 !important;
 }

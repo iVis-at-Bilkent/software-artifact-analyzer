@@ -109,11 +109,31 @@ export class IgnoredBugsComponent implements OnInit {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
     
     const cb = (x) => {
+      const positions2 = [
+        "top",
+        "top-right",
+        "top-left",
+        "right",
+        "left",
+        "center",
+        "bottom",
+        "bottom-right",
+        "bottom-left",
+      ];
       console.log(x)
+      const node = this._g.cy.$(':selected')[0];
+      node.addCue({
+        htmlElem: document.createElement("div"),
+        position: positions2[1],
+        marginX: "%-20",
+        marginY: "%-20",
+      });  
+
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
         this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
+        
       }
       if (!filter || this.graphResponse == null) {
         this.graphResponse = x;
