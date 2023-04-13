@@ -1,5 +1,23 @@
-
+.btn-close{
+  float: right;
+}
+.draggable-content {
+  z-index: 1001 !important;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.90) !important;
+  white-space: pre-wrap;
+  border: 2px solid #555555;
+  border-radius: 5px;
+  overflow: hidden;
+  min-width: 150px;
+  top:60vh;
   
+  right: 25vw;
+}
+.modal-header{
+  display: block;
+}
+
   .dd-item {
     padding: 0.37rem !important;
   }

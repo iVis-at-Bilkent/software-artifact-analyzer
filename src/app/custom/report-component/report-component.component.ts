@@ -26,7 +26,7 @@ interface Attachment {
 export interface BoolSetting {
   isEnable: boolean;
   text: string;
-  path2userPref: () => string;
+  path2userPref: () => Promise<any>;
 }
 @Component({
   selector: 'app-report-component',
@@ -56,6 +56,9 @@ export class ReportComponentComponent implements OnInit {
   cloudId: string = "";
   token: string = "";
   anomalies: BoolSetting[];
+  number_of_anomalies: number = 0;
+  anomalyModal:boolean=true;
+
   commentInput: any = {
     addGraph: false, addAnomaly: false, addJira: false, addGithub: false, addReviewer: false
   };
@@ -343,15 +346,15 @@ export class ReportComponentComponent implements OnInit {
   }
   ngOnInit() {
     this.anomalies = [
-      { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
-      { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
+      { text: 'Unassigned Bugs', isEnable: false, path2userPref:  this.anomaly1.bind(this) },
+      { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref:this.anomaly2.bind(this) },
       { text: 'Ignored Bugs', isEnable: false, path2userPref: this.anomaly3.bind(this) },
-      { text: 'Bugs Assigned to a Team', isEnable: false, path2userPref: this.anomaly4.bind(this) },
+      { text: 'Bugs Assigned to a Team', isEnable: false, path2userPref:this.anomaly4.bind(this) },
       { text: 'Missing Priority', isEnable: false, path2userPref: this.anomaly5.bind(this) },
       { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
       { text: 'No comment bugs', isEnable: false, path2userPref: this.anomaly7.bind(this) },
       { text: 'Non-Assignee Resolver of Bug', isEnable: false, path2userPref: this.anomaly8.bind(this) },
-      { text: 'Closed-Reopen Ping Pong', isEnable: true, path2userPref: this.anomaly9.bind(this) },
+      { text: 'Closed-Reopen Ping Pong', isEnable: false, path2userPref: this.anomaly9.bind(this) }
     ];
 
     this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
@@ -360,6 +363,8 @@ export class ReportComponentComponent implements OnInit {
       if (this._g.cy.$(':selected')[0]) {
         this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
         if (this._g.cy.$(':selected')[0]._private.data.name != name) {
+          this.anomalies
+          .map((anomaly) => anomaly.isEnable=false);
           this.comment = ""
           this.dataURL = ""
           this.pr_name = ""
@@ -507,13 +512,20 @@ export class ReportComponentComponent implements OnInit {
     console.log("x")
     if (!this.commentInput.addAnomaly) {
       this.commentInput.addAnomaly = true;
+      this.anomalyModal = true;
 
     }
     else {
       this.commentInput.addAnomaly = false
+      this.anomalyModal = false;
     }
 
   }
+
+  closeClicked(){
+    this.anomalyModal = false;
+  }
+
   addJira() {
     if (!this.commentInput.addJira) {
       console.log(this._g.initialQuery)
@@ -542,63 +554,121 @@ export class ReportComponentComponent implements OnInit {
 
   }
 
+  /**
+   * 
+    
+      { text: 'Closed-Reopen Ping Pong', isEnable: true, path2userPref: this.anomaly9.bind(this) }
+   */
+
   showObjectProps() {
     let selected = this._g.cy.$(':selected');
     this.selectedItemProps = selected
   }
-  anomaly9() {
-    return "";
-  }
-  anomaly8() {
-    return "";
-
-  }
-  anomaly7() {
-    return "";
-
-  }
-  anomaly6() {
-    return "";
-
-  }
-  anomaly5() {
-    return "";
-
-  }
-  anomaly4() {
-    return "";
-
-  }
-  anomaly3() {
-    return "";
-
-  }
-  anomaly2() {
-    return "";
-
-  }
-  anomaly1() {
-    const cb = (x) => {
-      const result = x.data[0]
-      console.log(result)
-      if(result[0]){
-        this.comment = this.comment + "\nWe have detected an anomaly in the system.\nAnomaly Found: Unassigned Issue "
-      }  
-      else{
-        this.comment = this.comment + "\nWe have not detected any anomaly."
-
-
-
-      }  
-    };
-    const cql = `MATCH (n:Issue {status: 'Done'})
-    WHERE n.assignee = 'None' AND n.name = '${this.issue_name}'
+  async anomaly9(): Promise<any> {
+    const count=  this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1;
+    const cql =` MATCH (n:Issue) 
+    WHERE n.reopenCount>=${count} and  n.name = '${this.issue_name}'
     WITH count(n) AS count
     RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    this._dbService.runQuery(cql, cb, DbResponseType.table);
+    return await this.runAnomalyQuery(cql, "Closed reopen ping pong");
+  }
+
+
+  async anomaly8(): Promise<any> {
+    const cql = `MATCH (n:Issue)
+    WHERE EXISTS(n.assignee) AND EXISTS(n.resolver) AND n.assignee <>'None' AND n.resolver <>'None' and  n.name = '${this.issue_name}'
+    WITH n, n.assignee AS assignee, n.resolver AS resolver
+    WHERE assignee <> resolver  
+    WITH count(n) AS count,assignee,resolver
+    RETURN CASE WHEN count = 0 THEN false ELSE true END, assignee, resolver`;
+    return await this.runAnomalyQuery(cql, "No assignee resolver:");
+
+  }
+
+
+  async anomaly7(): Promise<any> {
+    const cql = `MATCH (n:Issue{status:'Done'})
+    WHERE size(n.comments) = 0  and  n.name = '${this.issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, "No comment on issue");
+  }
+  async anomaly6(): Promise<any> {
+   
+
+  }
+  async anomaly5(): Promise<any> {
+    const cql = ` MATCH (n:Issue) WHERE n.priority  is NULL   and  n.name = '${this.issue_name}'
+    WITH count(n) AS count
+     RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+     return await this.runAnomalyQuery(cql, "Missing priority");
+
+  }
+
+
+  async anomaly4(): Promise<any> {
     return "";
   }
-  performSelection() {
+
+
+  async anomaly3(): Promise<any> {
+    const time=  this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1;
+    const cql = `MATCH (n:Issue)
+    WHERE exists(n.history) AND size(n.history) >= 2 and n.name = '${this.issue_name}'
+    WITH n, range(0, size(n.history)-2) as index_range
+    UNWIND index_range as i
+    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+    WHERE duration.between(from, to).months > ${time} 
+    WITH  from, to, count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true  END, from, to`;
+    return await this.runAnomalyQuery(cql, `Ignored bug:`);
+  }
+
+  async anomaly2(): Promise<any> {
+    const cql = `MATCH (n:Issue{status:'Done' })
+    WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] and n.name = '${this.issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, "No link to bug fixing commit or pull request");
+
+  }
+
+  async anomaly1(): Promise<any> {
+    const cql = `MATCH (n:Issue {status: 'Done'})
+      WHERE n.assignee = 'None' AND n.name = '${this.issue_name}'
+      WITH count(n) AS count
+      RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, "Unassigned issue");
+  }
+  async runAnomalyQuery(cql: string, name: string) {
+    return new Promise((resolve, reject) => {
+      const cb = (x) => {
+        const result = x.data[0]
+        console.log(result)
+        if ( result && result[0] ) {
+          this.number_of_anomalies += 1
+          if(name=="Ignored bug:"){
+            console.log(result[1],result[2])
+            const startDateString = result[1].slice(0, 10);
+            const endDateString =result[2].slice(0, 10);
+            resolve(`\nAnomaly Found:Ignored bug: From ${startDateString} To ${endDateString}`);
+          }
+          else if(name=="No assignee resolver:"){
+            resolve(`\nNo assignee resolver: Assignee ${result[1]} Resolver ${result[2]}`);
+          }
+          else{
+            resolve("\nAnomaly Found: " + name);
+          }
+        }
+        else {
+          resolve("");
+        }
+      };
+      this._dbService.runQuery(cql, cb, DbResponseType.table);
+    });
+  }
+  async performSelection() {
+    this.comment =""
     if (this.commentInput.addGithub) {
       const developer_name = this._g.cy.$(':selected')[0]._private.data.name
       const pull_request_name = this.pr_name
@@ -639,18 +709,26 @@ export class ReportComponentComponent implements OnInit {
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     }
     if (this.commentInput.addAnomaly) {
+      const link = "You can inspect artifact " + name + " from this [ link|http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + "]";
+      this.comment = link + "\n" + this.comment
+      let commentAnomaly = "";
       this.issue_name = this._g.cy.$(':selected')[0]._private.data.name;
-      this.anomalies.forEach((anomaly) => {
-        if (anomaly.isEnable) {
-          const queryResult = anomaly.path2userPref()
-          this.comment = this.comment + " " + queryResult
-          //console.log(anomaly.text);
-        }
-      });
+      const queries = this.anomalies
+        .filter((anomaly) => anomaly.isEnable)
+        .map((anomaly) => anomaly.path2userPref());
+      const queryResults = await Promise.all(queries);
+      commentAnomaly = queryResults.join(" ");
+      if (this.number_of_anomalies > 0) {
+        commentAnomaly = "\nAnomalies: We have detected " + this.number_of_anomalies + " anomaly in the issue " + this.issue_name + "." + commentAnomaly;
+      } else {
+        commentAnomaly += "\nAnomalies: We have not detected any anomaly in the issue " + this.issue_name + ".";
+      }
+      this.number_of_anomalies= 0;
+      this.comment = this.comment + commentAnomaly;
     }
 
-  }
 
+  }
 
 }
 
