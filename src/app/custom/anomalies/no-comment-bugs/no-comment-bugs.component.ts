@@ -118,7 +118,8 @@ export class NoCommentBugsComponent implements OnInit {
     
     const cql = `MATCH (n:Issue{status:'Done'})
     WHERE size(n.comments) = 0
-    RETURN n`
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -174,7 +175,8 @@ export class NoCommentBugsComponent implements OnInit {
     
     const cql = `MATCH (n:Issue{status:'Done'})
     WHERE size(n.comments) = 0 and ${idFilter}
-    RETURN n  `
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2 `
     this._dbService.runQuery(cql, cb);
   }
 

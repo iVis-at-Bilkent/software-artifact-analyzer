@@ -10,6 +10,8 @@ import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 
 export interface Anomaly {
   Issue: string;
+  Assignee: string;
+  Resolver: string;
 }
 @Component({
   selector: 'app-no-link-to-bug-fixing-commit',
@@ -21,7 +23,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
 
   
   tableInput: TableViewInput = {
-    columns: ['issue'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue', 'assignee','resolver'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -87,7 +89,9 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n:Issue{status:'Done' })
     WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[]
-    RETURN  ID(n) as id,  n.name AS issue ORDER BY ${orderExpr}`
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) 
+    RETURN  ID(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -116,7 +120,9 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n:Issue{status:'Done' })
-    WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] return n`
+    WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] 
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -144,7 +150,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string,TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -173,7 +179,8 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     
     const cql = `MATCH (n:Issue{status:'Done'})
     WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] and ${idFilter}
-    RETURN n  `
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
   }
 

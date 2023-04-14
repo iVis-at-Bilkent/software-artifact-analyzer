@@ -11,6 +11,7 @@ import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 
 export interface Anomaly {
   Issue: string;
+  Resolver: string;
 }
 @Component({
   selector: 'app-unassigned-bugs',
@@ -22,7 +23,7 @@ export class UnassignedBugsComponent implements OnInit {
 
   
   tableInput: TableViewInput = {
-    columns: ['issue'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue','resolver'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -88,7 +89,7 @@ export class UnassignedBugsComponent implements OnInit {
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH(n:Issue{status:'Done'}) 
     WHERE n.assignee='None' and ${dateFilter} 
-    RETURN  ID(n) as id,  n.name AS issue ORDER BY ${orderExpr}`
+    RETURN  ID(n) as id,  n.name AS issue, n.resolver as resolver ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -116,7 +117,7 @@ export class UnassignedBugsComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue{status:'Done'}) WHERE n.assignee='None' return n`
+    const cql = `MATCH (n:Issue{status:'Done'}) WHERE n.assignee='None' MERGE (n)-[r:RESOLVE]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -144,7 +145,7 @@ export class UnassignedBugsComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -171,8 +172,8 @@ export class UnassignedBugsComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH(n:Issue{status:'Done'})
-    WHERE n.assignee='None' and ${idFilter}
-    RETURN n  `
+    WHERE n.assignee='None' and ${idFilter} 
+    MERGE (n)-[r:RESOLVE]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
   }
 

@@ -10,6 +10,7 @@ import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 
 export interface Anomaly {
   Issue: string;
+  History: string[];
   Count: string;
 }
 @Component({
@@ -21,7 +22,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
   count :number;
 
   tableInput: TableViewInput = {
-    columns: ['issue','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue','history','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -90,7 +91,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
 
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=` MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${dateFilter} 
-    RETURN  ID(n) as id,  n.name AS issue,  n.assigneeChangeCount as count ORDER BY ${orderExpr}`
+    RETURN  ID(n) as id,  n.name AS issue, n.assigneeHistory as history,  n.assigneeChangeCount as count ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -119,7 +120,9 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = ` MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${dateFilter} RETURN n`
+    const cql = ` MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${dateFilter} 
+    OPTIONAL MATCH (n)-[r]-(d) 
+    return n,d,r`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -147,7 +150,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string, TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -173,7 +176,9 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     }
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
-    const cql = `  MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${idFilter} RETURN n`
+    const cql = `  MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${idFilter} 
+    OPTIONAL MATCH (n)-[r]-(d) 
+    return n,d,r`
     this._dbService.runQuery(cql, cb);
   }
 

@@ -10,6 +10,7 @@ import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 
 export interface Anomaly {
   Issue: string;
+  RelatedIssue: string;
 }
 @Component({
   selector: 'app-not-referenced-duplicates',
@@ -21,7 +22,7 @@ export class NotReferencedDuplicatesComponent implements OnInit {
 
   
   tableInput: TableViewInput = {
-    columns: ['issue'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue','related'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -88,7 +89,8 @@ export class NotReferencedDuplicatesComponent implements OnInit {
 
 
     const cql=` MATCH (n:Issue)  WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-()   and ${dateFilter} 
-    RETURN  ID(n) as id,  n.name AS issue ORDER BY ${orderExpr}`
+    OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
+    RETURN  ID(n) as id,  n.name AS issue, d.name as related ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -117,7 +119,9 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n:Issue)
-    WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-()RETURN n`
+    WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-()
+    OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
+    RETURN n,r,d`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -145,7 +149,7 @@ export class NotReferencedDuplicatesComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -173,7 +177,8 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     
     const cql = `MATCH (n:Issue)
     WHERE n.duplicate='True'  AND NOT (n)-[:DUPLICATES]-() and ${idFilter}
-    RETURN n  `
+    OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
+    RETURN n,r,d  `
     this._dbService.runQuery(cql, cb);
   }
 

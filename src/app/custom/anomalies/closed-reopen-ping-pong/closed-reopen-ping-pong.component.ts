@@ -11,6 +11,8 @@ import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 
 export interface Anomaly {
   Issue: string;
+  Assignee: string;
+  Resolver: string;
   Count: string;
 }
 @Component({
@@ -21,7 +23,7 @@ export interface Anomaly {
 export class ClosedReopenPingPongComponent implements OnInit {
   count:number;
   tableInput: TableViewInput = {
-    columns: ['issue','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue','assignee','resolver','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -88,7 +90,9 @@ export class ClosedReopenPingPongComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=` MATCH (n:Issue) WHERE n.reopenCount>=${this.count}  and ${dateFilter} 
-    RETURN  ID(n) as id,  n.name AS issue,  n.reopenCount as count ORDER BY ${orderExpr}`
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2)
+    RETURN  ID(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver,  n.reopenCount as count ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -117,7 +121,9 @@ export class ClosedReopenPingPongComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = ` MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${dateFilter} RETURN n`
+    const cql = ` MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${dateFilter} 
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -145,7 +151,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string,TableDataType.string, TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -171,7 +177,9 @@ export class ClosedReopenPingPongComponent implements OnInit {
     }
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
-    const cql = `  MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${idFilter} RETURN n`
+    const cql = `  MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${idFilter} 
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
   }
 

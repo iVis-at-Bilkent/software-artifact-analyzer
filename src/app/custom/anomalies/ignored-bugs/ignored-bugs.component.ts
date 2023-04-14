@@ -10,6 +10,7 @@ import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 
 export interface Anomaly {
   Issue: string;
+  Assignee: string;
   From: Date;
   To: Date;
 }
@@ -24,7 +25,7 @@ export class IgnoredBugsComponent implements OnInit {
 
   
   tableInput: TableViewInput = {
-    columns: ['issue','from','to'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue','assignee','from','to'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -98,7 +99,8 @@ export class IgnoredBugsComponent implements OnInit {
     UNWIND index_range as i
     WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
     WHERE duration.between(from, to).months > ${this.time}
-    RETURN  ID(n) as id , n.name as issue, from, to ORDER BY ${orderExpr}`
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    RETURN  distinct ID(n) as id , n.name as issue, d.name as assignee, from, to ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -151,7 +153,8 @@ export class IgnoredBugsComponent implements OnInit {
     WHERE exists(n.history) AND size(n.history) >= 2
     WITH n, range(0, size(n.history)-2) as indices
     WHERE any(i in indices WHERE duration.between(datetime(n.history[i]), datetime(n.history[i+1])).months >${this.time})
-    RETURN n`
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    RETURN n,d,r`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -179,7 +182,7 @@ export class IgnoredBugsComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.datetime, TableDataType.datetime];
+    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string, TableDataType.datetime, TableDataType.datetime];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -212,7 +215,8 @@ export class IgnoredBugsComponent implements OnInit {
     WHERE exists(n.history) AND size(n.history) >= 2 and ${idFilter}
     WITH n, range(0, size(n.history)-2) as indices
     WHERE any(i in indices WHERE duration.between(datetime(n.history[i]), datetime(n.history[i+1])).months >${this.time}) 
-    RETURN n `
+    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
+    RETURN n,d,r `
     this._dbService.runQuery(cql, cb);
   }
 
