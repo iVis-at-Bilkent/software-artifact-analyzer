@@ -7,6 +7,7 @@ import layoutUtilities from 'cytoscape-layout-utilities';
 import cise from 'cytoscape-cise';
 import cytoscape from 'cytoscape';
 import timebar from '../../lib/timebar/cytoscape-timebar';
+import cytoscapeVisualCues from '../../lib/cytoscape-visual-cues/cytoscape-visual-cues';
 import {
   addCue,
   removeCue,
@@ -35,6 +36,8 @@ export class CyExtService {
   registerExtensions() {
     // register timebar extension
     timebar(cytoscape);
+    // register cues extention
+    cytoscapeVisualCues(cytoscape);
     // register navigator extension
     navigator(cytoscape);
     // register view utilities extension
