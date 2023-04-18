@@ -276,7 +276,6 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
     }
     this.highlightStyleSelected(this.highlightStyleIdx);
   }
-
   addHighlightStyle() {
     this.bandPassHighlightWidth();
     let cyStyle = getCyStyleFromColorAndWid(this.highlightColor, this.highlightWidth);
@@ -286,6 +285,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
     this.highlightStyleSelected(this.highlightStyleIdx);
     this._g.updateSelectionCyStyle();
   }
+
 
   highlightStyleSelected(t: EventTarget | number) {
     let i = 0;

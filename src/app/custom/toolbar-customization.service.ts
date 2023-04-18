@@ -3,6 +3,9 @@ import { ToolbarDiv } from '../visuall/toolbar/itoolbar';
 import { GlobalVariableService } from '../visuall/global-variable.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { Neo4jDb } from '../visuall/db-service/neo4j-db.service';
+import { getCyStyleFromColorAndWid, readTxtFile, isJson } from '../visuall/constants';
+import tinycolor from 'tinycolor2';
+import { UserProfileService } from '../visuall/user-profile.service';
 import {
   addCue,
   removeCue,
@@ -32,11 +35,12 @@ import {
 **/
 export class ToolbarCustomizationService {
   private _menu: ToolbarDiv[];
+  addCue: boolean = false;
   get menu(): ToolbarDiv[] {
     return this._menu;
   }
 
-  constructor(private _g: GlobalVariableService, public _dbService: Neo4jDb) {
+  constructor(private _g: GlobalVariableService, public _dbService: Neo4jDb, private _profile: UserProfileService) {
     this._menu = [];
 
     this._menu = [{
@@ -123,7 +127,6 @@ export class ToolbarCustomizationService {
     return new Promise((resolve, reject) => {
       const cb = (x) => {
         const result = x.data[0]
-        console.log(result)
         if (result && result[0]) {
           resolve(true);
         }
@@ -134,7 +137,31 @@ export class ToolbarCustomizationService {
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     });
   }
+
+  createRedShades() {
+    if (this._g.userPrefs.highlightStyles.length < 14) {
+      const baseColor = '#990000'; // Base color is pure red
+      const shades = [];
+
+      for (let i = 0; i < 10; i++) {
+        const shade = tinycolor(baseColor).lighten(i * 10).toString();
+        shades.push(shade);
+      }
+      for (let i = 0; i < shades.length; i++) {
+        const cyStyle = getCyStyleFromColorAndWid(shades[i], 4.5);
+        this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
+      }
+      this._profile.saveUserPrefs();
+
+    }
+    /*
+    console.log(this._g.userPrefs.highlightStyles)
+    this._g.userPrefs.highlightStyles.splice(4);
+    this._profile.saveUserPrefs();
+    */
+  }
   activateAnomalyCues() {
+
     //TODO:Number of detected anomalies 
     let anomalies = [
       { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
@@ -147,37 +174,62 @@ export class ToolbarCustomizationService {
       { text: 'Non-Assignee Resolver of Bug', isEnable: false, path2userPref: this.anomaly8.bind(this) },
       { text: 'Closed-Reopen Ping Pong', isEnable: false, path2userPref: this.anomaly9.bind(this) }
     ];
+    if (!this.addCue) {
+      this.createRedShades()
+      this.addCue = true;
+      this._g.cy.nodes().filter(':visible').forEach(async element => {
+        if (element._private.classes.values().next().value == 'Issue') {
+          const div1 = document.createElement("div");
+
+          const queries = anomalies.map((anomaly) => anomaly.path2userPref(element._private.data.name));
+          const queryResults = await Promise.all(queries);
+          let anomaliesWithTrueResults = anomalies
+            .filter((anomaly, index) => queryResults[index]) // filter out items whose function returns false
+            .map(anomaly => anomaly.text);
+          let number = anomaliesWithTrueResults.length;
+          let listOfAnomalies = anomaliesWithTrueResults
+          this._g.viewUtils.highlight(element, 7 - number);
+          div1.innerHTML = `<span title="tooltip" class="badge rounded-pill bg-primary">${number}</span>`;
+          element.addCue({
+            htmlElem: div1,
+            show: "always",
+            position: "top-right",
+            marginX: "%0",
+            marginY: "%0",
+          });
+          if (anomaliesWithTrueResults.length > 0) {
+            const div2 = document.createElement("div");
+            div2.innerHTML = `<ul class="va-text" style="opacity: 0.9; list-style-type: square; background-color: #eaeaea; color:#333a40; border: 1px solid #ddd; padding: 12px;"> ${listOfAnomalies.map(anomaly => `<li class="va-text">${anomaly}</li>`).join('')} </ul>`;
+            element.addCue({
+              htmlElem: div2,
+              show: "over",
+              position: "bottom-left",
+              marginX: "%-90",
+              marginY: "%90",
+            });
+
+          } else {
+            this._g.viewUtils.highlight(element, 2);
+          }
 
 
-    this._g.cy.nodes().filter(':visible').forEach(async element => {
-      if (element._private.classes.values().next().value == 'Issue') {
-        const div1 = document.createElement("div");
-        const queries = anomalies.map((anomaly) => anomaly.path2userPref(element._private.data.name));
-        const queryResults = await Promise.all(queries);
-        let anomaliesWithTrueResults = anomalies
-          .filter((anomaly, index) =>queryResults[index]) // filter out items whose function returns false
-          .map(anomaly => anomaly.text);
-        let number = anomaliesWithTrueResults.length;
-        let listOfAnomalies = anomaliesWithTrueResults
-        div1.innerHTML = `<span title="tooltip" class="badge rounded-pill bg-primary">${number}</span>`;
-        element.addCue({
-          htmlElem: div1,
-          show: "always",
-          position: "top-right",
-          marginX: "%0",
-          marginY: "%0",
-        });
-        const div2 = document.createElement("div");
-        div2.innerHTML = `<ul class="va-text" style="opacity: 0.9; list-style-type: square; background-color: #eaeaea; color:#333a40; border: 1px solid #ddd; padding: 12px;"> ${listOfAnomalies.map(anomaly => `<li class="va-text">${anomaly}</li>`).join('')} </ul>`;
-        element.addCue({
-          htmlElem: div2,
-          show: "over",
-          position: "bottom-left",
-          marginX: "%-90",
-          marginY: "%90",
-        });
+        }
+      });
+    }
+    else {
+      this.addCue = false;
+      this._g.cy.nodes().removeCue()
+      this._g.cy.nodes().filter(':visible').forEach(async element => {
+        if (element._private.classes.values().next().value == 'Issue') {
+          this._g.viewUtils.removeHighlights(element)
+          element.removeCue()
+        }
       }
-    });
+      );
+
+    }
+
+
 
   }
 

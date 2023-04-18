@@ -2,19 +2,13 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { GlobalVariableService } from '../../visuall/global-variable.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { getPropNamesFromObj, DATE_PROP_END, DATE_PROP_START, findTypeOfAttribute, debounce, COLLAPSED_EDGE_CLASS, OBJ_INFO_UPDATE_DELAY, CLUSTER_CLASS, extend } from '../../visuall/constants';
-import { TableViewInput, TableData, TableDataType, TableFiltering, property2TableData, filterTableDatas } from '../../shared/table-view/table-view-types';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { CytoscapeService } from "../../visuall/cytoscape.service";
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
-import { CustomizationModule } from '../customization.module';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BrowserModule } from '@angular/platform-browser';
-import { SaveAsPngModalComponent } from '../../visuall/popups/save-as-png-modal/save-as-png-modal.component';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 //import {  BoolSetting } from '../../visuall/user-preference';
 //import api from '@forge/api';
@@ -57,7 +51,7 @@ export class ReportComponentComponent implements OnInit {
   token: string = "";
   anomalies: BoolSetting[];
   number_of_anomalies: number = 0;
-  anomalyModal:boolean=true;
+  anomalyModal: boolean = true;
 
   commentInput: any = {
     addGraph: false, addAnomaly: false, addJira: false, addGithub: false, addReviewer: false
@@ -212,11 +206,13 @@ export class ReportComponentComponent implements OnInit {
   //Github PullRequest Post Comment To Pull Request
   async postCommentPr(prKey: string) {
     const commentBody = {
-      body: "### " + this.comment_header + "\n" + this.comment
+      body: `###${this.comment_header }\n${this.comment}\n<img id="guiai-16816155202" src="data:image/png;base64,${this.dataURL.split(",")[1]}">`
     };
+    console.log(commentBody.body)
 
     //If add graph is selected
     if (this.commentInput.addGraph) {
+      /*
       this.http.get(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/contents/image.png`, this.httpOptions).subscribe(async response => {
         this.sha_github = response["sha"];
         await this.updateFile().subscribe(response => {
@@ -236,6 +232,32 @@ export class ReportComponentComponent implements OnInit {
       }, error => {
         console.error('Error getting ssh:', error);
       });
+      */
+
+      /*
+      this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
+        console.log('Comment posted successfully:', response);
+      }, error => {
+        console.error('Error posting comment:', error);
+      });
+      */
+      const byteCharacters = atob(this.dataURL.split(',')[1]);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'image/png' }); // Replace 'image/png' with the appropriate MIME type for your image
+    
+      const formData = new FormData();
+      formData.append('file', blob);
+      await this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/pr/${prKey}/attachments`, formData,this.httpOptions).subscribe(response => {
+        console.log('Comment posted successfully:', response);
+      }, error => {
+        console.error('Error posting comment:', error);
+      });
+        //console.log('Comment posted successfully:', response);
+      //const imageUrl = uploadResponse.headers.get('location');
     }
 
     else {
@@ -346,10 +368,10 @@ export class ReportComponentComponent implements OnInit {
   }
   ngOnInit() {
     this.anomalies = [
-      { text: 'Unassigned Bugs', isEnable: false, path2userPref:  this.anomaly1.bind(this) },
-      { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref:this.anomaly2.bind(this) },
+      { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
+      { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
       { text: 'Ignored Bugs', isEnable: false, path2userPref: this.anomaly3.bind(this) },
-      { text: 'Bugs Assigned to a Team', isEnable: false, path2userPref:this.anomaly4.bind(this) },
+      { text: 'Bugs Assigned to a Team', isEnable: false, path2userPref: this.anomaly4.bind(this) },
       { text: 'Missing Priority', isEnable: false, path2userPref: this.anomaly5.bind(this) },
       { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
       { text: 'No comment bugs', isEnable: false, path2userPref: this.anomaly7.bind(this) },
@@ -364,7 +386,7 @@ export class ReportComponentComponent implements OnInit {
         this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
         if (this._g.cy.$(':selected')[0]._private.data.name != name) {
           this.anomalies
-          .map((anomaly) => anomaly.isEnable=false);
+            .map((anomaly) => anomaly.isEnable = false);
           this.comment = ""
           this.dataURL = ""
           this.pr_name = ""
@@ -522,7 +544,7 @@ export class ReportComponentComponent implements OnInit {
 
   }
 
-  closeClicked(){
+  closeClicked() {
     this.anomalyModal = false;
   }
 
@@ -565,8 +587,8 @@ export class ReportComponentComponent implements OnInit {
     this.selectedItemProps = selected
   }
   async anomaly9(): Promise<any> {
-    const count=  this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1;
-    const cql =` MATCH (n:Issue) 
+    const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
+    const cql = ` MATCH (n:Issue) 
     WHERE n.reopenCount>=${count} and  n.name = '${this.issue_name}'
     WITH count(n) AS count
     RETURN CASE WHEN count = 0 THEN false ELSE true END`;
@@ -594,14 +616,14 @@ export class ReportComponentComponent implements OnInit {
     return await this.runAnomalyQuery(cql, "No comment on issue");
   }
   async anomaly6(): Promise<any> {
-   
+
 
   }
   async anomaly5(): Promise<any> {
     const cql = ` MATCH (n:Issue) WHERE n.priority  is NULL   and  n.name = '${this.issue_name}'
     WITH count(n) AS count
      RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-     return await this.runAnomalyQuery(cql, "Missing priority");
+    return await this.runAnomalyQuery(cql, "Missing priority");
 
   }
 
@@ -612,7 +634,7 @@ export class ReportComponentComponent implements OnInit {
 
 
   async anomaly3(): Promise<any> {
-    const time=  this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1;
+    const time = this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() || 1;
     const cql = `MATCH (n:Issue)
     WHERE exists(n.history) AND size(n.history) >= 2 and n.name = '${this.issue_name}'
     WITH n, range(0, size(n.history)-2) as index_range
@@ -645,18 +667,18 @@ export class ReportComponentComponent implements OnInit {
       const cb = (x) => {
         const result = x.data[0]
         console.log(result)
-        if ( result && result[0] ) {
+        if (result && result[0]) {
           this.number_of_anomalies += 1
-          if(name=="Ignored bug:"){
-            console.log(result[1],result[2])
+          if (name == "Ignored bug:") {
+            console.log(result[1], result[2])
             const startDateString = result[1].slice(0, 10);
-            const endDateString =result[2].slice(0, 10);
+            const endDateString = result[2].slice(0, 10);
             resolve(`\nAnomaly Found:Ignored bug: From ${startDateString} To ${endDateString}`);
           }
-          else if(name=="No assignee resolver:"){
+          else if (name == "No assignee resolver:") {
             resolve(`\nNo assignee resolver: Assignee ${result[1]} Resolver ${result[2]}`);
           }
-          else{
+          else {
             resolve("\nAnomaly Found: " + name);
           }
         }
@@ -668,7 +690,7 @@ export class ReportComponentComponent implements OnInit {
     });
   }
   async performSelection() {
-    this.comment =""
+    this.comment = ""
     if (this.commentInput.addGithub) {
       const developer_name = this._g.cy.$(':selected')[0]._private.data.name
       const pull_request_name = this.pr_name
@@ -723,7 +745,7 @@ export class ReportComponentComponent implements OnInit {
       } else {
         commentAnomaly += "\nAnomalies: We have not detected any anomaly in the issue " + this.issue_name + ".";
       }
-      this.number_of_anomalies= 0;
+      this.number_of_anomalies = 0;
       this.comment = this.comment + commentAnomaly;
     }
 

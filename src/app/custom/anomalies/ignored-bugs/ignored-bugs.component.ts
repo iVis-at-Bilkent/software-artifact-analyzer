@@ -11,8 +11,7 @@ import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 export interface Anomaly {
   Issue: string;
   Assignee: string;
-  From: Date;
-  To: Date;
+  Dates: string;
 }
 
 @Component({
@@ -25,7 +24,7 @@ export class IgnoredBugsComponent implements OnInit {
 
   
   tableInput: TableViewInput = {
-    columns: ['issue','assignee','from','to'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue','assignee','dates'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -91,16 +90,14 @@ export class IgnoredBugsComponent implements OnInit {
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql=`MATCH (n:Issue)
+    const cql=`MATCH (n)-[r:ASSIGNED]-(d) 
     WHERE exists(n.history) AND size(n.history) >= 2
-    WITH n, range(0, size(n.history)-2) as index_range
+    WITH n, range(0, size(n.history)-2) as index_range , r,d
     UNWIND index_range as i
-    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to,  r,d
     WHERE duration.between(from, to).months > ${this.time}
-    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
-    RETURN  distinct ID(n) as id , n.name as issue, d.name as assignee, from, to ORDER BY ${orderExpr}`
+    RETURN  distinct ID(n) as id , n.name as issue, d.name as assignee, collect([from, to]) as dates ORDER BY  ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -111,31 +108,11 @@ export class IgnoredBugsComponent implements OnInit {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
     
     const cb = (x) => {
-      const positions2 = [
-        "top",
-        "top-right",
-        "top-left",
-        "right",
-        "left",
-        "center",
-        "bottom",
-        "bottom-right",
-        "bottom-left",
-      ];
       console.log(x)
-      const node = this._g.cy.$(':selected')[0];
-      node.addCue({
-        htmlElem: document.createElement("div"),
-        position: positions2[1],
-        marginX: "%-20",
-        marginY: "%-20",
-      });  
-
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
         this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
-        
       }
       if (!filter || this.graphResponse == null) {
         this.graphResponse = x;
@@ -149,12 +126,11 @@ export class IgnoredBugsComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue)
+    const cql = ` MATCH (n:Issue)-[r:ASSIGNED]-(d) 
     WHERE exists(n.history) AND size(n.history) >= 2
-    WITH n, range(0, size(n.history)-2) as indices
-    WHERE any(i in indices WHERE duration.between(datetime(n.history[i]), datetime(n.history[i+1])).months >${this.time})
-    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
-    RETURN n,d,r`
+    WITH n, range(0, size(n.history)-2) as indices,r,d
+    WHERE any(i in indices WHERE duration.between(datetime(n.history[i]), datetime(n.history[i+1])).months >${this.time}) 
+    RETURN n,r,d`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -182,22 +158,52 @@ export class IgnoredBugsComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string, TableDataType.datetime, TableDataType.datetime];
 
+    console.log(uiColumns)
+    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string,TableDataType.string];
+    console.log(data)
     this.tableInput.results = [];
+  
     for (let i = 0; i < data.length; i++) {
-      const row: TableData[] = [];
+      const row: TableData[] = []     
       for (let j = 0; j < uiColumns.length; j++) {
-        row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
+        if(uiColumns[j] == "dates" && data[i][uiColumns[j]].length>3 ){
+          const formattedDates = data[i][uiColumns[j]].map(subArray => {
+            return subArray.map(dateString => {
+              const date = new Date(dateString);
+              return date.toLocaleDateString('en-GB'); // use your preferred locale here
+            }).join(' - ');
+          });
+          
+          data[i][uiColumns[j]] = formattedDates.slice(0,3).join(" , ")
+          data[i][uiColumns[j]]  = "[" + data[i][uiColumns[j]] + " ...]"
+          row.push({ type: columnTypes[j], val: data[i][uiColumns[j]] })
+        }
+        else if (uiColumns[j] == "dates" && data[i][uiColumns[j]].length<=3 ){
+          const formattedDates = data[i][uiColumns[j]].map(subArray => {
+            return subArray.map(dateString => {
+              const date = new Date(dateString);
+              return date.toLocaleDateString('en-GB'); // use your preferred locale here
+            }).join(' - ');
+          });
+          
+          data[i][uiColumns[j]] = formattedDates.join(" , ")
+          data[i][uiColumns[j]]  = "[" + data[i][uiColumns[j]] + " ]";
+          row.push({ type: columnTypes[j], val: data[i][uiColumns[j]] })
+        }
+        else{
+          row.push({ type: columnTypes[j], val: data[i][uiColumns[j]] })
+        }
+        
       }
-      row.push(); 
       this.tableInput.results.push(row)
-
     }
+    console.log(this.tableInput.results )
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
     console.log(this.tableInput)
+
     this.tableFilled.next(true);
   }
 
@@ -211,23 +217,15 @@ export class IgnoredBugsComponent implements OnInit {
     console.log(e)
     const ui2Db = {'issue': 'n.name'};
     
-    const cql = ` MATCH (n:Issue)
+    const cql = ` MATCH (n:Issue)-[r:ASSIGNED]-(d) 
     WHERE exists(n.history) AND size(n.history) >= 2 and ${idFilter}
-    WITH n, range(0, size(n.history)-2) as indices
+    WITH n, range(0, size(n.history)-2) as indices,d,r
     WHERE any(i in indices WHERE duration.between(datetime(n.history[i]), datetime(n.history[i+1])).months >${this.time}) 
-    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
     RETURN n,d,r `
     this._dbService.runQuery(cql, cb);
   }
 
-  filterTable(filter: TableFiltering) {
-    this.tableInput.currPage = 1;
-    let skip = filter.skip ? filter.skip : 0;
-    this.loadTable(skip, filter);
-    if (this.tableInput.isLoadGraph) {
-      this.loadGraph(skip, filter);
-    }
-  }
+
 
   // zip paralel arrays 
   private preprocessTableData(data): Anomaly[] {
