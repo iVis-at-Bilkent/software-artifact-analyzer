@@ -178,7 +178,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   highlightSelected() { this._cyService.highlightSelected(); }
 
-  removeHighlights() { this._cyService.removeHighlights(); }
+  removeHighlights() { this._cyService.removeHighlights()}
 
   performLayout() { this._g.performLayout(false, true); }
 

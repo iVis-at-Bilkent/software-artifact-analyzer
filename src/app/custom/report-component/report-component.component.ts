@@ -376,7 +376,9 @@ export class ReportComponentComponent implements OnInit {
       { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
       { text: 'No comment bugs', isEnable: false, path2userPref: this.anomaly7.bind(this) },
       { text: 'Non-Assignee Resolver of Bug', isEnable: false, path2userPref: this.anomaly8.bind(this) },
-      { text: 'Closed-Reopen Ping Pong', isEnable: false, path2userPref: this.anomaly9.bind(this) }
+      { text: 'Closed-Reopen Ping Pong', isEnable: false, path2userPref: this.anomaly9.bind(this) },
+      { text: 'Not Referenced Duplicates', isEnable: false, path2userPref: this.anomaly10.bind(this) },
+      { text: 'Same Resolver Closer', isEnable: false, path2userPref: this.anomaly11.bind(this) }
     ];
 
     this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
@@ -576,15 +578,25 @@ export class ReportComponentComponent implements OnInit {
 
   }
 
-  /**
-   * 
-    
-      { text: 'Closed-Reopen Ping Pong', isEnable: true, path2userPref: this.anomaly9.bind(this) }
-   */
-
   showObjectProps() {
     let selected = this._g.cy.$(':selected');
     this.selectedItemProps = selected
+  }
+  async anomaly11(): Promise<any> {
+    const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
+    const cql = ` MATCH (n:Developer)-[r]->(issue:Issue)
+    WHERE issue.resolver= n.name and issue.closer = n.name and issue.name = '${this.issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, "Same resolver closer");
+  }
+  async anomaly10(): Promise<any> {
+    const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
+    const cql = `MATCH (n:Issue)  WHERE n.duplicate='True' 
+    AND NOT (n)-[:DUPLICATES]-() and  n.name = '${this.issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, "Not Referenced duplicates");
   }
   async anomaly9(): Promise<any> {
     const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;

@@ -3,23 +3,11 @@ import { ToolbarDiv } from '../visuall/toolbar/itoolbar';
 import { GlobalVariableService } from '../visuall/global-variable.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { Neo4jDb } from '../visuall/db-service/neo4j-db.service';
-import { getCyStyleFromColorAndWid, readTxtFile, isJson } from '../visuall/constants';
-import tinycolor from 'tinycolor2';
-import { UserProfileService } from '../visuall/user-profile.service';
-import {
-  addCue,
-  removeCue,
-  updateCue,
-  getCueData,
-  showCue,
-  hideCue,
-  setActiveInstance,
-  getActiveInstanceId,
-} from "./cytoscape-visual-cues";
 
 @Injectable({
   providedIn: 'root'
 })
+
 /** Custom menu items and action functions for the items should be added to this class.
  * You might need to import other services but you should only edit this file.
  * Using 'menu' function, provided items will be added to toolbar.
@@ -34,18 +22,35 @@ import {
     }];
 **/
 export class ToolbarCustomizationService {
+
   private _menu: ToolbarDiv[];
-  addCue: boolean = false;
+  listOfAnomalies = []
   get menu(): ToolbarDiv[] {
     return this._menu;
   }
 
-  constructor(private _g: GlobalVariableService, public _dbService: Neo4jDb, private _profile: UserProfileService) {
+  constructor( private _g: GlobalVariableService, public _dbService: Neo4jDb) {
     this._menu = [];
 
     this._menu = [{
-      div: 12, items: [{ title: 'Anomaly Cues', isRegular: true, fn: 'activateAnomalyCues', isStd: true, imgSrc: 'assets/img/toolbar/issue.svg' }]
+      div: 3, items: [{ title: 'Add Anomaly Cues', isRegular: true, fn: 'activateAnomalyCues', isStd: true, imgSrc: 'assets/img/toolbar/cue.svg' }]
     }];
+  }
+  async anomaly11(issue_name): Promise<any> {
+    const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
+    const cql = ` MATCH (n:Developer)-[r]->(issue:Issue)
+    WHERE issue.resolver= n.name and issue.closer = n.name and issue.name = '${issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, "Same resolver closer");
+  }
+  async anomaly10(issue_name): Promise<any> {
+    const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
+    const cql = `MATCH (n:Issue)  WHERE n.duplicate='True' 
+    AND NOT (n)-[:DUPLICATES]-() and  n.name = '${issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, "Not Referenced duplicates");
   }
   async anomaly9(issue_name): Promise<any> {
     const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
@@ -138,27 +143,22 @@ export class ToolbarCustomizationService {
     });
   }
 
-  createRedShades() {
-    if (this._g.userPrefs.highlightStyles.length < 14) {
-      const baseColor = '#990000'; // Base color is pure red
-      const shades = [];
-
-      for (let i = 0; i < 10; i++) {
-        const shade = tinycolor(baseColor).lighten(i * 10).toString();
-        shades.push(shade);
-      }
-      for (let i = 0; i < shades.length; i++) {
-        const cyStyle = getCyStyleFromColorAndWid(shades[i], 4.5);
-        this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
-      }
-      this._profile.saveUserPrefs();
-
+  generateRedShades() {
+    let colors = [];
+    let redValue = 280;
+    let greenValue = 80;
+    let blueValue = 80;
+    for (let i = 0; i < 11; i++) {
+      let redHex = redValue.toString(16).padStart(2, '0');
+      let greenHex = greenValue.toString(16).padStart(2, '0');
+      let blueHex = blueValue.toString(16).padStart(2, '0');
+      let hexColor = '#' + redHex + greenHex + blueHex;
+      colors.push(hexColor);
+      redValue -= 30;
+      greenValue -= 6;
+      blueValue -= 6;
     }
-    /*
-    console.log(this._g.userPrefs.highlightStyles)
-    this._g.userPrefs.highlightStyles.splice(4);
-    this._profile.saveUserPrefs();
-    */
+    return colors;
   }
   activateAnomalyCues() {
 
@@ -172,12 +172,13 @@ export class ToolbarCustomizationService {
       { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
       { text: 'No comment bugs', isEnable: false, path2userPref: this.anomaly7.bind(this) },
       { text: 'Non-Assignee Resolver of Bug', isEnable: false, path2userPref: this.anomaly8.bind(this) },
-      { text: 'Closed-Reopen Ping Pong', isEnable: false, path2userPref: this.anomaly9.bind(this) }
+      { text: 'Closed-Reopen Ping Pong', isEnable: false, path2userPref: this.anomaly9.bind(this) },
+      { text: 'Not Referenced Duplicates', isEnable: false, path2userPref: this.anomaly10.bind(this) },
+      { text: 'Same Resolver Closer', isEnable: false, path2userPref: this.anomaly11.bind(this) }
     ];
-    if (!this.addCue) {
-      this.createRedShades()
-      this.addCue = true;
-      this._g.cy.nodes().filter(':visible').forEach(async element => {
+      const colors = this.generateRedShades()
+      console.log(colors)
+      this._g.cy.nodes().filter(':visible').forEach(async (element )=> {
         if (element._private.classes.values().next().value == 'Issue') {
           const div1 = document.createElement("div");
 
@@ -187,49 +188,27 @@ export class ToolbarCustomizationService {
             .filter((anomaly, index) => queryResults[index]) // filter out items whose function returns false
             .map(anomaly => anomaly.text);
           let number = anomaliesWithTrueResults.length;
+          let color = (number>0)?colors[number]: '#599a20';
           let listOfAnomalies = anomaliesWithTrueResults
-          this._g.viewUtils.highlight(element, 7 - number);
-          div1.innerHTML = `<span title="tooltip" class="badge rounded-pill bg-primary">${number}</span>`;
+          this.listOfAnomalies = listOfAnomalies
+          div1.innerHTML = `<span style="background-color:${color} !important;" class="badge rounded-pill bg-primary">${number}</span>`;
           element.addCue({
             htmlElem: div1,
+            id:element._private.data.name,
             show: "always",
             position: "top-right",
             marginX: "%0",
             marginY: "%0",
+            cursor: "pointer",
+            zIndex: 1000,
+            tooltip: listOfAnomalies.join('\n')
+          
           });
-          if (anomaliesWithTrueResults.length > 0) {
-            const div2 = document.createElement("div");
-            div2.innerHTML = `<ul class="va-text" style="opacity: 0.9; list-style-type: square; background-color: #eaeaea; color:#333a40; border: 1px solid #ddd; padding: 12px;"> ${listOfAnomalies.map(anomaly => `<li class="va-text">${anomaly}</li>`).join('')} </ul>`;
-            element.addCue({
-              htmlElem: div2,
-              show: "over",
-              position: "bottom-left",
-              marginX: "%-90",
-              marginY: "%90",
-            });
-
-          } else {
-            this._g.viewUtils.highlight(element, 2);
-          }
-
 
         }
       });
-    }
-    else {
-      this.addCue = false;
-      this._g.cy.nodes().removeCue()
-      this._g.cy.nodes().filter(':visible').forEach(async element => {
-        if (element._private.classes.values().next().value == 'Issue') {
-          this._g.viewUtils.removeHighlights(element)
-          element.removeCue()
-        }
-      }
-      );
 
-    }
-
-
+    
 
   }
 

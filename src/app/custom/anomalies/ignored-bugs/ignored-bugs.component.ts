@@ -125,7 +125,6 @@ export class IgnoredBugsComponent implements OnInit {
     const ui2Db = { 'issue': 'n.name'};
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
-    
     const cql = ` MATCH (n:Issue)-[r:ASSIGNED]-(d) 
     WHERE exists(n.history) AND size(n.history) >= 2
     WITH n, range(0, size(n.history)-2) as indices,r,d
@@ -134,6 +133,7 @@ export class IgnoredBugsComponent implements OnInit {
     this._dbService.runQuery(cql, cb);
    
   }
+ 
   private filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
    

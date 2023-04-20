@@ -179,7 +179,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   highlightNeighborsOfSelected() { this._cyService.staticHighlightNeighbors(); }
 
-  removeHighlights() { this._cyService.removeHighlights(); }
+  removeHighlights() { this._cyService.removeHighlights()}
 
   doLayout() { this._g.performLayout(false, true); }
 
