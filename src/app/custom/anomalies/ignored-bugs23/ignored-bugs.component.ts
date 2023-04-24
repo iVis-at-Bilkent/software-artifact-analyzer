@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { Neo4jDb } from '../../../visuall/db-service/neo4j-db.service';
 import { CytoscapeService } from '../../../visuall/cytoscape.service';
@@ -11,19 +10,21 @@ import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 
 export interface Anomaly {
   Issue: string;
-  Resolver: string;
+  Assignee: string;
+  Dates: string;
 }
-@Component({
-  selector: 'app-unassigned-bugs',
-  templateUrl: './unassigned-bugs.component.html',
-  styleUrls: ['./unassigned-bugs.component.css']
-})
-export class UnassignedBugsComponent implements OnInit {
 
+@Component({
+  selector: 'app-ignored-bugs',
+  templateUrl: './ignored-bugs.component.html',
+  styleUrls: ['./ignored-bugs.component.css']
+})
+export class IgnoredBugsComponent implements OnInit {
+  time:number ;
 
   
   tableInput: TableViewInput = {
-    columns: ['issue','resolver'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue','assignee','dates'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -32,9 +33,11 @@ export class UnassignedBugsComponent implements OnInit {
   clearTableFilter = new Subject<boolean>();
 
   constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService) {
+    this.time=  this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1;
   }
 
   ngOnInit() {
+    
     setTimeout(() => {
       
     }, 0);
@@ -51,6 +54,7 @@ export class UnassignedBugsComponent implements OnInit {
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
+    this.time = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue()
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       const processedTableData = this.preprocessTableData(x);
@@ -80,19 +84,26 @@ export class UnassignedBugsComponent implements OnInit {
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
     const txtCondition = getQueryCondition4TxtFilter(filter, ['Issue'], isIgnoreCase);
     const ui2Db = {'issue': 'n.name' };
-    const orderExpr = getOrderByExpression4Query(filter, 'id', 'desc', ui2Db);
+    const orderExpr = getOrderByExpression4Query(filter, 'issue', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     let dataCnt = this.tableInput.pageSize;
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql=`MATCH(n:Issue{status:'Done'}) 
-    WHERE n.assignee='None' and ${dateFilter} 
-    RETURN  ID(n) as id,  n.name AS issue, n.resolver as resolver ORDER BY ${orderExpr}`
+    const cql=`MATCH (n)
+    WHERE exists(n.history) AND size(n.history) >= 2
+    WITH n, range(0, size(n.history)-2) as index_range , r,d
+    UNWIND index_range as i
+    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+    WHERE duration.between(from, to).months > ${this.time}
+    OPTIONAL MATCH  (n)-[ASSIGNED|ASSIGN]-(d) 
+    RETURN  distinct ID(n) as id , n.name as issue, d.name as assignee, collect([from, to]) as dates ORDER BY  ${orderExpr} 
+    SKIP ${skip} LIMIT ${dataCnt}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
+    this.time = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue()
     if (!this.tableInput.isLoadGraph) {    
       return;
     } 
@@ -114,13 +125,21 @@ export class UnassignedBugsComponent implements OnInit {
       return;
     }
     const ui2Db = { 'issue': 'n.name'};
-    const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
+    const orderExpr = getOrderByExpression4Query(filter, 'n.name', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
-    
-    const cql = `MATCH (n:Issue{status:'Done'}) WHERE n.assignee='None' OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
+    const cql = `MATCH (n)
+    WHERE exists(n.history) AND size(n.history) >= 2
+    WITH n, range(0, size(n.history)-2) as index_range
+    UNWIND index_range as i
+    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+    WHERE duration.between(from, to).months > ${this.time}
+    OPTIONAL MATCH  (n)-[r:ASSIGNED|ASSIGN]-(d) 
+    RETURN  n,r,d ORDER BY  ${orderExpr} 
+    SKIP ${skip}`
     this._dbService.runQuery(cql, cb);
-   
+
   }
+ 
   private filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
    
@@ -145,46 +164,77 @@ export class UnassignedBugsComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string];
 
+    console.log(uiColumns)
+    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string,TableDataType.string];
+    console.log(data)
     this.tableInput.results = [];
+  
     for (let i = 0; i < data.length; i++) {
-      const row: TableData[] = [];
+      const row: TableData[] = []     
       for (let j = 0; j < uiColumns.length; j++) {
-        row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
+        if(uiColumns[j] == "dates" && data[i][uiColumns[j]].length>3 ){
+          const formattedDates = data[i][uiColumns[j]].map(subArray => {
+            return subArray.map(dateString => {
+              const date = new Date(dateString);
+              return date.toLocaleDateString('en-GB'); // use your preferred locale here
+            }).join(' - ');
+          });
+          
+          data[i][uiColumns[j]] = formattedDates.slice(0,3).join(" , ")
+          data[i][uiColumns[j]]  = "[" + data[i][uiColumns[j]] + " ...]"
+          row.push({ type: columnTypes[j], val: data[i][uiColumns[j]] })
+        }
+        else if (uiColumns[j] == "dates" && data[i][uiColumns[j]].length<=3 ){
+          const formattedDates = data[i][uiColumns[j]].map(subArray => {
+            return subArray.map(dateString => {
+              const date = new Date(dateString);
+              return date.toLocaleDateString('en-GB'); // use your preferred locale here
+            }).join(' - ');
+          });
+          
+          data[i][uiColumns[j]] = formattedDates.join(" , ")
+          data[i][uiColumns[j]]  = "[" + data[i][uiColumns[j]] + " ]";
+          row.push({ type: columnTypes[j], val: data[i][uiColumns[j]] })
+        }
+        else{
+          row.push({ type: columnTypes[j], val: data[i][uiColumns[j]] })
+        }
+        
       }
-      row.push(); 
       this.tableInput.results.push(row)
-
     }
+    console.log(this.tableInput.results )
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
     console.log(this.tableInput)
+
     this.tableFilled.next(true);
   }
 
   getDataForQueryResult(e: TableRowMeta) {
+    this.time = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue()
     const cb = (x) => {
-      this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
+      console.log(x)
+      this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
     }
     const idFilter = buildIdFilter(e.dbIds);
+    console.log(e)
     const ui2Db = {'issue': 'n.name'};
-    
-    const cql = `MATCH(n:Issue{status:'Done'})
-    WHERE n.assignee='None' and ${idFilter} 
-    OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
+
+    const cql =  `MATCH (n)
+    WHERE exists(n.history) AND size(n.history) >= 2
+    WITH n, range(0, size(n.history)-2) as index_range
+    UNWIND index_range as i
+    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+    WHERE duration.between(from, to).months > ${this.time} and ${idFilter}
+    OPTIONAL MATCH  (n)-[r:ASSIGNED|ASSIGN]-(d) 
+    RETURN  n,r,d `
     this._dbService.runQuery(cql, cb);
   }
 
-  filterTable(filter: TableFiltering) {
-    this.tableInput.currPage = 1;
-    let skip = filter.skip ? filter.skip : 0;
-    this.loadTable(skip, filter);
-    if (this.tableInput.isLoadGraph) {
-      this.loadGraph(skip, filter);
-    }
-  }
+
 
   // zip paralel arrays 
   private preprocessTableData(data): Anomaly[] {
@@ -253,3 +303,4 @@ export class UnassignedBugsComponent implements OnInit {
     return `n.start > ${d1} AND n.end < ${d2}`;
   }
 }
+

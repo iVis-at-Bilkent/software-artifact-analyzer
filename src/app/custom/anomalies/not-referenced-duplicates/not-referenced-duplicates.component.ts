@@ -134,7 +134,10 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
+      if (nodeIdDict[x.edges[i].startNode]) {
+        nodeIdDict[x.edges[i].endNode] = true;
+      }
+      else if (nodeIdDict[x.edges[i].endNode]) {
         nodeIdDict[x.edges[i].startNode] = true;
       }
     }

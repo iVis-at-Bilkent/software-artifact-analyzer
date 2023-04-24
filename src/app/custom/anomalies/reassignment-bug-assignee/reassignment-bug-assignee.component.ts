@@ -119,10 +119,13 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     const ui2Db = { 'issue': 'n.name'};
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
-    
-    const cql = ` MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${dateFilter} 
-    OPTIONAL MATCH (n)-[r]-(d) 
-    return n,d,r`
+   
+    const cql =  ` MATCH (n:Issue)
+    WHERE n.assigneeChangeCount >= ${this.count} 
+    WITH n, [assignee IN n.assigneeHistory ] AS assignees
+    UNWIND assignees AS assignee
+    MATCH (developer:Developer { name: assignee })
+    RETURN n, n.name AS issue, developer AS assignee`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -135,8 +138,8 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].startNode]) {
+        nodeIdDict[x.edges[i].endNode] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {

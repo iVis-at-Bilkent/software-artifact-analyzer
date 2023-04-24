@@ -17,12 +17,23 @@
 .modal-header{
   display: block;
 }
+.subpanel-heading {
+  cursor: pointer;
+  text-align: center;
+  background-color: #eaeaea40;
+  line-height: 1.45;
+  display: flex;
+  width: 22vw;
+  justify-content: center;
+  flex-direction: column;
+}
 
   .dd-item {
     padding: 0.37rem !important;
   }
   
   .flex{
+    flex-wrap: wrap;
     margin-top: 1rem;
     align-items: center !important;
     display: flex;

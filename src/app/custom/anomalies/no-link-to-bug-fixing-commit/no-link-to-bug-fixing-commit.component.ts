@@ -148,6 +148,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
   }
 
 
+
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
     const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string,TableDataType.string];
@@ -245,6 +246,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const skip = filter && filter.skip ? filter.skip : 0;
     return filtered.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
   }
+
 
   // tableInput is already filtered. Use that to filter graph elements.
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
