@@ -89,7 +89,7 @@ export class NoAssigneeResolverBugComponent implements OnInit {
 
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n:Issue)
-    WHERE EXISTS(n.assignee) AND EXISTS(n.resolver) AND n.assignee <>'None' AND n.resolver <>'None'
+    WHERE EXISTS(n.assignee) AND EXISTS(n.resolver) AND   EXISTS(n.assignee)  AND   EXISTS(n.resolver) 
     WITH n, n.assignee AS assignee, n.resolver AS resolver
     WHERE assignee <> resolver  and ${dateFilter} 
     RETURN ID(n) as id, n.name as issue, assignee, resolver ORDER BY ${orderExpr}`
@@ -120,7 +120,7 @@ export class NoAssigneeResolverBugComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue)<-[r1:ASSIGNEE]-(assignee:Developer),
+    const cql = `MATCH (n:Issue)-[r1:ASSIGNED]-(assignee:Developer),
      (n:Issue)<-[r2:RESOLVE]-(resolver:Developer)
     WHERE assignee <> resolver
     RETURN n, assignee, resolver, r2,r1`
@@ -177,7 +177,7 @@ export class NoAssigneeResolverBugComponent implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
     
-    const cql = `MATCH (resolver:Developer)-[r2:RESOLVE]->(n:Issue)<-[r1:ASSIGNEE]-(assignee:Developer)
+    const cql = `MATCH (resolver:Developer)-[r2:RESOLVE]->(n:Issue)-[r1:ASSIGNED]-(assignee:Developer)
     WHERE assignee <> resolver  and ${idFilter}
     RETURN n, assignee, resolver, r2,r1  `
     this._dbService.runQuery(cql, cb);

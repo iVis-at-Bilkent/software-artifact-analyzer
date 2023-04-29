@@ -88,7 +88,7 @@ export class UnassignedBugsComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH(n:Issue{status:'Done'}) 
-    WHERE n.assignee='None' and ${dateFilter} 
+    WHERE NOT EXISTS(n.assignee) and ${dateFilter} 
     RETURN  ID(n) as id,  n.name AS issue, n.resolver as resolver ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -101,6 +101,7 @@ export class UnassignedBugsComponent implements OnInit {
     const cb = (x) => {
       console.log(x)
       if (isClientSidePagination) {
+        console.log(1)
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
         this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
@@ -110,6 +111,7 @@ export class UnassignedBugsComponent implements OnInit {
       }
     };
     if (isClientSidePagination && filter && this.graphResponse) {
+      console.log(2)
       this._cyService.loadElementsFromDatabase(this.filterGraphResponse(this.graphResponse), this.tableInput.isMergeGraph);
       return;
     }
@@ -117,7 +119,7 @@ export class UnassignedBugsComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue{status:'Done'}) WHERE n.assignee='None' OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
+    const cql = `MATCH (n:Issue{status:'Done'}) WHERE NOT EXISTS(n.assignee) OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -139,6 +141,7 @@ export class UnassignedBugsComponent implements OnInit {
         r.nodes.push(x.nodes[i]);
       }
     }
+    console.log(nodeIdDict)
     return r;
   }
 
@@ -172,7 +175,7 @@ export class UnassignedBugsComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH(n:Issue{status:'Done'})
-    WHERE n.assignee='None' and ${idFilter} 
+    WHERE NOT EXISTS(n.assignee) and ${idFilter} 
     OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
   }

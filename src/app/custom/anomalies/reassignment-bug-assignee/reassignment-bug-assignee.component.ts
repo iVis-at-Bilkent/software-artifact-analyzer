@@ -119,27 +119,32 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     const ui2Db = { 'issue': 'n.name'};
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
-   
+
     const cql =  ` MATCH (n:Issue)
     WHERE n.assigneeChangeCount >= ${this.count} 
     WITH n, [assignee IN n.assigneeHistory ] AS assignees
     UNWIND assignees AS assignee
-    MATCH (developer:Developer { name: assignee })
-    RETURN n, n.name AS issue, developer AS assignee`
+    MATCH path =(developer:Developer {name: assignee})-[*1..2]-()
+    WHERE last(nodes(path)) = n
+    RETURN n, developer AS assignee,relationships(path) AS edges`
     this._dbService.runQuery(cql, cb);
    
   }
   private filterGraphResponse(x: GraphResponse): GraphResponse {
-    const r: GraphResponse = { nodes: [], edges: x.edges };
-   
+    const r: GraphResponse = { nodes: x.nodes, edges: x.edges };
+   /*
     const nodeIdDict = {};
     for (let i = 0; i < this.tableInput.results.length; i++) {
       nodeIdDict[this.tableInput.results[i][0].val] = true;
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].startNode]) {
+      if (nodeIdDict[x.edges[i].endNode]) {
+        nodeIdDict[x.edges[i].startNode] = true;
+      }else if (nodeIdDict[x.edges[i].startNode]) {
         nodeIdDict[x.edges[i].endNode] = true;
+      }else{
+
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
@@ -147,6 +152,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
         r.nodes.push(x.nodes[i]);
       }
     }
+    */
     return r;
   }
 

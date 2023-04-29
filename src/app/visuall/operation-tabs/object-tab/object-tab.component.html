@@ -35,6 +35,6 @@
     </div>
   </div>
 
-  <app-panel-container [panels]="customSubTabs" [containerId]="'obj-custom-sub-tab'"> </app-panel-container>
+  <app-panel-container  *ngIf="selectedItemProps.length>0"  [panels]="customSubTabs" [containerId]="'obj-custom-sub-tab'">  </app-panel-container>
 
 </div>

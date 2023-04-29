@@ -610,7 +610,7 @@ export class ReportComponentComponent implements OnInit {
 
   async anomaly8(): Promise<any> {
     const cql = `MATCH (n:Issue)
-    WHERE EXISTS(n.assignee) AND EXISTS(n.resolver) AND n.assignee <>'None' AND n.resolver <>'None' and  n.name = '${this.issue_name}'
+    WHERE EXISTS(n.assignee) AND EXISTS(n.resolver) AND  EXISTS(n.assignee) AND  EXISTS(n.resolver) and  n.name = '${this.issue_name}'
     WITH n, n.assignee AS assignee, n.resolver AS resolver
     WHERE assignee <> resolver  
     WITH count(n) AS count,assignee,resolver
@@ -621,8 +621,8 @@ export class ReportComponentComponent implements OnInit {
 
 
   async anomaly7(): Promise<any> {
-    const cql = `MATCH (n:Issue{status:'Done'})
-    WHERE size(n.comments) = 0  and  n.name = '${this.issue_name}'
+    const cql = `MATCH (n) 
+    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and  n.name = '${this.issue_name}'
     WITH count(n) AS count
     RETURN CASE WHEN count = 0 THEN false ELSE true END`;
     return await this.runAnomalyQuery(cql, "No comment on issue");
@@ -669,7 +669,7 @@ export class ReportComponentComponent implements OnInit {
 
   async anomaly1(): Promise<any> {
     const cql = `MATCH (n:Issue {status: 'Done'})
-      WHERE n.assignee = 'None' AND n.name = '${this.issue_name}'
+      WHERE NOT EXISTS(n.assignee) AND n.name = '${this.issue_name}'
       WITH count(n) AS count
       RETURN CASE WHEN count = 0 THEN false ELSE true END`;
     return await this.runAnomalyQuery(cql, "Unassigned issue");

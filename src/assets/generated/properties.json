@@ -37,7 +37,9 @@
       "closer": "string",
       "duplicate": "string",
       "assigneeChangeCount": "integer",
-      "reopenCount": "integer"
+      "environment": "string",
+      "reopenCount": "integer",
+      "affectedVersion": "string"
     },
     "PullRequest": {
       "name": "string",
@@ -67,7 +69,7 @@
       "end": "datetime",
       "createdAt": "datetime"
     },
-    "ASSIGNEE": {
+    "ASSIGNS": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"

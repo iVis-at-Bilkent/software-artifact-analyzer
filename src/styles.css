@@ -340,11 +340,6 @@ app-operation-tabs {
   height: 2.25em;
 }
 
-.modal-dialog {
-  width: fit-content;
-  min-width: 380px;
-}
-
 .form-inline {
   display: flex;
   vertical-align: middle;
@@ -377,7 +372,7 @@ body {
 
 .mat-dialog-container {
   overflow: hidden !important;
-  height: 80% !important;
-  width: 100% !important;
+  width: 70vw !important;
+  height: 70vh !important;
   padding: 0 !important;
 }

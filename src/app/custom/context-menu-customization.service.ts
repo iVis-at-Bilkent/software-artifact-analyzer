@@ -34,7 +34,7 @@ export class ContextMenuCustomizationService {
   private _get_commit_for_issue_relation = "REFERENCES";
   private _get_developer_for_issue_relation = ["REFERENCES", "COMMITS"]
   private _get_files_for_issue_relation = ["REFERENCES", "CONTAINS"]
-  private _get_developer_for_issue_relation2 = ["REPORTS", "ASSIGNED", "ASSIGNEE", "RESOLVE"];
+  private _get_developer_for_issue_relation2 = ["REPORTS", "ASSIGNED", "ASSIGNS", "RESOLVE"];
   private _issue_issue = ["FIXES", "DEPENDS_UPON", "DUPLICATES", "BLOCKS", "INCORPORATES", "INCORPORATES", "RELATES_TO", "SUPERSEDES"]
   //Developer
   private _developer_pull_request = ["OPENS", "MERGE", "REVIEWS"];
@@ -127,7 +127,7 @@ export class ContextMenuCustomizationService {
               this.getNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "ASSIGNEE", targetType: "Issue" }
+                { edgeType: "ASSIGNS", targetType: "Issue" }
               );
             },
           },
@@ -139,7 +139,7 @@ export class ContextMenuCustomizationService {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "ASSIGNEE", targetType: "Issue" }
+                { edgeType: "ASSIGNS", targetType: "Issue" }
               );
             },
           },
@@ -923,7 +923,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "ASSIGNEE",
+                    edgeType: "ASSIGNS",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -939,7 +939,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "ASSIGNEE",
+                    edgeType: "ASSIGNS",
                     isMultiLength: false,
                     targetType: "Developer"
                   }

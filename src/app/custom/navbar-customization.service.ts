@@ -73,7 +73,7 @@ export class NavbarCustomizationService {
 
   async anomaly8(issue_name): Promise<any> {
     const cql = `MATCH (n:Issue)
-    WHERE EXISTS(n.assignee) AND EXISTS(n.resolver) AND n.assignee <>'None' AND n.resolver <>'None' and  n.name = '${issue_name}'
+    WHERE EXISTS(n.assignee) AND EXISTS(n.resolver) AND EXISTS(n.assignee) AND EXISTS(n.resolver) and  n.name = '${issue_name}'
     WITH n, n.assignee AS assignee, n.resolver AS resolver
     WHERE assignee <> resolver  
     WITH count(n) AS count,assignee,resolver
@@ -132,7 +132,7 @@ export class NavbarCustomizationService {
 
   async anomaly1(issue_name): Promise<any> {
     const cql = `MATCH (n:Issue {status: 'Done'})
-      WHERE n.assignee = 'None' AND n.name = '${issue_name}'
+      WHERE NOT EXISTS(n.assignee) AND n.name = '${issue_name}'
       WITH count(n) AS count
       RETURN CASE WHEN count = 0 THEN false ELSE true END`;
     return await this.runAnomalyQuery(cql, "Unassigned issue");

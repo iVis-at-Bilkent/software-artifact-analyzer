@@ -23,7 +23,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
 
   
   tableInput: TableViewInput = {
-    columns: ['issue', 'assignee','resolver'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    columns: ['issue', 'assignee','resolver'],results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
@@ -49,6 +49,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     this.loadTable(skip);
     this.loadGraph(skip);
   }
+
 
   loadTable(skip: number, filter?: TableFiltering) {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
@@ -103,6 +104,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const cb = (x) => {
       console.log(x)
       if (isClientSidePagination) {
+        console.log(1)
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
         this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
@@ -112,6 +114,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
       }
     };
     if (isClientSidePagination && filter && this.graphResponse) {
+      console.log()
       this._cyService.loadElementsFromDatabase(this.filterGraphResponse(this.graphResponse), this.tableInput.isMergeGraph);
       return;
     }
@@ -138,12 +141,19 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
       if (nodeIdDict[x.edges[i].endNode]) {
         nodeIdDict[x.edges[i].startNode] = true;
       }
+      else if  (nodeIdDict[x.edges[i].startNode]) {
+        nodeIdDict[x.edges[i].endNode] = true;
+      }
+      else{
+
+      }
     }
     for (let i = 0; i < x.nodes.length; i++) {
       if (nodeIdDict[x.nodes[i].id]) {
         r.nodes.push(x.nodes[i]);
       }
     }
+    console.log(nodeIdDict)
     return r;
   }
 

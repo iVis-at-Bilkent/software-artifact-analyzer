@@ -218,7 +218,7 @@
     }
   },
   {
-    "selector": "edge.ASSIGNEE",
+    "selector": "edge.ASSIGNS",
     "style": {
       "label": "assign",
       "width": "1px",

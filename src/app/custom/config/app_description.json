@@ -99,7 +99,9 @@
         "closer":"string",
         "duplicate":"string",
         "assigneeChangeCount":"integer",
-        "reopenCount":"integer"
+        "environment":"string",
+        "reopenCount":"integer",
+        "affectedVersion":"string"
 
       },
       "style": {
@@ -209,7 +211,7 @@
         "color":"#976e6e"
       }
     }, 
-    "ASSIGNEE": {
+    "ASSIGNS": {
       "source": "Developer",
       "target": "Issue",
       "isBidirectional": false,
