@@ -716,8 +716,6 @@ export class ReportComponentComponent implements OnInit {
         this.reviewerData = x.data;
         console.log(this.reviewerData)
         this.commentInput.addReviewer = true;
-
-        console.log(x)
         let recomendation = '';
         // Generate table header
         recomendation += 'Recommended developers are;\n';
@@ -727,7 +725,6 @@ export class ReportComponentComponent implements OnInit {
             recomendation += `@${data[1].replace(' ', '')} with score ${data[0]}\n`
           }
         });
-
         this.comment = this.comment + recomendation
         this.commentInput.addReviewer = true
 

@@ -6,6 +6,7 @@ import { Query1Component } from './queries/query1/query1.component';
 import { Query2Component } from './queries/query2/query2.component';
 import { Query3Component } from './queries/query3/query3.component';
 import { Query5Component } from './queries/query5/query5.component';
+import { Query6Component } from './queries/query6/query6.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
@@ -35,6 +36,7 @@ import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/sa
     Query1Component, 
     Query2Component,
     Query3Component,
+    Query6Component,
      ReportComponentComponent,
      Query5Component,
      UnassignedBugsComponent,
@@ -61,7 +63,7 @@ import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/sa
 
 export class CustomizationModule {
   // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }];
-  // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }, { component: Dummy2Component, text: 'Dummy2' }];
+ // static operationTabs: { component: any, text: string }[] = [{ component: Query5Component, text: 'Get Anomalies' }];
   static operationTabs: { component: any, text: string }[] = [];
   static objSubTabs: { component: any, text: string }[] = [
     { component: ReportComponentComponent, text: 'Report' }
@@ -73,6 +75,7 @@ export class CustomizationModule {
     { component: Query1Component, text: 'Get Commits of Developer' },
     { component: Query3Component, text: 'Get Recommended Reviewers' },
     { component: Query5Component, text: 'Get Anomalies' },
+    { component: Query6Component, text: 'Get Anomaly Statistics' }
 
   ];
   static anomalies:{ component: any, text: string }[] = [
