@@ -7,20 +7,5 @@
       "Access-Control-Allow-Origin": "*",
       "X-Atlassian-Token": "no-check"
     }
-  },
-  "/authorize/*": {
-    "target": "https://auth.atlassian.com",
-    "secure": false,
-    "changeOrigin": true,
-    "headers": {
-      "Access-Control-Allow-Origin": "http://localhost:4200",
-      "X-Atlassian-Token": "no-check"
-    },
-    "logLevel": "debug",
-    "onProxyRes": {
-      "setHeader": {
-        "Access-Control-Allow-Origin": "http://localhost:4200"
-      }
-    }
   }
 }

@@ -170,8 +170,8 @@
       }
     },
     "ASSIGNED": {
-      "source": "Developer",
-      "target": "Issue",
+      "source": "Issue",
+      "target": "Developer",
       "isBidirectional": false,
       "properties": {
         "id":"string",

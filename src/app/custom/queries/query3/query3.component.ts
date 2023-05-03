@@ -26,7 +26,8 @@ export interface DeveloperData {
   styleUrls: ['./query3.component.css']
 })
 export class Query3Component implements OnInit {
-
+  githubHttpOptions:any;
+  authentication: any;
   pr: string;
   prId : number;
   prs: string[];
@@ -61,6 +62,17 @@ export class Query3Component implements OnInit {
   }
 
   ngOnInit() {
+    this.http.get('http://0.0.0.0:4445/getAuthentication').subscribe(data => {
+      this.authentication  = data;
+      this.githubHttpOptions = {
+        headers: new HttpHeaders({
+          'Authorization': `Bearer ${this.authentication.github_token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          "X-GitHub-Api-Version": "2022-11-28",
+          'Content-Type': 'application/json'
+        })
+      };
+    });
     this.pr = "None";
     setTimeout(() => {
       this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , ID(m) as id order by m.name ', (x) =>{ 
@@ -70,30 +82,30 @@ export class Query3Component implements OnInit {
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
   }
-assign(){
-  console.log(this.tableInput.results2)
-  this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
-  console.log(this.reviewers)
-  const url = `https://api.github.com/repos/LaraMerdol/codebanksystemProject/pulls/${this.pr}/requested_reviewers`;
-  const headers = {
-    headers: new HttpHeaders({
-      'Authorization': 'Bearer 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',
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json',
-    }
- ) };
-
- const body = { reviewers: this.reviewers };
- return this.http.post(url, body, headers).subscribe(
-  (response) => {
-    alert('Reviewers added successfully to pull request '+this.pr);
-  },
-  (error) => {
-    console.error('Error adding Reviewers:', error);
+  assign() {
+    console.log(this.tableInput.results);
+    this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
+    const url = `https://api.github.com/repos/${this.authentication.github_repo}/pulls/${this.pr}/requested_reviewers`;
+    const headers = {
+      'Accept': 'application/vnd.github+json',
+      'Authorization': `Bearer ${this.authentication.github_token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+      'Content-Type': 'application/json'
+    };
+    const body = {
+      reviewers: this.reviewers 
+    };
+    
+    this.http.post(url, body, { headers }).subscribe(
+      (response) => {
+        console.log('Reviewers added successfully:', response);
+      },
+      (error) => {
+        console.error('Error adding reviewers:', error);
+      }
+    );
   }
-);
 
-}
 
   prepareQuery() {
     this.tableInput.currPage = 1;

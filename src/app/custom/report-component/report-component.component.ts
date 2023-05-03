@@ -1,17 +1,12 @@
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { GlobalVariableService } from '../../visuall/global-variable.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { CytoscapeService } from "../../visuall/cytoscape.service";
+import { Observable } from 'rxjs';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
-import { CookieService } from 'ngx-cookie-service';
-import { HttpXsrfTokenExtractor } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-//import {  BoolSetting } from '../../visuall/user-preference';
-//import api from '@forge/api';
+
+
 interface Attachment {
   name: string;
   data: any,
@@ -28,345 +23,37 @@ export interface BoolSetting {
   styleUrls: ['./report-component.component.css']
 })
 export class ReportComponentComponent implements OnInit {
-  credentials = 'lara.merdol@ug.bilkent.edu.tr:ATATT3xFfGF05CflbDueb6BFnWmfArTRv6h8OwY08_E_xMLUvHqeiFh4YTfpWtf1CMLS4LASzjVbDe5yZOZNzOBvHuA33tatEQvlmcEk-ST1TzWVIpwud9vKcFkW5F9sNEU-DmxinvwDQ0F1tXeRJ26LfH-gWlXuNzW6K3wyHqonmvyX2rX6n28=F8DD5F05';
-  encodedCredentials = btoa(this.credentials);
-  className: string = ""
-  selectedItemProps: any[];
-  selectedItemPropsURL: any[];
-  public comment: string = '';
-  comment_header: string;
+  //MENU VARIABLES
+  addMenu: any[];
+  commentInput: any = {
+    addGraph: false, addAnomaly: false, addJira: false, addGithub: false, addReviewer: false
+  };
+  prs: string[] = []
+  dataURL: string; //Graph screenshot base64
   pr_name: string = "";
   issue_name: string = "";
-  comment_paragraph: string;
-  attachments: Attachment[] = [];
+  comment: string = '';
+  comment_header: string;
+  className: string = ""
+
+  //RECOMMEND REVIEWER PR
   reviewerData: any[] = [];
-  dataURL: string;
-  imageUrl: string;
-  sha_github: string = "";
-  panel: any;
-  csrfToken: any;
-  prs: string[] = []
-  code: string = "";
-  cloudId: string = "";
-  token: string = "";
+
+  //REPORT ANOMALY VARIABLES
   anomalies: BoolSetting[];
   number_of_anomalies: number = 0;
   anomalyModal: boolean = true;
 
-  commentInput: any = {
-    addGraph: false, addAnomaly: false, addJira: false, addGithub: false, addReviewer: false
-  };
-  addMenu: any[];
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Authorization': 'Bearer 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',
-      'Accept': 'application/vnd.github.v3+json'
-    })
-  };
-  constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute, private tokenExtractor: HttpXsrfTokenExtractor, private cookieService: CookieService, public _dbService: Neo4jDb, private _g: GlobalVariableService, private _cyService: CytoscapeService,
-    private http: HttpClient, private _modalService: NgbModal) {
-    this.selectedItemProps = [];
-    this.selectedItemPropsURL = [];
-  }
-  afterLogin() {
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/json');
-
-    // Set the data for the POST request
-    const body = {
-      "grant_type": "authorization_code",
-      "client_id": "WNeK0URX3suDqJmiz7Wh32vg05gOpimn",
-      "client_secret": "ATOA08WMGp8Rg7CgSRXODWRMgNVOIT4eK3hzkvvgTCRbys0sqx4pP5Tztcap74X3oAF2C4693FF8",
-      "code": this.code,
-      "redirect_uri": "http://localhost:4200/?name=SAA-3"
-    };
-    /*
-    const body = {
-      "grant_type": "authorization_code",
-      "client_id": "Gte89X7se0jg0EGuEqZFSwBgQoGDIEhU",
-      "client_secret": "ATOArGowlE0ILdGC19sGXhYf4nWhlXAqpIdqSyMaEYR_UcCZhNi7jDdl2EOFleUUzOL5DCAFCEB0",
-      "code": this.code,
-      "redirect_uri": "http://localhost:4400/?name=SAA-3"
-    };
-    */
-    // Make the POST request
-    console.log("geldi")
-    this.http.post('https://auth.atlassian.com/oauth/token', body, { headers }).subscribe(
-      (response) => {
-        console.log('Token:', response);
-        this.token = response["access_token"]
-        console.log(this.token)
-        const options = {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.token,
-          }),
-        };
-
-        this.http.get('https://api.atlassian.com/oauth/token/accessible-resources', options).subscribe(
-          (response) => {
-            console.log('ID:', response);
-            this.cloudId = response[0]["id"]
-            let issueKey = this._g.cy.$(':selected')[0]._private.data.name
-            //let issueKey = this._g.cy.$(':selected')[0]._private.data.name
-            this.postCommentIssue(issueKey, "Bu bir deneme")
-
-          },
-          (error) => {
-            console.error('Error adding comment:', error);
-          })
-      },
-      (error) => {
-        console.error('Error adding comment:', error);
-      })
-  }
-  login() {
-    //window.location.href = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=Gte89X7se0jg0EGuEqZFSwBgQoGDIEhU&scope=read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20read%3Ajira-user%20write%3Ajira-work%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=http%3A%2F%2Flocalhost%3A4400%2F%3Fname%3DSAA-3&state=${YOUR_USER_BOUND_VALUE}&response_type=code&prompt=consent';
-    window.location.href = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=WNeK0URX3suDqJmiz7Wh32vg05gOpimn&scope=read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20read%3Ajira-user%20write%3Ajira-work%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2F%3Fname%3DSAA-3&state=${YOUR_USER_BOUND_VALUE}&response_type=code&prompt=consent';
-  }
-  //Jira Issue Post Comment
-  postCommentIssue(issueKey: string, comment: string) {
-    this.code = this.route.snapshot.queryParamMap.get('code') ? this.route.snapshot.queryParamMap.get('code') : "";
-
-    if (this.code != "") {
-      if (this.cloudId == "" || this.token == "") {
-        this.afterLogin()
-        console.log(this.code)
-      }
-      else {
-        const headers = {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.token,
-          }),
-        };
-        const body = {
-          body: "h2. " + this.comment_header + "\n" + this.comment
-        };
-        const body2 = {
-          "body": "h2. " + this.comment_header + "\n" + this.comment,
-          "properties": [
-            {
-              "key": "sd.public.comment.image",
-              "value": {
-                "name": "example.png",
-                "data": this.dataURL
-              }
-            }
-          ]
-        };
-        if (this.commentInput.addGraph) {
-          this.http.post('https://api.atlassian.com/ex/jira/' + this.cloudId + '/rest/api/2/issue/' + issueKey + '/comment', body2, headers).subscribe(
-            (response) => {
-              console.log('Comment added successfully:', response);
-              alert('Comment posted successfully')
-            },
-            (error) => {
-              console.error('Error adding comment:', error);
-            }
-          );
-        }
-        else {
-          this.http.post('https://api.atlassian.com/ex/jira/' + this.cloudId + '/rest/api/2/issue/' + issueKey + '/comment', body, headers).subscribe(
-            (response) => {
-              console.log('Comment added successfully:', response);
-              alert('Comment posted successfully')
-            },
-            (error) => {
-              console.error('Error adding comment:', error);
-            }
-          );
-        }
-
-      }
-
-      // "eyJraWQiOiJmZTM2ZThkMzZjMTA2N2RjYTgyNTg5MmEiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiI5Y2UzYTVkOS02NTUzLTRjZWYtOGZlYi05ZjMxYjRkY2FiZWYiLCJzdWIiOiI2M2U3NmRmNTg5NzhkN2E0MzUzZWQzZGQiLCJuYmYiOjE2Nzk5NDA1ODYsImlzcyI6Imh0dHBzOi8vYXRsYXNzaWFuLWFjY291bnQtcHJvZC5wdXMyLmF1dGgwLmNvbS8iLCJpYXQiOjE2Nzk5NDA1ODYsImV4cCI6MTY3OTk0NDE4NiwiYXVkIjoiR3RlODlYN3NlMGpnMEVHdUVxWkZTd0JnUW9HRElFaFUiLCJjbGllbnRfaWQiOiJHdGU4OVg3c2UwamcwRUd1RXFaRlN3QmdRb0dESUVoVSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9lbWFpbERvbWFpbiI6InVnLmJpbGtlbnQuZWR1LnRyIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2F0bF90b2tlbl90eXBlIjoiQUNDRVNTIiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL2ZpcnN0UGFydHkiOmZhbHNlLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vc2Vzc2lvbl9pZCI6ImIyNDY4ZGY5LWVmZWMtNGMyOS1iMGE2LWNkMTViOGYxNTU3MSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS92ZXJpZmllZCI6dHJ1ZSwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL3N5c3RlbUFjY291bnRFbWFpbCI6IjEzNzUzYWY1LWUyNDgtNGY4My04MDMwLTVlNDliYjY0NTZjZkBjb25uZWN0LmF0bGFzc2lhbi5jb20iLCJodHRwczovL2lkLmF0bGFzc2lhbi5jb20vdWp0IjoiYTU1Y2MwNGUtNDVmYy00ZTMwLThiYjctNTQ5MjFhOWMyOGU2IiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3Byb2Nlc3NSZWdpb24iOiJ1cy1lYXN0LTEiLCJzY29wZSI6Im1hbmFnZTpqaXJhLXByb2plY3QgbWFuYWdlOmppcmEtY29uZmlndXJhdGlvbiByZWFkOmppcmEtd29yayBtYW5hZ2U6amlyYS1kYXRhLXByb3ZpZGVyIHdyaXRlOmppcmEtd29yayBtYW5hZ2U6amlyYS13ZWJob29rIHJlYWQ6amlyYS11c2VyIiwiY2xpZW50X2F1dGhfdHlwZSI6IlBPU1QiLCJodHRwczovL2F0bGFzc2lhbi5jb20vb2F1dGhDbGllbnRJZCI6Ikd0ZTg5WDdzZTBqZzBFR3VFcVpGU3dCZ1FvR0RJRWhVIiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tLzNsbyI6dHJ1ZSwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3ZlcmlmaWVkIjp0cnVlLCJodHRwczovL2F0bGFzc2lhbi5jb20vc3lzdGVtQWNjb3VudElkIjoiNzEyMDIwOmY3MjM0MDg0LWQwZTMtNDFjMi1hNTQ5LTE4NzI2MTFjMWVmZSIsImh0dHBzOi8vYXRsYXNzaWFuLmNvbS9zeXN0ZW1BY2NvdW50RW1haWxEb21haW4iOiJjb25uZWN0LmF0bGFzc2lhbi5jb20ifQ.WB5P-gCXQiIaTb5gjUmmX1rMy_d2y0XvCe-b786I_ujGsL8H913hCW14N1r3ljs-u40VcK85cdlKTucWEVfi5Xyn4H7ejIEfdU1-eD2Rmkdl7n1lr2HqiEDjotJ6EnJGsNAQLR9X00id2MaRcGpsz-NyEcshfA0HsqhbH50Emy7e7noAp0RkelpW5R0lddqzLeDG82R9eMJ0xiBi1I_1ufBLzigDhMSyBaRPiDGIa28EZZoXUoXrjtecKm-HWaqsFUSP2vSs3wW2FacvDcTkSqBLl-cHJhpN6_1FCjLkry_KSl6RSLW6-Y6uxd_yYIzOoflRVGV9u4tXkmZ9JAKLVA"
-
-      //b9404671-23b7-4a57-90ab-7fea46d4ab63
+  //GITHUB  JIRA REST API VARIABLES
+  githubHttpOptions: any; //Github rest api header
+  sha_github: string = "";
+  authentication: any;
+  imageUrl: string;
+  attachments: Attachment[] = [];
 
 
-    }
-    else {
-      this.login();
-    }
-  }
 
-  updateFile(): Observable<any> {
-    const url = `https://api.github.com/repos/LaraMerdol/codebanksystemProject/contents/image.png`;
-
-    const body = {
-      message: "txt file",
-      content: `${this.dataURL.split(",")[1]}`,
-      sha: this.sha_github
-    };
-
-    const options = this.httpOptions;
-    return this.http.put(url, body, options);
-  }
-  //Github PullRequest Post Comment To Pull Request
-  async postCommentPr(prKey: string) {
-    const commentBody = {
-      body: `###${this.comment_header }\n${this.comment}\n<img id="guiai-16816155202" src="data:image/png;base64,${this.dataURL.split(",")[1]}">`
-    };
-    console.log(commentBody.body)
-
-    //If add graph is selected
-    if (this.commentInput.addGraph) {
-      /*
-      this.http.get(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/contents/image.png`, this.httpOptions).subscribe(async response => {
-        this.sha_github = response["sha"];
-        await this.updateFile().subscribe(response => {
-          console.log('Comment posted successfully:', response);
-          alert('Comment posted successfully')
-          this.imageUrl = response["content"]["download_url"]
-          commentBody.body += '\n\n![image](' + this.imageUrl + ')'
-          this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
-            console.log('Comment posted successfully:', response);
-          }, error => {
-            console.error('Error posting comment:', error);
-          });
-          console.log(commentBody.body)
-        }, error => {
-          console.error('Error updating image:', error);
-        });
-      }, error => {
-        console.error('Error getting ssh:', error);
-      });
-      */
-
-      /*
-      this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
-        console.log('Comment posted successfully:', response);
-      }, error => {
-        console.error('Error posting comment:', error);
-      });
-      */
-      const byteCharacters = atob(this.dataURL.split(',')[1]);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'image/png' }); // Replace 'image/png' with the appropriate MIME type for your image
-    
-      const formData = new FormData();
-      formData.append('file', blob);
-      await this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/pr/${prKey}/attachments`, formData,this.httpOptions).subscribe(response => {
-        console.log('Comment posted successfully:', response);
-      }, error => {
-        console.error('Error posting comment:', error);
-      });
-        //console.log('Comment posted successfully:', response);
-      //const imageUrl = uploadResponse.headers.get('location');
-    }
-
-    else {
-      this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
-        console.log('Comment posted successfully:', response);
-        alert('Comment posted successfully')
-      }, error => {
-        console.error('Error posting comment:', error);
-      });
-    }
-
-  }
-
-  async postCommentCommit(commitKey: string) {
-    const commentBody = {
-      body: "### " + this.comment_header + "\n" + this.comment
-    };
-
-    console.log(this._g.cy.$(':selected')[0]._private.data)
-    if (this.commentInput.addGraph) {
-      this.http.get(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/contents/image.png`, this.httpOptions).subscribe(async response => {
-        this.sha_github = response["sha"];
-        await this.updateFile().subscribe(response => {
-          console.log('Comment posted successfully:', response);
-          this.imageUrl = response["content"]["download_url"]
-          commentBody.body += '\n\n![image](' + this.imageUrl + ')'
-          this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commits/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
-            console.log('Comment posted successfully:', response);
-            alert('Comment posted successfully')
-          }, error => {
-            console.error('Error posting comment:', error);
-          });
-          console.log(commentBody.body)
-        }, error => {
-          console.error('Error updating image:', error);
-        });
-      }, error => {
-        console.error('Error getting ssh:', error);
-      });
-    }
-
-    else {
-      this.http.post(`https://api.github.com/repos/LaraMerdol/codebanksystemProject/commits/${commitKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
-        console.log('Comment posted successfully:', response);
-        alert('Comment posted successfully')
-      }, error => {
-        console.error('Error posting comment:', error);
-      });
-    }
-  }
-
-  onAddComment() {
-    if (this.className == "Issue") {
-      let issueKey = this._g.cy.$(':selected')[0]._private.data.name
-      //let issueKey = this._g.cy.$(':selected')[0]._private.data.name
-      this.postCommentIssue(issueKey, "Bu bir deneme")
-    }
-    else if (this.className == "Commit") {
-      let commitKey = this._g.cy.$(':selected')[0]._private.data.name
-      //this.postCommentCommit(commitKey)
-      if (this.commentInput.addGithub) {
-        this.postCommentPr(this.pr_name)
-      }
-      else {
-        this.postCommentCommit(commitKey)
-      }
-    }
-    else if (this.className == "PullRequest") {
-      let prKey = this._g.cy.$(':selected')[0]._private.data.name
-      this.postCommentPr(prKey)
-    }
-    else if (this.className == "File") {
-      if (this.commentInput.addGithub) {
-        this.postCommentPr(this.pr_name)
-      }
-    }
-    else if (this.className == "Developer") {
-      if (this.commentInput.addGithub) {
-        this.postCommentPr(this.pr_name)
-      }
-      else if (this.commentInput.addJira) {
-        this.postCommentIssue("SAA-3", "Bu bir deneme")
-      }
-    }
-    else {
-      alert("Please choose a node first")
-    }
-
-
-  }
-
-  updateCommentInput() {
-    this.commentInput = {
-      addGraph: false,
-      addAnomaly: false,
-      addJira: false,
-      addGithub: false,
-      addReviewer: false,
-    };
-  }
-
-  fillGenres(data) {
-    console.log(data)
-    this.prs = [];
-    for (let i = 0; i < data.data.length; i++) {
-      this.prs.push(data.data[i][0]);
-    }
-  }
-  ngOnInit() {
+  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient) {
     this.anomalies = [
       { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
       { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
@@ -381,7 +68,21 @@ export class ReportComponentComponent implements OnInit {
       { text: 'Same Resolver Closer', isEnable: false, path2userPref: this.anomaly11.bind(this) }
     ];
 
-    this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
+  }
+
+  ngOnInit() {
+    //Get authentication information from saa configuration flask app
+    this.http.get('http://0.0.0.0:4445/getAuthentication').subscribe(data => {
+      this.authentication = data;
+      this.githubHttpOptions = {
+        headers: new HttpHeaders({
+          'Authorization': `Bearer ${this.authentication.github_token}`,
+          'Accept': 'application/vnd.github.v3+json'
+        })
+      };
+      console.log(this.authentication)
+    });
+    this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillPr(x), DbResponseType.table);
     let name = ""
     setInterval(() => {
       if (this._g.cy.$(':selected')[0]) {
@@ -397,12 +98,10 @@ export class ReportComponentComponent implements OnInit {
           if (this.className == "Issue") {
             const link = "You can inspect artifact " + name + " from this [ link|http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + "]";
             this.comment = link + "\n" + this.comment
-            console.log(link)
           }
           else {
             const link = "[You can inspect artifact " + name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + ")";
             this.comment = link + "\n" + this.comment
-            console.log(link)
           }
           this.commentInput = {
             addGraph: false,
@@ -446,7 +145,6 @@ export class ReportComponentComponent implements OnInit {
           ]
         }
         else {
-          //console.log(this.commentInput)
           this.addMenu = [
             { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
           ]
@@ -454,17 +152,251 @@ export class ReportComponentComponent implements OnInit {
 
       }
     }, 500);
+  }
+
+  fillPr(data) {
+    console.log(data)
+    this.prs = [];
+    for (let i = 0; i < data.data.length; i++) {
+      this.prs.push(data.data[i][0]);
+    }
+  }
+
+  //Jira Issue Post Comment
+  async postCommentIssue(issueKey: string) {
+    let apiUrl = '/rest/api/2';
+    const url = `${apiUrl}/issue/${issueKey}`;
+    const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
+    const headers = new HttpHeaders({
+      'Authorization': `Basic ${authenticationString}`,
+    });
+    let body: any;
+    if (this.addGraph) {
+         /*
+     const binaryImage = this.base64ToBinaryImage(this.dataURL.split(",")[1]);
+     const formData = new FormData();
+     formData.append('file', binaryImage, 'image.png');
+
+     this.http.post(`${url}/attachments`, formData, { headers }).subscribe(
+       (response: any) => {
+         const attachmentId = response[0].id;
+         const attachmentUrl = response[0].content;
+         console.log(attachmentUrl)
+       })
+       */
+      body = {
+        "update": {
+          "comment": [
+            {
+              "add": {
+                "body": this.comment 
+              }
+            }
+          ]
+        }
+      }
+
+    } else {
+      body = {
+        "update": {
+          "comment": [
+            {
+              "add": {
+                "body": this.comment + ` <br/><img src="data:image/png;base64,${this.dataURL}"/> `
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    this.http.put(url, body, { headers }).subscribe(
+      (response) => {
+        console.log('Comment added successfully:', response);
+        alert('Comment posted successfully')
+      },
+      (error) => {
+        console.error('Error adding comment:', error);
+      }
+
+    )
+  }
+
+  updateFile(): Observable<any> {
+    const url = `https://api.github.com/repos/${this.authentication.github_repo}/contents/image.png`;
+
+    const body = {
+      message: "txt file",
+      content: `${this.dataURL.split(",")[1]}`,
+      sha: this.sha_github
+    };
+
+    const options = this.githubHttpOptions;
+    return this.http.put(url, body, options);
+  }
+  //Github PullRequest Post Comment To Pull Request
+  async postCommentPr(prKey: string) {
+    const commentBody = {
+      body: `###${this.comment_header}\n${this.comment}\n<img id="guiai-16816155202" src="data:image/png;base64,${this.dataURL.split(",")[1]}">`
+    };
+    console.log(commentBody.body)
+
+    //If add graph is selected
+    if (this.commentInput.addGraph) {
+      /*
+      this.http.get(`https://api.github.com/repos/${this.authentication.github_repo}/contents/image.png`, this.httpOptions).subscribe(async response => {
+        this.sha_github = response["sha"];
+        await this.updateFile().subscribe(response => {
+          console.log('Comment posted successfully:', response);
+          alert('Comment posted successfully')
+          this.imageUrl = response["content"]["download_url"]
+          commentBody.body += '\n\n![image](' + this.imageUrl + ')'
+          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
+            console.log('Comment posted successfully:', response);
+          }, error => {
+            console.error('Error posting comment:', error);
+          });
+          console.log(commentBody.body)
+        }, error => {
+          console.error('Error updating image:', error);
+        });
+      }, error => {
+        console.error('Error getting ssh:', error);
+      });
+      */
+
+      /*
+      this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
+        console.log('Comment posted successfully:', response);
+      }, error => {
+        console.error('Error posting comment:', error);
+      });
+      */
+      const byteCharacters = atob(this.dataURL.split(',')[1]);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'image/png' }); // Replace 'image/png' with the appropriate MIME type for your image
+
+      const formData = new FormData();
+      formData.append('file', blob);
+      await this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/pr/${prKey}/attachments`, formData, this.githubHttpOptions).subscribe(response => {
+        console.log('Comment posted successfully:', response);
+      }, error => {
+        console.error('Error posting comment:', error);
+      });
+      //console.log('Comment posted successfully:', response);
+      //const imageUrl = uploadResponse.headers.get('location');
+    }
+
+    else {
+      this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
+        console.log('Comment posted successfully:', response);
+        alert('Comment posted successfully')
+      }, error => {
+        console.error('Error posting comment:', error);
+      });
+    }
+
+  }
+
+  async postCommentCommit(commitKey: string) {
+    const commentBody = {
+      body: "### " + this.comment_header + "\n" + this.comment
+    };
+
+    console.log(this._g.cy.$(':selected')[0]._private.data)
+    if (this.commentInput.addGraph) {
+      this.http.get(`https://api.github.com/repos/${this.authentication.github_repo}/contents/image.png`, this.githubHttpOptions).subscribe(async response => {
+        this.sha_github = response["sha"];
+        await this.updateFile().subscribe(response => {
+          console.log('Comment posted successfully:', response);
+          this.imageUrl = response["content"]["download_url"]
+          commentBody.body += '\n\n![image](' + this.imageUrl + ')'
+          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
+            console.log('Comment posted successfully:', response);
+            alert('Comment posted successfully')
+          }, error => {
+            console.error('Error posting comment:', error);
+          });
+          console.log(commentBody.body)
+        }, error => {
+          console.error('Error updating image:', error);
+        });
+      }, error => {
+        console.error('Error getting ssh:', error);
+      });
+    }
+
+    else {
+      this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
+        console.log('Comment posted successfully:', response);
+        alert('Comment posted successfully')
+      }, error => {
+        console.error('Error posting comment:', error);
+      });
+    }
+  }
+
+  onAddComment() {
+    if (this.className == "Issue") {
+      let issueKey = this._g.cy.$(':selected')[0]._private.data.name
+      this.postCommentIssue(issueKey)
+    }
+    else if (this.className == "Commit") {
+      let commitKey = this._g.cy.$(':selected')[0]._private.data.name
+      //this.postCommentCommit(commitKey)
+      if (this.commentInput.addGithub) {
+        this.postCommentPr(this.pr_name)
+      }
+      else {
+        this.postCommentCommit(commitKey)
+      }
+    }
+    else if (this.className == "PullRequest") {
+      let prKey = this._g.cy.$(':selected')[0]._private.data.name
+      this.postCommentPr(prKey)
+    }
+    else if (this.className == "File") {
+      if (this.commentInput.addGithub) {
+        this.postCommentPr(this.pr_name)
+      }
+    }
+    else if (this.className == "Developer") {
+      if (this.commentInput.addGithub) {
+        this.postCommentPr(this.pr_name)
+      }
+      else if (this.commentInput.addJira) {
+        //FIXXXXXX
+        let issueKey = this._g.cy.$(':selected')[0]._private.data.name
+        this.postCommentIssue(issueKey)
+      }
+    }
+    else {
+      alert("Please choose a node first")
+    }
 
 
   }
+
+  updateCommentInput() {
+    this.commentInput = {
+      addGraph: false,
+      addAnomaly: false,
+      addJira: false,
+      addGithub: false,
+      addReviewer: false,
+    };
+  }
+
 
 
   settingChanged(val: any) {
 
   }
   onCheckboxChange(item: any) {
-    //item.value = !item.value; // toggle the value of the checkbox
-    // call the function associated with the checkbox
     this.callFunction(item.function);
   }
   callFunction(functionName: string) {
@@ -484,8 +416,6 @@ export class ReportComponentComponent implements OnInit {
       case "addGithub()":
         this.addGithub();
         break;
-
-      // add more cases for other functions
     }
   }
 
@@ -504,15 +434,33 @@ export class ReportComponentComponent implements OnInit {
       canvas.height = image.height;
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       this.dataURL = canvas.toDataURL('image/png');
-      console.log(this.dataURL.split(",")[1])
+      console.log(this.dataURL)
     };
   }
+  // Convert base64 image data to binary
+  base64ToBinary(base64Data) {
+    const binaryData = atob(base64Data);
+    const len = binaryData.length;
+    const buffer = new ArrayBuffer(len);
+    const view = new Uint8Array(buffer);
+    for (let i = 0; i < len; i++) {
+      view[i] = binaryData.charCodeAt(i);
+    }
+    return buffer;
+  }
+
+  // Convert base64 image data to binary image
+  base64ToBinaryImage(base64Data) {
+    const binaryData = this.base64ToBinary(base64Data);
+    const blob = new Blob([binaryData], { type: 'image/png' });
+    console.log(blob)
+    return blob;
+  }
+
+
   addGraph() {
     if (!this.commentInput.addGraph) {
       this.commentInput.addGraph = true;
-      //this._modalService.open(SaveAsPngModalComponent);
-      //this.saveAsPng(true);
-
     }
     else {
       this.commentInput.addGraph = false
@@ -580,7 +528,6 @@ export class ReportComponentComponent implements OnInit {
 
   showObjectProps() {
     let selected = this._g.cy.$(':selected');
-    this.selectedItemProps = selected
   }
   async anomaly11(): Promise<any> {
     const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
@@ -688,7 +635,7 @@ export class ReportComponentComponent implements OnInit {
             resolve(`\nAnomaly Found:Ignored bug: From ${startDateString} To ${endDateString}`);
           }
           else if (name == "No assignee resolver:") {
-            resolve(`\nNo assignee resolver: Assignee ${result[1]} Resolver ${result[2]}`);
+            resolve(`\nNo assignee resolver: Assignee ${result[1]} Resolver ${result[0]}`);
           }
           else {
             resolve("\nAnomaly Found: " + name);
@@ -702,7 +649,8 @@ export class ReportComponentComponent implements OnInit {
     });
   }
   async performSelection() {
-    this.comment = ""
+    const prKey = this.commentInput.addGithub ? this.pr_name : this._g.cy.$(':selected')[0]._private.data.name;
+    this.comment = "[You can inspect artifact " + prKey + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + prKey + ")\n";
     if (this.commentInput.addGithub) {
       const developer_name = this._g.cy.$(':selected')[0]._private.data.name
       const pull_request_name = this.pr_name
@@ -729,7 +677,6 @@ export class ReportComponentComponent implements OnInit {
         this.commentInput.addReviewer = true
 
       }
-      const prKey = this.commentInput.addGithub ? this.pr_name : this._g.cy.$(':selected')[0]._private.data.name;
       const cql = ` MATCH (pr:PullRequest{name:'${prKey}'})-[*]->(file:File)
       MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${prKey}'})
       with collect(file.name) as filenames, collect(dp.name) as dnames
@@ -740,8 +687,7 @@ export class ReportComponentComponent implements OnInit {
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     }
     if (this.commentInput.addAnomaly) {
-      const link = "You can inspect artifact " + name + " from this [ link|http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + "]";
-      this.comment = link + "\n" + this.comment
+      this.comment = "You can inspect artifact " + name + " from this [ link|http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + "]\n";
       let commentAnomaly = "";
       this.issue_name = this._g.cy.$(':selected')[0]._private.data.name;
       const queries = this.anomalies
