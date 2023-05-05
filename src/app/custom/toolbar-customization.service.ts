@@ -94,10 +94,6 @@ export class ToolbarCustomizationService {
   }
 
 
-  async anomaly4(): Promise<any> {
-    return "";
-  }
-
 
   async anomaly3(issue_name): Promise<any> {
     const time = this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() || 1;
@@ -145,18 +141,21 @@ export class ToolbarCustomizationService {
 
   generateRedShades() {
     let colors = [];
-    let redValue = 280;
-    let greenValue = 80;
-    let blueValue = 80;
-    for (let i = 0; i < 11; i++) {
+    let redValue = 250;
+    let greenValue = 200;
+    let blueValue = 200;
+    for (let i = 0; i < 6; i++) {
       let redHex = redValue.toString(16).padStart(2, '0');
       let greenHex = greenValue.toString(16).padStart(2, '0');
       let blueHex = blueValue.toString(16).padStart(2, '0');
       let hexColor = '#' + redHex + greenHex + blueHex;
       colors.push(hexColor);
-      redValue -= 30;
-      greenValue -= 6;
-      blueValue -= 6;
+      greenValue -=40;
+      blueValue -= 40;
+      redValue -= 10;
+    }
+    for(let i = 6; i<11;i++){
+      colors.push('#721D1D');
     }
     return colors;
   }
@@ -167,7 +166,6 @@ export class ToolbarCustomizationService {
       { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
       { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
       { text: 'Ignored Bugs', isEnable: false, path2userPref: this.anomaly3.bind(this) },
-      { text: 'Bugs Assigned to a Team', isEnable: false, path2userPref: this.anomaly4.bind(this) },
       { text: 'Missing Priority', isEnable: false, path2userPref: this.anomaly5.bind(this) },
       { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
       { text: 'No comment bugs', isEnable: false, path2userPref: this.anomaly7.bind(this) },
@@ -188,10 +186,13 @@ export class ToolbarCustomizationService {
             .filter((anomaly, index) => queryResults[index]) // filter out items whose function returns false
             .map(anomaly => anomaly.text);
           let number = anomaliesWithTrueResults.length;
-          let color = (number>0)?colors[number]: '#599a20';
+          let color = (number>0)?colors[number]: '#15a014';
           let listOfAnomalies = anomaliesWithTrueResults
           this.listOfAnomalies = listOfAnomalies
-          div1.innerHTML = `<span style="background-color:${color} !important;" class="badge rounded-pill bg-primary">${number}</span>`;
+          const size_x =  0.65 + 2*listOfAnomalies.length/20;
+          const size_y =  0.35 + 2*listOfAnomalies.length/20;
+          const font_size = 0.75+ listOfAnomalies.length/20;
+          div1.innerHTML = `<span style="background-color:${color} !important; font-size:${font_size}em !important; padding-bottom:${size_y}em !important; padding-top:${size_y}em !important; padding-right:${size_x}em !important; padding-left:${size_x}em !important;border-radius:50%!important;" class="badge rounded-pill bg-primary">${number}</span>`;
           element.addCue({
             htmlElem: div1,
             id:element._private.data.name,
@@ -200,7 +201,7 @@ export class ToolbarCustomizationService {
             marginX: "%0",
             marginY: "%0",
             cursor: "pointer",
-            zIndex: 1000,
+            zIndex: 50,
             tooltip: listOfAnomalies.join('\n')
           
           });

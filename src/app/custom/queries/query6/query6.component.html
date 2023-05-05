@@ -29,6 +29,7 @@
   <div class="form-check form-check-inline m-1">
     <input type="checkbox" class="form-check-input" [(ngModel)]="tableInput.isMergeGraph" />
     <label class="form-label va-text">Merge</label>
+    
   </div>
 </div>
 <app-table-view [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"

@@ -17,7 +17,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { UnassignedBugsComponent } from './anomalies/unassigned-bugs/unassigned-bugs.component';
 import { NoLinkToBugFixingCommitComponent } from './anomalies/no-link-to-bug-fixing-commit/no-link-to-bug-fixing-commit.component';
 import { IgnoredBugsComponent } from './anomalies/ignored-bugs/ignored-bugs.component';
-import { BugsAssignedTeamComponent } from './anomalies/bugs-assigned-team/bugs-assigned-team.component';
 import { MissingPriorityComponent } from './anomalies/missing-priority/missing-priority.component';
 import { NotReferencedDuplicatesComponent } from './anomalies/not-referenced-duplicates/not-referenced-duplicates.component';
 import { MissingEnvironmentInformationComponent } from './anomalies/missing-environment-information/missing-environment-information.component';
@@ -42,7 +41,6 @@ import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/sa
      UnassignedBugsComponent,
      NoLinkToBugFixingCommitComponent,
      IgnoredBugsComponent,
-     BugsAssignedTeamComponent,
      MissingPriorityComponent,
      NotReferencedDuplicatesComponent,
      MissingEnvironmentInformationComponent,
@@ -82,7 +80,6 @@ export class CustomizationModule {
     { component: UnassignedBugsComponent, text: 'Unassigned Bugs' },
     { component: NoLinkToBugFixingCommitComponent, text: 'No Link to Bug-Fixing Commit' },
     { component: IgnoredBugsComponent, text: 'Ignored Bugs' },
-    { component: BugsAssignedTeamComponent, text: 'Bugs Assigned to a Team' },
     { component: MissingPriorityComponent, text: 'Missing Priority' },
     { component: NotReferencedDuplicatesComponent, text: 'Not referenced duplicates' },
     { component: MissingEnvironmentInformationComponent, text: 'Missing Environment Information' },

@@ -103,10 +103,6 @@ export class NavbarCustomizationService {
   }
 
 
-  async anomaly4(): Promise<any> {
-    return "";
-  }
-
 
   async anomaly3(issue_name): Promise<any> {
     const time = this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() || 1;
@@ -177,7 +173,6 @@ export class NavbarCustomizationService {
       { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
       { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
       { text: 'Ignored Bugs', isEnable: false, path2userPref: this.anomaly3.bind(this) },
-      { text: 'Bugs Assigned to a Team', isEnable: false, path2userPref: this.anomaly4.bind(this) },
       { text: 'Missing Priority', isEnable: false, path2userPref: this.anomaly5.bind(this) },
       { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
       { text: 'No comment bugs', isEnable: false, path2userPref: this.anomaly7.bind(this) },
