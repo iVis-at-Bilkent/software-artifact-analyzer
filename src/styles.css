@@ -372,7 +372,11 @@ body {
 
 .mat-dialog-container {
   overflow: hidden !important;
-  width: 70vw !important;
-  height: 70vh !important;
+  width: 1000px !important;
+  height: 500px !important;
   padding: 0 !important;
+  margin-left: calc((80vw - 1000px)/2);
+  margin-right: calc((80vw - 1000px)/2);
+  margin-top: calc((80vh - 500px)/2);
+  margin-bottom: calc((80vh - 500px)/2);
 }

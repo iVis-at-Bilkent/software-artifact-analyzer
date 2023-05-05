@@ -1,6 +1,6 @@
 iframe{
-    height: 70vh;
-    width: 70vw;
+    width: 1000px !important;
+    height: 500px !important;
     overflow: hidden;
 }
 
