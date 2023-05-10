@@ -33,6 +33,7 @@ export class GlobalVariableService {
   addNewGraphHistoryItem = new BehaviorSubject<boolean>(false);
   isLoadFromHistory: boolean = false;
   isLoadFromDB: boolean = false;
+  openReportTab =new BehaviorSubject<boolean>(false);
   isLoadFromExpandCollapse: boolean = false;
   isUserPrefReady = new BehaviorSubject<boolean>(false);
   statusMsg = new BehaviorSubject<string>('');

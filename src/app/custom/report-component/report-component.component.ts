@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef, NgZone } from '@angular/core';
 import { GlobalVariableService } from '../../visuall/global-variable.service';
 import { Observable } from 'rxjs';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
@@ -53,7 +53,7 @@ export class ReportComponentComponent implements OnInit {
 
 
 
-  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient) {
+  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private cd: ChangeDetectorRef, private ngZone: NgZone) {
     this.anomalies = [
       { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
       { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
@@ -70,6 +70,7 @@ export class ReportComponentComponent implements OnInit {
   }
 
   ngOnInit() {
+
     //Get authentication information from saa configuration flask app
     this.http.get('http://0.0.0.0:4445/getAuthentication').subscribe(data => {
       this.authentication = data;
@@ -79,14 +80,16 @@ export class ReportComponentComponent implements OnInit {
           'Accept': 'application/vnd.github.v3+json'
         })
       };
-      console.log(this.authentication)
     });
     this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillPr(x), DbResponseType.table);
     let name = ""
+    let reported = false;
     setInterval(() => {
+      reported = false;
       if (this._g.cy.$(':selected')[0]) {
         this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
         if (this._g.cy.$(':selected')[0]._private.data.name != name) {
+
           this.anomalies
             .map((anomaly) => anomaly.isEnable = false);
           this.comment = ""
@@ -109,6 +112,7 @@ export class ReportComponentComponent implements OnInit {
             addGithub: false,
             addReviewer: false,
           };
+          reported = true;
         }
 
         if (this.className == "Issue") {
@@ -150,11 +154,23 @@ export class ReportComponentComponent implements OnInit {
         }
 
       }
+
+    }, 500)
+    
+    setInterval(() => {
+      this._g.openReportTab.subscribe((isOpen) => {
+
+        if (isOpen == true && reported) {
+          this.reportAnomaly()
+        }
+      });
     }, 500);
+
+
+
   }
 
   fillPr(data) {
-    console.log(data)
     this.prs = [];
     for (let i = 0; i < data.data.length; i++) {
       this.prs.push(data.data[i][0]);
@@ -171,24 +187,24 @@ export class ReportComponentComponent implements OnInit {
     });
     let body: any;
     if (this.addGraph) {
-         /*
-     const binaryImage = this.base64ToBinaryImage(this.dataURL.split(",")[1]);
-     const formData = new FormData();
-     formData.append('file', binaryImage, 'image.png');
+      /*
+  const binaryImage = this.base64ToBinaryImage(this.dataURL.split(",")[1]);
+  const formData = new FormData();
+  formData.append('file', binaryImage, 'image.png');
 
-     this.http.post(`${url}/attachments`, formData, { headers }).subscribe(
-       (response: any) => {
-         const attachmentId = response[0].id;
-         const attachmentUrl = response[0].content;
-         console.log(attachmentUrl)
-       })
-       */
+  this.http.post(`${url}/attachments`, formData, { headers }).subscribe(
+    (response: any) => {
+      const attachmentId = response[0].id;
+      const attachmentUrl = response[0].content;
+      console.log(attachmentUrl)
+    })
+    */
       body = {
         "update": {
           "comment": [
             {
               "add": {
-                "body": this.comment 
+                "body": this.comment
               }
             }
           ]
@@ -238,7 +254,6 @@ export class ReportComponentComponent implements OnInit {
     const commentBody = {
       body: `###${this.comment_header}\n${this.comment}\n<img id="guiai-16816155202" src="data:image/png;base64,${this.dataURL.split(",")[1]}">`
     };
-    console.log(commentBody.body)
 
     //If add graph is selected
     if (this.commentInput.addGraph) {
@@ -305,8 +320,6 @@ export class ReportComponentComponent implements OnInit {
     const commentBody = {
       body: "### " + this.comment_header + "\n" + this.comment
     };
-
-    console.log(this._g.cy.$(':selected')[0]._private.data)
     if (this.commentInput.addGraph) {
       this.http.get(`https://api.github.com/repos/${this.authentication.github_repo}/contents/image.png`, this.githubHttpOptions).subscribe(async response => {
         this.sha_github = response["sha"];
@@ -320,7 +333,6 @@ export class ReportComponentComponent implements OnInit {
           }, error => {
             console.error('Error posting comment:', error);
           });
-          console.log(commentBody.body)
         }, error => {
           console.error('Error updating image:', error);
         });
@@ -433,7 +445,6 @@ export class ReportComponentComponent implements OnInit {
       canvas.height = image.height;
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       this.dataURL = canvas.toDataURL('image/png');
-      console.log(this.dataURL)
     };
   }
   // Convert base64 image data to binary
@@ -452,7 +463,6 @@ export class ReportComponentComponent implements OnInit {
   base64ToBinaryImage(base64Data) {
     const binaryData = this.base64ToBinary(base64Data);
     const blob = new Blob([binaryData], { type: 'image/png' });
-    console.log(blob)
     return blob;
   }
 
@@ -480,7 +490,6 @@ export class ReportComponentComponent implements OnInit {
   }
 
   addAnomaly() {
-    console.log("x")
     if (!this.commentInput.addAnomaly) {
       this.commentInput.addAnomaly = true;
       this.anomalyModal = true;
@@ -499,7 +508,6 @@ export class ReportComponentComponent implements OnInit {
 
   addJira() {
     if (!this.commentInput.addJira) {
-      console.log(this._g.initialQuery)
       this.commentInput.addJira = true
 
     }
@@ -620,11 +628,9 @@ export class ReportComponentComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const cb = (x) => {
         const result = x.data[0]
-        console.log(result)
         if (result && result[0]) {
           this.number_of_anomalies += 1
           if (name == "Ignored bug:") {
-            console.log(result[1], result[2])
             const startDateString = result[1].slice(0, 10);
             const endDateString = result[2].slice(0, 10);
             resolve(`\nAnomaly Found:Ignored bug: From ${startDateString} To ${endDateString}`);
@@ -657,7 +663,6 @@ export class ReportComponentComponent implements OnInit {
     if (this.commentInput.addReviewer) {
       const cb = (x) => {
         this.reviewerData = x.data;
-        console.log(this.reviewerData)
         this.commentInput.addReviewer = true;
         let recomendation = '';
         // Generate table header
@@ -682,7 +687,8 @@ export class ReportComponentComponent implements OnInit {
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     }
     if (this.commentInput.addAnomaly) {
-      this.comment = "You can inspect artifact " + name + " from this [ link|http://" + window.location.hostname + ":" + window.location.port + "/?name=" + name + "]\n";
+
+      this.comment = "You can inspect artifact " + name + " from this [ link|http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this._g.cy.$(':selected')[0]._private.data.name + "]\n";
       let commentAnomaly = "";
       this.issue_name = this._g.cy.$(':selected')[0]._private.data.name;
       const queries = this.anomalies
@@ -701,6 +707,19 @@ export class ReportComponentComponent implements OnInit {
 
 
   }
+
+
+
+  async reportAnomaly() {
+    this._g.openReportTab.next(false);
+    this.comment = ""
+    this.anomalies.map((anomaly) => {
+      anomaly.isEnable = true;
+    })
+    this.commentInput.addAnomaly = true;
+    this.performSelection()
+  }
+
 
 }
 

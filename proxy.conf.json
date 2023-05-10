@@ -1,11 +1,13 @@
 {
   "/rest/*": {
     "target": "https://saanalyzer.atlassian.net",
-    "secure": false,
     "changeOrigin": true,
     "headers": {
       "Access-Control-Allow-Origin": "*",
       "X-Atlassian-Token": "no-check"
+    },
+    "pathRewrite": {
+      "^/rest": "/rest"
     }
   }
 }

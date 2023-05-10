@@ -53,6 +53,7 @@ export class ContextMenuCustomizationService {
     private _dbService: DbAdapterService,
     private _g: GlobalVariableService,
     private _http: HttpClient
+
   ) {
     this._menu = [
       //Developer
@@ -413,6 +414,7 @@ export class ContextMenuCustomizationService {
         id: "Developer",
         content: "Developer",
         selector: "node.Developer",
+        hasTrailingDivider: true,
         submenu: [
           {
             id: "showDeveloperReview",
@@ -597,6 +599,7 @@ export class ContextMenuCustomizationService {
         id: "showCommit Developer",
         content: "Developer",
         selector: "node.Commit",
+        hasTrailingDivider: true,
         submenu:
           // Commit Developer submenu
           [
@@ -661,6 +664,16 @@ export class ContextMenuCustomizationService {
           ]
       },
       //Issue
+      {
+        id: "report_anomaly",
+        content: "Report Anomaly",
+        selector: "node.Issue",
+        hasTrailingDivider: true,
+        onClickFunction: (x) => {
+          this.reportAnomaly(x);
+        },
+
+      },
       {
         id: "related_issue",
         content: "All Related",
@@ -1016,6 +1029,7 @@ export class ContextMenuCustomizationService {
         id: "issue_issue",
         content: "Issue",
         selector: "node.Issue",
+        hasTrailingDivider: true,
         submenu:
           // Commit Developer submenu
           [
@@ -1051,6 +1065,7 @@ export class ContextMenuCustomizationService {
             },
           ]
       },
+
       //Pull Request
       {
         id: "pr",
@@ -1266,6 +1281,7 @@ export class ContextMenuCustomizationService {
         id: "pr_files",
         content: "File",
         selector: "node.PullRequest",
+        hasTrailingDivider: true,
         submenu:
           [
             {
@@ -1413,98 +1429,102 @@ export class ContextMenuCustomizationService {
         content: "Developer",
         selector: "node.File",
         submenu: [
-      {
-        id: "showFileDeveloper",
-        content: "Show Developers",
-        selector: "node.File",
-        onClickFunction: (x) => {
-          this.getNeighbors(
-            x,
-            { isNode: true, customTxt: "Show Developers: " },
-            {
-              edgeType: this._file_developer, isMultiLength: true,
-              targetType: "Developer"
-            }
-          );
-        },
+          {
+            id: "showFileDeveloper",
+            content: "Show Developers",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show Developers: " },
+                {
+                  edgeType: this._file_developer, isMultiLength: true,
+                  targetType: "Developer"
+                }
+              );
+            },
+          },
+          {
+            id: "hideFileDeveloper",
+            content: "Hide Developers ",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.deleteNeighbors(
+                x,
+                { isNode: true, customTxt: "Show Developers: " },
+                {
+                  edgeType: this._file_developer, isMultiLength: true,
+                  targetType: "Developer"
+                }
+              );
+            },
+          },
+        ]
       },
       {
-        id: "hideFileDeveloper",
-        content: "Hide Developers ",
+        id: "file_pr",
+        content: "Pull Request ",
         selector: "node.File",
-        onClickFunction: (x) => {
-          this.deleteNeighbors(
-            x,
-            { isNode: true, customTxt: "Show Developers: " },
-            {
-              edgeType: this._file_developer, isMultiLength: true,
-              targetType: "Developer"
-            }
-          );
-        },
-      },
-    ]},
-    {
-      id: "file_pr",
-      content: "Pull Request ",
-      selector: "node.File",
-      submenu: [
+        submenu: [
 
-      {
-        id: "showFilePullRequests",
-        content: "Show Related PullRequests",
-        selector: "node.File",
-        onClickFunction: (x) => {
-          this.getNeighbors(
-            x,
-            { isNode: true, customTxt: "Show Pull Requests: " },
-            { edgeType: this._file_pull_request, isMultiLength: true, targetType: "PullRequest" }
-          );
-        },
+          {
+            id: "showFilePullRequests",
+            content: "Show Related PullRequests",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show Pull Requests: " },
+                { edgeType: this._file_pull_request, isMultiLength: true, targetType: "PullRequest" }
+              );
+            },
+          },
+          {
+            id: "hideFilePullRequests",
+            content: "Hide Related PullRequests",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.deleteNeighbors(
+                x,
+                { isNode: true, customTxt: "Hide Pull Requests: " },
+                { edgeType: this._file_pull_request, isMultiLength: true, targetType: "PullRequest" }
+              );
+            },
+          },
+        ]
       },
       {
-        id: "hideFilePullRequests",
-        content: "Hide Related PullRequests",
+        id: "file_issue",
+        content: "Issue ",
         selector: "node.File",
-        onClickFunction: (x) => {
-          this.deleteNeighbors(
-            x,
-            { isNode: true, customTxt: "Hide Pull Requests: " },
-            { edgeType: this._file_pull_request, isMultiLength: true, targetType: "PullRequest" }
-          );
-        },
-      },
-    ]},
-    {
-      id: "file_issue",
-      content: "Issue ",
-      selector: "node.File",
-      submenu: [
-      {
-        id: "showFileIssue",
-        content: "Show Related Issues",
-        selector: "node.File",
-        onClickFunction: (x) => {
-          this.getNeighbors(
-            x,
-            { isNode: true, customTxt: "Show Issues: " },
-            { edgeType: this._file_issue, isMultiLength: true, targetType: "Issue" }
-          );
-        },
-      },
-      {
-        id: "hideFileIssue",
-        content: "Hide Related Issues",
-        selector: "node.File",
-        onClickFunction: (x) => {
-          this.deleteNeighbors(
-            x,
-            { isNode: true, customTxt: "Show Issues: " },
-            { edgeType: this._file_issue, isMultiLength: true, targetType: "Issue" }
-          );
-        },
-      },
-    ]}
+        hasTrailingDivider: true,
+        submenu: [
+          {
+            id: "showFileIssue",
+            content: "Show Related Issues",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show Issues: " },
+                { edgeType: this._file_issue, isMultiLength: true, targetType: "Issue" }
+              );
+            },
+          },
+          {
+            id: "hideFileIssue",
+            content: "Hide Related Issues",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.deleteNeighbors(
+                x,
+                { isNode: true, customTxt: "Show Issues: " },
+                { edgeType: this._file_issue, isMultiLength: true, targetType: "Issue" }
+              );
+            },
+          },
+        ]
+      }
     ];
   }
 
@@ -1576,5 +1596,17 @@ export class ContextMenuCustomizationService {
     );
   }
 
+  reportAnomaly(event) {
+      const ele = event.target;
+      this._g.cy.$().unselect();
+      this._g.cy.$('#' + ele.id()).select();
+      this._g.openReportTab.next(true);
+      this._g.openReportTab.subscribe((isOpen) => {
+        console.log(isOpen)
+      });
+      if (this._g.isSwitch2ObjTabOnSelect) {
+        this._g.operationTabChanged.next(0);
+      }
+  }
 
 }

@@ -169,3 +169,1168 @@ runtime.js          | runtime       |   6.37 kB |
 Build at: 2023-02-17T11:50:56.658Z - Hash: 108f089a31520be1 - Time: 8329ms
 server listening port:  4400
 runner ended Cum 17 Şub 2023 14:50:56 +03
+starting runner Mon May  8 20:37:51 +03 2023
+runner ended Mon May  8 20:37:56 +03 2023
+starting runner Mon May  8 20:38:18 +03 2023
+runner ended Mon May  8 20:38:18 +03 2023
+starting runner Mon May  8 20:38:48 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T17:38:59.975Z - Hash: 1568fa2b04b4c402 - Time: 7970ms
+server listening port:  4400
+starting runner Mon May  8 20:48:11 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 20:48:45 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 20:49:33 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T17:49:39.833Z - Hash: 1568fa2b04b4c402 - Time: 3464ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 21:04:38 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:04:44.881Z - Hash: 1568fa2b04b4c402 - Time: 3063ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 21:09:26 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:09:32.679Z - Hash: 1568fa2b04b4c402 - Time: 3034ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 21:12:46 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:12:53.138Z - Hash: 1568fa2b04b4c402 - Time: 3003ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 21:27:48 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:27:55.525Z - Hash: 1568fa2b04b4c402 - Time: 3258ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 21:38:21 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:38:28.382Z - Hash: 1568fa2b04b4c402 - Time: 3214ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 21:54:58 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:55:04.230Z - Hash: 1568fa2b04b4c402 - Time: 2840ms
+runner ended Mon May  8 21:55:04 +03 2023
+starting runner Mon May  8 21:55:31 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:55:36.943Z - Hash: 1568fa2b04b4c402 - Time: 2818ms
+runner ended Mon May  8 21:55:37 +03 2023
+starting runner Mon May  8 21:56:03 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:56:08.605Z - Hash: 1568fa2b04b4c402 - Time: 2766ms
+runner ended Mon May  8 21:56:08 +03 2023
+starting runner Mon May  8 21:56:19 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:56:24.740Z - Hash: 1568fa2b04b4c402 - Time: 2753ms
+runner ended Mon May  8 21:56:24 +03 2023
+starting runner Mon May  8 21:58:43 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:58:48.651Z - Hash: 1568fa2b04b4c402 - Time: 2987ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 21:59:08 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T18:59:14.033Z - Hash: 1568fa2b04b4c402 - Time: 2873ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 22:10:53 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T19:11:00.178Z - Hash: 1568fa2b04b4c402 - Time: 3114ms
+[HPM] Proxy created: /  -> [object Object]
+server listening port:  4400
+starting runner Mon May  8 22:18:09 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T19:18:17.110Z - Hash: 1568fa2b04b4c402 - Time: 3041ms
+[HPM] Proxy created: /  -> [object Object]
+server listening port:  4400
+starting runner Mon May  8 22:20:59 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T19:21:05.568Z - Hash: 1568fa2b04b4c402 - Time: 3112ms
+[HPM] Proxy created: /  -> [object Object]
+server listening port:  4400
+starting runner Mon May  8 22:42:37 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T19:42:44.262Z - Hash: 1568fa2b04b4c402 - Time: 3134ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 23:00:51 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:00:57.813Z - Hash: 1568fa2b04b4c402 - Time: 3130ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Mon May  8 23:05:21 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:05:27.726Z - Hash: 1568fa2b04b4c402 - Time: 3092ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> ""
+server listening port:  4400
+starting runner Mon May  8 23:08:43 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:08:49.844Z - Hash: 1568fa2b04b4c402 - Time: 3067ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> "http://saanalyzer.atlassian.net/rest"
+server listening port:  4400
+starting runner Mon May  8 23:19:22 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:19:29.395Z - Hash: 1568fa2b04b4c402 - Time: 3307ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> ""
+server listening port:  4400
+starting runner Mon May  8 23:30:03 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:30:09.949Z - Hash: 1568fa2b04b4c402 - Time: 3078ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest/" ~> "http://saanalyzer.atlassian.net/rest/"
+server listening port:  4400
+starting runner Mon May  8 23:41:38 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:41:45.927Z - Hash: 1568fa2b04b4c402 - Time: 3598ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> "/rest"
+server listening port:  4400
+starting runner Mon May  8 23:49:28 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:49:35.410Z - Hash: 1568fa2b04b4c402 - Time: 3089ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> ""
+server listening port:  4400
+starting runner Mon May  8 23:52:40 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:52:47.747Z - Hash: 85f63cf2bf4e3b25 - Time: 3987ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> ""
+server listening port:  4400
+starting runner Mon May  8 23:57:31 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T20:57:38.619Z - Hash: 1568fa2b04b4c402 - Time: 3544ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Tue May  9 00:00:35 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T21:00:42.191Z - Hash: 1568fa2b04b4c402 - Time: 3215ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Subscribed to http-proxy events: [ 'error', 'close' ]
+server listening port:  4400
+[HPM] PUT /rest/api/2/issue/SAA-5 -> https://saanalyzer.atlassian.net
+starting runner Tue May  9 00:30:34 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+server listening port:  4400
+starting runner Tue May  9 00:33:04 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T21:33:10.309Z - Hash: 1568fa2b04b4c402 - Time: 3098ms
+server listening port:  4400
+starting runner Tue May  9 00:36:48 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build proxy.conf.json
+
+server listening port:  4400
+starting runner Tue May  9 00:37:38 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T21:37:44.942Z - Hash: 1568fa2b04b4c402 - Time: 3115ms
+server listening port:  4400
+starting runner Tue May  9 00:41:41 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T21:41:48.712Z - Hash: 1568fa2b04b4c402 - Time: 4092ms
+server listening port:  4400
+starting runner Tue May  9 01:09:46 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T22:09:53.964Z - Hash: 1568fa2b04b4c402 - Time: 3709ms
+server listening port:  4400
+starting runner Tue May  9 01:17:58 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T22:18:04.637Z - Hash: 1568fa2b04b4c402 - Time: 3088ms
+runner ended Tue May  9 01:18:04 +03 2023
+starting runner Tue May  9 01:21:18 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T22:21:25.107Z - Hash: 1568fa2b04b4c402 - Time: 3180ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> "/rest"
+server listening port:  4400
+starting runner Tue May  9 01:23:02 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T22:23:08.783Z - Hash: 1568fa2b04b4c402 - Time: 3285ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.netdd
+[HPM] Proxy rewrite rule created: "^/rest" ~> "/rest"
+server listening port:  4400
+starting runner Tue May  9 01:25:20 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-08T22:25:26.942Z - Hash: 1568fa2b04b4c402 - Time: 3458ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> "/rest"
+server listening port:  4400

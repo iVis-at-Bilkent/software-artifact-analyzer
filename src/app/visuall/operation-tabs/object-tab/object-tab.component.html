@@ -13,7 +13,8 @@
           </tr>
           <tr *ngFor="let item of selectedItemPropsURL" class="small">
             <td class="text-end"><b class="va-text">{{item.key}}</b></td>
-            <td class="text-start"><a href="{{item.val}}"  class="va-text" target="_blank" rel="noopener noreferrer">link</a></td>
+            <td class="text-start"><a href="{{item.val}}" class="va-text" target="_blank"
+                rel="noopener noreferrer">link</a></td>
           </tr>
         </tbody>
       </table>
@@ -34,7 +35,14 @@
       </app-table-view>
     </div>
   </div>
-
-  <app-panel-container  *ngIf="selectedItemProps.length>0"  [panels]="customSubTabs" [containerId]="'obj-custom-sub-tab'">  </app-panel-container>
-
+  <div class="panel" *ngFor="let p of customSubTabs; let i = index;">
+    <ng-container *ngIf="selectedItemProps.length > 0">
+      <div class="panel-heading collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + 'obj-custom-sub-tab' + i" aria-expanded="false" [ngClass]="{'show': reportOpen}">
+        <span class="panel-title accordion-toggle"><b class="va-heading2">{{ p.text }}</b></span>
+      </div>
+      <div [id]="'obj-custom-sub-tab' + i" [ngClass]="{'collapse': !reportOpen, 'show': reportOpen}">
+        <ng-container *ngComponentOutlet="p.component"></ng-container>
+      </div>
+    </ng-container>
+  </div>
 </div>

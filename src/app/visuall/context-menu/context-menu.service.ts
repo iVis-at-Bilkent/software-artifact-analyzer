@@ -20,30 +20,35 @@ export class ContextMenuService {
       {
         id: 'collapseAllNodes',
         content: 'Collapse All Nodes',
+        hasTrailingDivider: true,
         coreAsWell: true,
         onClickFunction: () => { this._cyService.collapseNodes(); }
       },
       {
         id: 'collapseAllEdges',
         content: 'Collapse All Edges',
+        hasTrailingDivider: true,
         coreAsWell: true,
         onClickFunction: () => { this._cyService.collapseMultiEdges(); }
       },
       {
         id: 'performLayout',
         content: 'Perform Layout',
+        hasTrailingDivider: true,
         coreAsWell: true,
         onClickFunction: this.performLayout.bind(this)
       },
       {
         id: 'deleteSelected',
         content: 'Delete Selected',
+        hasTrailingDivider: true,
         coreAsWell: true,
         onClickFunction: this.deleteSelected.bind(this)
       },
       {
         id: 'selectObjectsOfThisType',
         content: 'Select Objects of This Type',
+        hasTrailingDivider: true,
         selector: 'node,edge',
         onClickFunction: this.selectAllThisType.bind(this)
       },
@@ -51,6 +56,7 @@ export class ContextMenuService {
         id: 'collapseEdge',
         content: 'Collapse',
         selector: '[^collapsedEdges][^originalEnds]',
+        hasTrailingDivider: true,
         onClickFunction: this.collapseEdges.bind(this)
       },
       {
@@ -62,12 +68,14 @@ export class ContextMenuService {
       {
         id: 'removeGroup',
         content: 'Remove Group',
+        hasTrailingDivider: true,
         selector: 'node.' + CLUSTER_CLASS,
         onClickFunction: (e) => { this._cyService.removeGroup4Selected(e.target || e.cyTarget) }
       },
       {
         id: 'deleteElement',
         content: 'Delete',
+        hasTrailingDivider: true,
         selector: 'node,edge',
         onClickFunction: this.deleteElem.bind(this)
       },

@@ -189,7 +189,7 @@ export class ToolbarCustomizationService {
           let color = (number>0)?colors[number]: '#15a014';
           let listOfAnomalies = anomaliesWithTrueResults
           this.listOfAnomalies = listOfAnomalies
-          const size_x =  0.65 + 2*listOfAnomalies.length/20;
+          const size_x =  0.60 + 2*listOfAnomalies.length/20;
           const size_y =  0.35 + 2*listOfAnomalies.length/20;
           const font_size = 0.75+ listOfAnomalies.length/20;
           div1.innerHTML = `<span style="background-color:${color} !important; font-size:${font_size}em !important; padding-bottom:${size_y}em !important; padding-top:${size_y}em !important; padding-right:${size_x}em !important; padding-left:${size_x}em !important;border-radius:50%!important;" class="badge rounded-pill bg-primary">${number}</span>`;
@@ -198,10 +198,10 @@ export class ToolbarCustomizationService {
             id:element._private.data.name,
             show: "always",
             position: "top-right",
-            marginX: "%0",
-            marginY: "%0",
+            marginX: "%1",
+            marginY: "%1",
             cursor: "pointer",
-            zIndex: 50,
+            zIndex: 1000,
             tooltip: listOfAnomalies.join('\n')
           
           });

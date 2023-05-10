@@ -6,41 +6,52 @@ const cors = require('cors');
 const path = require('path');
 const https = require('https');
 const compression = require('compression');
-
 const app = express();
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text({ type: 'text/*' }))
 app.use(compression());
-/*
+const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-
-
-app.use('/oauth/*', createProxyMiddleware({
-  target: 'https://auth.atlassian.com',
-  secure:false,
-  changeOrigin: true,
-  followRedirects: true,
-}));
-app.use('/oauth/*', createProxyMiddleware({
-  target: 'https://auth.atlassian.com',
-  secure:false,
-  changeOrigin: true,
-  followRedirects: true,
-}));
-
-app.use('/ex/*', createProxyMiddleware({
-  target: "https://api.atlassian.com",
-  secure:false,
-  changeOrigin: true,
-}));
-*/
 const appPath = '/dist/ng-visuall';
 app.use(express.static(__dirname + appPath));
 
-const port = process.env.PORT || 4400;
-app.listen(port);
+
+
+const proxyConfig = require(path.join(__dirname, 'proxy.conf.json'));
+
+const proxy = createProxyMiddleware(proxyConfig['/rest/*']);
+/*
+app.use('/rest', createProxyMiddleware({
+  target: 'https://saanalyzer.atlassian.net',
+  changeOrigin: true,
+  secure: true, 
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "X-Atlassian-Token": "no-check"
+  },
+  pathRewrite: {
+    '^/rest': ''
+  }
+}));
+
+
+
+const proxy = createProxyMiddleware({
+  target: 'https://saanalyzer.atlassian.net',
+  changeOrigin: true,
+  secure: true, 
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "X-Atlassian-Token": "no-check"
+  },
+  pathRewrite: {
+    '^/rest': ''
+  }
+});
+*/
+
+app.use('/rest', proxy);
 
 app.get('/urlquery/*', function (req, res) {
   let reqURL = req.url.substr(10);
@@ -93,6 +104,31 @@ app.get('/e2e', function (req, res) {
 app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname + appPath + '/index.html'));
 });
+/*
 
+const options = {
+  cert: fs.readFileSync('./server-cert.pem'),
+  ca: fs.readFileSync('./ca-cert.pem')
+};
+
+app.use('/rest/*', createProxyMiddleware({
+  target: 'https://saanalyzer.atlassian.net',
+  secure:false,
+  changeOrigin: true,
+  followRedirects: true,
+  logLevel: 'debug',
+  onError: function(err, req, res) {
+    console.log('Proxy error:', err);
+    res.writeHead(500, {
+      'Content-Type': 'text/plain'
+    });
+    res.end('Proxy error');
+  }
+}));
+
+
+*/
+const port = process.env.PORT || 4400;
+app.listen(port);
 // Start the app by listening on the default port
 console.log('server listening port: ', port);
