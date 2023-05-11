@@ -6,7 +6,6 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
 
-
 interface Attachment {
   name: string;
   data: any,
@@ -72,7 +71,7 @@ export class ReportComponentComponent implements OnInit {
   ngOnInit() {
 
     //Get authentication information from saa configuration flask app
-    this.http.get('http://0.0.0.0:4445/getAuthentication').subscribe(data => {
+    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
       this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
@@ -179,15 +178,33 @@ export class ReportComponentComponent implements OnInit {
 
   //Jira Issue Post Comment
   async postCommentIssue(issueKey: string) {
-    let apiUrl = '/rest/api/2';
+    let apiUrl = 'https://saanalyzer.atlassian.net/rest/api/2';
     const url = `${apiUrl}/issue/${issueKey}`;
     const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
     const headers = new HttpHeaders({
       'Authorization': `Basic ${authenticationString}`,
+      "Access-Control-Allow-Origin": "*",
+      "X-Atlassian-Token": "no-check"
     });
-    let body: any;
+    let body = {
+      "text":this.comment,
+      "issueName":issueKey
+    } 
+  
+    
+
+    this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
+    .subscribe(
+      (response) => {
+        console.info('Confirm request success');
+      },
+      (error) => {
+        console.error('Confirm request error:', error);
+      }
+    );
+     /*
     if (this.addGraph) {
-      /*
+
   const binaryImage = this.base64ToBinaryImage(this.dataURL.split(",")[1]);
   const formData = new FormData();
   formData.append('file', binaryImage, 'image.png');
@@ -199,6 +216,9 @@ export class ReportComponentComponent implements OnInit {
       console.log(attachmentUrl)
     })
     */
+
+
+    /*
       body = {
         "update": {
           "comment": [
@@ -235,6 +255,7 @@ export class ReportComponentComponent implements OnInit {
       }
 
     )
+    */
   }
 
   updateFile(): Observable<any> {

@@ -84,7 +84,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "ng-visuall:build:production"
+              "browserTarget": "ng-visuall:build:production",
+              "proxyConfig": "proxy.conf.json"
             }
           }
         },
@@ -92,6 +93,7 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "ng-visuall:build"
+            
           }
         },
         "test": {

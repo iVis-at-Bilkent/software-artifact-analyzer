@@ -1334,3 +1334,1261 @@ Build at: 2023-05-08T22:25:26.942Z - Hash: 1568fa2b04b4c402 - Time: 3458ms
 [HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
 [HPM] Proxy rewrite rule created: "^/rest" ~> "/rest"
 server listening port:  4400
+starting runner Wed May 10 16:54:39 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-10T13:54:45.843Z - Hash: 1568fa2b04b4c402 - Time: 2975ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> "/rest"
+server listening port:  4400
+starting runner Wed May 10 17:05:29 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-10T14:05:35.950Z - Hash: 1568fa2b04b4c402 - Time: 3355ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> "/rest"
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> ""
+server listening port:  4400
+starting runner Wed May 10 17:08:27 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-10T14:08:33.545Z - Hash: 1568fa2b04b4c402 - Time: 3049ms
+[HPM] Proxy created: /  -> https://saanalyzer.atlassian.net
+runner ended Wed May 10 17:08:33 +03 2023
+starting runner Wed May 10 17:09:18 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-10T14:09:23.771Z - Hash: 1568fa2b04b4c402 - Time: 2906ms
+[HPM] Proxy created: /rest  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+starting runner Wed May 10 20:32:23 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-10T17:32:29.563Z - Hash: 1568fa2b04b4c402 - Time: 3009ms
+[HPM] Proxy created: /rest  -> https://saanalyzer.atlassian.net
+[HPM] Proxy rewrite rule created: "^/rest" ~> "/rest"
+server listening port:  4400
+starting runner Wed May 10 20:37:08 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-10T17:37:14.505Z - Hash: 1568fa2b04b4c402 - Time: 2957ms
+[HPM] Proxy created: /rest  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+Rewriting path from /rest/api/2/issue/SAA-2 to /rest/api/issues/2/api/2/issue/SAA-2
+<ref *2> ClientRequest {
+  _events: [Object: null prototype] {
+    socket: [Function (anonymous)],
+    error: [ [Function: onerror], [Function: proxyError] ],
+    unpipe: [Function: onunpipe],
+    close: [Function: bound onceWrapper] { listener: [Function: onclose] },
+    finish: [Function: bound onceWrapper] { listener: [Function: onfinish] },
+    response: [Function (anonymous)]
+  },
+  _eventsCount: 6,
+  _maxListeners: undefined,
+  outputData: [],
+  outputSize: 0,
+  writable: true,
+  destroyed: false,
+  _last: true,
+  chunkedEncoding: false,
+  shouldKeepAlive: false,
+  maxRequestsOnConnectionReached: false,
+  _defaultKeepAlive: true,
+  useChunkedEncodingByDefault: true,
+  sendDate: false,
+  _removedConnection: false,
+  _removedContLen: false,
+  _removedTE: false,
+  strictContentLength: false,
+  _contentLength: null,
+  _hasBody: true,
+  _trailer: '',
+  finished: false,
+  _headerSent: false,
+  _closed: false,
+  socket: <ref *1> TLSSocket {
+    _tlsOptions: {
+      allowHalfOpen: undefined,
+      pipe: false,
+      secureContext: [SecureContext],
+      isServer: false,
+      requestCert: true,
+      rejectUnauthorized: true,
+      session: undefined,
+      ALPNProtocols: undefined,
+      requestOCSP: undefined,
+      enableTrace: undefined,
+      pskCallback: undefined,
+      highWaterMark: undefined,
+      onread: undefined,
+      signal: undefined
+    },
+    _secureEstablished: false,
+    _securePending: false,
+    _newSessionPending: false,
+    _controlReleased: true,
+    secureConnecting: true,
+    _SNICallback: null,
+    servername: null,
+    alpnProtocol: null,
+    authorized: false,
+    authorizationError: null,
+    encrypted: true,
+    _events: [Object: null prototype] {
+      close: [Array],
+      end: [Array],
+      newListener: [Function: keylogNewListener],
+      connect: [Array],
+      secure: [Function: onConnectSecure],
+      session: [Function (anonymous)],
+      free: [Function: onFree],
+      timeout: [Function: onTimeout],
+      agentRemove: [Function: onRemove],
+      error: [Function: socketErrorListener],
+      data: [Function: socketOnData],
+      drain: [Function: ondrain]
+    },
+    _eventsCount: 12,
+    connecting: true,
+    _hadError: false,
+    _parent: null,
+    _host: 'saanalyzer.atlassian.net',
+    _closeAfterHandlingError: false,
+    _readableState: ReadableState {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: BufferList { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: true,
+      ended: false,
+      endEmitted: false,
+      reading: true,
+      constructed: true,
+      sync: false,
+      needReadable: true,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: true,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null,
+      [Symbol(kPaused)]: false
+    },
+    _maxListeners: undefined,
+    _writableState: WritableState {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: [Function: bound onwrite],
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      [Symbol(kOnFinished)]: []
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: undefined,
+    _server: null,
+    ssl: TLSWrap {
+      _parent: [TCP],
+      _parentWrap: undefined,
+      _secureContext: [SecureContext],
+      reading: false,
+      onkeylog: [Function: onkeylog],
+      onhandshakestart: {},
+      onhandshakedone: [Function (anonymous)],
+      onocspresponse: [Function: onocspresponse],
+      onnewsession: [Function: onnewsessionclient],
+      onerror: [Function: onerror],
+      [Symbol(owner_symbol)]: [Circular *1]
+    },
+    _requestCert: true,
+    _rejectUnauthorized: true,
+    parser: HTTPParser {
+      '0': null,
+      '1': [Function: parserOnHeaders],
+      '2': [Function: parserOnHeadersComplete],
+      '3': [Function: parserOnBody],
+      '4': [Function: parserOnMessageComplete],
+      '5': null,
+      '6': null,
+      _headers: [],
+      _url: '',
+      socket: [Circular *1],
+      incoming: null,
+      outgoing: [Circular *2],
+      maxHeaderPairs: 2000,
+      _consumed: false,
+      onIncoming: [Function: parserOnIncomingClient],
+      joinDuplicateHeaders: undefined,
+      [Symbol(resource_symbol)]: [HTTPClientAsyncResource]
+    },
+    _httpMessage: [Circular *2],
+    [Symbol(res)]: TLSWrap {
+      _parent: [TCP],
+      _parentWrap: undefined,
+      _secureContext: [SecureContext],
+      reading: false,
+      onkeylog: [Function: onkeylog],
+      onhandshakestart: {},
+      onhandshakedone: [Function (anonymous)],
+      onocspresponse: [Function: onocspresponse],
+      onnewsession: [Function: onnewsessionclient],
+      onerror: [Function: onerror],
+      [Symbol(owner_symbol)]: [Circular *1]
+    },
+    [Symbol(verified)]: false,
+    [Symbol(pendingSession)]: null,
+    [Symbol(async_id_symbol)]: 5944,
+    [Symbol(kHandle)]: TLSWrap {
+      _parent: [TCP],
+      _parentWrap: undefined,
+      _secureContext: [SecureContext],
+      reading: false,
+      onkeylog: [Function: onkeylog],
+      onhandshakestart: {},
+      onhandshakedone: [Function (anonymous)],
+      onocspresponse: [Function: onocspresponse],
+      onnewsession: [Function: onnewsessionclient],
+      onerror: [Function: onerror],
+      [Symbol(owner_symbol)]: [Circular *1]
+    },
+    [Symbol(lastWriteQueueSize)]: 0,
+    [Symbol(timeout)]: null,
+    [Symbol(kBuffer)]: null,
+    [Symbol(kBufferCb)]: null,
+    [Symbol(kBufferGen)]: null,
+    [Symbol(kCapture)]: false,
+    [Symbol(kSetNoDelay)]: false,
+    [Symbol(kSetKeepAlive)]: false,
+    [Symbol(kSetKeepAliveInitialDelay)]: 0,
+    [Symbol(kBytesRead)]: 0,
+    [Symbol(kBytesWritten)]: 0,
+    [Symbol(connect-options)]: {
+      rejectUnauthorized: true,
+      ciphers: undefined,
+      checkServerIdentity: [Function: checkServerIdentity],
+      minDHSize: 1024,
+      port: 443,
+      host: 'saanalyzer.atlassian.net',
+      hostname: 'saanalyzer.atlassian.net',
+      socketPath: undefined,
+      pfx: undefined,
+      key: undefined,
+      passphrase: undefined,
+      cert: undefined,
+      ca: undefined,
+      secureProtocol: undefined,
+      method: 'PUT',
+      headers: [Object],
+      agent: false,
+      localAddress: undefined,
+      path: null,
+      _defaultAgent: [Agent],
+      noDelay: true,
+      servername: 'saanalyzer.atlassian.net',
+      _agentKey: 'saanalyzer.atlassian.net:443::::::::true:::::::::::::',
+      encoding: null,
+      singleUse: true
+    }
+  },
+  _header: null,
+  _keepAliveTimeout: 0,
+  _onPendingData: [Function: nop],
+  agent: Agent {
+    _events: [Object: null prototype] {
+      free: [Function (anonymous)],
+      newListener: [Function: maybeEnableKeylog]
+    },
+    _eventsCount: 2,
+    _maxListeners: undefined,
+    defaultPort: 443,
+    protocol: 'https:',
+    options: [Object: null prototype] { noDelay: true, path: null },
+    requests: [Object: null prototype] {},
+    sockets: [Object: null prototype] {
+      'saanalyzer.atlassian.net:443::::::::true:::::::::::::': [Array]
+    },
+    freeSockets: [Object: null prototype] {},
+    keepAliveMsecs: 1000,
+    keepAlive: false,
+    maxSockets: Infinity,
+    maxFreeSockets: 256,
+    scheduling: 'lifo',
+    maxTotalSockets: Infinity,
+    totalSocketCount: 1,
+    maxCachedSessions: 100,
+    _sessionCache: { map: {}, list: [] },
+    [Symbol(kCapture)]: false
+  },
+  socketPath: undefined,
+  method: 'PUT',
+  maxHeaderSize: undefined,
+  insecureHTTPParser: undefined,
+  joinDuplicateHeaders: undefined,
+  path: '/rest/api/issues/2/api/2/issue/SAA-2',
+  _ended: false,
+  res: null,
+  aborted: false,
+  timeoutCb: null,
+  upgradeOrConnect: false,
+  parser: <ref *3> HTTPParser {
+    '0': null,
+    '1': [Function: parserOnHeaders],
+    '2': [Function: parserOnHeadersComplete],
+    '3': [Function: parserOnBody],
+    '4': [Function: parserOnMessageComplete],
+    '5': null,
+    '6': null,
+    _headers: [],
+    _url: '',
+    socket: <ref *1> TLSSocket {
+      _tlsOptions: [Object],
+      _secureEstablished: false,
+      _securePending: false,
+      _newSessionPending: false,
+      _controlReleased: true,
+      secureConnecting: true,
+      _SNICallback: null,
+      servername: null,
+      alpnProtocol: null,
+      authorized: false,
+      authorizationError: null,
+      encrypted: true,
+      _events: [Object: null prototype],
+      _eventsCount: 12,
+      connecting: true,
+      _hadError: false,
+      _parent: null,
+      _host: 'saanalyzer.atlassian.net',
+      _closeAfterHandlingError: false,
+      _readableState: [ReadableState],
+      _maxListeners: undefined,
+      _writableState: [WritableState],
+      allowHalfOpen: false,
+      _sockname: null,
+      _pendingData: null,
+      _pendingEncoding: '',
+      server: undefined,
+      _server: null,
+      ssl: [TLSWrap],
+      _requestCert: true,
+      _rejectUnauthorized: true,
+      parser: [Circular *3],
+      _httpMessage: [Circular *2],
+      [Symbol(res)]: [TLSWrap],
+      [Symbol(verified)]: false,
+      [Symbol(pendingSession)]: null,
+      [Symbol(async_id_symbol)]: 5944,
+      [Symbol(kHandle)]: [TLSWrap],
+      [Symbol(lastWriteQueueSize)]: 0,
+      [Symbol(timeout)]: null,
+      [Symbol(kBuffer)]: null,
+      [Symbol(kBufferCb)]: null,
+      [Symbol(kBufferGen)]: null,
+      [Symbol(kCapture)]: false,
+      [Symbol(kSetNoDelay)]: false,
+      [Symbol(kSetKeepAlive)]: false,
+      [Symbol(kSetKeepAliveInitialDelay)]: 0,
+      [Symbol(kBytesRead)]: 0,
+      [Symbol(kBytesWritten)]: 0,
+      [Symbol(connect-options)]: [Object]
+    },
+    incoming: null,
+    outgoing: [Circular *2],
+    maxHeaderPairs: 2000,
+    _consumed: false,
+    onIncoming: [Function: parserOnIncomingClient],
+    joinDuplicateHeaders: undefined,
+    [Symbol(resource_symbol)]: HTTPClientAsyncResource {
+      type: 'HTTPINCOMINGMESSAGE',
+      req: [Circular *2]
+    }
+  },
+  maxHeadersCount: null,
+  reusedSocket: false,
+  host: 'saanalyzer.atlassian.net',
+  protocol: 'https:',
+  [Symbol(kCapture)]: false,
+  [Symbol(kBytesWritten)]: 0,
+  [Symbol(kEndCalled)]: false,
+  [Symbol(kNeedDrain)]: false,
+  [Symbol(corked)]: 0,
+  [Symbol(kOutHeaders)]: [Object: null prototype] {
+    'accept-language': [ 'accept-language', 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7' ],
+    'accept-encoding': [ 'accept-encoding', 'gzip, deflate, br' ],
+    referer: [ 'referer', 'http://localhost:4400/' ],
+    'sec-fetch-dest': [ 'sec-fetch-dest', 'empty' ],
+    'sec-fetch-mode': [ 'sec-fetch-mode', 'cors' ],
+    'sec-fetch-site': [ 'sec-fetch-site', 'same-origin' ],
+    origin: [ 'origin', 'http://localhost:4400' ],
+    'sec-ch-ua-platform': [ 'sec-ch-ua-platform', '"macOS"' ],
+    'user-agent': [
+      'user-agent',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36'
+    ],
+    authorization: [
+      'authorization',
+      'Basic c2FhbmFseXplckBnbWFpbC5jb206QVRBVFQzeEZmR0YwZVN4a3RXeU5VNUVWZDNFaG51enY0MTJUWDJ0S3d4cnBYaVhGN1I2UmxpeUV2V3lxeGJYRE5hNHY2TjRwNFJybld1cUhadmJYNzNJeTlIcjgxTWlLMGhhdHY3NEJXcFNtTTduQ0VKRWRqdXluZmRISUZGS0lCeFpnaFVhdFdkcnZqVkQzZkpBLXlLXzFLX2JMSHI1QVdUV1U3dEhiQ3B4Yk82M1RCLU80MkFvPThDRjJEOURB'
+    ],
+    'sec-ch-ua-mobile': [ 'sec-ch-ua-mobile', '?0' ],
+    'content-type': [ 'content-type', 'application/json' ],
+    accept: [ 'accept', 'application/json, text/plain, */*' ],
+    'sec-ch-ua': [
+      'sec-ch-ua',
+      '"Chromium";v="112", "Google Chrome";v="112", "Not:A-Brand";v="99"'
+    ],
+    'content-length': [ 'content-length', '288' ],
+    connection: [ 'connection', 'close' ],
+    host: [ 'host', 'saanalyzer.atlassian.net' ],
+    'access-control-allow-origin': [ 'Access-Control-Allow-Origin', '*' ],
+    'x-atlassian-token': [ 'X-Atlassian-Token', 'no-check' ]
+  },
+  [Symbol(errored)]: null,
+  [Symbol(kUniqueHeaders)]: null
+}
+starting runner Wed May 10 20:39:22 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-10T17:39:28.269Z - Hash: 1568fa2b04b4c402 - Time: 3004ms
+[HPM] Proxy created: /rest  -> https://saanalyzer.atlassian.net
+server listening port:  4400
+Rewriting path from /rest/api/2/issue/SAA-1 to /rest/api/2/issue/SAA-1
+<ref *2> ClientRequest {
+  _events: [Object: null prototype] {
+    socket: [Function (anonymous)],
+    error: [ [Function: onerror], [Function: proxyError] ],
+    unpipe: [Function: onunpipe],
+    close: [Function: bound onceWrapper] { listener: [Function: onclose] },
+    finish: [Function: bound onceWrapper] { listener: [Function: onfinish] },
+    response: [Function (anonymous)]
+  },
+  _eventsCount: 6,
+  _maxListeners: undefined,
+  outputData: [],
+  outputSize: 0,
+  writable: true,
+  destroyed: false,
+  _last: true,
+  chunkedEncoding: false,
+  shouldKeepAlive: false,
+  maxRequestsOnConnectionReached: false,
+  _defaultKeepAlive: true,
+  useChunkedEncodingByDefault: true,
+  sendDate: false,
+  _removedConnection: false,
+  _removedContLen: false,
+  _removedTE: false,
+  strictContentLength: false,
+  _contentLength: null,
+  _hasBody: true,
+  _trailer: '',
+  finished: false,
+  _headerSent: false,
+  _closed: false,
+  socket: <ref *1> TLSSocket {
+    _tlsOptions: {
+      allowHalfOpen: undefined,
+      pipe: false,
+      secureContext: [SecureContext],
+      isServer: false,
+      requestCert: true,
+      rejectUnauthorized: true,
+      session: undefined,
+      ALPNProtocols: undefined,
+      requestOCSP: undefined,
+      enableTrace: undefined,
+      pskCallback: undefined,
+      highWaterMark: undefined,
+      onread: undefined,
+      signal: undefined
+    },
+    _secureEstablished: false,
+    _securePending: false,
+    _newSessionPending: false,
+    _controlReleased: true,
+    secureConnecting: true,
+    _SNICallback: null,
+    servername: null,
+    alpnProtocol: null,
+    authorized: false,
+    authorizationError: null,
+    encrypted: true,
+    _events: [Object: null prototype] {
+      close: [Array],
+      end: [Array],
+      newListener: [Function: keylogNewListener],
+      connect: [Array],
+      secure: [Function: onConnectSecure],
+      session: [Function (anonymous)],
+      free: [Function: onFree],
+      timeout: [Function: onTimeout],
+      agentRemove: [Function: onRemove],
+      error: [Function: socketErrorListener],
+      data: [Function: socketOnData],
+      drain: [Function: ondrain]
+    },
+    _eventsCount: 12,
+    connecting: true,
+    _hadError: false,
+    _parent: null,
+    _host: 'saanalyzer.atlassian.net',
+    _closeAfterHandlingError: false,
+    _readableState: ReadableState {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: BufferList { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: true,
+      ended: false,
+      endEmitted: false,
+      reading: true,
+      constructed: true,
+      sync: false,
+      needReadable: true,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: true,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null,
+      [Symbol(kPaused)]: false
+    },
+    _maxListeners: undefined,
+    _writableState: WritableState {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: [Function: bound onwrite],
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      [Symbol(kOnFinished)]: []
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: undefined,
+    _server: null,
+    ssl: TLSWrap {
+      _parent: [TCP],
+      _parentWrap: undefined,
+      _secureContext: [SecureContext],
+      reading: false,
+      onkeylog: [Function: onkeylog],
+      onhandshakestart: {},
+      onhandshakedone: [Function (anonymous)],
+      onocspresponse: [Function: onocspresponse],
+      onnewsession: [Function: onnewsessionclient],
+      onerror: [Function: onerror],
+      [Symbol(owner_symbol)]: [Circular *1]
+    },
+    _requestCert: true,
+    _rejectUnauthorized: true,
+    parser: HTTPParser {
+      '0': null,
+      '1': [Function: parserOnHeaders],
+      '2': [Function: parserOnHeadersComplete],
+      '3': [Function: parserOnBody],
+      '4': [Function: parserOnMessageComplete],
+      '5': null,
+      '6': null,
+      _headers: [],
+      _url: '',
+      socket: [Circular *1],
+      incoming: null,
+      outgoing: [Circular *2],
+      maxHeaderPairs: 2000,
+      _consumed: false,
+      onIncoming: [Function: parserOnIncomingClient],
+      joinDuplicateHeaders: undefined,
+      [Symbol(resource_symbol)]: [HTTPClientAsyncResource]
+    },
+    _httpMessage: [Circular *2],
+    [Symbol(res)]: TLSWrap {
+      _parent: [TCP],
+      _parentWrap: undefined,
+      _secureContext: [SecureContext],
+      reading: false,
+      onkeylog: [Function: onkeylog],
+      onhandshakestart: {},
+      onhandshakedone: [Function (anonymous)],
+      onocspresponse: [Function: onocspresponse],
+      onnewsession: [Function: onnewsessionclient],
+      onerror: [Function: onerror],
+      [Symbol(owner_symbol)]: [Circular *1]
+    },
+    [Symbol(verified)]: false,
+    [Symbol(pendingSession)]: null,
+    [Symbol(async_id_symbol)]: 5945,
+    [Symbol(kHandle)]: TLSWrap {
+      _parent: [TCP],
+      _parentWrap: undefined,
+      _secureContext: [SecureContext],
+      reading: false,
+      onkeylog: [Function: onkeylog],
+      onhandshakestart: {},
+      onhandshakedone: [Function (anonymous)],
+      onocspresponse: [Function: onocspresponse],
+      onnewsession: [Function: onnewsessionclient],
+      onerror: [Function: onerror],
+      [Symbol(owner_symbol)]: [Circular *1]
+    },
+    [Symbol(lastWriteQueueSize)]: 0,
+    [Symbol(timeout)]: null,
+    [Symbol(kBuffer)]: null,
+    [Symbol(kBufferCb)]: null,
+    [Symbol(kBufferGen)]: null,
+    [Symbol(kCapture)]: false,
+    [Symbol(kSetNoDelay)]: false,
+    [Symbol(kSetKeepAlive)]: false,
+    [Symbol(kSetKeepAliveInitialDelay)]: 0,
+    [Symbol(kBytesRead)]: 0,
+    [Symbol(kBytesWritten)]: 0,
+    [Symbol(connect-options)]: {
+      rejectUnauthorized: true,
+      ciphers: undefined,
+      checkServerIdentity: [Function: checkServerIdentity],
+      minDHSize: 1024,
+      port: 443,
+      host: 'saanalyzer.atlassian.net',
+      hostname: 'saanalyzer.atlassian.net',
+      socketPath: undefined,
+      pfx: undefined,
+      key: undefined,
+      passphrase: undefined,
+      cert: undefined,
+      ca: undefined,
+      secureProtocol: undefined,
+      method: 'PUT',
+      headers: [Object],
+      agent: false,
+      localAddress: undefined,
+      path: null,
+      _defaultAgent: [Agent],
+      noDelay: true,
+      servername: 'saanalyzer.atlassian.net',
+      _agentKey: 'saanalyzer.atlassian.net:443::::::::true:::::::::::::',
+      encoding: null,
+      singleUse: true
+    }
+  },
+  _header: null,
+  _keepAliveTimeout: 0,
+  _onPendingData: [Function: nop],
+  agent: Agent {
+    _events: [Object: null prototype] {
+      free: [Function (anonymous)],
+      newListener: [Function: maybeEnableKeylog]
+    },
+    _eventsCount: 2,
+    _maxListeners: undefined,
+    defaultPort: 443,
+    protocol: 'https:',
+    options: [Object: null prototype] { noDelay: true, path: null },
+    requests: [Object: null prototype] {},
+    sockets: [Object: null prototype] {
+      'saanalyzer.atlassian.net:443::::::::true:::::::::::::': [Array]
+    },
+    freeSockets: [Object: null prototype] {},
+    keepAliveMsecs: 1000,
+    keepAlive: false,
+    maxSockets: Infinity,
+    maxFreeSockets: 256,
+    scheduling: 'lifo',
+    maxTotalSockets: Infinity,
+    totalSocketCount: 1,
+    maxCachedSessions: 100,
+    _sessionCache: { map: {}, list: [] },
+    [Symbol(kCapture)]: false
+  },
+  socketPath: undefined,
+  method: 'PUT',
+  maxHeaderSize: undefined,
+  insecureHTTPParser: undefined,
+  joinDuplicateHeaders: undefined,
+  path: '/rest/api/2/issue/SAA-1',
+  _ended: false,
+  res: null,
+  aborted: false,
+  timeoutCb: null,
+  upgradeOrConnect: false,
+  parser: <ref *3> HTTPParser {
+    '0': null,
+    '1': [Function: parserOnHeaders],
+    '2': [Function: parserOnHeadersComplete],
+    '3': [Function: parserOnBody],
+    '4': [Function: parserOnMessageComplete],
+    '5': null,
+    '6': null,
+    _headers: [],
+    _url: '',
+    socket: <ref *1> TLSSocket {
+      _tlsOptions: [Object],
+      _secureEstablished: false,
+      _securePending: false,
+      _newSessionPending: false,
+      _controlReleased: true,
+      secureConnecting: true,
+      _SNICallback: null,
+      servername: null,
+      alpnProtocol: null,
+      authorized: false,
+      authorizationError: null,
+      encrypted: true,
+      _events: [Object: null prototype],
+      _eventsCount: 12,
+      connecting: true,
+      _hadError: false,
+      _parent: null,
+      _host: 'saanalyzer.atlassian.net',
+      _closeAfterHandlingError: false,
+      _readableState: [ReadableState],
+      _maxListeners: undefined,
+      _writableState: [WritableState],
+      allowHalfOpen: false,
+      _sockname: null,
+      _pendingData: null,
+      _pendingEncoding: '',
+      server: undefined,
+      _server: null,
+      ssl: [TLSWrap],
+      _requestCert: true,
+      _rejectUnauthorized: true,
+      parser: [Circular *3],
+      _httpMessage: [Circular *2],
+      [Symbol(res)]: [TLSWrap],
+      [Symbol(verified)]: false,
+      [Symbol(pendingSession)]: null,
+      [Symbol(async_id_symbol)]: 5945,
+      [Symbol(kHandle)]: [TLSWrap],
+      [Symbol(lastWriteQueueSize)]: 0,
+      [Symbol(timeout)]: null,
+      [Symbol(kBuffer)]: null,
+      [Symbol(kBufferCb)]: null,
+      [Symbol(kBufferGen)]: null,
+      [Symbol(kCapture)]: false,
+      [Symbol(kSetNoDelay)]: false,
+      [Symbol(kSetKeepAlive)]: false,
+      [Symbol(kSetKeepAliveInitialDelay)]: 0,
+      [Symbol(kBytesRead)]: 0,
+      [Symbol(kBytesWritten)]: 0,
+      [Symbol(connect-options)]: [Object]
+    },
+    incoming: null,
+    outgoing: [Circular *2],
+    maxHeaderPairs: 2000,
+    _consumed: false,
+    onIncoming: [Function: parserOnIncomingClient],
+    joinDuplicateHeaders: undefined,
+    [Symbol(resource_symbol)]: HTTPClientAsyncResource {
+      type: 'HTTPINCOMINGMESSAGE',
+      req: [Circular *2]
+    }
+  },
+  maxHeadersCount: null,
+  reusedSocket: false,
+  host: 'saanalyzer.atlassian.net',
+  protocol: 'https:',
+  [Symbol(kCapture)]: false,
+  [Symbol(kBytesWritten)]: 0,
+  [Symbol(kEndCalled)]: false,
+  [Symbol(kNeedDrain)]: false,
+  [Symbol(corked)]: 0,
+  [Symbol(kOutHeaders)]: [Object: null prototype] {
+    'accept-language': [ 'accept-language', 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7' ],
+    'accept-encoding': [ 'accept-encoding', 'gzip, deflate, br' ],
+    referer: [ 'referer', 'http://localhost:4400/' ],
+    'sec-fetch-dest': [ 'sec-fetch-dest', 'empty' ],
+    'sec-fetch-mode': [ 'sec-fetch-mode', 'cors' ],
+    'sec-fetch-site': [ 'sec-fetch-site', 'same-origin' ],
+    origin: [ 'origin', 'http://localhost:4400' ],
+    'sec-ch-ua-platform': [ 'sec-ch-ua-platform', '"macOS"' ],
+    'user-agent': [
+      'user-agent',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36'
+    ],
+    authorization: [
+      'authorization',
+      'Basic c2FhbmFseXplckBnbWFpbC5jb206QVRBVFQzeEZmR0YwZVN4a3RXeU5VNUVWZDNFaG51enY0MTJUWDJ0S3d4cnBYaVhGN1I2UmxpeUV2V3lxeGJYRE5hNHY2TjRwNFJybld1cUhadmJYNzNJeTlIcjgxTWlLMGhhdHY3NEJXcFNtTTduQ0VKRWRqdXluZmRISUZGS0lCeFpnaFVhdFdkcnZqVkQzZkpBLXlLXzFLX2JMSHI1QVdUV1U3dEhiQ3B4Yk82M1RCLU80MkFvPThDRjJEOURB'
+    ],
+    'sec-ch-ua-mobile': [ 'sec-ch-ua-mobile', '?0' ],
+    'content-type': [ 'content-type', 'application/json' ],
+    accept: [ 'accept', 'application/json, text/plain, */*' ],
+    'sec-ch-ua': [
+      'sec-ch-ua',
+      '"Chromium";v="112", "Google Chrome";v="112", "Not:A-Brand";v="99"'
+    ],
+    'content-length': [ 'content-length', '227' ],
+    connection: [ 'connection', 'close' ],
+    host: [ 'host', 'saanalyzer.atlassian.net' ],
+    'access-control-allow-origin': [ 'Access-Control-Allow-Origin', '*' ],
+    'x-atlassian-token': [ 'X-Atlassian-Token', 'no-check' ]
+  },
+  [Symbol(errored)]: null,
+  [Symbol(kUniqueHeaders)]: null
+}
+starting runner Thu May 11 20:02:18 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-11T17:02:25.803Z - Hash: 1568fa2b04b4c402 - Time: 2967ms
+server listening port:  4400
+starting runner Thu May 11 20:50:50 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-11T17:51:01.224Z - Hash: 0271e84927e40cff - Time: 7895ms
+server listening port:  4400
+starting runner Thu May 11 20:52:24 +03 2023
+
+up to date, audited 1138 packages in 2s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-11T17:52:30.900Z - Hash: 0271e84927e40cff - Time: 3247ms
+server listening port:  4400
+starting runner Thu May 11 20:53:09 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-11T17:53:15.122Z - Hash: 0271e84927e40cff - Time: 2881ms
+server listening port:  4400
+starting runner Thu May 11 20:55:32 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.01 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-11T17:55:38.451Z - Hash: de6b1a8107658200 - Time: 3617ms
+server listening port:  4400
+starting runner Thu May 11 22:28:36 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.02 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-11T19:28:43.250Z - Hash: dc803112aa757a17 - Time: 3610ms
+server listening port:  4400
+starting runner Thu May 11 22:30:59 +03 2023
+
+up to date, audited 1138 packages in 1s
+
+135 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> ng-visuall@1.0.0 ng
+> ng build
+
+
+Initial Chunk Files | Names         |  Raw Size
+vendor.js           | vendor        |   7.46 MB |
+main.js             | main          |   1.02 MB |
+polyfills.js        | polyfills     | 971.32 kB |
+scripts.js          | scripts       | 393.86 kB |
+styles.css          | styles        | 323.21 kB |
+runtime.js          | runtime       |   7.12 kB |
+
+| Initial Total |  10.13 MB
+
+Build at: 2023-05-11T19:31:05.846Z - Hash: 4dcef3239e8b875c - Time: 3288ms
+server listening port:  4400
