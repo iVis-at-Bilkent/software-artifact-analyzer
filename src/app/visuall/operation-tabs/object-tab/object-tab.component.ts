@@ -24,7 +24,6 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   isShowStatsTable: boolean = false;
   isShowObjTable = false;
   customSubTabs: { component: any, text: string }[] = CustomizationModule.objSubTabs;
-  reportOpen: boolean;
   tableInput: TableViewInput = {
     columns: ['Type', 'Count', 'Selected', 'Hidden'], isHide0: true, results: [],results2: [], resultCnt: 0, currPage: 1, pageSize: 20, tableTitle: 'Statistics',
     isShowExportAsCSV: true, isLoadGraph: true, columnLimit: 5, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true
@@ -45,14 +44,6 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    setInterval(() => {
-      if (this._g.cy.$(":selected")[0]) {
-        this._g.openReportTab.subscribe((isOpen) => {
-          this.reportOpen = isOpen
-        });
-      }
-    }, 500);
-
     this.appDescSubs = this._g.appDescription.subscribe(x => {
       if (x === null) {
         return;

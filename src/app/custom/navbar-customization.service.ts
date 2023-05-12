@@ -90,8 +90,12 @@ export class NavbarCustomizationService {
     RETURN CASE WHEN count = 0 THEN false ELSE true END`;
     return await this.runAnomalyQuery(cql, "No comment on issue");
   }
-  async anomaly6(): Promise<any> {
-
+  async anomaly6(issue_name): Promise<any> {
+    const cql = `MATCH (n) 
+    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and  n.name = '${issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, 'Missing Environment Information');
 
   }
   async anomaly5(issue_name): Promise<any> {

@@ -178,21 +178,13 @@ export class ReportComponentComponent implements OnInit {
 
   //Jira Issue Post Comment
   async postCommentIssue(issueKey: string) {
-    let apiUrl = 'https://saanalyzer.atlassian.net/rest/api/2';
-    const url = `${apiUrl}/issue/${issueKey}`;
     const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
-    const headers = new HttpHeaders({
-      'Authorization': `Basic ${authenticationString}`,
-      "Access-Control-Allow-Origin": "*",
-      "X-Atlassian-Token": "no-check"
-    });
     let body = {
       "text":this.comment,
-      "issueName":issueKey
+      "issueName":issueKey,
+      "imgData": this.dataURL.split(",")[1],
+      "uploadImage":this.commentInput.addGraph
     } 
-  
-    
-
     this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
     .subscribe(
       (response) => {
@@ -202,60 +194,6 @@ export class ReportComponentComponent implements OnInit {
         console.error('Confirm request error:', error);
       }
     );
-     /*
-    if (this.addGraph) {
-
-  const binaryImage = this.base64ToBinaryImage(this.dataURL.split(",")[1]);
-  const formData = new FormData();
-  formData.append('file', binaryImage, 'image.png');
-
-  this.http.post(`${url}/attachments`, formData, { headers }).subscribe(
-    (response: any) => {
-      const attachmentId = response[0].id;
-      const attachmentUrl = response[0].content;
-      console.log(attachmentUrl)
-    })
-    */
-
-
-    /*
-      body = {
-        "update": {
-          "comment": [
-            {
-              "add": {
-                "body": this.comment
-              }
-            }
-          ]
-        }
-      }
-
-    } else {
-      body = {
-        "update": {
-          "comment": [
-            {
-              "add": {
-                "body": this.comment + ` <br/><img src="data:image/png;base64,${this.dataURL}"/> `
-              }
-            }
-          ]
-        }
-      }
-    }
-
-    this.http.put(url, body, { headers }).subscribe(
-      (response) => {
-        console.log('Comment added successfully:', response);
-        alert('Comment posted successfully')
-      },
-      (error) => {
-        console.error('Error adding comment:', error);
-      }
-
-    )
-    */
   }
 
   updateFile(): Observable<any> {
@@ -596,21 +534,25 @@ export class ReportComponentComponent implements OnInit {
 
 
   async anomaly7(): Promise<any> {
-    const cql = `MATCH (n) 
-    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and  n.name = '${this.issue_name}'
+    const cql = `MATCH (n:Issue{status:'Done'})
+    WHERE size(n.comments) = 0  and  n.name = '${this.issue_name}'
     WITH count(n) AS count
     RETURN CASE WHEN count = 0 THEN false ELSE true END`;
     return await this.runAnomalyQuery(cql, "No comment on issue");
   }
   async anomaly6(): Promise<any> {
-
+    const cql = `MATCH (n) 
+    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and  n.name = '${this.issue_name}'
+    WITH count(n) AS count
+    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
+    return await this.runAnomalyQuery(cql, 'Missing Environment Information');
 
   }
   async anomaly5(): Promise<any> {
     const cql = ` MATCH (n:Issue) WHERE n.priority  is NULL   and  n.name = '${this.issue_name}'
     WITH count(n) AS count
      RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, "Missing priority");
+    return await this.runAnomalyQuery(cql, 'Missing Priority');
 
   }
 
