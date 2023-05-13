@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
-
+import * as base64js from 'base64-js';
 interface Attachment {
   name: string;
   data: any,
@@ -28,6 +28,7 @@ export class ReportComponentComponent implements OnInit {
     addGraph: false, addAnomaly: false, addJira: false, addGithub: false, addReviewer: false
   };
   prs: string[] = []
+  issues: string[] = []
   dataURL: string; //Graph screenshot base64
   pr_name: string = "";
   issue_name: string = "";
@@ -81,6 +82,7 @@ export class ReportComponentComponent implements OnInit {
       };
     });
     this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillPr(x), DbResponseType.table);
+    this._dbService.runQuery(`MATCH (n:Issue) RETURN distinct n.name`, (x) => this.fillIssues(x), DbResponseType.table);
     let name = ""
     let reported = false;
     setInterval(() => {
@@ -155,7 +157,7 @@ export class ReportComponentComponent implements OnInit {
       }
 
     }, 500)
-    
+
     setInterval(() => {
       this._g.openReportTab.subscribe((isOpen) => {
 
@@ -175,56 +177,62 @@ export class ReportComponentComponent implements OnInit {
       this.prs.push(data.data[i][0]);
     }
   }
+  fillIssues(data) {
+    this.issues = [];
+    for (let i = 0; i < data.data.length; i++) {
+      this.issues.push(data.data[i][0]);
+    }
+  }
 
   //Jira Issue Post Comment
   async postCommentIssue(issueKey: string) {
     const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
     let body = {
-      "text":this.comment,
-      "issueName":issueKey,
+      "header": this.comment_header,
+      "text": this.comment.split("]", 1),
+      "url":"http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this._g.cy.$(':selected')[0]._private.data.name,
+      "issueName": issueKey,
       "imgData": this.dataURL.split(",")[1],
-      "uploadImage":this.commentInput.addGraph
-    } 
+      "uploadImage": this.commentInput.addGraph
+    }
     this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
-    .subscribe(
-      (response) => {
-        console.info('Confirm request success');
-      },
-      (error) => {
-        console.error('Confirm request error:', error);
-      }
-    );
+      .subscribe(
+        (response) => {
+          console.info('Confirm request success');
+        },
+        (error) => {
+          console.error('Confirm request error:', error);
+        }
+      );
   }
 
   updateFile(): Observable<any> {
-    const url = `https://api.github.com/repos/${this.authentication.github_repo}/contents/image.png`;
-
+    const filename = `image_${Date.now()}.png`;
+    const url = `https://api.github.com/repos/${this.authentication.github_repo}/contents/assets/${filename}`;
     const body = {
-      message: "txt file",
-      content: `${this.dataURL.split(",")[1]}`,
-      sha: this.sha_github
+      message: "Add image",
+      content: `${this.dataURL.split(",")[1]}`
     };
-
     const options = this.githubHttpOptions;
     return this.http.put(url, body, options);
   }
   //Github PullRequest Post Comment To Pull Request
   async postCommentPr(prKey: string) {
-    const commentBody = {
-      body: `###${this.comment_header}\n${this.comment}\n<img id="guiai-16816155202" src="data:image/png;base64,${this.dataURL.split(",")[1]}">`
+    let  commentBody = {
+      body: `### ${this.comment_header}\n${this.comment}`
     };
 
     //If add graph is selected
     if (this.commentInput.addGraph) {
-      /*
-      this.http.get(`https://api.github.com/repos/${this.authentication.github_repo}/contents/image.png`, this.httpOptions).subscribe(async response => {
-        this.sha_github = response["sha"];
         await this.updateFile().subscribe(response => {
           console.log('Comment posted successfully:', response);
           alert('Comment posted successfully')
           this.imageUrl = response["content"]["download_url"]
-          commentBody.body += '\n\n![image](' + this.imageUrl + ')'
-          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
+          console.log(this.imageUrl )
+          commentBody = {
+            body: `### ${this.comment_header}\n${this.comment}\n![image](${ this.imageUrl })`
+          };
+          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
             console.log('Comment posted successfully:', response);
           }, error => {
             console.error('Error posting comment:', error);
@@ -233,37 +241,8 @@ export class ReportComponentComponent implements OnInit {
         }, error => {
           console.error('Error updating image:', error);
         });
-      }, error => {
-        console.error('Error getting ssh:', error);
-      });
-      */
 
-      /*
-      this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.httpOptions).subscribe(response => {
-        console.log('Comment posted successfully:', response);
-      }, error => {
-        console.error('Error posting comment:', error);
-      });
-      */
-      const byteCharacters = atob(this.dataURL.split(',')[1]);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'image/png' }); // Replace 'image/png' with the appropriate MIME type for your image
-
-      const formData = new FormData();
-      formData.append('file', blob);
-      await this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/pr/${prKey}/attachments`, formData, this.githubHttpOptions).subscribe(response => {
-        console.log('Comment posted successfully:', response);
-      }, error => {
-        console.error('Error posting comment:', error);
-      });
-      //console.log('Comment posted successfully:', response);
-      //const imageUrl = uploadResponse.headers.get('location');
     }
-
     else {
       this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
@@ -273,19 +252,20 @@ export class ReportComponentComponent implements OnInit {
       });
     }
 
+
   }
 
   async postCommentCommit(commitKey: string) {
-    const commentBody = {
+    let commentBody = {
       body: "### " + this.comment_header + "\n" + this.comment
     };
     if (this.commentInput.addGraph) {
-      this.http.get(`https://api.github.com/repos/${this.authentication.github_repo}/contents/image.png`, this.githubHttpOptions).subscribe(async response => {
-        this.sha_github = response["sha"];
         await this.updateFile().subscribe(response => {
           console.log('Comment posted successfully:', response);
           this.imageUrl = response["content"]["download_url"]
-          commentBody.body += '\n\n![image](' + this.imageUrl + ')'
+          commentBody = {
+            body: `###${this.comment_header}\n${this.comment}\n![image](${ this.imageUrl })`
+          };
           this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
             console.log('Comment posted successfully:', response);
             alert('Comment posted successfully')
@@ -295,9 +275,6 @@ export class ReportComponentComponent implements OnInit {
         }, error => {
           console.error('Error updating image:', error);
         });
-      }, error => {
-        console.error('Error getting ssh:', error);
-      });
     }
 
     else {
@@ -340,8 +317,7 @@ export class ReportComponentComponent implements OnInit {
       }
       else if (this.commentInput.addJira) {
         //FIXXXXXX
-        let issueKey = this._g.cy.$(':selected')[0]._private.data.name
-        this.postCommentIssue(issueKey)
+        this.postCommentIssue(this.issue_name)
       }
     }
     else {
@@ -393,15 +369,15 @@ export class ReportComponentComponent implements OnInit {
 
 
   saveAsPng(isWholeGraph: boolean) {
-    const options = { bg: 'white', scale: 3, full: isWholeGraph };
+    const options = { bg: 'white', scale: 2, full: isWholeGraph };
     const base64png: string = this._g.cy.png(options);
     const image = new Image();
     image.src = base64png;
     image.onload = async () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = image.width;
-      canvas.height = image.height;
+      canvas.width = image.width/4;
+      canvas.height = image.height/4;
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       this.dataURL = canvas.toDataURL('image/png');
     };
@@ -614,12 +590,29 @@ export class ReportComponentComponent implements OnInit {
   }
   async performSelection() {
     const prKey = this.commentInput.addGithub ? this.pr_name : this._g.cy.$(':selected')[0]._private.data.name;
-    this.comment = "[You can inspect artifact " + prKey + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + prKey + ")\n";
+    this.comment = "[You can inspect artifact " +  this._g.cy.$(':selected')[0]._private.data.name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" +  this._g.cy.$(':selected')[0]._private.data.name + ")\n";
     if (this.commentInput.addGithub) {
-      const developer_name = this._g.cy.$(':selected')[0]._private.data.name
-      const pull_request_name = this.pr_name
-      this.comment_header = "Report  " + developer_name + " "
+      if(this._g.cy.$(':selected')[0]._private.classes.values().next().value == "Developer"){
+        const developer_name = this._g.cy.$(':selected')[0]._private.data.name
+        const pull_request_name = this.pr_name
+        this.comment_header = "Report  @" + developer_name + " "
+      }
+      else if(this._g.cy.$(':selected')[0]._private.classes.values().next().value == "Commit"){
+        const commit_name = this._g.cy.$(':selected')[0]._private.data.name
+        const pull_request_name = this.pr_name
+        this.comment_header = "Report  Commit " + commit_name + " "
+      }else{
+        const file_name = this._g.cy.$(':selected')[0]._private.data.name
+        const pull_request_name = this.pr_name
+        this.comment_header = "Report  File " + file_name + " "       
+      }
+
+
     }
+    if (this.commentInput.addJira) {
+      const developer_name = this._g.cy.$(':selected')[0]._private.data.name
+      this.comment_header = "Report  @" + developer_name + " "
+    }    
     if (this.commentInput.addGraph) {
       this.saveAsPng(true);
     }
@@ -670,8 +663,6 @@ export class ReportComponentComponent implements OnInit {
 
 
   }
-
-
 
   async reportAnomaly() {
     this._g.openReportTab.next(false);

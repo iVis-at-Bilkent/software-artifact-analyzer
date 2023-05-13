@@ -56,7 +56,17 @@
         </select>
       </div>
     </div>
-
+    <div *ngIf="commentInput.addJira">
+      <div class="form-group flex-pr d-flex align-items-center justify-content-center va-text">
+        Issue
+        <select ngModel name="option" class="form-select tight-select filter-form va-small-text m-2" id="selectAction"
+          [(ngModel)]="issue_name">
+          <option *ngFor="let op of issues" [value]="op">
+            #{{ op }}
+          </option>
+        </select>
+      </div>
+    </div>
     <div class="form-group flex">
       <input type="text" id="commenst_header" name="comment_header" class="form-control va-text comment-header"
         placeholder="Comment Header" [(ngModel)]="comment_header">

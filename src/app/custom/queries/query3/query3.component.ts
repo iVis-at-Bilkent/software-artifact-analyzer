@@ -62,7 +62,7 @@ export class Query3Component implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get('http://0.0.0.0:4445/getAuthentication').subscribe(data => {
+    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
       this.authentication  = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
