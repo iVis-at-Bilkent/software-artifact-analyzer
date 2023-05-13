@@ -189,10 +189,10 @@ export class ReportComponentComponent implements OnInit {
     const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
     let body = {
       "header": this.comment_header,
-      "text": this.comment.split("]", 1),
+      "text": this.comment.substring(this.comment.indexOf("]") + 1),
       "url":"http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this._g.cy.$(':selected')[0]._private.data.name,
       "issueName": issueKey,
-      "imgData": this.dataURL.split(",")[1],
+      "imgData": this.dataURL?this.dataURL.split(",")[1]:"",
       "uploadImage": this.commentInput.addGraph
     }
     this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
