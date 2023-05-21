@@ -6,6 +6,10 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
 import * as base64js from 'base64-js';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalContentComponent } from './../modal-content/modal-content.component';
+
+
 interface Attachment {
   name: string;
   data: any,
@@ -53,7 +57,7 @@ export class ReportComponentComponent implements OnInit {
 
 
 
-  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private cd: ChangeDetectorRef, private ngZone: NgZone) {
+  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private cd: ChangeDetectorRef, private ngZone: NgZone, private modalService: NgbModal) {
     this.anomalies = [
       { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
       { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
@@ -70,7 +74,6 @@ export class ReportComponentComponent implements OnInit {
   }
 
   ngOnInit() {
-
     //Get authentication information from saa configuration flask app
     this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
       this.authentication = data;
@@ -170,7 +173,11 @@ export class ReportComponentComponent implements OnInit {
 
 
   }
-
+  openModal(name, url): void {
+    const modalRef = this.modalService.open(ModalContentComponent);
+    modalRef.componentInstance.name = name; // Pass data to the modal component
+    modalRef.componentInstance.url = url; // Pass data to the modal component
+  }
   fillPr(data) {
     this.prs = [];
     for (let i = 0; i < data.data.length; i++) {
@@ -199,6 +206,10 @@ export class ReportComponentComponent implements OnInit {
       .subscribe(
         (response) => {
           console.info('Confirm request success');
+          this._dbService.runQuery(`Match(n{name:'${issueKey}'}) return n.url`, (x) => {
+            const url = x.data[0];
+            this.openModal("issue " + issueKey, url)
+          }, DbResponseType.table); 
         },
         (error) => {
           console.error('Confirm request error:', error);
@@ -226,7 +237,6 @@ export class ReportComponentComponent implements OnInit {
     if (this.commentInput.addGraph) {
         await this.updateFile().subscribe(response => {
           console.log('Comment posted successfully:', response);
-          alert('Comment posted successfully')
           this.imageUrl = response["content"]["download_url"]
           console.log(this.imageUrl )
           commentBody = {
@@ -234,6 +244,10 @@ export class ReportComponentComponent implements OnInit {
           };
           this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
             console.log('Comment posted successfully:', response);
+            this._dbService.runQuery(`Match(n{name:'${prKey}'}) return n.url`, (x) => {
+              const url = x.data[0];
+              this.openModal("pull request  " + prKey, url)
+            }, DbResponseType.table); 
           }, error => {
             console.error('Error posting comment:', error);
           });
@@ -246,7 +260,10 @@ export class ReportComponentComponent implements OnInit {
     else {
       this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
-        alert('Comment posted successfully')
+        this._dbService.runQuery(`Match(n{name:'${prKey}'}) return n.url`, (x) => {
+          const url = x.data[0];
+          this.openModal("pull request  " + prKey, url)
+        }, DbResponseType.table); 
       }, error => {
         console.error('Error posting comment:', error);
       });
@@ -268,7 +285,7 @@ export class ReportComponentComponent implements OnInit {
           };
           this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
             console.log('Comment posted successfully:', response);
-            alert('Comment posted successfully')
+            this.openModal("commit  " + commitKey, "")
           }, error => {
             console.error('Error posting comment:', error);
           });
@@ -280,7 +297,6 @@ export class ReportComponentComponent implements OnInit {
     else {
       this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
-        alert('Comment posted successfully')
       }, error => {
         console.error('Error posting comment:', error);
       });
@@ -315,8 +331,7 @@ export class ReportComponentComponent implements OnInit {
       if (this.commentInput.addGithub) {
         this.postCommentPr(this.pr_name)
       }
-      else if (this.commentInput.addJira) {
-        //FIXXXXXX
+      if (this.commentInput.addJira) {
         this.postCommentIssue(this.issue_name)
       }
     }

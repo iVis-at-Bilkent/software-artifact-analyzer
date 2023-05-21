@@ -25,7 +25,8 @@ import { NoCommentBugsComponent } from './anomalies/no-comment-bugs/no-comment-b
 import { NoAssigneeResolverBugComponent } from './anomalies/no-assignee-resolver-bug/no-assignee-resolver-bug.component';
 import { ClosedReopenPingPongComponent } from './anomalies/closed-reopen-ping-pong/closed-reopen-ping-pong.component';
 import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/same-resolver-closer.component';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModalContentComponent } from './modal-content/modal-content.component';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
@@ -48,14 +49,16 @@ import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/sa
      NoCommentBugsComponent,
      NoAssigneeResolverBugComponent,
      ClosedReopenPingPongComponent,
-     SameResolverCloserComponent],
+     SameResolverCloserComponent,
+     ModalContentComponent],
   // declarations: [AsdComponent],
   imports: [
     HttpClientModule,
     BrowserModule,
     CommonModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ]
 })
 
