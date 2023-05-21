@@ -1,1 +1,6 @@
-<div><iframe  [src]="safeSrc"></iframe></div>
+<div>
+    <div class="close_button"> <button type="button" class="btn-close" aria-label="Close" (click)="onCloseClick()">
+        </button></div>
+
+    <iframe [src]="safeSrc"></iframe>
+</div>

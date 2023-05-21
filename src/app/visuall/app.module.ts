@@ -69,7 +69,7 @@ import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
     RuleTreeComponent,
     RuleDropdownComponent,
     PanelContainerComponent,
-    LoadGraphFromFileModalComponent,
+    LoadGraphFromFileModalComponent
   ],
   imports: [
     OAuthModule.forRoot(),

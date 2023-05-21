@@ -2,6 +2,8 @@ iframe{
     width: 1000px !important;
     height: 500px !important;
     overflow: hidden;
+    position: static;
+    top:15px;
 }
 
 .md-button {
@@ -16,3 +18,20 @@ iframe{
     border: none;
     outline: none;
   }
+
+.btn-close:focus {
+    outline: 0;
+    box-shadow: none;
+    opacity: 1;
+}
+
+.btn-close {
+    padding: 5px;
+}
+.close_button {
+    width: 86vw;
+    float: right;
+    padding: 5px;
+    display: flex;
+    flex-direction: row-reverse;
+}
