@@ -34,7 +34,7 @@ export class DialogElementsExampleDialog implements OnInit {
           );
         }
       });
-    }, 500);
+    }, 2000);
   }
   adjustSize() {
     const dialogEl = this.elRef.nativeElement.closest('.mat-dialog-container');
