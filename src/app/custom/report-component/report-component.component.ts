@@ -603,7 +603,7 @@ export class ReportComponentComponent implements OnInit {
       if(this._g.cy.$(':selected')[0]._private.classes.values().next().value == "Developer"){
         const developer_name = this._g.cy.$(':selected')[0]._private.data.name
         const pull_request_name = this.pr_name
-        this.comment_header = "Report  @" + developer_name + " "
+        this.comment_header = "Report  @" + developer_name.replace(" ", "") + " "
       }
       else if(this._g.cy.$(':selected')[0]._private.classes.values().next().value == "Commit"){
         const commit_name = this._g.cy.$(':selected')[0]._private.data.name
