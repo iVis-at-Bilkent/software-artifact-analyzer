@@ -205,11 +205,9 @@ export class ReportComponentComponent implements OnInit {
     this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
-          console.info('Confirm request success');
-          this._dbService.runQuery(`Match(n{name:'${issueKey}'}) return n.url`, (x) => {
-            const url = x.data[0];
-            this.openModal("issue " + issueKey, url)
-          }, DbResponseType.table); 
+          console.info('Confirm request success',response);
+          const url = `${this.authentication.jira_url}/browse/${issueKey}?focusedCommentId=${response["id"]} `
+          this.openModal("issue " + issueKey, url)
         },
         (error) => {
           console.error('Confirm request error:', error);
@@ -244,10 +242,7 @@ export class ReportComponentComponent implements OnInit {
           };
           this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
             console.log('Comment posted successfully:', response);
-            this._dbService.runQuery(`Match(n{name:'${prKey}'}) return n.url`, (x) => {
-              const url = x.data[0];
-              this.openModal("pull request  " + prKey, url)
-            }, DbResponseType.table); 
+            this.openModal("pull request  " + prKey, response["html_url"])
           }, error => {
             console.error('Error posting comment:', error);
           });
@@ -260,10 +255,7 @@ export class ReportComponentComponent implements OnInit {
     else {
       this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
-        this._dbService.runQuery(`Match(n{name:'${prKey}'}) return n.url`, (x) => {
-          const url = x.data[0];
-          this.openModal("pull request  " + prKey, url)
-        }, DbResponseType.table); 
+        this.openModal("pull request  " + prKey, response["html_url"])
       }, error => {
         console.error('Error posting comment:', error);
       });
@@ -285,7 +277,7 @@ export class ReportComponentComponent implements OnInit {
           };
           this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
             console.log('Comment posted successfully:', response);
-            this.openModal("commit  " + commitKey, "")
+            this.openModal("commit  " + commitKey, response["html_url"])
           }, error => {
             console.error('Error posting comment:', error);
           });
@@ -297,6 +289,7 @@ export class ReportComponentComponent implements OnInit {
     else {
       this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
+        this.openModal("commit  " + commitKey, response["html_url"])
       }, error => {
         console.error('Error posting comment:', error);
       });

@@ -15,9 +15,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   <p>Thank you, for submitting your report under {{ name }}. </p>
   <p>You can view your report by clicking the following link: <a [href]="url" target="_blank">{{ url }}</a></p>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-</div>
   `,
 })
 export class ModalContentComponent {
