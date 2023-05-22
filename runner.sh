@@ -4,6 +4,6 @@ echo "starting runner $(date)" >> bash-script.log
 
 npm i >> bash-script.log
 npm run ng build  >> bash-script.log 
-sudo "$(which node)" server.js --proxy-config proxy.conf.json >> bash-script.log 
+sudo "$(which node)" server.js  >> bash-script.log 
 
 echo "runner ended $(date)" >> bash-script.log
