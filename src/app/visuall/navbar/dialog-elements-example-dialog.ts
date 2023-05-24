@@ -21,20 +21,6 @@ export class DialogElementsExampleDialog implements OnInit {
 
   ngOnInit() {
     this.safeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`http://${window.location.hostname}:4450`);
-    this.timeoutRef = setInterval(() => {
-      this.http.get(`http://${window.location.hostname}:4445/getCloseModule`).subscribe(data => {
-        if(data["closeModule"]=="True"){
-          this.dialogRef.close();
-          this.http.post(`http://${window.location.hostname}:4445/closeModule`,  JSON.stringify({"value":"False"}), { headers: { 'Content-Type': 'application/json' } })
-          .subscribe(
-            (response) => {
-              console.log(response)
-
-            }
-          );
-        }
-      });
-    }, 2000);
   }
   adjustSize() {
     const dialogEl = this.elRef.nativeElement.closest('.mat-dialog-container');
@@ -45,14 +31,7 @@ export class DialogElementsExampleDialog implements OnInit {
     clearTimeout(this.timeoutRef);
   }
   onCloseClick(): void {
-    this.http.post(`http://${window.location.hostname}:4445/closeModule`, JSON.stringify({"value":"True"}), { headers: { 'Content-Type': 'application/json' } })
-    .subscribe(
-      (response) => {
-        console.log(response)
-        this.dialogRef.close();
-
-      }
-    );
+    this.dialogRef.close();
   }
 }
 
