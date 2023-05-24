@@ -35,7 +35,7 @@ export class NavbarCustomizationService {
   constructor(private _g: GlobalVariableService, public _dbService: Neo4jDb, ) {
     this._menu = [
      {
-        dropdown: 'Highlight', actions: [{ txt: 'Add Anomaly Cues', id: '', fn: 'activateAnomalyCues', isStd: false }]
+        dropdown: 'Highlight', actions: [{ txt: 'Check Anomalies', id: '', fn: 'activateAnomalyCues', isStd: false }]
      },
     ];
     // this._menu = [{

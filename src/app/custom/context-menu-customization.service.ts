@@ -665,16 +665,6 @@ export class ContextMenuCustomizationService {
       },
       //Issue
       {
-        id: "report_anomaly",
-        content: "Report Anomaly",
-        selector: "node.Issue",
-        hasTrailingDivider: true,
-        onClickFunction: (x) => {
-          this.reportAnomaly(x);
-        },
-
-      },
-      {
         id: "related_issue",
         content: "All Related",
         selector: "node.Issue",
@@ -1315,6 +1305,16 @@ export class ContextMenuCustomizationService {
               },
             },
           ]
+      },
+      {
+        id: "report_anomaly",
+        content: "Report Anomalies",
+        selector: "node.Issue",
+        hasTrailingDivider: true,
+        onClickFunction: (x) => {
+          this.reportAnomaly(x);
+        },
+
       },
       //File 
       {

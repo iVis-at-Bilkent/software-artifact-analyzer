@@ -33,7 +33,7 @@ export class ToolbarCustomizationService {
     this._menu = [];
 
     this._menu = [{
-      div: 3, items: [{ title: 'Add Anomaly Cues', isRegular: true, fn: 'activateAnomalyCues', isStd: true, imgSrc: 'assets/img/toolbar/cue.svg' }]
+      div: 3, items: [{ title: 'Check Anomalies', isRegular: true, fn: 'activateAnomalyCues', isStd: true, imgSrc: 'assets/img/toolbar/cue.svg' }]
     }];
   }
 
