@@ -50,7 +50,7 @@ export class NavbarCustomizationService {
   generateRedShades() {
     let colors = [];
     colors = [
-      "#599a20", "#FF9999", "#fe5050", "#FE0022", "#AA0000", "#660000"
+      "#599a20", "#FF9999", "#dd5050", "#bb0022", "#990000", "#660000"
     ]
 
 
@@ -79,7 +79,7 @@ export class NavbarCustomizationService {
           const cb = (x) => {
             const div1 = document.createElement("div");        
             let number = x.data[0][1];
-            let color = (number<5)?colors[number-1]: colors[4];
+            let color = (number<=5)?colors[number-1]: colors[4];
             let listOfAnomalies = x.data[0][0];
             const size_x =  0.60 + 2*listOfAnomalies.length/20;
             const size_y =  0.35 + 2*listOfAnomalies.length/20;

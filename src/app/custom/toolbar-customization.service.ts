@@ -39,6 +39,12 @@ export class ToolbarCustomizationService {
 
   generateRedShades() {
     let colors = [];
+    colors = [
+      "#599a20", "#FF9999", "#fe5050", "#FE0022", "#BC0000", "#660000"
+    ]
+
+
+    /*
     let redValue = 250;
     let greenValue = 200;
     let blueValue = 200;
@@ -55,6 +61,8 @@ export class ToolbarCustomizationService {
     for(let i = 6; i<11;i++){
       colors.push('#721D1D');
     }
+    
+    */
     return colors;
   }
   activateAnomalyCues() {
