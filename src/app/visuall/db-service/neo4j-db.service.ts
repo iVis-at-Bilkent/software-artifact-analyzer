@@ -27,7 +27,6 @@ export class Neo4jDb implements DbService {
     if (!isTimeboxed) {
       q = query;
     }
-    console.log(q);
     this._g.statusMsg.next('Executing database query...');
     const requestBody = {
       statements: [{

@@ -1,18 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ElementRef, ViewChild, SimpleChanges, OnChanges, Input } from '@angular/core';
 import { GlobalVariableService } from '../../global-variable.service';
 import { getPropNamesFromObj, DATE_PROP_END, DATE_PROP_START, findTypeOfAttribute, debounce, COLLAPSED_EDGE_CLASS, OBJ_INFO_UPDATE_DELAY, CLUSTER_CLASS, extend } from '../../constants';
 import { TableViewInput, TableData, TableDataType, TableFiltering, property2TableData, filterTableDatas } from '../../../shared/table-view/table-view-types';
 import { Subject, Subscription } from 'rxjs';
 import { CytoscapeService } from '../../cytoscape.service';
 import { CustomizationModule } from '../../../custom/customization.module';
-
 @Component({
   selector: 'app-object-tab',
   templateUrl: './object-tab.component.html',
   styleUrls: ['./object-tab.component.css']
 })
-export class ObjectTabComponent implements OnInit, OnDestroy {
+export class ObjectTabComponent implements OnInit, OnDestroy{
 
+  @ViewChild('panelContainer', { static: false }) panelContainer: ElementRef;
+  @Input() openReportTab: boolean;
   nodeClasses: Set<string>;
   edgeClasses: Set<string>;
   selectedClasses: string;
@@ -22,14 +23,15 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   multiObjTableFilled = new Subject<boolean>();
   clearMultiObjTableFilter = new Subject<boolean>();
   isShowStatsTable: boolean = false;
+  openReport: boolean = false;
   isShowObjTable = false;
   customSubTabs: { component: any, text: string }[] = CustomizationModule.objSubTabs;
   tableInput: TableViewInput = {
-    columns: ['Type', 'Count', 'Selected', 'Hidden'], isHide0: true, results: [],results2: [], resultCnt: 0, currPage: 1, pageSize: 20, tableTitle: 'Statistics',
+    columns: ['Type', 'Count', 'Selected', 'Hidden'], isHide0: true, results: [], results2: [], resultCnt: 0, currPage: 1, pageSize: 20, tableTitle: 'Statistics',
     isShowExportAsCSV: true, isLoadGraph: true, columnLimit: 5, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true
   };
   multiObjTableInp: TableViewInput = {
-    columns: ['Type'], isHide0: true, results: [],results2: [], resultCnt: 0, currPage: 1, pageSize: 20, isReplace_inHeaders: true, tableTitle: 'Properties',
+    columns: ['Type'], isHide0: true, results: [], results2: [], resultCnt: 0, currPage: 1, pageSize: 20, isReplace_inHeaders: true, tableTitle: 'Properties',
     isShowExportAsCSV: true, isEmphasizeOnHover: true, isLoadGraph: true, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true
   };
   private NODE_TYPE = '_NODE_';
@@ -40,10 +42,18 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
   constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) {
     this.selectedItemProps = [];
-    this.selectedItemPropsURL =[];
+    this.selectedItemPropsURL = [];
   }
 
+
   ngOnInit() {
+    setInterval(() => {
+      this._g.openReportTab.subscribe((isOpen) => {
+        if (isOpen == true) {
+          this.openReportTab = true;
+        }
+      });
+    }, 500);
     this.appDescSubs = this._g.appDescription.subscribe(x => {
       if (x === null) {
         return;
@@ -242,7 +252,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
           renderedValue = '';
         }
       }
-      if(key === 'url'){
+      if (key === 'url') {
         this.selectedItemPropsURL.push({ key: renderedKey, val: renderedValue });
       }
 
@@ -252,13 +262,16 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
         continue;
       }
       renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
-      if(key != 'url'){
+      if (key != 'url') {
         this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
       }
-      
+
     }
   }
 
+  toggleReportTab() {
+    this.openReport = !this.openReport;
+  }
   // get common key-value pairs for non-nested properties
   getCommonObjectProps(eleList) {
     let superObj = {};

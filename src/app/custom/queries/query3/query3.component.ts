@@ -83,7 +83,6 @@ export class Query3Component implements OnInit {
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
   }
   assign() {
-    console.log(this.tableInput.results);
     this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
     const url = `https://api.github.com/repos/${this.authentication.github_repo}/pulls/${this.pr}/requested_reviewers`;
     const headers = {
@@ -244,7 +243,7 @@ export class Query3Component implements OnInit {
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
-    console.log(this.tableInput)
+    
     this.tableFilled.next(true);
   }
 
@@ -265,7 +264,6 @@ export class Query3Component implements OnInit {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
       this.seeds = e.dbIds;
       this.seeds.push(this.prId)
-      console.log(this.seeds)
       const seedNodes = this._g.cy.nodes(this.seeds.map(x => '#n' + x).join());
       if (this._g.userPrefs.highlightStyles.length < 2) {
         const cyStyle = getCyStyleFromColorAndWid('#0b9bcd', 4.5);
@@ -380,14 +378,12 @@ export class Query3Component implements OnInit {
 
   //Cluster by developer
   clusterByDeveloper() {
-    console.log(this.cluster)
     if(this.cluster) {
       this._cyService.expandAllCompounds();
       this._cyService.deleteClusteringNodes();
       this._g.performLayout(false);
       this._cyService.changeGroupingOption(GroupingOptionTypes.compound)
       const seedNodes = this.developers.map(x => 'n' + x);
-      console.log(seedNodes)
       this._group.clusterByDeveloper(seedNodes)      
     }
     else {
@@ -410,7 +406,6 @@ export class Query3Component implements OnInit {
     for (let i = 0; i < badges.length; i++) {
       s += `<span class="badge badge-pill badge-primary strokeme">${formatNumber(badges[i], 'en', '1.0-2')}</span>`
     }
-    console.log(s)
     return s;
   }
   devSize(){

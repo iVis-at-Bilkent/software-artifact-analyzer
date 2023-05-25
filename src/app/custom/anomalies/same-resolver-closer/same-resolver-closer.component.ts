@@ -54,7 +54,6 @@ export class SameResolverCloserComponent implements OnInit {
   loadTable(skip: number, filter?: TableFiltering) {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
-      console.log(x.data)
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
@@ -62,7 +61,7 @@ export class SameResolverCloserComponent implements OnInit {
         cnt = limit4clientSidePaginated;
       }
       if (isClientSidePagination) {
-        console.log(cnt)
+        
         this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
       } else {
         this.fillTable(processedTableData, cnt);
@@ -99,10 +98,10 @@ export class SameResolverCloserComponent implements OnInit {
     
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
-      console.log(x)
+      
       let nodeIds = []
       let edegeIds = []
-      console.log(x)
+      
       x.nodes.forEach(node => {
         nodeIds.push(node.id)
       });
@@ -150,10 +149,7 @@ export class SameResolverCloserComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-
-    console.log(uiColumns)
     const columnTypes = [TableDataType.number, TableDataType.string, TableDataType.string,TableDataType.number];
-    console.log(data)
     this.tableInput.results = [];
   
     for (let i = 0; i < data.length; i++) {
@@ -176,11 +172,10 @@ export class SameResolverCloserComponent implements OnInit {
       }
       this.tableInput.results.push(row)
     }
-    console.log(this.tableInput.results )
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
-    console.log(this.tableInput)
+    
 
     this.tableFilled.next(true);
   }
@@ -191,7 +186,7 @@ export class SameResolverCloserComponent implements OnInit {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
       let nodeIds = []
       let edegeIds = []
-      console.log(x)
+      
       x.nodes.forEach(node => {
         nodeIds.push(node.id)
       });

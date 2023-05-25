@@ -49,6 +49,12 @@ export class NavbarCustomizationService {
 
   generateRedShades() {
     let colors = [];
+    colors = [
+      "#599a20", "#FF9999", "#fe5050", "#FE0022", "#AA0000", "#660000"
+    ]
+
+
+    /*
     let redValue = 280;
     let greenValue = 80;
     let blueValue = 80;
@@ -62,6 +68,7 @@ export class NavbarCustomizationService {
       greenValue -= 6;
       blueValue -= 6;
     }
+    */
     return colors;
   }
   activateAnomalyCues() {
@@ -70,11 +77,9 @@ export class NavbarCustomizationService {
       this._g.cy.nodes().filter(':visible').forEach(async (element )=> {
         if (element._private.classes.values().next().value == 'Issue') {
           const cb = (x) => {
-            console.log(x)
-  
             const div1 = document.createElement("div");        
             let number = x.data[0][1];
-            let color = (number>0)?colors[number]: '#599a20';
+            let color = (number<5)?colors[number-1]: colors[4];
             let listOfAnomalies = x.data[0][0];
             const size_x =  0.60 + 2*listOfAnomalies.length/20;
             const size_y =  0.35 + 2*listOfAnomalies.length/20;

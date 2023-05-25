@@ -21,8 +21,6 @@ export class GroupCustomizationService {
     this._g.cy.edges().filter(':visible').forEach(element => {
       if(element._private.source._private.classes.values().next().value=='Developer'){
         if(ids != null){
-          console.log(element._private.source._private.data.id)
-          console.log(ids)
           if(ids.includes(element._private.source._private.data.id)){
             developerEdges.push(element)
           }

@@ -236,7 +236,6 @@ export class ReportComponentComponent implements OnInit {
         await this.updateFile().subscribe(response => {
           console.log('Comment posted successfully:', response);
           this.imageUrl = response["content"]["download_url"]
-          console.log(this.imageUrl )
           commentBody = {
             body: `### ${this.comment_header}\n${this.comment}\n![image](${ this.imageUrl })`
           };
@@ -246,7 +245,6 @@ export class ReportComponentComponent implements OnInit {
           }, error => {
             console.error('Error posting comment:', error);
           });
-          console.log(commentBody.body)
         }, error => {
           console.error('Error updating image:', error);
         });

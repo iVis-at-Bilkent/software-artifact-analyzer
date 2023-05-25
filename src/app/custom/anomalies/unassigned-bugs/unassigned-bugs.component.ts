@@ -56,21 +56,21 @@ export class UnassignedBugsComponent implements OnInit {
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
-      console.log(x)
+      
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
-        console.log(cnt)
+        
       }
       if (isClientSidePagination) {
         this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
-        console.log(cnt)
+        
       } else {
         this.fillTable(processedTableData, cnt);
-        console.log(cnt)
+        
       }
       if (!filter) {
         this.tableResponse = processedTableData;
-        console.log(cnt)
+        
       }
     };
     if (isClientSidePagination && filter) {
@@ -99,9 +99,8 @@ export class UnassignedBugsComponent implements OnInit {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
     
     const cb = (x) => {
-      console.log(x)
+      
       if (isClientSidePagination) {
-        console.log(1)
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
         this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
@@ -111,7 +110,6 @@ export class UnassignedBugsComponent implements OnInit {
       }
     };
     if (isClientSidePagination && filter && this.graphResponse) {
-      console.log(2)
       this._cyService.loadElementsFromDatabase(this.filterGraphResponse(this.graphResponse), this.tableInput.isMergeGraph);
       return;
     }
@@ -141,7 +139,6 @@ export class UnassignedBugsComponent implements OnInit {
         r.nodes.push(x.nodes[i]);
       }
     }
-    console.log(nodeIdDict)
     return r;
   }
 
@@ -163,7 +160,7 @@ export class UnassignedBugsComponent implements OnInit {
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
-    console.log(this.tableInput)
+    
     this.tableFilled.next(true);
   }
 
@@ -206,7 +203,6 @@ export class UnassignedBugsComponent implements OnInit {
       }
       objArr.push(obj as Anomaly)
     }
-    console.log(objArr)
     return objArr;
   }
 

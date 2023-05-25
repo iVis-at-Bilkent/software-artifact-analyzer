@@ -1535,27 +1535,6 @@ export class ContextMenuCustomizationService {
       [ele.id().substr(1)],
       (x) => {
         this._cyService.loadElementsFromDatabase(x, true);
-        /** 
-        this._cyService.removeHighlights()
-        x.nodes.forEach(element => {
-          if (`n${element.id}` == targetNodeId || (!queryMeta.targetType || queryMeta.targetType == element.labels[0]) ) {
-            this._g.cy.$('#' + `n${element.id}`).select();
-          }
-        },
-        )   
-        this._cyService.highlightSelected()    
-        */
-        /** 
-        let targetNodes = []
-        this._cyService.removeHighlights()
-        x.nodes.forEach(element => {
-          if(!queryMeta.targetType || queryMeta.targetType == element.labels[0]){
-            targetNodes.push(this._g.cy.$('#' + `n${element.id}`))
-          }
-        });
-         console.log(targetNodes)
-        this._g.highlightElems(targetNodes);
-        */
       },
       historyMeta,
       queryMeta
@@ -1566,7 +1545,6 @@ export class ContextMenuCustomizationService {
   }
   deleteNeighbors(event, historyMeta: HistoryMetaData, queryMeta: DbQueryMeta) {
     const ele = event.target || event.cyTarget;
-    console.log(queryMeta)
     const targetNodeId = ele._private.data.id;
     let arr = this._g.cy.nodes().map(x => x.id())
     this._dbService.getNeighbors(
@@ -1602,11 +1580,13 @@ export class ContextMenuCustomizationService {
       this._g.cy.$('#' + ele.id()).select();
       this._g.openReportTab.next(true);
       this._g.openReportTab.subscribe((isOpen) => {
-        console.log(isOpen)
+        if(isOpen){
+          if (this._g.isSwitch2ObjTabOnSelect) {
+            this._g.operationTabChanged.next(0);
+          }
+        }
       });
-      if (this._g.isSwitch2ObjTabOnSelect) {
-        this._g.operationTabChanged.next(0);
-      }
+
   }
 
 }

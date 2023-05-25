@@ -58,21 +58,16 @@ export class ClosedReopenPingPongComponent implements OnInit {
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
-      console.log(x)
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
-        console.log(cnt)
       }
       if (isClientSidePagination) {
         this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
-        console.log(cnt)
       } else {
         this.fillTable(processedTableData, cnt);
-        console.log(cnt)
       }
       if (!filter) {
         this.tableResponse = processedTableData;
-        console.log(cnt)
       }
     };
     if (isClientSidePagination && filter) {
@@ -103,7 +98,6 @@ export class ClosedReopenPingPongComponent implements OnInit {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
     
     const cb = (x) => {
-      console.log(x)
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
@@ -166,7 +160,6 @@ export class ClosedReopenPingPongComponent implements OnInit {
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
-    console.log(this.tableInput)
     this.tableFilled.next(true);
   }
 
@@ -209,7 +202,6 @@ export class ClosedReopenPingPongComponent implements OnInit {
       }
       objArr.push(obj as Anomaly)
     }
-    console.log(objArr)
     return objArr;
   }
 

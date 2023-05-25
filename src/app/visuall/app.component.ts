@@ -21,7 +21,6 @@ export class AppComponent {
     this.route.queryParamMap.subscribe(params => {
       if( params.get('name')){
         this.paramValue = params.get('name');
-        console.log(this.paramValue); 
         this._g.initialQuery = this.paramValue.toString();
         if(this.paramValue != ""){ 
           const isClientSidePagination =

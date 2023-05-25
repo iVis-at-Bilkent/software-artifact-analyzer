@@ -60,21 +60,21 @@ export class IgnoredBugsComponent implements OnInit {
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
-      console.log(x)
+      
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
-        console.log(cnt)
+        
       }
       if (isClientSidePagination) {
         this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
-        console.log(cnt)
+        
       } else {
         this.fillTable(processedTableData, cnt);
-        console.log(cnt)
+        
       }
       if (!filter) {
         this.tableResponse = processedTableData;
-        console.log(cnt)
+        
       }
     };
     if (isClientSidePagination && filter) {
@@ -110,7 +110,7 @@ export class IgnoredBugsComponent implements OnInit {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
     
     const cb = (x) => {
-      console.log(x)
+      
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
@@ -164,10 +164,7 @@ export class IgnoredBugsComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-
-    console.log(uiColumns)
     const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string,TableDataType.string];
-    console.log(data)
     this.tableInput.results = [];
   
     for (let i = 0; i < data.length; i++) {
@@ -204,11 +201,9 @@ export class IgnoredBugsComponent implements OnInit {
       }
       this.tableInput.results.push(row)
     }
-    console.log(this.tableInput.results )
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
-    console.log(this.tableInput)
 
     this.tableFilled.next(true);
   }
@@ -216,11 +211,10 @@ export class IgnoredBugsComponent implements OnInit {
   getDataForQueryResult(e: TableRowMeta) {
     this.time = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue()
     const cb = (x) => {
-      console.log(x)
+      
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
     }
     const idFilter = buildIdFilter(e.dbIds);
-    console.log(e)
     const ui2Db = {'issue': 'n.name'};
 
     const cql =  `MATCH (n)
@@ -253,7 +247,6 @@ export class IgnoredBugsComponent implements OnInit {
       }
       objArr.push(obj as Anomaly)
     }
-    console.log(objArr)
     return objArr;
   }
 

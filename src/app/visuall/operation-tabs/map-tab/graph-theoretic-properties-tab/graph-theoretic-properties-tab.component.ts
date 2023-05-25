@@ -293,7 +293,6 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
         sum += badges[i];
       }
       e.data('__graphTheoreticProp', sum / badges.length);
-      console.log(e.data)
     }
     if (this.isMapNodeSizes) {
       e.removeClass('graphTheoreticDisplay');

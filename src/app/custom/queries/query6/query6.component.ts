@@ -65,26 +65,25 @@ export class Query6Component implements OnInit {
       if (x.data[0] && x.data[0].length > 0) {
         cnt = x.data[0][2];
       }
-      console.log(cnt)
+      
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
-        console.log(cnt)
+        
       }
       if (isClientSidePagination) {
         this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
-        console.log(cnt)
+        
       } else {
         this.fillTable(processedTableData, cnt);
-        console.log(cnt)
+        
       }
       if (!filter) {
         this.tableResponse = processedTableData;
-        console.log(cnt)
+        
       }
     };
     if (isClientSidePagination && filter) {
       this.fillTable(this.filterTableResponse(this.tableResponse, filter), null);
-      console.log("l")
       return;
     }
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
@@ -100,9 +99,7 @@ export class Query6Component implements OnInit {
 
     const cql = `MATCH (n : Issue) WHERE n.anomalyCount = ${this.count} 
     RETURN  distinct ID(n) as id , collect(n.name) as issue, n.anomalyList as anomalies `;
-    this._dbService.runQuery(cql, cb, DbResponseType.table);
-    console.log("k")
-    
+    this._dbService.runQuery(cql, cb, DbResponseType.table); 
   }
 
 
@@ -113,7 +110,7 @@ export class Query6Component implements OnInit {
     }
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
-      console.log(x)
+      
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {

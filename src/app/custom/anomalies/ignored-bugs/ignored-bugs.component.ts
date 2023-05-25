@@ -58,21 +58,17 @@ export class IgnoredBugsComponent implements OnInit {
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
-      console.log(x)
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
-        console.log(cnt)
       }
       if (isClientSidePagination) {
         this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
-        console.log(cnt)
       } else {
         this.fillTable(processedTableData, cnt);
-        console.log(cnt)
       }
       if (!filter) {
         this.tableResponse = processedTableData;
-        console.log(cnt)
+
       }
     };
     if (isClientSidePagination && filter) {
@@ -136,27 +132,23 @@ export class IgnoredBugsComponent implements OnInit {
    
   }
   private filterGraphResponse(x: GraphResponse): GraphResponse {
-    console.log(x)
     const r: GraphResponse = { nodes: [], edges: x.edges };
    
     const nodeIdDict = {};
     for (let i = 0; i < this.tableInput.results.length; i++) {
       nodeIdDict[this.tableInput.results[i][0].val] = true;
     }
-    console.log(nodeIdDict)
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
       if (nodeIdDict[x.edges[i].startNode]) {
         nodeIdDict[x.edges[i].endNode] = true;
       }
     }
-    console.log(nodeIdDict)
     for (let i = 0; i < x.nodes.length; i++) {
       if (nodeIdDict[x.nodes[i].id]) {
         r.nodes.push(x.nodes[i]);
       }
     }
-    console.log(nodeIdDict)
     return r;
   }
 
@@ -203,7 +195,6 @@ export class IgnoredBugsComponent implements OnInit {
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
-    console.log(this.tableInput)
     this.tableFilled.next(true);
   }
 
@@ -251,7 +242,6 @@ export class IgnoredBugsComponent implements OnInit {
       }
       objArr.push(obj as Anomaly)
     }
-    console.log(objArr)
     return objArr;
   }
 

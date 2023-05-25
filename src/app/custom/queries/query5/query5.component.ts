@@ -16,8 +16,6 @@ export class Query5Component implements OnInit {
    }
   changeAnomaly(event) {
     this.selectedIdx = this.anomalies.findIndex(x => x.text == event.target.value);
-    console.log(this.selectedIdx)
-
   }
   ngOnInit(): void {
     this.anomaly = '';

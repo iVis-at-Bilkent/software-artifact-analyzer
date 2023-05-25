@@ -59,37 +59,33 @@ export class Query1Component implements OnInit {
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data[0][2];
-      console.log(cnt)
+      
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
-        console.log(cnt)
+        
       }
       if (isClientSidePagination) {
         this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
-        console.log(cnt)
+        
       } else {
         this.fillTable(processedTableData, cnt);
-        console.log(cnt)
+        
       }
       if (!filter) {
         this.tableResponse = processedTableData;
-        console.log(cnt)
+        
       }
     };
     if (isClientSidePagination && filter) {
       this.fillTable(this.filterTableResponse(this.tableResponse, filter), null);
-      console.log("l")
       return;
     }
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
     const txtCondition = getQueryCondition4TxtFilter(filter, ['n.name'], isIgnoreCase);
     const ui2Db = { 'name': 'n.name' };
-    console.log("k")
     const orderExpr = getOrderByExpression4Query(filter, 'n.name', 'desc', ui2Db);
-    console.log("k")
     const dateFilter = this.getDateRangeCQL();
     let dataCnt = this.tableInput.pageSize;
-    console.log("k")
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     } 
@@ -100,19 +96,17 @@ export class Query1Component implements OnInit {
     WITH DISTINCT n ORDER BY ${orderExpr}
     RETURN collect(ID(n))${r} as id, collect(n.name) as name, size(collect(ID(n))) as totalDataCount`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
-    console.log("k")
     
   }
 
   loadGraph(skip: number, filter?: TableFiltering) {
     if (!this.tableInput.isLoadGraph) {    
-      console.log("bu")
       return;
     } 
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     
     const cb = (x) => {
-      console.log(x)
+      
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
@@ -281,7 +275,6 @@ export class Query1Component implements OnInit {
     const c = new Date(d2);
     const b = a.toISOString()
     const d =c.toISOString()
-    console.log(b)
 
     return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }

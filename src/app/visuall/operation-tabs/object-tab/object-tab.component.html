@@ -35,4 +35,11 @@
       </app-table-view>
     </div>
   </div>
-  <app-panel-container  *ngIf="selectedItemProps.length>0"  [panels]="customSubTabs" [containerId]="'obj-custom-sub-tab'">  </app-panel-container>
+  <div class="panel" *ngFor="let p of customSubTabs; let i = index;">
+    <div *ngIf="selectedItemProps.length > 0" class="panel-heading collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + 'customSubTabs' + i" aria-expanded="false">
+      <span class="panel-title accordion-toggle" (click)="toggleReportTab()"><b class="va-heading2">{{p.text}}</b></span>
+    </div>
+    <div *ngIf="selectedItemProps.length > 0"  [id]="'customSubTabs' + i" class="collapse" [ngClass]="{'show':openReportTab}">
+      <ng-container *ngComponentOutlet="p.component"></ng-container>
+    </div>
+  </div>

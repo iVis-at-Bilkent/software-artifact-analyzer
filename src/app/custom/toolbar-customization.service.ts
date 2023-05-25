@@ -62,8 +62,6 @@ export class ToolbarCustomizationService {
     this._g.cy.nodes().filter(':visible').forEach(async (element )=> {
       if (element._private.classes.values().next().value == 'Issue') {
         const cb = (x) => {
-          console.log(x)
-
           const div1 = document.createElement("div");        
           let number = x.data[0][1];
           let color = (number>0)?colors[number]: '#599a20';
