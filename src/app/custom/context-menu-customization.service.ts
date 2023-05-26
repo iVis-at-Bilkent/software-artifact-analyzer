@@ -1579,13 +1579,11 @@ export class ContextMenuCustomizationService {
       this._g.cy.$().unselect();
       this._g.cy.$('#' + ele.id()).select();
       this._g.openReportTab.next(true);
-      this._g.openReportTab.subscribe((isOpen) => {
-        if(isOpen){
-          if (this._g.isSwitch2ObjTabOnSelect) {
-            this._g.operationTabChanged.next(0);
-          }
+      if(this._g.openReportTab.getValue()){
+        if (this._g.isSwitch2ObjTabOnSelect) {
+          this._g.operationTabChanged.next(0);
         }
-      });
+      }
 
   }
 

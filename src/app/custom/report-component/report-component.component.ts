@@ -8,7 +8,7 @@ import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
 import * as base64js from 'base64-js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from './../modal-content/modal-content.component';
-
+import { BehaviorSubject } from 'rxjs';
 
 interface Attachment {
   name: string;
@@ -56,6 +56,8 @@ export class ReportComponentComponent implements OnInit {
   attachments: Attachment[] = [];
 
 
+  selectedItem = new BehaviorSubject<any>(null);
+
 
   constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private cd: ChangeDetectorRef, private ngZone: NgZone, private modalService: NgbModal) {
     this.anomalies = [
@@ -74,6 +76,11 @@ export class ReportComponentComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    let reportAnamolyChange = false;
+    this._g.openReportTab.subscribe((isOpen) => {
+      reportAnamolyChange = isOpen;
+    });
     //Get authentication information from saa configuration flask app
     this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
       this.authentication = data;
@@ -87,13 +94,11 @@ export class ReportComponentComponent implements OnInit {
     this._dbService.runQuery(`MATCH (n:PullRequest) RETURN distinct n.name`, (x) => this.fillPr(x), DbResponseType.table);
     this._dbService.runQuery(`MATCH (n:Issue) RETURN distinct n.name`, (x) => this.fillIssues(x), DbResponseType.table);
     let name = ""
-    let reported = false;
     setInterval(() => {
-      reported = false;
       if (this._g.cy.$(':selected')[0]) {
+        this.selectedItem.next(this._g.cy.$(':selected')[0]._private.data.name)
         this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
-        if (this._g.cy.$(':selected')[0]._private.data.name != name) {
-
+        if (this._g.cy.$(':selected')[0]._private.data.name !== name) {
           this.anomalies
             .map((anomaly) => anomaly.isEnable = false);
           this.comment = ""
@@ -116,7 +121,11 @@ export class ReportComponentComponent implements OnInit {
             addGithub: false,
             addReviewer: false,
           };
-          reported = true;
+          if  (this._g.openReportTab.getValue()) {
+            this.reportAnomaly()
+            
+          }
+          
         }
 
         if (this.className == "Issue") {
@@ -161,15 +170,9 @@ export class ReportComponentComponent implements OnInit {
 
     }, 500)
 
-    setInterval(() => {
-      this._g.openReportTab.subscribe((isOpen) => {
+    
 
-        if (isOpen == true && reported) {
-          this.comment_header = "Report Anomalies"
-          this.reportAnomaly()
-        }
-      });
-    }, 500);
+
 
 
 
@@ -672,8 +675,8 @@ export class ReportComponentComponent implements OnInit {
   }
 
   async reportAnomaly() {
-    this._g.openReportTab.next(false);
     this.comment = ""
+    this.comment_header = "Report Anomalies"
     this.anomalies.map((anomaly) => {
       anomaly.isEnable = true;
     })
