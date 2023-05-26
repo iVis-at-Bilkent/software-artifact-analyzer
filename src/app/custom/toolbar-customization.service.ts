@@ -74,9 +74,9 @@ export class ToolbarCustomizationService {
           let number = x.data[0][1];
           let color = (number<=5)?colors[number]: colors[4];
           let listOfAnomalies = x.data[0][0];
-          const size_x =  0.60 + 2*listOfAnomalies.length/20;
-          const size_y =  0.35 + 2*listOfAnomalies.length/20;
-          const font_size = 0.75+ listOfAnomalies.length/20;
+          const size_x = 0.60 + 2 * Math.log(3*listOfAnomalies.length + 1) / 15;
+          const size_y = 0.35 + 2 * Math.log(3*listOfAnomalies.length + 1) / 15;
+          const font_size = 0.75 + Math.log(3*listOfAnomalies.length + 1) / 15;
           div1.innerHTML = `<span style="background-color:${color} !important; font-size:${font_size}em !important; padding-bottom:${size_y}em !important; padding-top:${size_y}em !important; padding-right:${size_x}em !important; padding-left:${size_x}em !important;border-radius:50%!important;" class="badge rounded-pill bg-primary">${number}</span>`;
           element.addCue({
             htmlElem: div1,
