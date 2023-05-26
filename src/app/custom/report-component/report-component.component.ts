@@ -165,6 +165,7 @@ export class ReportComponentComponent implements OnInit {
       this._g.openReportTab.subscribe((isOpen) => {
 
         if (isOpen == true && reported) {
+          this.comment_header = "Report Anomalies"
           this.reportAnomaly()
         }
       });
