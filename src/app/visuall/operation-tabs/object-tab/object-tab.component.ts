@@ -14,11 +14,12 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
   @ViewChild('panelContainer', { static: false }) panelContainer: ElementRef;
   @Input() openReportTab: boolean;
+  @Input() selectedItemProps: any[];
   openReport: boolean =false;
+  previousName: string = null;
   nodeClasses: Set<string>;
   edgeClasses: Set<string>;
   selectedClasses: string;
-  selectedItemProps: any[];
   selectedItemPropsURL: any[];
   tableFilled = new Subject<boolean>();
   multiObjTableFilled = new Subject<boolean>();
@@ -47,28 +48,11 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    let previousName = null;
+
     this._g.openReportTab.subscribe((isOpen) => {
+      console.log("2",isOpen)
       this.openReport = isOpen; 
     });
-    const time = setInterval(() => {
-      if (this.selectedItemProps.length > 0) {
-        const newName = this.selectedItemProps[0].val;
-        if (newName !== previousName) {
-          this.openReportTab = this.openReport
-          previousName = newName
-
-          
-        }
-        else{
-          if( this.openReport){
-            this.openReportTab = this.openReport
-            this._g.openReportTab.next(false)
-          }
-          
-        }
-      } 
-    },500);
     this.appDescSubs = this._g.appDescription.subscribe(x => {
     if (x === null) {
       return;
@@ -95,6 +79,20 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
       this._cyService.showStatsFn = debounce(this.showStats, OBJ_INFO_UPDATE_DELAY).bind(this);
     });
   });
+  }
+  handleSelectedItemChange() {
+    if (this.selectedItemProps && this.selectedItemProps.length > 0) {
+      const newName = this.selectedItemProps[0].val;
+      if (newName !== this.previousName) {
+        this.openReportTab = this.openReport;
+        console.log("3",this.openReportTab)
+        this.previousName = newName;
+        let timeout = setTimeout(()=>{
+          this._g.openReportTab.next(false)
+          console.log("1")
+        },600)
+      }
+    }
   }
 
 ngOnDestroy(): void {
@@ -274,11 +272,13 @@ renderObjectProps(props, classNames, selectedCount) {
     if (key.toLowerCase() === DATE_PROP_START ||
       key.toLowerCase() === DATE_PROP_END) {
       this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
+      this.handleSelectedItemChange()
       continue;
     }
     renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
     if (key != 'url') {
       this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
+      this.handleSelectedItemChange()
     }
 
   }

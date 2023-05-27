@@ -123,7 +123,6 @@ export class ReportComponentComponent implements OnInit {
           };
           if  (this._g.openReportTab.getValue()) {
             this.reportAnomaly()
-            
           }
           
         }
