@@ -1,9 +1,8 @@
 iframe{
     width: 1000px !important;
-    height: 500px !important;
+    height: 520px !important;
     overflow: hidden;
-    position: static;
-    top:15px;
+    position: absolute;
 }
 
 .md-button {
@@ -29,7 +28,9 @@ iframe{
     padding: 5px;
 }
 .close_button {
-    width: 86vw;
+    z-index: 400;
+    position: absolute;
+    width: 1000px;
     float: right;
     padding: 5px;
     display: flex;
