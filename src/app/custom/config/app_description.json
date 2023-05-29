@@ -756,7 +756,7 @@
     "avgNodeSize": 40,
     "objectInclusionType": 0,
     "anomalyDefaultValues":{
-      "ignoreBug":2,
+      "ignoreBug":5,
       "assigneeChangeCount":2,
       "reopenCount":2
     },

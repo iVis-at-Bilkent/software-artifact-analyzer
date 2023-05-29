@@ -80,6 +80,71 @@ export class Neo4jDb implements DbService {
     }, errFn);
   }
 
+  runQueryWithoutTimeBoxed(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
+    const conf = environment.dbConfig;
+    const url = conf.url;
+    const username = conf.username;
+    const password = conf.password;
+    const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
+    this._g.setLoadingStatus(true);
+    const timeout = this._g.userPrefs.dbTimeout.getValue() * 10000;
+    let q = query;
+    console.log(q)
+    if (!isTimeboxed) {
+      q = query;
+    }
+    this._g.statusMsg.next('Executing database query...');
+    const requestBody = {
+      statements: [{
+        statement: q,
+        parameters: null,
+        resultDataContents: [requestType]
+      }]
+    };
+    let isTimeout = true;
+    if (isTimeboxed) {
+      setTimeout(() => {
+        if (isTimeout) {
+          this._g.showErrorModal('Database Timeout', 'Your query took too long! <br> Consider adjusting timeout setting.');
+        }
+      }, timeout);
+    }
+
+    const errFn = (err) => {
+      isTimeout = false;
+      // It means our user-defined stored procedure intentionally throws exception to signal timeout
+      if (err.message.includes('Timeout occurred! It takes longer than')) {
+        this._g.statusMsg.next('');
+        this._g.showErrorModal('Database Timeout', 'Your query took too long!  <br> Consider adjusting timeout setting.');
+      } else {
+        this._g.statusMsg.next('Database query execution raised error!');
+        this._g.showErrorModal('Database Query Qxecution Error', err.message);
+      }
+      this._g.setLoadingStatus(false);
+    };
+    this._http.post(url, requestBody, {
+      headers: {
+        'Accept': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa(username + ':' + password)
+      }
+    }).subscribe(x => {
+      isTimeout = false;
+      this._g.setLoadingStatus(false);
+      if (x['errors'] && x['errors'].length > 0) {
+        errFn(x['errors'][0]);
+        return;
+      }
+      this._g.statusMsg.next('');
+      if (responseType == DbResponseType.graph) {
+        callback(this.extractGraph(x));
+      } else if (responseType == DbResponseType.table || responseType == DbResponseType.count) {
+        callback(this.extractTable(x, isTimeboxed));
+      } else if (responseType == DbResponseType.generic) {
+        callback(this.extractGenericData(x, isTimeboxed));
+      }
+    }, errFn);
+  }
   getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, meta?: DbQueryMeta) {
     let isEdgeQuery = meta && meta.isEdgeQuery;
     const idFilter = this.buildIdFilter(elemIds, false, isEdgeQuery);

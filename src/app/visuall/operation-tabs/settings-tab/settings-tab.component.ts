@@ -5,7 +5,8 @@ import { UserProfileService } from '../../user-profile.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MIN_HIGHTLIGHT_WIDTH, MAX_HIGHTLIGHT_WIDTH, getCyStyleFromColorAndWid } from '../../constants';
 import { CustomizationModule } from 'src/app/custom/customization.module';
-
+import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
+import { Neo4jDb } from 'src/app/visuall/db-service/neo4j-db.service';
 @Component({
   selector: 'app-settings-tab',
   templateUrl: './settings-tab.component.html',
@@ -50,17 +51,17 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   customSubTabs: { component: any, text: string }[] = CustomizationModule.settingsSubTabs;
   loadFromFileSubs: Subscription;
   tabChangeSubs: Subscription;
-  anomalyDefaultValues:{
+  anomalyDefaultValues: {
     ignoreBug: number,
-    assigneeChangeCount:number,
-    reopenCount:number,
-  }   
-  constructor(private _g: GlobalVariableService, private _profile: UserProfileService) { 
-    this.anomalyDefaultValues ={
-      ignoreBug:this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1,
-      assigneeChangeCount:this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1,
-      reopenCount:this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1,
-    } 
+    assigneeChangeCount: number,
+    reopenCount: number,
+  }
+  constructor(private _g: GlobalVariableService, private _profile: UserProfileService, public _dbService: Neo4jDb) {
+    this.anomalyDefaultValues = {
+      ignoreBug: this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() || 1,
+      assigneeChangeCount: this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() || 1,
+      reopenCount: this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1,
+    }
     this.loadFromFileSubs = this._profile.onLoadFromFile.subscribe(x => {
       if (!x) {
         return;
@@ -72,13 +73,13 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.anomalyDefaultValues ={
-      ignoreBug:this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1,
-      assigneeChangeCount:this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1,
-      reopenCount:this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1,
-    }  
+    this.anomalyDefaultValues = {
+      ignoreBug: this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() || 1,
+      assigneeChangeCount: this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() || 1,
+      reopenCount: this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1,
+    }
     //this.anomalyDefaultValues.ignoreBug = this._g.userPrefs.anomalyDefaultValues.ignoreBug.getValue();
-  
+
     this.generalBoolSettings = [
       { text: 'Perform layout on changes', isEnable: false, path2userPref: 'isAutoIncrementalLayoutOnChange' },
       { text: 'Emphasize on hover', isEnable: false, path2userPref: 'isHighlightOnHover' },
@@ -96,12 +97,6 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
       { text: 'Hide disconnected nodes on animation', isEnable: false, path2userPref: 'timebar.isHideDisconnectedNodesOnAnim' },
       { text: 'Maintain graph range on topology changes', isEnable: false, path2userPref: 'timebar.isMaintainGraphRange' }
     ];
-    this.anomalyBoolSetting = [
-      { text: 'Show timebar', isEnable: false, path2userPref: 'timebar.isEnabled' },
-      { text: 'Hide disconnected nodes on animation', isEnable: false, path2userPref: 'timebar.isHideDisconnectedNodesOnAnim' },
-      { text: 'Maintain graph range on topology changes', isEnable: false, path2userPref: 'timebar.isMaintainGraphRange' }
-    ];
-
 
     this.isInit = true;
 
@@ -122,11 +117,11 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   }
 
   private fillUIFromMemory() {
-    this.anomalyDefaultValues ={
-      ignoreBug:this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() ||1,
-      assigneeChangeCount:this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1,
-      reopenCount:this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() ||1,
-    } 
+    this.anomalyDefaultValues = {
+      ignoreBug: this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() || 1,
+      assigneeChangeCount: this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() || 1,
+      reopenCount: this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1,
+    }
     // reference variables for shorter text
     const up = this._g.userPrefs;
     const up_t = this._g.userPrefs.timebar;
@@ -208,7 +203,64 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
       this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
     }
   }
+  settingAnomalyChanged(val: any, userPref: string) {
+    let path = userPref.split('.');
+    let obj = this._g.userPrefs[path[0]];
+    for (let i = 1; i < path.length; i++) {
+      obj = obj[path[i]];
+    }
+    obj.next(val);
+    this._profile.saveUserPrefs();
+    console.log(userPref)
+    const cb = (x) => {
+      console.log(x)
+    }
+    let cql = "";
+    if (userPref == "anomalyDefaultValues.ignoreBug") {
+      cql = `MATCH (n:Issue)
+                  SET n.anomalyCount = CASE
+                      WHEN 'Ignored bug' IN n.anomalyList THEN n.anomalyCount - 1
+                      ELSE n.anomalyCount
+                  END,
+                  n.anomalyList = [x IN n.anomalyList WHERE x <> 'Ignored bug']
+                  WITH n
+                  WHERE exists(n.history) AND size(n.history) >= 2
+                  WITH n, range(0, size(n.history)-2) as index_range
+                  UNWIND index_range as i
+                  WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+                  WHERE duration.between(from, to).months > ${val}
+                  WITH DISTINCT n
+                  SET n.anomalyList = coalesce(n.anomalyList, []) + ['Ignored bug'], n.anomalyCount = coalesce(n.anomalyCount, 0) + 1
+                  RETURN n.name as name , ID(n) as id order by n.name`;
+    }
+    else if (userPref == "anomalyDefaultValues.assigneeChangeCount") {
+      cql = ` MATCH (n:Issue)
+              SET n.anomalyCount = CASE
+              WHEN 'Reassignment of Bug Assignee' IN n.anomalyList THEN n.anomalyCount - 1
+              ELSE n.anomalyCount
+              END,
+              n.anomalyList = [x IN n.anomalyList WHERE x <> 'Reassignment of Bug Assignee']
+              WITH n WHERE n.assigneeChangeCount>=${val}
+              SET n.anomalyList = coalesce(n.anomalyList, []) + [ 'Reassignment of Bug Assignee'] , n.anomalyCount = coalesce(n.anomalyCount, 0) + 1
+              RETURN n.name as name , ID(n) as id order by n.name`;
+    }
+    else if (userPref == "anomalyDefaultValues.reopenCount") {
+      cql = `MATCH (n:Issue)
+              SET n.anomalyCount = CASE
+              WHEN 'Closed reopen ping pong' IN n.anomalyList THEN n.anomalyCount - 1
+              ELSE n.anomalyCount
+              END,
+              n.anomalyList = [x IN n.anomalyList WHERE x <> 'Closed reopen ping pong']
+              WITH n 
+              WHERE n.reopenCount>=${val}
+              SET n.anomalyList = coalesce(n.anomalyList, []) + ['Closed reopen ping pong'] , n.anomalyCount = coalesce(n.anomalyCount, 0) + 1
+              RETURN n.name as name , ID(n) as id order by n.name`;
+    }
 
+    this._dbService.runQueryWithoutTimeBoxed(cql, cb, DbResponseType.table);
+
+  }
+  
   settingChanged(val: any, userPref: string) {
     let path = userPref.split('.');
     let obj = this._g.userPrefs[path[0]];
@@ -217,7 +269,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
     }
     obj.next(val);
     this._profile.saveUserPrefs();
-    }
+  }
   onColorSelected(c: string) {
     this.highlightColor = c;
   }
