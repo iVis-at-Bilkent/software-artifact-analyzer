@@ -89,7 +89,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n:Issue{status:'Done' })
-    WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[]
+    WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] and  ${dateFilter} 
     OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) 
     RETURN  ID(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver ORDER BY ${orderExpr}`
@@ -121,7 +121,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n:Issue{status:'Done' })
-    WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] 
+    WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] and ${dateFilter} 
     OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
@@ -265,6 +265,11 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }

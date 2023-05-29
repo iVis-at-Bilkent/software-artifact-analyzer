@@ -97,7 +97,7 @@ export class Query6Component implements OnInit {
     } 
     const r = `[${skip}..${skip + dataCnt}]`;
 
-    const cql = `MATCH (n : Issue) WHERE n.anomalyCount = ${this.count} 
+    const cql = `MATCH (n : Issue) WHERE n.anomalyCount = ${this.count} and ${dateFilter} 
     RETURN  distinct ID(n) as id , collect(n.name) as issue, n.anomalyList as anomalies `;
     this._dbService.runQuery(cql, cb, DbResponseType.table); 
   }
@@ -133,7 +133,8 @@ export class Query6Component implements OnInit {
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-    const cql = `MATCH (n : Issue)-[r]-(d) WHERE n.anomalyCount = ${this.count}   
+    const cql = `MATCH (n : Issue)-[r]-(d)
+     WHERE n.anomalyCount = ${this.count}   and  ${dateFilter} 
     RETURN n,d,r
     SKIP ${skip} LIMIT ${dataCnt}`
     this._dbService.runQuery(cql, cb);
@@ -190,8 +191,9 @@ export class Query6Component implements OnInit {
     }
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = { 'issue': 'n.name' };
-
-    const cql = `MATCH (n:Issue) WHERE ${idFilter}  OPTIONAL MATCH  (n)-[r]-(d) return n,d,r`
+    const dateFilter = this.getDateRangeCQL();
+    const cql = `MATCH (n:Issue) WHERE ${idFilter} and ${dateFilter}  
+    OPTIONAL MATCH  (n)-[r]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
   }
 
@@ -267,6 +269,11 @@ export class Query6Component implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }

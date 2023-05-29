@@ -87,7 +87,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n) 
-    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' 
+    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and ${dateFilter}
     RETURN  ID(n) as id, n.name as issue , n.reporter as reporter ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -117,7 +117,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n) 
-    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' 
+    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = ''  and ${dateFilter}
     OPTIONAL MATCH  (n)-[r:REPORTS]-(d)
      return n,r,d`
     this._dbService.runQuery(cql, cb);
@@ -253,6 +253,11 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }

@@ -108,10 +108,6 @@ export class SameResolverCloserComponent implements OnInit {
       x.edges.forEach(edge => {
         edegeIds.push(edge.id)
       });
-      const seedEdges = this._g.cy.edges(edegeIds.map(x => '#e' + x).join());
-      const seedNodes = this._g.cy.nodes(nodeIds.map(x => '#n' + x).join());
-      this._g.viewUtils.highlight(seedNodes, 3);
-      this._g.viewUtils.highlight(seedEdges, 3);
     }
 
     const ui2Db = { 'Developer': 'Developer' ,'Issues': 'Issues','Count': 'Count'};
@@ -193,10 +189,6 @@ export class SameResolverCloserComponent implements OnInit {
       x.edges.forEach(edge => {
         edegeIds.push(edge.id)
       });
-      const seedEdges = this._g.cy.edges(edegeIds.map(x => '#e' + x).join());
-      const seedNodes = this._g.cy.nodes(nodeIds.map(x => '#n' + x).join());
-      this._g.viewUtils.highlight(seedNodes, 3);
-      this._g.viewUtils.highlight(seedEdges, 3);
     }
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = { 'Developer': 'Developer' ,'Issues': 'Issues','Count': 'Count'};
@@ -205,7 +197,7 @@ export class SameResolverCloserComponent implements OnInit {
     
     const cql = ` MATCH (n:Developer)-[r1:RESOLVE ]->(issue:Issue)
     MATCH (n)-[r2:CLOSE]->(issue)
-    WHERE issue.resolver= n.name and issue.closer = n.name  AND ${idFilter}
+    WHERE issue.resolver= n.name and issue.closer = n.name  AND ${idFilter} and and ${dateFilter} 
     RETURN  n, r1,r2, issue SKIP 0 `
     this._dbService.runQuery(cql, cb);
   }
@@ -282,6 +274,12 @@ export class SameResolverCloserComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `issue.createdAt > ${d1}  AND  issue.createdAt < ${d2} `;
   }
+
 }

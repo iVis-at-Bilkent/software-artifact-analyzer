@@ -241,6 +241,7 @@ export class ClosedReopenPingPongComponent implements OnInit {
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
 
 
+
   private getDateRangeCQL() {
     const isLimit = this._g.userPrefs.isLimitDbQueries2range.getValue();
     if (!isLimit) {
@@ -248,7 +249,12 @@ export class ClosedReopenPingPongComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }
 

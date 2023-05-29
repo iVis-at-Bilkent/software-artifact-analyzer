@@ -118,7 +118,8 @@ export class MissingPriorityComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue) WHERE n.priority is NULL 
+    const cql = `MATCH (n:Issue) 
+    WHERE n.priority is NULL and ${dateFilter} 
     OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
@@ -245,7 +246,6 @@ export class MissingPriorityComponent implements OnInit {
   // tableInput is already filtered. Use that to filter graph elements.
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
 
-
   private getDateRangeCQL() {
     const isLimit = this._g.userPrefs.isLimitDbQueries2range.getValue();
     if (!isLimit) {
@@ -253,6 +253,11 @@ export class MissingPriorityComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }

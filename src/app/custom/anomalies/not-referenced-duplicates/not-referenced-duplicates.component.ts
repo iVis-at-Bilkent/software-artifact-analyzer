@@ -88,7 +88,8 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     const r = `[${skip}..${skip + dataCnt}]`;
 
 
-    const cql=` MATCH (n:Issue)  WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-()   and ${dateFilter} 
+    const cql=` MATCH (n:Issue) 
+    WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-()   and ${dateFilter} 
     OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
     RETURN  ID(n) as id,  n.name AS issue, d.name as related ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
@@ -119,7 +120,7 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n:Issue)
-    WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-()
+    WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-() and ${dateFilter} 
     OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
     RETURN n,r,d`
     this._dbService.runQuery(cql, cb);
@@ -258,6 +259,11 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }

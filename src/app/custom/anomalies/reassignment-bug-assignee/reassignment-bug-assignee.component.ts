@@ -125,7 +125,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     WITH n, [assignee IN n.assigneeHistory ] AS assignees
     UNWIND assignees AS assignee
     MATCH path =(developer:Developer {name: assignee})-[*1..2]-()
-    WHERE last(nodes(path)) = n
+    WHERE last(nodes(path)) = n and  ${dateFilter} 
     RETURN n, developer AS assignee,relationships(path) AS edges`
     this._dbService.runQuery(cql, cb);
    
@@ -264,7 +264,12 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }
 
