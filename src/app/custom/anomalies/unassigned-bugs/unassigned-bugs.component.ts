@@ -117,7 +117,8 @@ export class UnassignedBugsComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue{status:'Done'}) WHERE NOT EXISTS(n.assignee) OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
+    const cql = `MATCH (n:Issue{status:'Done'}) WHERE NOT EXISTS(n.assignee)  AND ${dateFilter}
+    OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -249,6 +250,11 @@ export class UnassignedBugsComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }

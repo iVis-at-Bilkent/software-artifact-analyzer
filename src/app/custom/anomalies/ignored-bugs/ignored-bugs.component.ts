@@ -86,11 +86,11 @@ export class IgnoredBugsComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n)
-    WHERE exists(n.history) AND size(n.history) >= 2
+    WHERE exists(n.history) AND size(n.history) >= 2  AND ${dateFilter}
     WITH n, range(0, size(n.history)-2) as index_range 
     UNWIND index_range as i
     WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
-    WHERE duration.between(from, to).months > ${this.time}
+    WHERE duration.between(from, to).months > ${this.time} 
     RETURN  distinct ID(n) as id , n.name as issue,  n.assignee as assignee, collect([from, to]) as dates ORDER BY  ${orderExpr} 
     SKIP ${skip} LIMIT ${dataCnt}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
@@ -121,11 +121,11 @@ export class IgnoredBugsComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql =`MATCH (n)
-    WHERE exists(n.history) AND size(n.history) >= 2
+    WHERE exists(n.history) AND size(n.history) >= 2 AND ${dateFilter}
     WITH n, range(0, size(n.history)-2) as index_range 
     UNWIND index_range as i
     WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
-    WHERE duration.between(from, to).months > ${this.time}
+    WHERE duration.between(from, to).months > ${this.time}  
     OPTIONAL MATCH (n) -[r:ASSIGNED]-(t) WHERE t.name = n.assignee
     RETURN  n , t ,r   `
     this._dbService.runQuery(cql, cb);
@@ -288,6 +288,11 @@ export class IgnoredBugsComponent implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `n.start > ${d1} AND n.end < ${d2}`;
+    const a = new Date(d1 );
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d =c.toISOString()
+
+    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
   }
 }
