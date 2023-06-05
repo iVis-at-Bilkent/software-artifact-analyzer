@@ -279,7 +279,7 @@ export class SameResolverCloserComponent implements OnInit {
     const b = a.toISOString()
     const d =c.toISOString()
 
-    return `issue.createdAt > ${d1}  AND  issue.createdAt < ${d2} `;
+    return ` ${d2} >= issue.createdAt  AND ${d1}<= issue.closeDate`;
   }
 
 }

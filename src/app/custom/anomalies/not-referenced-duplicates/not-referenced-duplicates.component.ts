@@ -264,6 +264,6 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     const b = a.toISOString()
     const d =c.toISOString()
 
-    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
+    return ` ${d2} >= n.createdAt  AND ${d1}<= n.closeDate`;
   }
 }

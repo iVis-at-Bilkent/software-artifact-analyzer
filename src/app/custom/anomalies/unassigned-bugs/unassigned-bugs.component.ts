@@ -238,7 +238,6 @@ export class UnassignedBugsComponent implements OnInit {
     const skip = filter && filter.skip ? filter.skip : 0;
     return filtered.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
   }
-
   // tableInput is already filtered. Use that to filter graph elements.
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
 
@@ -255,6 +254,6 @@ export class UnassignedBugsComponent implements OnInit {
     const b = a.toISOString()
     const d =c.toISOString()
 
-    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
+    return ` ${d2} >= n.createdAt  AND ${d1}<= n.closeDate`;
   }
 }

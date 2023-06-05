@@ -8,7 +8,6 @@ import { buildIdFilter, getOrderByExpression4Query, getQueryCondition4TxtFilter 
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 
 export interface Anomaly {
-  id: string;
   issue: string;
   anomalies: string;
 }
@@ -21,8 +20,8 @@ export class Query6Component implements OnInit {
 
 
   tableInput: TableViewInput = {
-    columns: ['issue', 'anomalies'], results: [], results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
-    resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
+    columns: ['issue','anomalies'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
+    resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
   tableFilled = new Subject<boolean>();
   tableResponse = null;
@@ -35,7 +34,7 @@ export class Query6Component implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-
+      
     }, 0);
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
@@ -47,7 +46,6 @@ export class Query6Component implements OnInit {
     const skip = (this.tableInput.currPage - 1) * this.tableInput.pageSize;
     this.loadTable(skip);
     this.loadGraph(skip);
-    
   }
 
   //Anomaly Detection Queries
@@ -61,10 +59,7 @@ export class Query6Component implements OnInit {
     const cb = (x) => {
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
-      let cnt = 0;
-      if (x.data[0] && x.data[0].length > 0) {
-        cnt = x.data[0][2];
-      }
+      let cnt = x.data.length;
       
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
@@ -87,28 +82,28 @@ export class Query6Component implements OnInit {
       return;
     }
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
-    const txtCondition = getQueryCondition4TxtFilter(filter, ['n.name'], isIgnoreCase);
-    const ui2Db = { 'name': 'n.name' };
-    const orderExpr = getOrderByExpression4Query(filter, 'n.name', 'desc', ui2Db);
+    const txtCondition = getQueryCondition4TxtFilter(filter, ['issue'], isIgnoreCase);
+    const ui2Db = {'issue': 'n.name' };
+    const orderExpr = getOrderByExpression4Query(filter, 'id', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     let dataCnt = this.tableInput.pageSize;
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
-    } 
+    }
     const r = `[${skip}..${skip + dataCnt}]`;
-
     const cql = `MATCH (n : Issue) WHERE n.anomalyCount = ${this.count} and ${dateFilter} 
-    RETURN  distinct ID(n) as id , collect(n.name) as issue, n.anomalyList as anomalies `;
+    RETURN  distinct ID(n) as id , n.name  as issue, n.anomalyList as anomalies ORDER BY ${orderExpr}`;
     this._dbService.runQuery(cql, cb, DbResponseType.table); 
   }
 
 
 
   loadGraph(skip: number, filter?: TableFiltering) {
-    if (!this.tableInput.isLoadGraph) {
+    if (!this.tableInput.isLoadGraph) {    
       return;
-    }
-    const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
+    } 
+    const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
+    
     const cb = (x) => {
       
       if (isClientSidePagination) {
@@ -124,25 +119,18 @@ export class Query6Component implements OnInit {
       this._cyService.loadElementsFromDatabase(this.filterGraphResponse(this.graphResponse), this.tableInput.isMergeGraph);
       return;
     }
-    const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
-    const txtCondition = getQueryCondition4TxtFilter(filter, ['n.name'], isIgnoreCase);
-    const ui2Db = { 'name': 'n.name' };
-    const orderExpr = getOrderByExpression4Query(filter, 'n.name', 'desc', ui2Db);
+    const ui2Db = { 'issue': 'n.name'};
+    const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
-    let dataCnt = this.tableInput.pageSize;
-    if (isClientSidePagination) {
-      dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
-    }
-    const cql = `MATCH (n : Issue)-[r]-(d)
+    const cql = `MATCH (n : Issue)-[r]-(d:Developer)
      WHERE n.anomalyCount = ${this.count}   and  ${dateFilter} 
-    RETURN n,d,r
-    SKIP ${skip} LIMIT ${dataCnt}`
+    RETURN  n,r,d`
     this._dbService.runQuery(cql, cb);
 
   }
   private filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
-
+   
     const nodeIdDict = {};
     for (let i = 0; i < this.tableInput.results.length; i++) {
       nodeIdDict[this.tableInput.results[i][0].val] = true;
@@ -167,7 +155,7 @@ export class Query6Component implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -175,13 +163,14 @@ export class Query6Component implements OnInit {
       for (let j = 0; j < uiColumns.length; j++) {
         row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
       }
-      row.push();
+      row.push(); 
       this.tableInput.results.push(row)
 
     }
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
+    
     this.tableFilled.next(true);
   }
 
@@ -190,10 +179,8 @@ export class Query6Component implements OnInit {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
     }
     const idFilter = buildIdFilter(e.dbIds);
-    const ui2Db = { 'issue': 'n.name' };
-    const dateFilter = this.getDateRangeCQL();
-    const cql = `MATCH (n:Issue) WHERE ${idFilter} and ${dateFilter}  
-    OPTIONAL MATCH  (n)-[r]-(d) return n,d,r`
+    const ui2Db = {'issue': 'n.name'};
+    const cql = `MATCH (n:Issue)-[r]-(d:Developer) WHERE ${idFilter} return n,d,r`
     this._dbService.runQuery(cql, cb);
   }
 
@@ -257,7 +244,6 @@ export class Query6Component implements OnInit {
     const skip = filter && filter.skip ? filter.skip : 0;
     return filtered.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
   }
-
   // tableInput is already filtered. Use that to filter graph elements.
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
 
@@ -274,6 +260,6 @@ export class Query6Component implements OnInit {
     const b = a.toISOString()
     const d =c.toISOString()
 
-    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
+    return ` ${d2} >= n.createdAt  AND ${d1}<= n.closeDate`;
   }
 }
