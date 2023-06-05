@@ -62,6 +62,10 @@ export class Query3Component implements OnInit {
   }
 
   ngOnInit() {
+    this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , ID(m) as id order by m.name ', (x) =>{ 
+      this.fillGenres(x)
+    }, DbResponseType.table);
+
     this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
       this.authentication  = data;
       this.githubHttpOptions = {
@@ -73,12 +77,7 @@ export class Query3Component implements OnInit {
         })
       };
     });
-    this.pr = "None";
-    setTimeout(() => {
-      this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , ID(m) as id order by m.name ', (x) =>{ 
-        this.fillGenres(x)
-      }, DbResponseType.table);
-    }, 0);
+    
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
   }
@@ -256,6 +255,7 @@ export class Query3Component implements OnInit {
     for (let i = 0; i < data.data.length; i++) {
       this.prIds.push(data.data[i][1]);
     }
+    this.pr = this.prs[0]
   }
 
   getDataForQueryResult(e: TableRowMeta) {

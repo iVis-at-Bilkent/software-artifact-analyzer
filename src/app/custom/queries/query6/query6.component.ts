@@ -33,6 +33,7 @@ export class Query6Component implements OnInit {
   }
 
   ngOnInit() {
+    this.count = 1
     setTimeout(() => {
       
     }, 0);
