@@ -10,7 +10,7 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 //This query is for 
 export interface CommitData {
   id:string;
-  name:string;
+  commit:string;
 }
 @Component({
   selector: 'app-query1',
@@ -23,7 +23,7 @@ export class Query1Component implements OnInit {
   developer: string;
   developers: string[];
   tableInput: TableViewInput = {
-    columns:['name'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
+    columns:['commit'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
   };
   tableFilled = new Subject<boolean>();
@@ -40,7 +40,7 @@ export class Query1Component implements OnInit {
   
     setTimeout(() => {
       const dateFilter = this.getDateRangeCQL();
-      this._dbService.runQuery(`MATCH (n:Developer) WHERE ${dateFilter} RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
+      this._dbService.runQuery(`MATCH (n:Developer) RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
     }, 0);
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
@@ -59,7 +59,7 @@ export class Query1Component implements OnInit {
     const cb = (x) => {
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
-      let cnt = x.data[0][2];
+      let cnt = x.data.length;
       
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
@@ -92,10 +92,9 @@ export class Query1Component implements OnInit {
     } 
     const r = `[${skip}..${skip + dataCnt}]`;
 
-    const cql = `MATCH (Developer {name: '${this.developer}' })--(n:Commit)
-    WHERE  ${dateFilter} ${txtCondition} 
-    WITH DISTINCT n ORDER BY ${orderExpr}
-    RETURN collect(ID(n))${r} as id, collect(n.name) as name, size(collect(ID(n))) as totalDataCount`;
+    const cql = `MATCH (n:Commit) <-[r:COMMITS]-(d:Developer {name: '${this.developer}' })
+    WHERE  ${dateFilter} 
+    RETURN collect(ID(n))${r} as id, n.name as commit, size(collect(ID(n))) as totalDataCount`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
     
   }
@@ -131,27 +130,28 @@ export class Query1Component implements OnInit {
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-    const cql =`MATCH (Developer {name:'${this.developer}' })-[r:COMMITS]->(n:Commit)
-    WHERE  ${dateFilter} ${txtCondition}
-    RETURN n,r
+    const cql =`MATCH (n:Commit) <-[r:COMMITS]-(d:Developer {name: '${this.developer}' })
+    WHERE  ${dateFilter} 
+    RETURN d,n,r
     SKIP ${skip} LIMIT ${dataCnt}`;
     this._dbService.runQuery(cql, cb);
    
   }
 
+
   fillTable(data: CommitData[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [ TableDataType.string,TableDataType.string];
-    
+    const columnTypes = [TableDataType.string, TableDataType.string];
+
     this.tableInput.results = [];
-  
     for (let i = 0; i < data.length; i++) {
       const row: TableData[] = [];
       for (let j = 0; j < uiColumns.length; j++) {
-
-        row.push({ type: columnTypes[j], val: data[i][uiColumns[j]] })
+        row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
       }
+      row.push(); 
       this.tableInput.results.push(row)
+
     }
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
@@ -159,6 +159,7 @@ export class Query1Component implements OnInit {
     
     this.tableFilled.next(true);
   }
+
 
   fillGenres(data) {
     this.developers = [];
@@ -176,9 +177,9 @@ export class Query1Component implements OnInit {
     const dateFilter = this.getDateRangeCQL();
 
 
-    const cql =`MATCH (Developer {name: '${this.developer}' })-[r:COMMITS]->(n:Commit)
-    WHERE  ${idFilter} ${dateFilter}
-    RETURN n,r,Developer
+    const cql =`MATCH (n:Commit) <-[r:COMMITS]-(d:Developer {name: '${this.developer}' })
+    WHERE  ${idFilter} and ${dateFilter}
+    RETURN n,r,d
     SKIP 0 LIMIT ${this.tableInput.pageSize}`;
     this._dbService.runQuery(cql, cb); 
   }
@@ -191,27 +192,27 @@ export class Query1Component implements OnInit {
       this.loadGraph(skip, filter);
     }
   }
+  // zip paralel arrays 
   private preprocessTableData(data): CommitData[] {
-      
-    
     const dbColumns = data.columns as string[];
     const uiColumns = ['id'].concat(this.tableInput.columns);
     let columnMapping = [];
     for (let i = 0; i < uiColumns.length; i++) {
       columnMapping.push(dbColumns.indexOf(uiColumns[i]));
-      
     }
-    const rawData = data.data[0];
+    const rawData = data.data;
     const objArr: CommitData[] = [];
-    for (let i = 0; i < rawData[0].length; i++) {
+    for (let i = 0; i < rawData.length; i++) {
       const obj = {};
       for (let j = 0; j < columnMapping.length; j++) {
-        obj[uiColumns[j]] = rawData[columnMapping[j]][i];
+        obj[uiColumns[j]] = rawData[i][columnMapping[j]];
       }
       objArr.push(obj as CommitData)
     }
     return objArr;
   }
+
+
 
   private filterTableResponse(x: CommitData[], filter: TableFiltering): CommitData[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
@@ -228,8 +229,9 @@ export class Query1Component implements OnInit {
         filtered.push(x[i]);
       }
     }
-     // order by
-     if (filter && filter.orderDirection.length > 0) {
+
+    // order by
+    if (filter && filter.orderDirection.length > 0) {
       const o = filter.orderBy;
       if (filter.orderDirection == 'asc') {
         filtered = filtered.sort((a, b) => { if (!a[o]) return 1; if (!b[o]) return -1; if (a[o] > b[o]) return 1; if (b[o] > a[o]) return -1; return 0 });
@@ -277,7 +279,7 @@ export class Query1Component implements OnInit {
     const b = a.toISOString()
     const d =c.toISOString()
 
-    return ` ${d2} >= n.start  AND ${d1}<= n.end`;
+    return ` ${d2} >= n.createdAt  AND ${d1}<= n.end`;
   }
 }
  

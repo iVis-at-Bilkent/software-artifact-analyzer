@@ -40,7 +40,7 @@ export class ToolbarCustomizationService {
   generateRedShades() {
     let colors = [];
     colors = [
-      "#599a20", "#FF9999", "#fe5050", "#FE0022", "#BC0000", "#9a0000"
+       "#FF9999", "#fe5050", "#FE0022", "#BC0000", "#9a0000"
     ]
 
 
@@ -72,24 +72,26 @@ export class ToolbarCustomizationService {
         const cb = (x) => {
           const div1 = document.createElement("div");        
           let number = x.data[0][1];
-          let color = (number<=5)?colors[number]: colors[4];
-          let listOfAnomalies = x.data[0][0];
-          const size_x = 0.60 + 2 * Math.log(3*listOfAnomalies.length + 1) / 15;
-          const size_y = 0.35 + 2 * Math.log(3*listOfAnomalies.length + 1) / 15;
-          const font_size = 0.75 + Math.log(3*listOfAnomalies.length + 1) / 15;
-          div1.innerHTML = `<span style="background-color:${color} !important; font-size:${font_size}em !important; padding-bottom:${size_y}em !important; padding-top:${size_y}em !important; padding-right:${size_x}em !important; padding-left:${size_x}em !important;border-radius:50%!important;" class="badge rounded-pill bg-primary">${number}</span>`;
-          element.addCue({
-            htmlElem: div1,
-            id:element._private.data.name,
-            show: "always",
-            position: "top-right",
-            marginX: "%0",
-            marginY: "%0",
-            cursor: "pointer",
-            zIndex: 1000,
-            tooltip: listOfAnomalies.join('\n')
-          
-          });      
+          if(number > 0){
+            let color = (number<=5)?colors[number-1]: colors[4];
+            let listOfAnomalies = x.data[0][0];
+            const size_x = 0.60 + 2 * Math.log(3*listOfAnomalies.length + 1) / 15;
+            const size_y = 0.35 + 2 * Math.log(3*listOfAnomalies.length + 1) / 15;
+            const font_size = 0.75 + Math.log(3*listOfAnomalies.length + 1) / 15;
+            div1.innerHTML = `<span style="background-color:${color} !important; font-size:${font_size}em !important; padding-bottom:${size_y}em !important; padding-top:${size_y}em !important; padding-right:${size_x}em !important; padding-left:${size_x}em !important;border-radius:50%!important;" class="badge rounded-pill bg-primary">${number}</span>`;
+            element.addCue({
+              htmlElem: div1,
+              id:element._private.data.name,
+              show: "always",
+              position: "top-right",
+              marginX: "%0",
+              marginY: "%8",
+              cursor: "pointer",
+              zIndex: 1000,
+              tooltip: listOfAnomalies.join('\n')
+            
+            }); 
+          } 
         }
         const cql = `MATCH (n:Issue {name:'${element._private.data.name}'}) RETURN n.anomalyList as anomalyList , n.anomalyCount as anomalyCount`;
         this._dbService.runQuery(cql, cb,  DbResponseType.table);
