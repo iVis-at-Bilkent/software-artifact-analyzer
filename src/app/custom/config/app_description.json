@@ -633,7 +633,7 @@
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },
-    "ASSIGNER": {
+    "ASSIGNS": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },
@@ -686,7 +686,8 @@
       "end_datetime": "end"
     }, 
     "REFERENCES": {
-      "begin_datetime": "createdAt"
+      "begin_datetime": "createdAt",
+      "end_datetime": "end"
     }, 
     "REVIEWS": {
       "begin_datetime": "createdAt",

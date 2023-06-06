@@ -39,7 +39,8 @@ export class Query1Component implements OnInit {
     this.developer = "Davide Palmisano";
   
     setTimeout(() => {
-      this._dbService.runQuery("MATCH (n:Developer )RETURN distinct n.name", (x) => this.fillGenres(x), DbResponseType.table);
+      const dateFilter = this.getDateRangeCQL();
+      this._dbService.runQuery(`MATCH (n:Developer) WHERE ${dateFilter} RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
     }, 0);
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
@@ -276,8 +277,7 @@ export class Query1Component implements OnInit {
     const b = a.toISOString()
     const d =c.toISOString()
 
-    return `n.createdAt > ${d1}  AND  n.createdAt < ${d2} `;
+    return ` ${d2} >= n.start  AND ${d1}<= n.end`;
   }
-
 }
  
