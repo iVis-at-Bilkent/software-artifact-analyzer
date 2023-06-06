@@ -259,11 +259,12 @@ renderObjectProps(props, classNames, selectedCount) {
 
     const attributeType = findTypeOfAttribute(key, properties.nodes, properties.edges);
     if (attributeType === 'datetime') {
-      if (typeof renderedValue !== 'undefined') {
+      if ( typeof renderedValue !== 'undefined' && renderedValue < 2208988800000) {
         renderedValue = new Date(renderedValue).toLocaleString();
       } else {
-        renderedValue = '';
+        renderedValue = '-';
       }
+      
     }
     if (key === 'url') {
       this.selectedItemPropsURL.push({ key: renderedKey, val: renderedValue });
