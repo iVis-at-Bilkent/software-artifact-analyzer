@@ -1,12 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="800px" height="800px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-    <title>ic_fluent_warning_24_filled</title>
-    <desc>Created with Sketch.</desc>
-    <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="ic_fluent_warning_24_filled" fill="#212121" fill-rule="nonzero">
-            <path d="M10.9084921,2.78216375 C11.9482635,2.20625071 13.2462954,2.54089334 13.8841246,3.52240345 L13.9669228,3.66023048 L21.725879,17.6684928 C21.9106772,18.0021332 22.0076302,18.3772743 22.0076302,18.7586748 C22.0076302,19.9495388 21.0824686,20.9243197 19.911679,21.003484 L19.7576302,21.0086748 L4.24187791,21.0086748 C3.86056733,21.0086748 3.48551176,20.9117674 3.15192815,20.7270522 C2.11208877,20.1512618 1.7070482,18.8734454 2.20060302,17.8120352 L2.27350053,17.668725 L10.0302967,3.66046274 C10.2348245,3.291099 10.5391525,2.98673515 10.9084921,2.78216375 Z M12.0004478,16.0017852 C11.4489016,16.0017852 11.0017852,16.4489016 11.0017852,17.0004478 C11.0017852,17.5519939 11.4489016,17.9991104 12.0004478,17.9991104 C12.5519939,17.9991104 12.9991104,17.5519939 12.9991104,17.0004478 C12.9991104,16.4489016 12.5519939,16.0017852 12.0004478,16.0017852 Z M11.9982876,7.99806092 C11.4854518,7.99824566 11.0629195,8.38443798 11.0053334,8.88179743 L10.9986476,8.99842097 L11.0004479,13.9993002 L11.0072176,14.1159189 C11.0651617,14.6132367 11.487972,14.9991248 12.0008078,14.9989403 C12.5136436,14.9987555 12.9361759,14.6125632 12.993762,14.1152038 L13.0004478,13.9985802 L12.9986476,8.99770102 L12.9918779,8.88108232 C12.9339337,8.38376446 12.5111234,7.99787644 11.9982876,7.99806092 Z" id="🎨-Color">
-</path>
-        </g>
-    </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="800px"
+   height="800px"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="cue.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs13" />
+  <sodipodi:namedview
+     id="namedview11"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="1.09125"
+     inkscape:cx="400.45819"
+     inkscape:cy="400"
+     inkscape:window-width="1271"
+     inkscape:window-height="1081"
+     inkscape:window-x="760"
+     inkscape:window-y="96"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg9" />
+  <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+  <title
+     id="title2">ic_fluent_warning_24_filled</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <g
+     id="ic_fluent_warning_24_filled"
+     fill="#212121"
+     fill-rule="nonzero"
+     style="stroke:none;stroke-width:1;fill:#000000;fill-opacity:1">
+    <path
+       d="m 10.908492,2.7821638 c 1.039771,-0.5759131 2.337803,-0.2412705 2.975633,0.7402397 l 0.0828,0.137827 7.758956,14.0082625 c 0.184798,0.33364 0.281751,0.708781 0.281751,1.090182 0,1.190864 -0.925161,2.165645 -2.095951,2.244809 l -0.154049,0.0052 H 4.2418779 c -0.3813106,0 -0.7563661,-0.09691 -1.0899498,-0.281623 C 2.1120888,20.151262 1.7070482,18.873445 2.200603,17.812035 L 2.2735005,17.668725 10.030297,3.6604627 C 10.234825,3.291099 10.539153,2.9867352 10.908492,2.7821638 Z m 1.091956,13.2196212 c -0.551546,0 -0.998663,0.447117 -0.998663,0.998663 0,0.551546 0.447117,0.998662 0.998663,0.998662 0.551546,0 0.998662,-0.447116 0.998662,-0.998662 0,-0.551546 -0.447116,-0.998663 -0.998662,-0.998663 z m -0.0022,-8.0037241 C 11.485452,7.9982457 11.06292,8.384438 11.005333,8.8817974 l -0.0067,0.1166236 0.0018,5.000879 0.0068,0.116619 c 0.05794,0.497318 0.480754,0.883206 0.99359,0.883021 0.512836,-1.84e-4 0.935368,-0.386377 0.992954,-0.883736 l 0.0067,-0.116624 -0.0018,-5.000879 -0.0068,-0.1166187 C 12.933934,8.3837645 12.511123,7.9978764 11.998288,7.9980609 Z"
+       id="🎨-Color"
+       style="fill:#000000;fill-opacity:1" />
+  </g>
+  <metadata
+     id="metadata830">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>ic_fluent_warning_24_filled</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
 </svg>
