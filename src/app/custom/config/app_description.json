@@ -179,7 +179,7 @@
         "createdAt":"datetime"
       },
       "style": {
-        "label": "assigned",
+        "label": "assigned_to",
         "font-size": "11px",
         "width": "1px",
         "line-color": "#4C5F7A",
@@ -200,7 +200,7 @@
         "createdAt":"datetime"
       },
       "style": {
-        "label": "resolve",
+        "label": "resolved",
         "width": "1px",
         "font-size": "11px",
         "line-color": "#976e6e",
@@ -212,8 +212,8 @@
       }
     }, 
     "ASSIGNS": {
-      "source": "Developer",
-      "target": "Issue",
+      "source": "Issue",
+      "target": "Developer",
       "isBidirectional": false,
       "properties": {
         "id":"string",
@@ -221,7 +221,7 @@
         "end":"datetime"
       },
       "style": {
-        "label": "assign",
+        "label": "assigned_by",
         "width": "1px",
         "font-size": "11px",
         "line-color": "#976e6e",
@@ -391,7 +391,7 @@
         "end":"datetime"
       },
       "style": {
-        "label": "is a clone of",
+        "label": "clone of",
         "width": "1px",
         "font-size": "11px",
         "line-color": "#4C5F7A",
@@ -475,7 +475,7 @@
         "end":"datetime"
       },
       "style": {
-        "label": "merge",
+        "label": "merged",
         "width": "1px",
         "font-size": "11px",
         "line-color": "#976e6e",
@@ -538,7 +538,7 @@
       "end":"datetime"
     },
     "style": {
-      "label": "close",
+      "label": "closed",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",

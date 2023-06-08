@@ -192,7 +192,7 @@
   {
     "selector": "edge.ASSIGNED",
     "style": {
-      "label": "assigned",
+      "label": "assigned_to",
       "font-size": "11px",
       "width": "1px",
       "line-color": "#4C5F7A",
@@ -206,7 +206,7 @@
   {
     "selector": "edge.RESOLVE",
     "style": {
-      "label": "resolve",
+      "label": "resolved",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",
@@ -220,7 +220,7 @@
   {
     "selector": "edge.ASSIGNS",
     "style": {
-      "label": "assign",
+      "label": "assigned_by",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",
@@ -332,7 +332,7 @@
   {
     "selector": "edge.IS_A_CLONE_OF",
     "style": {
-      "label": "is a clone of",
+      "label": "clone of",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#4C5F7A",
@@ -388,7 +388,7 @@
   {
     "selector": "edge.MERGE",
     "style": {
-      "label": "merge",
+      "label": "merged",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",
@@ -430,7 +430,7 @@
   {
     "selector": "edge.CLOSE",
     "style": {
-      "label": "close",
+      "label": "closed",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",
