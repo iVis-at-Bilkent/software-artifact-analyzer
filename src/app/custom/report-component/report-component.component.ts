@@ -61,16 +61,16 @@ export class ReportComponentComponent implements OnInit {
 
   constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private cd: ChangeDetectorRef, private ngZone: NgZone, private modalService: NgbModal) {
     this.anomalies = [
-      { text: 'Unassigned Bugs', isEnable: false, path2userPref: this.anomaly1.bind(this) },
+      { text: 'Unassigned Bugs', isEnable: true, path2userPref: this.anomaly1.bind(this) },
       { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
-      { text: 'Ignored Bugs', isEnable: false, path2userPref: this.anomaly3.bind(this) },
-      { text: 'Missing Priority', isEnable: false, path2userPref: this.anomaly5.bind(this) },
+      { text: 'Ignored Bugs', isEnable: true, path2userPref: this.anomaly3.bind(this) },
+      { text: 'Missing Priority', isEnable: true, path2userPref: this.anomaly5.bind(this) },
       { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
-      { text: 'No comment bugs', isEnable: false, path2userPref: this.anomaly7.bind(this) },
-      { text: 'Non-Assignee Resolver of Bug', isEnable: false, path2userPref: this.anomaly8.bind(this) },
-      { text: 'Closed-Reopen Ping Pong', isEnable: false, path2userPref: this.anomaly9.bind(this) },
-      { text: 'Not Referenced Duplicates', isEnable: false, path2userPref: this.anomaly10.bind(this) },
-      { text: 'Same Resolver Closer', isEnable: false, path2userPref: this.anomaly11.bind(this) }
+      { text: 'No comment bugs', isEnable: true, path2userPref: this.anomaly7.bind(this) },
+      { text: 'Non-Assignee Resolver of Bug', isEnable: true, path2userPref: this.anomaly8.bind(this) },
+      { text: 'Closed-Reopen Ping Pong', isEnable: true, path2userPref: this.anomaly9.bind(this) },
+      { text: 'Not Referenced Duplicates', isEnable: true, path2userPref: this.anomaly10.bind(this) },
+      { text: 'Same Resolver Closer', isEnable: true, path2userPref: this.anomaly11.bind(this) }
     ];
 
   }
@@ -100,7 +100,7 @@ export class ReportComponentComponent implements OnInit {
         this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
         if (this._g.cy.$(':selected')[0]._private.data.name !== name) {
           this.anomalies
-            .map((anomaly) => anomaly.isEnable = false);
+            .map((anomaly) => anomaly.isEnable = true);
           this.comment = ""
           this.dataURL = ""
           this.pr_name = ""
