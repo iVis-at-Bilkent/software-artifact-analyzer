@@ -50,7 +50,6 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this._g.openReportTab.subscribe((isOpen) => {
-      console.log("2",isOpen)
       this.openReport = isOpen; 
     });
     this.appDescSubs = this._g.appDescription.subscribe(x => {
@@ -85,11 +84,9 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
       const newName = this.selectedItemProps[0].val;
       if (newName !== this.previousName) {
         this.openReportTab = this.openReport;
-        console.log("3",this.openReportTab)
         this.previousName = newName;
         let timeout = setTimeout(()=>{
           this._g.openReportTab.next(false)
-          console.log("1")
         },600)
       }
     }

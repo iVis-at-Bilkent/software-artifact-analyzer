@@ -24,7 +24,6 @@ export class Neo4jDb implements DbService {
     this._g.setLoadingStatus(true);
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 10000;
     let q = `CALL apoc.cypher.runTimeboxed("${query}", {}, ${timeout}) YIELD value RETURN value`;
-    console.log(q)
     if (!isTimeboxed) {
       q = query;
     }
@@ -90,7 +89,6 @@ export class Neo4jDb implements DbService {
     this._g.setLoadingStatus(true);
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 10000;
     let q = query;
-    console.log(q)
     if (!isTimeboxed) {
       q = query;
     }

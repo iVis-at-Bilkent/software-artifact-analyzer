@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
-import * as base64js from 'base64-js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from './../modal-content/modal-content.component';
 import { BehaviorSubject } from 'rxjs';
@@ -18,7 +17,7 @@ interface Attachment {
 export interface BoolSetting {
   isEnable: boolean;
   text: string;
-  path2userPref: () => Promise<any>;
+  name: string;
 }
 @Component({
   selector: 'app-report-component',
@@ -61,16 +60,17 @@ export class ReportComponentComponent implements OnInit {
 
   constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private cd: ChangeDetectorRef, private ngZone: NgZone, private modalService: NgbModal) {
     this.anomalies = [
-      { text: 'Unassigned Bugs', isEnable: true, path2userPref: this.anomaly1.bind(this) },
-      { text: 'No Link to Bug-Fixing Commit', isEnable: false, path2userPref: this.anomaly2.bind(this) },
-      { text: 'Ignored Bugs', isEnable: true, path2userPref: this.anomaly3.bind(this) },
-      { text: 'Missing Priority', isEnable: true, path2userPref: this.anomaly5.bind(this) },
-      { text: 'Missing Environment Information', isEnable: false, path2userPref: this.anomaly6.bind(this) },
-      { text: 'No comment bugs', isEnable: true, path2userPref: this.anomaly7.bind(this) },
-      { text: 'Non-Assignee Resolver of Bug', isEnable: true, path2userPref: this.anomaly8.bind(this) },
-      { text: 'Closed-Reopen Ping Pong', isEnable: true, path2userPref: this.anomaly9.bind(this) },
-      { text: 'Not Referenced Duplicates', isEnable: true, path2userPref: this.anomaly10.bind(this) },
-      { text: 'Same Resolver Closer', isEnable: true, path2userPref: this.anomaly11.bind(this) }
+      { text: 'Unassigned Bugs', isEnable: true, name:"Unassigned issue"},
+      { text: 'No Link to Bug-Fixing Commit', isEnable: false, name:"No link to bug fixing commit or pull request"},
+      { text: 'Ignored Bugs', isEnable: true , name:"Ignored bug"},
+      { text: 'Missing Priority', isEnable: true  , name:"Missing Priority"},
+      { text: 'Missing Environment Information', isEnable: true  , name:"Missing Environment Information"},
+      { text: 'No comment bugs', isEnable: true  , name:"No comment on issue"},
+      { text: 'Non-Assignee Resolver of Bug' , isEnable: true  , name:"No assignee resolver"},
+      { text: 'Closed-Reopen Ping Pong', isEnable: true  , name:"Closed reopen ping pong"} ,
+      { text: 'Reassignment of Bug Assignee', isEnable: true  , name:"Reassignment of Bug Assignee"},
+      { text: 'Not Referenced Duplicates', isEnable: true  , name:"Not Referenced duplicate"},
+      { text: 'Same Resolver Closer', isEnable: true  , name:"Same resolver closer"}
     ];
 
   }
@@ -480,98 +480,15 @@ export class ReportComponentComponent implements OnInit {
   showObjectProps() {
     let selected = this._g.cy.$(':selected');
   }
-  async anomaly11(): Promise<any> {
-    const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
-    const cql = ` MATCH (n:Developer)-[r]->(issue:Issue)
-    WHERE issue.resolver= n.name and issue.closer = n.name and issue.name = '${this.issue_name}'
-    WITH count(n) AS count
-    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, "Same resolver closer");
-  }
-  async anomaly10(): Promise<any> {
-    const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
-    const cql = `MATCH (n:Issue)  WHERE n.duplicate='True' 
-    AND NOT (n)-[:DUPLICATES]-() and  n.name = '${this.issue_name}'
-    WITH count(n) AS count
-    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, "Not Referenced duplicates");
-  }
-  async anomaly9(): Promise<any> {
-    const count = this._g.userPrefs?.anomalyDefaultValues?.reopenCount.getValue() || 1;
-    const cql = ` MATCH (n:Issue) 
-    WHERE n.reopenCount>=${count} and  n.name = '${this.issue_name}'
-    WITH count(n) AS count
-    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, "Closed reopen ping pong");
+
+  async anomalyQ(anomalyName: string): Promise<any> {
+    const cql =` MATCH (issue:Issue {name : '${this.issue_name}'})
+    WHERE EXISTS(issue.anomalyList) AND '${anomalyName}' IN issue.anomalyList
+    RETURN true`
+    return await this.runAnomalyQuery(cql,anomalyName );
   }
 
 
-  async anomaly8(): Promise<any> {
-    const cql = `MATCH (n:Issue)
-    WHERE EXISTS(n.assignee) AND EXISTS(n.resolver) AND  EXISTS(n.assignee) AND  EXISTS(n.resolver) and  n.name = '${this.issue_name}'
-    WITH n, n.assignee AS assignee, n.resolver AS resolver
-    WHERE assignee <> resolver  
-    WITH count(n) AS count,assignee,resolver
-    RETURN CASE WHEN count = 0 THEN false ELSE true END, assignee, resolver`;
-    return await this.runAnomalyQuery(cql, "No assignee resolver:");
-
-  }
-
-
-  async anomaly7(): Promise<any> {
-    const cql = `MATCH (n:Issue{status:'Done'})
-    WHERE size(n.comments) = 0  and  n.name = '${this.issue_name}'
-    WITH count(n) AS count
-    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, "No comment on issue");
-  }
-  async anomaly6(): Promise<any> {
-    const cql = `MATCH (n) 
-    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and  n.name = '${this.issue_name}'
-    WITH count(n) AS count
-    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, 'Missing Environment Information');
-
-  }
-  async anomaly5(): Promise<any> {
-    const cql = ` MATCH (n:Issue) WHERE n.priority  is NULL   and  n.name = '${this.issue_name}'
-    WITH count(n) AS count
-     RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, 'Missing Priority');
-
-  }
-
-
-
-  async anomaly3(): Promise<any> {
-    const time = this._g.userPrefs?.anomalyDefaultValues?.ignoreBug.getValue() || 1;
-    const cql = `MATCH (n:Issue)
-    WHERE exists(n.history) AND size(n.history) >= 2 and n.name = '${this.issue_name}'
-    WITH n, range(0, size(n.history)-2) as index_range
-    UNWIND index_range as i
-    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
-    WHERE duration.between(from, to).months > ${time} 
-    WITH  from, to, count(n) AS count
-    RETURN CASE WHEN count = 0 THEN false ELSE true  END, from, to`;
-    return await this.runAnomalyQuery(cql, `Ignored bug:`);
-  }
-
-  async anomaly2(): Promise<any> {
-    const cql = `MATCH (n:Issue{status:'Done' })
-    WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] and n.name = '${this.issue_name}'
-    WITH count(n) AS count
-    RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, "No link to bug fixing commit or pull request");
-
-  }
-
-  async anomaly1(): Promise<any> {
-    const cql = `MATCH (n:Issue {status: 'Done'})
-      WHERE NOT EXISTS(n.assignee) AND n.name = '${this.issue_name}'
-      WITH count(n) AS count
-      RETURN CASE WHEN count = 0 THEN false ELSE true END`;
-    return await this.runAnomalyQuery(cql, "Unassigned issue");
-  }
   async runAnomalyQuery(cql: string, name: string) {
     return new Promise((resolve, reject) => {
       const cb = (x) => {
@@ -658,7 +575,7 @@ export class ReportComponentComponent implements OnInit {
       this.issue_name = this._g.cy.$(':selected')[0]._private.data.name;
       const queries = this.anomalies
         .filter((anomaly) => anomaly.isEnable)
-        .map((anomaly) => anomaly.path2userPref());
+        .map((anomaly) => this.anomalyQ(anomaly.name));
       const queryResults = await Promise.all(queries);
       commentAnomaly = queryResults.join(" ");
       if (this.number_of_anomalies > 0) {
