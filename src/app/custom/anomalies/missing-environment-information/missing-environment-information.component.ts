@@ -133,7 +133,18 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
       if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+        if(x.edges[i].type ==="REPORTS"){
+          nodeIdDict[x.edges[i].startNode] = true;
+        }
+        
+      }
+      else if (nodeIdDict[x.edges[i].startNode]) {
+        if(x.edges[i].type ==="ASSIGNED"){
+          nodeIdDict[x.edges[i].endNode] = true;
+        }
+      }
+      else{
+
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {

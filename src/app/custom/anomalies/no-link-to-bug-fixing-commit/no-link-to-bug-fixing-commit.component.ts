@@ -121,7 +121,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const cql = `MATCH (n:Issue{status:'Done' })
     WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] and ${dateFilter} 
     OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
-    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
+    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,r,r2 `
     this._dbService.runQuery(cql, cb);
    
   }
@@ -135,10 +135,15 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
       if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+        if(x.edges[i].type ==="RESOLVE"){
+          nodeIdDict[x.edges[i].startNode] = true;
+        }
+        
       }
-      else if  (nodeIdDict[x.edges[i].startNode]) {
-        nodeIdDict[x.edges[i].endNode] = true;
+      else if (nodeIdDict[x.edges[i].startNode]) {
+        if(x.edges[i].type ==="ASSIGNED"){
+          nodeIdDict[x.edges[i].endNode] = true;
+        }
       }
       else{
 
