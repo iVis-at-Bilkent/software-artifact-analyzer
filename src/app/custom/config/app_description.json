@@ -179,7 +179,7 @@
         "createdAt":"datetime"
       },
       "style": {
-        "label": "assigned_to",
+        "label": "assigned to",
         "font-size": "11px",
         "width": "1px",
         "line-color": "#4C5F7A",
@@ -221,7 +221,7 @@
         "end":"datetime"
       },
       "style": {
-        "label": "assigned_by",
+        "label": "assigned by",
         "width": "1px",
         "font-size": "11px",
         "line-color": "#976e6e",
