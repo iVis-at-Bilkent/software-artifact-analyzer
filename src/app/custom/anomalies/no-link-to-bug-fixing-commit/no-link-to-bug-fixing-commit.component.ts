@@ -34,6 +34,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
   constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService) {
   }
 
+
   ngOnInit() {
     setTimeout(() => {
       
@@ -49,8 +50,6 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     this.loadTable(skip);
     this.loadGraph(skip);
   }
-
-
   loadTable(skip: number, filter?: TableFiltering) {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
@@ -119,7 +118,6 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const ui2Db = { 'issue': 'n.name'};
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
-    
     const cql = `MATCH (n:Issue{status:'Done' })
     WHERE NOT (n)-[:REFERENCES]->() and n.commitIds=[] and ${dateFilter} 
     OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
@@ -158,7 +156,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string,TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string,TableDataType.string, TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -176,6 +174,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     
     this.tableFilled.next(true);
   }
+
 
   getDataForQueryResult(e: TableRowMeta) {
     const cb = (x) => {
@@ -252,6 +251,9 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const skip = filter && filter.skip ? filter.skip : 0;
     return filtered.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
   }
+  // tableInput is already filtered. Use that to filter graph elements.
+  // For this query, we should specifically bring the related nodes and their 1-neighborhood
+
 
 
   // tableInput is already filtered. Use that to filter graph elements.

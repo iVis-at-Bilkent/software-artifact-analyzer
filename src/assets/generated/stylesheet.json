@@ -234,7 +234,7 @@
   {
     "selector": "edge.COMMITS",
     "style": {
-      "label": "commits",
+      "label": "committed",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",
@@ -346,7 +346,7 @@
   {
     "selector": "edge.OPENS",
     "style": {
-      "label": "opens",
+      "label": "opened",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",
@@ -360,7 +360,7 @@
   {
     "selector": "edge.REFERENCES",
     "style": {
-      "label": "references",
+      "label": "referenced",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#4C5F7A",
@@ -416,7 +416,7 @@
   {
     "selector": "edge.REPORTS",
     "style": {
-      "label": "reports",
+      "label": "reported",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",
@@ -444,7 +444,7 @@
   {
     "selector": "edge.REVIEWS",
     "style": {
-      "label": "reviews",
+      "label": "reviewed",
       "width": "1px",
       "font-size": "11px",
       "line-color": "#976e6e",
