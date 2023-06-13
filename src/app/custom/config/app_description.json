@@ -169,7 +169,7 @@
         "color":"#4C5F7A"
       }
     },
-    "ASSIGNED": {
+    "ASSIGNED_TO": {
       "source": "Issue",
       "target": "Developer",
       "isBidirectional": false,
@@ -190,7 +190,7 @@
         "color":"#4C5F7A"
       }
     },   
-    "RESOLVE": {
+    "RESOLVED": {
       "source": "Developer",
       "target": "Issue",
       "isBidirectional": false,
@@ -211,7 +211,7 @@
         "color":"#976e6e"
       }
     }, 
-    "ASSIGNS": {
+    "ASSIGNED_BY": {
       "source": "Issue",
       "target": "Developer",
       "isBidirectional": false,
@@ -232,7 +232,7 @@
         "color":"#976e6e"
       }
     }, 
-    "COMMITS": {
+    "COMMITTED": {
       "source": "Developer",
       "target": "Commit",
       "isBidirectional": false,
@@ -402,7 +402,7 @@
         "color":"#4C5F7A"
       }
     },
-    "OPENS": {
+    "OPENED": {
       "source": "Developer",
       "target": "PullRequest",
       "isBidirectional": false,
@@ -423,7 +423,7 @@
         "color":"#976e6e"
       }
     },
-    "REFERENCES": {
+    "REFERENCED": {
       "source": "Issue",
       "target": "Commit",
       "isBidirectional": false,
@@ -465,7 +465,7 @@
         "color":"#4C5F7A"
       }
     },
-    "MERGE": {
+    "MERGED": {
       "source": "Developer",
       "target": "PullRequest",
       "isBidirectional": false,
@@ -507,7 +507,7 @@
         "color":"#6988a5"
       }
     },
-    "REPORTS": {
+    "REPORTED": {
       "source": "Developer",
       "target": "Issue",
       "isBidirectional": false,
@@ -528,7 +528,7 @@
         "color":"#976e6e"
       }
   },
-  "CLOSE": {
+  "CLOSED": {
     "source": "Developer",
     "target": "Issue",
     "isBidirectional": false,
@@ -549,7 +549,7 @@
       "color":"#976e6e"
     }
   },
-    "REVIEWS": {
+    "REVIEWED": {
       "source": "Developer",
       "target": "PullRequest",
       "isBidirectional": false,
@@ -625,15 +625,15 @@
       "begin_datetime": "createdAt",
       "end_datetime": "closeDate"
     },    
-    "ASSIGNED": {
+    "ASSIGNED_TO": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },
-    "RESOLVE": {
+    "RESOLVED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },
-    "ASSIGNS": {
+    "ASSIGNED_BY": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },
@@ -645,7 +645,7 @@
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },
-    "COMMITS": {
+    "COMMITTED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },
@@ -669,11 +669,11 @@
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     }, 
-    "MERGE": {
+    "MERGED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     }, 
-    "OPENS": {
+    "OPENED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },   
@@ -685,19 +685,19 @@
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     }, 
-    "REFERENCES": {
+    "REFERENCED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     }, 
-    "REVIEWS": {
+    "REVIEWED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     }, 
-    "CLOSE": {
+    "CLOSED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     }, 
-    "REPORTS": {
+    "REPORTED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },    

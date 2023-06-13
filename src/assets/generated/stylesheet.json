@@ -190,7 +190,7 @@
     }
   },
   {
-    "selector": "edge.ASSIGNED",
+    "selector": "edge.ASSIGNED_TO",
     "style": {
       "label": "assigned to",
       "font-size": "11px",
@@ -204,7 +204,7 @@
     }
   },
   {
-    "selector": "edge.RESOLVE",
+    "selector": "edge.RESOLVED",
     "style": {
       "label": "resolved",
       "width": "1px",
@@ -218,7 +218,7 @@
     }
   },
   {
-    "selector": "edge.ASSIGNS",
+    "selector": "edge.ASSIGNED_BY",
     "style": {
       "label": "assigned by",
       "width": "1px",
@@ -232,7 +232,7 @@
     }
   },
   {
-    "selector": "edge.COMMITS",
+    "selector": "edge.COMMITTED",
     "style": {
       "label": "committed",
       "width": "1px",
@@ -344,7 +344,7 @@
     }
   },
   {
-    "selector": "edge.OPENS",
+    "selector": "edge.OPENED",
     "style": {
       "label": "opened",
       "width": "1px",
@@ -358,7 +358,7 @@
     }
   },
   {
-    "selector": "edge.REFERENCES",
+    "selector": "edge.REFERENCED",
     "style": {
       "label": "referenced",
       "width": "1px",
@@ -386,7 +386,7 @@
     }
   },
   {
-    "selector": "edge.MERGE",
+    "selector": "edge.MERGED",
     "style": {
       "label": "merged",
       "width": "1px",
@@ -414,7 +414,7 @@
     }
   },
   {
-    "selector": "edge.REPORTS",
+    "selector": "edge.REPORTED",
     "style": {
       "label": "reported",
       "width": "1px",
@@ -428,7 +428,7 @@
     }
   },
   {
-    "selector": "edge.CLOSE",
+    "selector": "edge.CLOSED",
     "style": {
       "label": "closed",
       "width": "1px",
@@ -442,7 +442,7 @@
     }
   },
   {
-    "selector": "edge.REVIEWS",
+    "selector": "edge.REVIEWED",
     "style": {
       "label": "reviewed",
       "width": "1px",

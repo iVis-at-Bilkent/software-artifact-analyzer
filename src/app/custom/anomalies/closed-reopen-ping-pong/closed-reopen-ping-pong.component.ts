@@ -85,8 +85,8 @@ export class ClosedReopenPingPongComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=` MATCH (n:Issue) WHERE n.reopenCount>=${this.count}  and ${dateFilter} 
-    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
-    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2)
+    OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2)
     RETURN  ID(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver,  n.reopenCount as count ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -116,8 +116,8 @@ export class ClosedReopenPingPongComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = ` MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${dateFilter} 
-    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
-    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
+    OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -171,8 +171,8 @@ export class ClosedReopenPingPongComponent implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
     const cql = `  MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${idFilter} 
-    OPTIONAL MATCH (n)-[r:ASSIGNED]-(d) 
-    OPTIONAL MATCH (n)-[r2:RESOLVE]-(d2) return n,d,d2,r,r2`
+    OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
+    OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
   }
 

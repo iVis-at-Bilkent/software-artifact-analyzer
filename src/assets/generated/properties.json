@@ -59,22 +59,22 @@
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "ASSIGNED": {
+    "ASSIGNED_TO": {
       "id": "string",
       "end": "datetime",
       "createdAt": "datetime"
     },
-    "RESOLVE": {
+    "RESOLVED": {
       "id": "string",
       "end": "datetime",
       "createdAt": "datetime"
     },
-    "ASSIGNS": {
+    "ASSIGNED_BY": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "COMMITS": {
+    "COMMITTED": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
@@ -114,12 +114,12 @@
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "OPENS": {
+    "OPENED": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "REFERENCES": {
+    "REFERENCED": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
@@ -129,7 +129,7 @@
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "MERGE": {
+    "MERGED": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
@@ -139,17 +139,17 @@
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "REPORTS": {
+    "REPORTED": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "CLOSE": {
+    "CLOSED": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "REVIEWS": {
+    "REVIEWED": {
       "id": "string",
       "createdAt": "datetime",
       "end": "datetime"

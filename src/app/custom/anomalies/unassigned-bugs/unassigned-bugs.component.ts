@@ -118,7 +118,7 @@ export class UnassignedBugsComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n:Issue{status:'Done'}) WHERE NOT EXISTS(n.assignee)  AND ${dateFilter}
-    OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
+    OPTIONAL MATCH  (n)-[r:RESOLVED]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
    
   }
@@ -174,7 +174,7 @@ export class UnassignedBugsComponent implements OnInit {
     
     const cql = `MATCH(n:Issue{status:'Done'})
     WHERE NOT EXISTS(n.assignee) and ${idFilter} 
-    OPTIONAL MATCH  (n)-[r:RESOLVE]-(d) return n,d,r`
+    OPTIONAL MATCH  (n)-[r:RESOLVED]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
   }
 

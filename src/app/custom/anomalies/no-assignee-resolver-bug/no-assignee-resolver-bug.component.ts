@@ -120,8 +120,8 @@ export class NoAssigneeResolverBugComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue)-[r1:ASSIGNED]-(assignee:Developer),
-     (n:Issue)<-[r2:RESOLVE]-(resolver:Developer)
+    const cql = `MATCH (n:Issue)-[r1:ASSIGNED_TO]-(assignee:Developer),
+     (n:Issue)<-[r2:RESOLVED]-(resolver:Developer)
     WHERE assignee <> resolver and ${dateFilter} 
     RETURN n, assignee, resolver, r2,r1`
     this._dbService.runQuery(cql, cb);
@@ -177,7 +177,7 @@ export class NoAssigneeResolverBugComponent implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
     
-    const cql = `MATCH (resolver:Developer)-[r2:RESOLVE]->(n:Issue)-[r1:ASSIGNED]-(assignee:Developer)
+    const cql = `MATCH (resolver:Developer)-[r2:RESOLVED]->(n:Issue)-[r1:ASSIGNED_TO]-(assignee:Developer)
     WHERE assignee <> resolver  and ${idFilter}
     RETURN n, assignee, resolver, r2,r1  `
     this._dbService.runQuery(cql, cb);

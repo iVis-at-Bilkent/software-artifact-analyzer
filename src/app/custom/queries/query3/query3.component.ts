@@ -218,8 +218,8 @@ export class Query3Component implements OnInit {
     const cql =`
     UNWIND [${this.developersName}] AS dID
     MATCH (pr:PullRequest{name:'${this.pr}'})
-    OPTIONAL Match(pr)-[e1:INCLUDES]->(n1:Commit)-[e2:CONTAINS]->(n2:File)<-[e3:CONTAINS]-(n3:Commit)<-[e4:REFERENCES|INCLUDES]-(n4)-[e5]-(n5:Developer{name:dID}) 
-    OPTIONAL Match (pr)-[e11:INCLUDES]->(n11:Commit)-[e21:CONTAINS]->(n21:File)<-[e31:CONTAINS]-(n31:Commit)<-[e41:COMMITS]-(n41:Developer{name:dID})
+    OPTIONAL Match(pr)-[e1:INCLUDES]->(n1:Commit)-[e2:CONTAINS]->(n2:File)<-[e3:CONTAINS]-(n3:Commit)<-[e4:REFERENCED|INCLUDES]-(n4)-[e5]-(n5:Developer{name:dID}) 
+    OPTIONAL Match (pr)-[e11:INCLUDES]->(n11:Commit)-[e21:CONTAINS]->(n21:File)<-[e31:CONTAINS]-(n31:Commit)<-[e41:COMMITTED]-(n41:Developer{name:dID})
     OPTIONAL Match (pr)-[e6]-(n6:Developer{name:dID})
     return pr,e1,e2,e3,e4,n1,n2,n3,n4,e5,e11,e21,e31,e41,n11,n21,n31,n41, n5,n6,e6`
     this._dbService.runQuery(cql, cb);
@@ -283,9 +283,9 @@ export class Query3Component implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     const cql =` UNWIND [${e.dbIds}]  AS dID
     MATCH (pr:PullRequest{name:'${this.pr}'})
-    OPTIONAL Match(pr)-[e1:INCLUDES]->(n1:Commit)-[e2:CONTAINS]->(n2:File)<-[e3:CONTAINS]-(n3:Commit)<-[e4:REFERENCES|INCLUDES]-(n4)-[e5]-(n5:Developer) 
+    OPTIONAL Match(pr)-[e1:INCLUDES]->(n1:Commit)-[e2:CONTAINS]->(n2:File)<-[e3:CONTAINS]-(n3:Commit)<-[e4:REFERENCED|INCLUDES]-(n4)-[e5]-(n5:Developer) 
     WHERE ID(n5) = dID
-    OPTIONAL Match (pr)-[e11:INCLUDES]->(n11:Commit)-[e21:CONTAINS]->(n21:File)<-[e31:CONTAINS]-(n31:Commit)<-[e41:COMMITS]-(n41:Developer)
+    OPTIONAL Match (pr)-[e11:INCLUDES]->(n11:Commit)-[e21:CONTAINS]->(n21:File)<-[e31:CONTAINS]-(n31:Commit)<-[e41:COMMITTED]-(n41:Developer)
     WHERE ID(n41) = dID
     OPTIONAL Match (pr)-[e6]-(n6:Developer{name:dID})
     WHERE ID(n6) = dID

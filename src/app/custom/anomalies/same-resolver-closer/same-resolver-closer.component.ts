@@ -114,8 +114,8 @@ export class SameResolverCloserComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = ` MATCH (n:Developer)-[r1:RESOLVE ]->(issue:Issue)
-    MATCH (n)-[r2:CLOSE]->(issue)
+    const cql = ` MATCH (n:Developer)-[r1:RESOLVED ]->(issue:Issue)
+    MATCH (n)-[r2:CLOSED]->(issue)
     WHERE issue.resolver= n.name and issue.closer = n.name  AND ${dateFilter}
     RETURN  n, r1,r2, issue SKIP 0 `
     this._dbService.runQuery(cql, cb);
@@ -195,8 +195,8 @@ export class SameResolverCloserComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = ` MATCH (n:Developer)-[r1:RESOLVE ]->(issue:Issue)
-    MATCH (n)-[r2:CLOSE]->(issue)
+    const cql = ` MATCH (n:Developer)-[r1:RESOLVED ]->(issue:Issue)
+    MATCH (n)-[r2:CLOSED]->(issue)
     WHERE issue.resolver= n.name and issue.closer = n.name  AND ${idFilter} and and ${dateFilter} 
     RETURN  n, r1,r2, issue SKIP 0 `
     this._dbService.runQuery(cql, cb);

@@ -92,7 +92,7 @@ export class Query1Component implements OnInit {
     } 
     const r = `[${skip}..${skip + dataCnt}]`;
 
-    const cql = `MATCH (n:Commit) <-[r:COMMITS]-(d:Developer {name: '${this.developer}' })
+    const cql = `MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
     WHERE  ${dateFilter} 
     RETURN collect(ID(n))${r} as id, n.name as commit, size(collect(ID(n))) as totalDataCount`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
@@ -130,7 +130,7 @@ export class Query1Component implements OnInit {
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-    const cql =`MATCH (n:Commit) <-[r:COMMITS]-(d:Developer {name: '${this.developer}' })
+    const cql =`MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
     WHERE  ${dateFilter} 
     RETURN d,n,r
     SKIP ${skip} LIMIT ${dataCnt}`;
@@ -177,7 +177,7 @@ export class Query1Component implements OnInit {
     const dateFilter = this.getDateRangeCQL();
 
 
-    const cql =`MATCH (n:Commit) <-[r:COMMITS]-(d:Developer {name: '${this.developer}' })
+    const cql =`MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
     WHERE  ${idFilter} and ${dateFilter}
     RETURN n,r,d
     SKIP 0 LIMIT ${this.tableInput.pageSize}`;

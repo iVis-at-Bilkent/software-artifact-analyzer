@@ -134,8 +134,8 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     const r: GraphResponse = { nodes: [], edges: x.edges };
    console.log(x)
     const nodeIdDict = {};
-    const start_edges  = ["ASSIGNED","ASSIGNS", "REFERENCES"]
-    const sink_edges  = ["COMMITS","OPENS","MERGE", "REVIEWS", "CLOSE", "RESOLVE","REPORTS"]
+    const start_edges  = ["ASSIGNED_TO","ASSIGNED_BY", "REFERENCED"]
+    const sink_edges  = ["COMMITTED","OPENED","MERGED", "REVIEWED", "CLOSED", "RESOLVED","REPORTED"]
     for (let i = 0; i < this.tableInput.results.length; i++) {
       nodeIdDict[this.tableInput.results[i][0].val] = true;
     }

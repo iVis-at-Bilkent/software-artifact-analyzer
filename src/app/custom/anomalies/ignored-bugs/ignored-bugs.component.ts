@@ -126,7 +126,7 @@ export class IgnoredBugsComponent implements OnInit {
     UNWIND index_range as i
     WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
     WHERE duration.between(from, to).months > ${this.time}  
-    OPTIONAL MATCH (n) -[r:ASSIGNED]-(t) WHERE t.name = n.assignee
+    OPTIONAL MATCH (n) -[r:ASSIGNED_TO]-(t) WHERE t.name = n.assignee
     RETURN  n , t ,r   `
     this._dbService.runQuery(cql, cb);
    
@@ -211,7 +211,7 @@ export class IgnoredBugsComponent implements OnInit {
     UNWIND index_range as i
     WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
     WHERE duration.between(from, to).months > ${this.time} and ${idFilter}
-    OPTIONAL MATCH  (n)-[r:ASSIGNED]-(d) 
+    OPTIONAL MATCH  (n)-[r:ASSIGNED_TO]-(d) 
     RETURN  n,r,d `
     this._dbService.runQuery(cql, cb);
   }

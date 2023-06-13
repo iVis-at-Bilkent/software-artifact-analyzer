@@ -118,7 +118,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     
     const cql = `MATCH (n) 
     WHERE NOT  EXISTS(n.environment) and n.affectedVersion = ''  and ${dateFilter}
-    OPTIONAL MATCH  (n)-[r:REPORTS]-(d)
+    OPTIONAL MATCH  (n)-[r:REPORTED]-(d)
      return n,r,d`
     this._dbService.runQuery(cql, cb);
    
@@ -133,13 +133,13 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
       if (nodeIdDict[x.edges[i].endNode]) {
-        if(x.edges[i].type ==="REPORTS"){
+        if(x.edges[i].type ==="REPORTED"){
           nodeIdDict[x.edges[i].startNode] = true;
         }
         
       }
       else if (nodeIdDict[x.edges[i].startNode]) {
-        if(x.edges[i].type ==="ASSIGNED"){
+        if(x.edges[i].type ==="ASSIGNED_TO"){
           nodeIdDict[x.edges[i].endNode] = true;
         }
       }
@@ -186,7 +186,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     
     const cql = `MATCH (n) 
     WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and ${idFilter}
-    OPTIONAL MATCH  (n)-[r:REPORTS]-(d)
+    OPTIONAL MATCH  (n)-[r:REPORTED]-(d)
      return n,r,d `
     this._dbService.runQuery(cql, cb);
   }

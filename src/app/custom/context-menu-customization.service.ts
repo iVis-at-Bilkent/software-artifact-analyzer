@@ -14,35 +14,35 @@ import { forEach } from "cypress/types/lodash";
 export class ContextMenuCustomizationService {
   private _menu: ContextMenuItem[];
   //Commit
-  private _commit_developer = "COMMITS";
-  private _commit_pr = "REFERENCES";
+  private _commit_developer = "COMMITTED";
+  private _commit_pr = "REFERENCED";
   private _commit_file = "CONTAINS";
-  private _commit_issue = "REFERENCES";
-  private _commit_review_developer = ["INCLUDES", "REVIEWS"]
+  private _commit_issue = "REFERENCED";
+  private _commit_review_developer = ["INCLUDES", "REVIEWED"]
   //File
   private _file_file = "RENAMED_TO";
   private _file_commit = "CONTAINS";
-  private _file_developer = ["CONTAINS", "COMMITS"];
+  private _file_developer = ["CONTAINS", "COMMITTED"];
   private _file_pull_request = ["CONTAINS", "INCLUDES"];
-  private _file_issue = ["CONTAINS", "REFERENCES"]
+  private _file_issue = ["CONTAINS", "REFERENCED"]
   //PullRequest
-  private _pr_issue = "REFERENCES";
-  private _pr_developer = ["OPENS", "MERGE", "REVIEWS"];
+  private _pr_issue = "REFERENCED";
+  private _pr_developer = ["OPENED", "MERGED", "REVIEWED"];
   private _pr_commit = "INCLUDES";
   private _pr_file = ["INCLUDES", "CONTAINS"]
   //Issue
-  private _get_commit_for_issue_relation = "REFERENCES";
-  private _get_developer_for_issue_relation = ["REFERENCES", "COMMITS"]
-  private _get_files_for_issue_relation = ["REFERENCES", "CONTAINS"]
-  private _get_developer_for_issue_relation2 = ["REPORTS", "ASSIGNED", "ASSIGNS", "RESOLVE"];
+  private _get_commit_for_issue_relation = "REFERENCED";
+  private _get_developer_for_issue_relation = ["REFERENCED", "COMMITTED"]
+  private _get_files_for_issue_relation = ["REFERENCED", "CONTAINS"]
+  private _get_developer_for_issue_relation2 = ["REPORTED", "ASSIGNED", "ASSIGNED_BY", "RESOLVED"];
   private _issue_issue = ["FIXES", "DEPENDS_UPON", "DUPLICATES", "BLOCKS", "INCORPORATES", "INCORPORATES", "RELATES_TO", "SUPERSEDES"]
   //Developer
-  private _developer_pull_request = ["OPENS", "MERGE", "REVIEWS"];
-  private _developer_issue = "REPORTS";
-  private _developer_commit_pull_request = ["COMMITS", "INCLUDES"];
-  private _developer_commits = "COMMITS";
-  private _developer_commits_file = ["COMMITS", "CONTAINS"];
-  private _developers_reviewBy_developer = ["REVIEWS", "INCLUDES", "COMMITS"];
+  private _developer_pull_request = ["OPENED", "MERGED", "REVIEWED"];
+  private _developer_issue = "REPORTED";
+  private _developer_commit_pull_request = ["COMMITTED", "INCLUDES"];
+  private _developer_commits = "COMMITTED";
+  private _developer_commits_file = ["COMMITTED", "CONTAINS"];
+  private _developers_reviewBy_developer = ["REVIEWED", "INCLUDES", "COMMITTED"];
 
 
   get menu(): ContextMenuItem[] {
@@ -104,7 +104,7 @@ export class ContextMenuCustomizationService {
               this.getNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "REPORTS", targetType: "Issue" }
+                { edgeType: "REPORTED", targetType: "Issue" }
               );
             },
           },
@@ -116,7 +116,7 @@ export class ContextMenuCustomizationService {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "REPORTS", targetType: "Issue" }
+                { edgeType: "REPORTED", targetType: "Issue" }
               );
             },
           },
@@ -128,7 +128,7 @@ export class ContextMenuCustomizationService {
               this.getNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "ASSIGNS", targetType: "Issue" }
+                { edgeType: "ASSIGNED_BY", targetType: "Issue" }
               );
             },
           },
@@ -140,7 +140,7 @@ export class ContextMenuCustomizationService {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "ASSIGNS", targetType: "Issue" }
+                { edgeType: "ASSIGNED_BY", targetType: "Issue" }
               );
             },
           },
@@ -176,7 +176,7 @@ export class ContextMenuCustomizationService {
               this.getNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "RESOLVE", targetType: "Issue" }
+                { edgeType: "RESOLVED", targetType: "Issue" }
               );
             },
           },
@@ -188,7 +188,7 @@ export class ContextMenuCustomizationService {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "RESOLVE", targetType: "Issue" }
+                { edgeType: "RESOLVED", targetType: "Issue" }
               );
             },
           },
@@ -200,7 +200,7 @@ export class ContextMenuCustomizationService {
               this.getNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "CLOSE", targetType: "Issue" }
+                { edgeType: "CLOSED", targetType: "Issue" }
               );
             },
           },
@@ -212,7 +212,7 @@ export class ContextMenuCustomizationService {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Show Issue: " },
-                { edgeType: "CLOSE", targetType: "Issue" }
+                { edgeType: "CLOSED", targetType: "Issue" }
               );
             },
           },
@@ -233,7 +233,7 @@ export class ContextMenuCustomizationService {
                 this.getNeighbors(
                   x,
                   { isNode: true, customTxt: "Show Pull Requests: " },
-                  { edgeType: "OPENS", targetType: "PullRequest" }
+                  { edgeType: "OPENED", targetType: "PullRequest" }
                 );
               },
             },
@@ -245,7 +245,7 @@ export class ContextMenuCustomizationService {
                 this.deleteNeighbors(
                   x,
                   { isNode: true, customTxt: "Show Pull Requests: " },
-                  { edgeType: "OPENS", targetType: "PullRequest" }
+                  { edgeType: "OPENED", targetType: "PullRequest" }
                 );
               },
             },
@@ -257,7 +257,7 @@ export class ContextMenuCustomizationService {
                 this.getNeighbors(
                   x,
                   { isNode: true, customTxt: "Show Pull Requests: " },
-                  { edgeType: "MERGE", targetType: "PullRequest" }
+                  { edgeType: "MERGED", targetType: "PullRequest" }
                 );
               },
             },
@@ -269,7 +269,7 @@ export class ContextMenuCustomizationService {
                 this.deleteNeighbors(
                   x,
                   { isNode: true, customTxt: "Show Pull Requests: " },
-                  { edgeType: " MERGE", targetType: "PullRequest" }
+                  { edgeType: " MERGED", targetType: "PullRequest" }
                 );
               },
             },
@@ -281,7 +281,7 @@ export class ContextMenuCustomizationService {
                 this.getNeighbors(
                   x,
                   { isNode: true, customTxt: "Show Pull Requests: " },
-                  { edgeType: "REVIEWS", targetType: "PullRequest" }
+                  { edgeType: "REVIEWED", targetType: "PullRequest" }
                 );
               },
             },
@@ -293,7 +293,7 @@ export class ContextMenuCustomizationService {
                 this.deleteNeighbors(
                   x,
                   { isNode: true, customTxt: "Show Pull Requests: " },
-                  { edgeType: "REVIEWS", targetType: "PullRequest" }
+                  { edgeType: "REVIEWED", targetType: "PullRequest" }
                 );
               },
             },
@@ -709,7 +709,7 @@ export class ContextMenuCustomizationService {
                 x,
                 { isNode: true, customTxt: "Show issue related pull request nodes: " },
                 {
-                  edgeType: "REFERENCES",
+                  edgeType: "REFERENCED",
                   targetType: "PullRequest"
                 }
               );
@@ -724,7 +724,7 @@ export class ContextMenuCustomizationService {
                 x,
                 { isNode: true, customTxt: "Show issue related pull request nodes: " },
                 {
-                  edgeType: "REFERENCES",
+                  edgeType: "REFERENCED",
                   targetType: "PullRequest"
                 }
               );
@@ -862,7 +862,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "REPORTS",
+                    edgeType: "REPORTED",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -878,7 +878,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "REPORTS",
+                    edgeType: "REPORTED",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -894,7 +894,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "ASSIGNED",
+                    edgeType: "ASSIGNED_TO",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -910,7 +910,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "ASSIGNED",
+                    edgeType: "ASSIGNED_TO",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -926,7 +926,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "ASSIGNS",
+                    edgeType: "ASSIGNED_BY",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -942,7 +942,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "ASSIGNS",
+                    edgeType: "ASSIGNED_BY",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -958,7 +958,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "RESOLVE",
+                    edgeType: "RESOLVED",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -974,7 +974,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "RESOLVE",
+                    edgeType: "RESOLVED",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -990,7 +990,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "CLOSE",
+                    edgeType: "CLOSED",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -1006,7 +1006,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Developers related to issue: " },
                   {
-                    edgeType: "CLOSE",
+                    edgeType: "CLOSED",
                     isMultiLength: false,
                     targetType: "Developer"
                   }
@@ -1145,7 +1145,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Show Developers: " },
                   {
-                    edgeType: "OPENS",
+                    edgeType: "OPENED",
                     targetType: "Developer"
                   }
                 );
@@ -1160,7 +1160,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Show Developers: " },
                   {
-                    edgeType: "OPENS",
+                    edgeType: "OPENED",
                     targetType: "Developer"
                   }
                 );
@@ -1175,7 +1175,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Show Developers: " },
                   {
-                    edgeType: "MERGE",
+                    edgeType: "MERGED",
                     targetType: "Developer"
                   }
                 );
@@ -1190,7 +1190,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Show Developers: " },
                   {
-                    edgeType: "MERGE",
+                    edgeType: "MERGED",
                     targetType: "Developer"
                   }
                 );
@@ -1205,7 +1205,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Show Developers: " },
                   {
-                    edgeType: "REVIEWS",
+                    edgeType: "REVIEWED",
                     targetType: "Developer"
                   }
                 );
@@ -1220,7 +1220,7 @@ export class ContextMenuCustomizationService {
                   x,
                   { isNode: true, customTxt: "Show Developers: " },
                   {
-                    edgeType: "REVIEWS",
+                    edgeType: "REVIEWED",
                     targetType: "Developer"
                   }
                 );
