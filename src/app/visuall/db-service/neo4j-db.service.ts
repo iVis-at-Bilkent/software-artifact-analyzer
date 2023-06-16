@@ -201,7 +201,7 @@ export class Neo4jDb implements DbService {
     if (f2.length > 0) {
       f += f2;
     }
-    this.runQuery(`MATCH (n1)-[e]->(n2) RETURN n1, rand() as r,e,n2 ORDER BY r limit 20`, callback);
+    this.runQuery(`MATCH (n)-[e]-() ${f} RETURN n,e , rand() as r ORDER BY r limit 20`, callback);
   }
 
   getFilteringResult(rules: ClassBasedRules, filter: TableFiltering, skip: number, limit: number, type: DbResponseType, callback: (x: GraphResponse | TableResponse) => any) {
