@@ -391,7 +391,7 @@
         "end":"datetime"
       },
       "style": {
-        "label": "clone of",
+        "label": "is a clone of",
         "width": "1px",
         "font-size": "11px",
         "line-color": "#4C5F7A",
