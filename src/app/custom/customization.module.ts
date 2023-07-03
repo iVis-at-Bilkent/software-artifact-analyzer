@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
 import { ReportComponentComponent } from './report-component/report-component.component';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 import { BrowserModule } from '@angular/platform-browser';
 import { UnassignedBugsComponent } from './anomalies/unassigned-bugs/unassigned-bugs.component';
 import { NoLinkToBugFixingCommitComponent } from './anomalies/no-link-to-bug-fixing-commit/no-link-to-bug-fixing-commit.component';

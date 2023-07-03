@@ -11,7 +11,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { TimebarComponent } from './timebar/timebar.component';
 import { OperationTabsComponent } from './operation-tabs/operation-tabs.component';
-import { HttpClientModule,HttpClientXsrfModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { CytoscapeComponent } from './cytoscape/cytoscape.component';
 import { SaveAsPngModalComponent } from './popups/save-as-png-modal/save-as-png-modal.component';
 import { QuickHelpModalComponent } from './popups/quick-help-modal/quick-help-modal.component';
@@ -39,8 +39,6 @@ import { PanelContainerComponent } from './panel-container/panel-container.compo
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DialogElementsExample} from './navbar/dialog-elements-example';
-import { CookieService } from 'ngx-cookie-service';
-import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 @NgModule({
   declarations: [
     DialogElementsExample,
@@ -72,14 +70,9 @@ import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
     LoadGraphFromFileModalComponent
   ],
   imports: [
-    OAuthModule.forRoot(),
     MatDialogModule,
     BrowserModule,
     HttpClientModule,
-    HttpClientXsrfModule.withOptions({
-      cookieName: 'XSRF-TOKEN',
-      headerName: 'X-XSRF-TOKEN',
-    }),
     FormsModule,
     NgbModule,
     AutoSizeInputModule,
@@ -91,8 +84,7 @@ import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
   ],
   exports: [RouterModule,
     HttpClientModule],
-  providers: [{ provide: APP_BASE_HREF, useValue: "/" },CookieService,
-  ],
+  providers: [{ provide: APP_BASE_HREF, useValue: "/" }],
   bootstrap: [AppComponent],
   entryComponents: [SaveAsPngModalComponent, QuickHelpModalComponent, AboutModalComponent, ErrorModalComponent]
 })

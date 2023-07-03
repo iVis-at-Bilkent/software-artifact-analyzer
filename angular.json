@@ -79,8 +79,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ng-visuall:build",
-            "proxyConfig": "proxy.conf.json"
+            "browserTarget": "ng-visuall:build"
           },
           "configurations": {
             "production": {
@@ -93,7 +92,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "ng-visuall:build"
-            
           }
         },
         "test": {
