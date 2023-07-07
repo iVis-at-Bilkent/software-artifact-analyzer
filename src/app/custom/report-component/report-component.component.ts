@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { GlobalVariableService } from '../../visuall/global-variable.service';
 import { Observable } from 'rxjs';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
@@ -58,7 +58,7 @@ export class ReportComponentComponent implements OnInit {
   selectedItem = new BehaviorSubject<any>(null);
 
 
-  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private cd: ChangeDetectorRef, private ngZone: NgZone, private modalService: NgbModal) {
+  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient,private modalService: NgbModal) {
     this.anomalies = [
       { text: 'Unassigned Bugs', isEnable: true, name:"Unassigned issue"},
       { text: 'No Link to Bug-Fixing Commit', isEnable: false, name:"No link to bug fixing commit or pull request"},
@@ -76,11 +76,6 @@ export class ReportComponentComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    let reportAnamolyChange = false;
-    this._g.openReportTab.subscribe((isOpen) => {
-      reportAnamolyChange = isOpen;
-    });
     //Get authentication information from saa configuration flask app
     this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
       this.authentication = data;

@@ -23,7 +23,6 @@ export class AppComponent {
         this.paramValue = params.get('name');
         this._g.initialQuery = this.paramValue.toString();
         if(this.paramValue != ""){ 
-          const isClientSidePagination =
           this._g.userPrefs.queryResultPagination.getValue() == "Client";
           const cb = (x) => {
             this._cyService.loadElementsFromDatabaseInitial(x);

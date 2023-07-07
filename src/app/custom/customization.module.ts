@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Neo4jDb } from '../visuall/db-service/neo4j-db.service';
 import { DbService } from '../visuall/db-service/data-types';
 import { Query1Component } from './queries/query1/query1.component';
-import { Query2Component } from './queries/query2/query2.component';
 import { Query3Component } from './queries/query3/query3.component';
 import { Query5Component } from './queries/query5/query5.component';
 import { Query6Component } from './queries/query6/query6.component';
@@ -11,6 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
 import { ReportComponentComponent } from './report-component/report-component.component';
+import { ObjectQueriesComponent } from './object-queries/object-queries.component'
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { UnassignedBugsComponent } from './anomalies/unassigned-bugs/unassigned-bugs.component';
@@ -26,30 +26,34 @@ import { ClosedReopenPingPongComponent } from './anomalies/closed-reopen-ping-po
 import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/same-resolver-closer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from './modal-content/modal-content.component';
+import { Query4Component } from './queries/query4/query4.component';
+import { Query2Component } from './queries/query2/query2.component';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
 @NgModule({
   // custom components should be inside declarations
   declarations: [
-    Query1Component, 
-    Query2Component,
+    Query1Component,
     Query3Component,
     Query6Component,
-     ReportComponentComponent,
-     Query5Component,
-     UnassignedBugsComponent,
-     NoLinkToBugFixingCommitComponent,
-     IgnoredBugsComponent,
-     MissingPriorityComponent,
-     NotReferencedDuplicatesComponent,
-     MissingEnvironmentInformationComponent,
-     ReassignmentBugAssigneeComponent,
-     NoCommentBugsComponent,
-     NoAssigneeResolverBugComponent,
-     ClosedReopenPingPongComponent,
-     SameResolverCloserComponent,
-     ModalContentComponent],
+    ReportComponentComponent,
+    ObjectQueriesComponent,
+    Query5Component,
+    UnassignedBugsComponent,
+    NoLinkToBugFixingCommitComponent,
+    IgnoredBugsComponent,
+    MissingPriorityComponent,
+    NotReferencedDuplicatesComponent,
+    MissingEnvironmentInformationComponent,
+    ReassignmentBugAssigneeComponent,
+    NoCommentBugsComponent,
+    NoAssigneeResolverBugComponent,
+    ClosedReopenPingPongComponent,
+    SameResolverCloserComponent,
+    ModalContentComponent,
+    Query4Component,
+    Query2Component],
   // declarations: [AsdComponent],
   imports: [
     HttpClientModule,
@@ -63,22 +67,26 @@ import { ModalContentComponent } from './modal-content/modal-content.component';
 
 export class CustomizationModule {
   // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }];
- // static operationTabs: { component: any, text: string }[] = [{ component: Query5Component, text: 'Get Anomalies' }];
+  // static operationTabs: { component: any, text: string }[] = [{ component: Query5Component, text: 'Get Anomalies' }];
   static operationTabs: { component: any, text: string }[] = [];
-  static objSubTabs: { component: any, text: string }[] = [
+  static reportTab: { component: any, text: string }[] = [
     { component: ReportComponentComponent, text: 'Report' }
   ];
+  static objSubTabs: { component: any, text: string }[] = [
+    { component: ObjectQueriesComponent, text: 'Queries' }
+  ];
+
   static mapSubTabs: { component: any, text: string }[] = [];
   static databaseSubTabs: { component: any, text: string }[] = [];
   static settingsSubTabs: { component: any, text: string }[] = [];
-  static queries: { component: any, text: string }[] = [ 
+  static queries: { component: any, text: string }[] = [
     { component: Query1Component, text: 'Get Commits of Developer' },
     { component: Query3Component, text: 'Get Recommended Reviewers' },
     { component: Query5Component, text: 'Get Anomalies' },
     { component: Query6Component, text: 'Get Anomaly Statistics' }
 
   ];
-  static anomalies:{ component: any, text: string }[] = [
+  static anomalies: { component: any, text: string }[] = [
     { component: UnassignedBugsComponent, text: 'Unassigned Bugs' },
     { component: NoLinkToBugFixingCommitComponent, text: 'No Link to Bug-Fixing Commit' },
     { component: IgnoredBugsComponent, text: 'Ignored Bugs' },
@@ -90,7 +98,7 @@ export class CustomizationModule {
     { component: NoAssigneeResolverBugComponent, text: 'Non-Assignee Resolver of Bug' },
     { component: ClosedReopenPingPongComponent, text: 'Closed-Reopen Ping Pong' },
     { component: SameResolverCloserComponent, text: 'Same Resolver and Closer' },
-  
+
   ];
   static db: DbService;
   static defaultTimebarMetrics: TimebarMetric[];

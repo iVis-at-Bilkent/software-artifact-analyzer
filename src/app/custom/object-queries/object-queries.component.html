@@ -1,0 +1,17 @@
+<div class="custom-query">
+    <div class="va-text">
+        <div class="d-flex align-items-center justify-content-center">
+            <select class="form-select tight-select filter-form va-small-text query-select" [(ngModel)]="selectedQuery"
+                (change)="changeQuery($event)">
+                <option value="">Choose a query</option>
+                <option *ngFor="let p of queries" [value]="p.text">{{p.text}}</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div *ngFor="let t of queries; let i = index">
+    <div [style.display]="i == selectedIdx ? 'block' : 'none'">
+        <ng-container *ngComponentOutlet="t.component"></ng-container>
+    </div>
+</div>
