@@ -9,8 +9,8 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 
 //This query is for 
 export interface CommitData {
-  id:string;
-  commit:string;
+  id: string;
+  commit: string;
 }
 @Component({
   selector: 'app-query1',
@@ -19,11 +19,10 @@ export interface CommitData {
 })
 
 export class Query1Component implements OnInit {
-
   developer: string;
   developers: string[];
   tableInput: TableViewInput = {
-    columns:['commit'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
+    columns: ['commit'], results: [], results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
   };
   tableFilled = new Subject<boolean>();
@@ -36,12 +35,24 @@ export class Query1Component implements OnInit {
   }
 
   ngOnInit() {
-    this.developer = "Davide Palmisano";
-  
+    if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "Developer") {
+      this.developer = this._g.cy.$(':selected')[0]._private.data.name;
+    }
+    else {
+      this.developer = "Davide Palmisano";
+
+    }
     setTimeout(() => {
       const dateFilter = this.getDateRangeCQL();
       this._dbService.runQuery(`MATCH (n:Developer) RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
-    }, 0);
+    }, 5);
+    let name = ""
+    setInterval(() => {
+      if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "Developer" && this._g.cy.$(':selected')[0]._private.data.name !== name) {
+        name = this._g.cy.$(':selected')[0]._private.data.name
+        this.developer = this._g.cy.$(':selected')[0]._private.data.name;
+      }
+    }, 500)
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
   }
@@ -60,21 +71,21 @@ export class Query1Component implements OnInit {
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
-      
+
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
-        
+
       }
       if (isClientSidePagination) {
         this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
-        
+
       } else {
         this.fillTable(processedTableData, cnt);
-        
+
       }
       if (!filter) {
         this.tableResponse = processedTableData;
-        
+
       }
     };
     if (isClientSidePagination && filter) {
@@ -89,24 +100,24 @@ export class Query1Component implements OnInit {
     let dataCnt = this.tableInput.pageSize;
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
-    } 
+    }
     const r = `[${skip}..${skip + dataCnt}]`;
 
     const cql = `MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
     WHERE  ${dateFilter} 
     RETURN collect(ID(n))${r} as id, n.name as commit, size(collect(ID(n))) as totalDataCount`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
-    
+
   }
 
   loadGraph(skip: number, filter?: TableFiltering) {
-    if (!this.tableInput.isLoadGraph) {    
+    if (!this.tableInput.isLoadGraph) {
       return;
-    } 
+    }
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
-    
+
     const cb = (x) => {
-      
+
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
@@ -130,12 +141,12 @@ export class Query1Component implements OnInit {
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-    const cql =`MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
+    const cql = `MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
     WHERE  ${dateFilter} 
     RETURN d,n,r
     SKIP ${skip} LIMIT ${dataCnt}`;
     this._dbService.runQuery(cql, cb);
-   
+
   }
 
 
@@ -149,14 +160,14 @@ export class Query1Component implements OnInit {
       for (let j = 0; j < uiColumns.length; j++) {
         row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
       }
-      row.push(); 
+      row.push();
       this.tableInput.results.push(row)
 
     }
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
-    
+
     this.tableFilled.next(true);
   }
 
@@ -165,7 +176,7 @@ export class Query1Component implements OnInit {
     this.developers = [];
     for (let i = 0; i < data.data.length; i++) {
       this.developers.push(data.data[i].join(''));
-      
+
     }
   }
   getDataForQueryResult(e: TableRowMeta) {
@@ -177,11 +188,11 @@ export class Query1Component implements OnInit {
     const dateFilter = this.getDateRangeCQL();
 
 
-    const cql =`MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
+    const cql = `MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
     WHERE  ${idFilter} and ${dateFilter}
     RETURN n,r,d
     SKIP 0 LIMIT ${this.tableInput.pageSize}`;
-    this._dbService.runQuery(cql, cb); 
+    this._dbService.runQuery(cql, cb);
   }
 
   filterTable(filter: TableFiltering) {
@@ -248,7 +259,7 @@ export class Query1Component implements OnInit {
 
   private filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
-   
+
     const nodeIdDict = {};
     for (let i = 0; i < this.tableInput.results.length; i++) {
       nodeIdDict[this.tableInput.results[i][0].val] = true;
@@ -274,12 +285,11 @@ export class Query1Component implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    const a = new Date(d1 );
+    const a = new Date(d1);
     const c = new Date(d2);
     const b = a.toISOString()
-    const d =c.toISOString()
+    const d = c.toISOString()
 
     return ` ${d2} >= n.createdAt  AND ${d1}<= n.end`;
   }
 }
- 

@@ -11,7 +11,10 @@ import { Query1Component } from '../queries/query1/query1.component';
 import { Query2Component } from '../queries/query2/query2.component';
 import { Query3Component } from '../queries/query3/query3.component';
 import { Query4Component } from '../queries/query4/query4.component';
-
+import { Query1Component as CommitsComponent } from '../queries/query1/query1.component'; // Replace with the actual path to your components and the desired aliases
+import { Query2Component as StrongCollaboratorsComponent } from '../queries/query2/query2.component';
+import { Query3Component as RecommendedReviewersComponent } from'../queries/query3/query3.component';
+import { Query4Component as ExpertsComponent } from '../queries/query4/query4.component';
 @Component({
   selector: 'app-object-queries',
   templateUrl: './object-queries.component.html',
@@ -60,7 +63,6 @@ export class ObjectQueriesComponent implements OnInit {
         this.selectedItem.next(this._g.cy.$(':selected')[0]._private.data.name)
         this.className = this._g.cy.$(':selected')[0]._private.classes.values().next().value;
         if (this._g.cy.$(':selected')[0]._private.data.name !== name) {
-          this.selectedQuery = '';
           if (this.className === "Issue"){
             this.queries = this.issueQueries
           }
@@ -76,7 +78,7 @@ export class ObjectQueriesComponent implements OnInit {
           else{
             this.queries = this.fileQueries
           }
-  }}})
+  }}}, 500)
   }
 
 }

@@ -26,24 +26,24 @@ export interface DeveloperData {
   styleUrls: ['./query3.component.css']
 })
 export class Query3Component implements OnInit {
-  githubHttpOptions:any;
+  githubHttpOptions: any;
   authentication: any;
   pr: string;
-  prId : number;
+  prId: number;
   prs: string[];
   prIds: number[];
   developers = [];
   scores = [];
   developersName = [];
-  reviewers:string[] = [];
+  reviewers: string[] = [];
 
   commits = [];
   seeds = [];
   number = 3;
-  assigned:boolean= false
+  assigned: boolean = false
   tableFilter: TableFiltering = { orderBy: null, orderDirection: null, txt: '', skip: null };
   tableInput: TableViewInput = {
-    columns: ['name', 'score'], results: [],results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
+    columns: ['name', 'score'], results: [], results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: false, isNodeData: true, isSelect: true
   };
   tableFilled = new Subject<boolean>();
@@ -52,8 +52,8 @@ export class Query3Component implements OnInit {
   clearTableFilter = new Subject<boolean>();
   cluster = true;
   algorithm = null;
-  
-  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService ) {
+
+  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService) {
     this.prs = [];
     this.developers = [];
     this.scores = [];
@@ -62,12 +62,19 @@ export class Query3Component implements OnInit {
   }
 
   ngOnInit() {
-    this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , ID(m) as id order by m.name ', (x) =>{ 
+
+    this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , ID(m) as id order by m.name ', (x) => {
       this.fillGenres(x)
     }, DbResponseType.table);
-
+    let name = ""
+    if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "PullRequest") {
+      this.pr = this._g.cy.$(':selected')[0]._private.data.name;
+    }
+    else {
+      this.pr = this.prs[0]
+    }
     this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
-      this.authentication  = data;
+      this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
           'Authorization': `Bearer ${this.authentication.github_token}`,
@@ -77,9 +84,16 @@ export class Query3Component implements OnInit {
         })
       };
     });
-    
+
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
+
+    setInterval(() => {
+      if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "PullRequest" && this._g.cy.$(':selected')[0]._private.data.name !== name) {
+        name = this._g.cy.$(':selected')[0]._private.data.name
+        this.pr = this._g.cy.$(':selected')[0]._private.data.name;
+      }
+    }, 500)
   }
   assign() {
     this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
@@ -91,9 +105,9 @@ export class Query3Component implements OnInit {
       'Content-Type': 'application/json'
     };
     const body = {
-      reviewers: this.reviewers 
+      reviewers: this.reviewers
     };
-    
+
     this.http.post(url, body, { headers }).subscribe(
       (response) => {
         console.log('Reviewers added successfully:', response);
@@ -122,9 +136,9 @@ export class Query3Component implements OnInit {
     const cb = (x) => {
       x.data.forEach(element => {
         this.developers.push(element[2])
-        this.developersName.push("'"+element[1]+"'")
+        this.developersName.push("'" + element[1] + "'")
         this.scores.push(element[0])
-      }); 
+      });
       const processedTableData = this.preprocessTableData(x);
       if (this.tableInput.isLoadGraph) {
 
@@ -143,8 +157,8 @@ export class Query3Component implements OnInit {
         this.tableResponse = processedTableData;
       }
       if (this.tableInput.isLoadGraph) {
-        
-        this.loadGraph(skip,this.tableFilter)
+
+        this.loadGraph(skip, this.tableFilter)
 
       }
     };
@@ -204,7 +218,7 @@ export class Query3Component implements OnInit {
           this._g.viewUtils.highlight(seedNodes, 0);
         }
 
-        
+
       } else {
         this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
       }
@@ -213,9 +227,9 @@ export class Query3Component implements OnInit {
       }
       this.clusterByDeveloper();
     };
-    
 
-    const cql =`
+
+    const cql = `
     UNWIND [${this.developersName}] AS dID
     MATCH (pr:PullRequest{name:'${this.pr}'})
     OPTIONAL Match(pr)-[e1:INCLUDES]->(n1:Commit)-[e2:CONTAINS]->(n2:File)<-[e3:CONTAINS]-(n3:Commit)<-[e4:REFERENCED|INCLUDES]-(n4)-[e5]-(n5:Developer{name:dID}) 
@@ -227,7 +241,7 @@ export class Query3Component implements OnInit {
 
   fillTable(data: DeveloperData[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string,TableDataType.string];
+    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string, TableDataType.string];
 
     this.tableInput.results = [];
     for (let i = 0; i < data.length; i++) {
@@ -235,14 +249,14 @@ export class Query3Component implements OnInit {
       for (let j = 0; j < uiColumns.length; j++) {
         row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
       }
-      row.push(); 
+      row.push();
       this.tableInput.results.push(row)
 
     }
     if (totalDataCount) {
       this.tableInput.resultCnt = totalDataCount;
     }
-    
+
     this.tableFilled.next(true);
   }
 
@@ -255,7 +269,8 @@ export class Query3Component implements OnInit {
     for (let i = 0; i < data.data.length; i++) {
       this.prIds.push(data.data[i][1]);
     }
-    this.pr = this.prs[0]
+
+
   }
 
   getDataForQueryResult(e: TableRowMeta) {
@@ -274,14 +289,14 @@ export class Query3Component implements OnInit {
         this._g.viewUtils.highlight(seedNodes, 1);
       } else {
         this._g.viewUtils.highlight(seedNodes, 0);
-      }     
+      }
     }
 
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = { 'Title': 'n.primary_title' };
     const orderExpr = getOrderByExpression4Query(null, 'score', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
-    const cql =` UNWIND [${e.dbIds}]  AS dID
+    const cql = ` UNWIND [${e.dbIds}]  AS dID
     MATCH (pr:PullRequest{name:'${this.pr}'})
     OPTIONAL Match(pr)-[e1:INCLUDES]->(n1:Commit)-[e2:CONTAINS]->(n2:File)<-[e3:CONTAINS]-(n3:Commit)<-[e4:REFERENCED|INCLUDES]-(n4)-[e5]-(n5:Developer) 
     WHERE ID(n5) = dID
@@ -378,13 +393,13 @@ export class Query3Component implements OnInit {
 
   //Cluster by developer
   clusterByDeveloper() {
-    if(this.cluster) {
+    if (this.cluster) {
       this._cyService.expandAllCompounds();
       this._cyService.deleteClusteringNodes();
       this._g.performLayout(false);
       this._cyService.changeGroupingOption(GroupingOptionTypes.compound)
       const seedNodes = this.developers.map(x => 'n' + x);
-      this._group.clusterByDeveloper(seedNodes)      
+      this._group.clusterByDeveloper(seedNodes)
     }
     else {
       // expand all collapsed without animation (sync)
@@ -408,19 +423,19 @@ export class Query3Component implements OnInit {
     }
     return s;
   }
-  devSize(){
-    for (let i = 0; i < this.developers.length -1; i++) {
+  devSize() {
+    for (let i = 0; i < this.developers.length - 1; i++) {
       const div = document.createElement('div');
       div.innerHTML = this.getHtml([this.scores[i]]);
       div.style.position = 'absolute';
       div.style.top = '100px';
       div.style.left = '100px';
-     // this._g.cy.nodes('#n' +this.developers[i]).addClass("addBadge")
-     document.getElementById('cy').append(div);
+      // this._g.cy.nodes('#n' +this.developers[i]).addClass("addBadge")
+      document.getElementById('cy').append(div);
     }
 
   }
-  
+
 
   private getDateRangeCQL() {
     const isLimit = this._g.userPrefs.isLimitDbQueries2range.getValue();
