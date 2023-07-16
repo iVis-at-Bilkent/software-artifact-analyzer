@@ -23,7 +23,7 @@ import { Query4Component as ExpertsComponent } from '../queries/query4/query4.co
 export class ObjectQueriesComponent implements OnInit {
   selectedItem = new BehaviorSubject<any>(null);
   selectedIdx: number;
-  selectedQuery: string;
+  selectedQuery: string = ""; 
   className: string = ""
   queries: { component: any, text: string }[] =[];
   issueQueries: { component: any, text: string }[] =[];

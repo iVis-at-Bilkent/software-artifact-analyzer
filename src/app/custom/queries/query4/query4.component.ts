@@ -4,7 +4,6 @@ import * as C from 'src/app/visuall/constants';
 import { Neo4jDb } from '../../../visuall/db-service/neo4j-db.service';
 import { CytoscapeService } from '../../../visuall/cytoscape.service';
 import { GlobalVariableService } from '../../../visuall/global-variable.service';
-import { formatNumber } from '@angular/common';
 import { TableViewInput, TableDataType, TableFiltering, TableRowMeta, TableData } from '../../../shared/table-view/table-view-types';
 import { Subject } from 'rxjs';
 import { buildIdFilter, getOrderByExpression4Query, getQueryCondition4TxtFilter } from '../query-helper';
@@ -12,8 +11,6 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 import { getCyStyleFromColorAndWid, readTxtFile, isJson } from 'src/app/visuall/constants';
 import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/group-customization.service';
-import { debounce2, debounce, COLLAPSED_EDGE_CLASS, mapColor } from 'src/app/visuall/constants';
-import { GraphTheoreticPropertiesTabComponent } from 'src/app/visuall/operation-tabs/map-tab/graph-theoretic-properties-tab/graph-theoretic-properties-tab.component'
 export interface DeveloperData {
   name: string;
   score: number;
