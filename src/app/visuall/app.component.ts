@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Neo4jDb } from './db-service/neo4j-db.service';
 import { CytoscapeService } from './cytoscape.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
+import { UserProfileService } from './user-profile.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,7 +13,7 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 export class AppComponent {
   isLoading = false;
   paramValue: string="";
-  constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private route: ActivatedRoute) {
+  constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private route: ActivatedRoute, private _profile: UserProfileService) {
     this._g.setLoadingStatus = (e) => {
       this.isLoading = e;
       window['IsVisuallLoading'] = e;
@@ -20,10 +21,12 @@ export class AppComponent {
     
     this.route.queryParamMap.subscribe(params => {
       if( params.get('name')){
+        
         this.paramValue = params.get('name');
         this._g.initialQuery = this.paramValue.toString();
         if(this.paramValue != ""){ 
-          this._g.userPrefs.queryResultPagination.getValue() == "Client";
+          this._g.userPrefs.isLimitDbQueries2range.next(false)
+          this._profile.saveUserPrefs();
           const cb = (x) => {
             this._cyService.loadElementsFromDatabaseInitial(x);
         };  
