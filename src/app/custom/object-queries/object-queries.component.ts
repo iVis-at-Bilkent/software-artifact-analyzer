@@ -44,7 +44,7 @@ export class ObjectQueriesComponent implements OnInit {
       { component: Query4Component, text: 'Get Experts' },
     ];    
     this.issueQueries = [
-      { component: Query2Component, text: 'Get Strong Collaborators' },
+      { component: Query2Component, text: 'Get Comment Contributors' },
     ];  
     this.commitQueries = [
     ];  
