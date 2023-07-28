@@ -20,6 +20,10 @@
       <label class=" va-text">Cluster By Developer</label>
       <input type="checkbox" class="form-check-input" [(ngModel)]="cluster" (change)="clusterByDeveloper()" />   
     </div>
+    <div class="form-check form-check-inline m-1">
+      <label class=" va-text">Adjust Developer Size</label>
+      <input type="checkbox" class="form-check-input" [(ngModel)]="size" (change)="devSize()" />   
+    </div>
   </div>
   <div class="d-flex align-items-center justify-content-center m-1">
     <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="prepareQuery()" value="Execute">
@@ -27,7 +31,7 @@
       <input type="checkbox" class="form-check-input" [(ngModel)]="tableInput.isLoadGraph" />
       <label class="form-label va-text">Graph</label>
     </div>
-    <div class="form-check form-check-inline m-1" *ngIf="assigned">
+    <div class="form-check form-check-inline m-1">
       <input type="checkbox" class="form-check-input" [(ngModel)]="tableInput.isMergeGraph" />
       <label class="form-label va-text">Merge</label>
     </div>

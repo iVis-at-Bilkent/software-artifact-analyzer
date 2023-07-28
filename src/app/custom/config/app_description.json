@@ -210,6 +210,25 @@
         "text-rotation": "autorotate",
         "color":"#976e6e"
       }
+    },"COMMENTED": {
+      "source": "Developer",
+      "target": "Issue",
+      "isBidirectional": false,
+      "properties": {
+        "id":"string",
+        "commentCount":"string"
+      },
+      "style": {
+        "label": "commented",
+        "width": "1px",
+        "font-size": "11px",
+        "line-color": "#976e6e",
+        "line-style": "solid",
+        "target-arrow-shape": "triangle",
+        "target-arrow-color": "#976e6e",
+        "text-rotation": "autorotate",
+        "color":"#976e6e"
+      }
     }, 
     "ASSIGNED_BY": {
       "source": "Issue",

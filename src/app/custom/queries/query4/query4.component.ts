@@ -48,6 +48,11 @@ export class Query4Component implements OnInit {
   graphResponse = null;
   clearTableFilter = new Subject<boolean>();
   cluster = true;
+  size = false;
+  readonly ZOOM_THRESHOLD = 0.8;
+  readonly NODE_SIZE = 40;
+  maxPropValue = 1;
+  currNodeSize = this.NODE_SIZE;
   algorithm = null;
 
   constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService) {
@@ -365,6 +370,69 @@ export class Query4Component implements OnInit {
       this._g.layout.clusters = clusters;
       // delete the compound nodes
       this._cyService.removeGroup4Selected(this._g.cy.nodes('.' + C.CLUSTER_CLASS), true, true);
+    }
+
+  }
+  devSize() {
+    if (this.size) {
+      for (let i = 0; i < this.developers.length - 1; i++) {
+        let element = this._g.cy.nodes('#n' + this.developers[i])[0]
+        if (element._private.classes.values().next().value == 'Developer') {
+          let selector = "knowAbout" + this.developers[i]
+          element.addClass(selector);
+          console.log(element)
+          const div1 = document.createElement("div");
+          let number = this.scores[i];
+          if (number > 0) {
+            div1.innerHTML = `<span class="badge rounded-pill bg-primary">${number}</span>`;
+            element.addCue({
+              htmlElem: div1,
+              id: element._private.data.name,
+              show: "always",
+              position: "top-right",
+              marginX: "%0",
+              marginY: "%8",
+              cursor: "pointer",
+              zIndex: 1000,
+
+            });
+            let avgSize = this.currNodeSize ;
+            let maxVal = Math.max(...this.scores);
+            console.log(avgSize,maxVal )
+            this._g.cy.style().selector(`node.${selector}`)
+              .style(
+                {
+                  'width': (e) => {
+                    let b = avgSize + 20;
+                    let a = Math.max(5, avgSize - 20);
+                    let x = this.scores[i] ;
+                    return ((b - a) * x / maxVal + a) + 'px';
+                  },
+                  'height': (e) => {
+                    let b = avgSize + 20;
+                    let a = Math.max(5, avgSize - 20);
+                    let x = this.scores[i];
+                    return (((b - a) * x / maxVal + a) * e.height() / e.width()) + 'px';
+                  }
+                })
+              .update();
+          }
+        }
+      }
+
+
+    }
+    else {
+      for (let i = 0; i < this.developers.length - 1; i++) {
+        let element = this._g.cy.nodes('#n' + this.developers[i])[0];
+        if (element._private.classes.values().next().value == 'Developer') {
+        let selector = "knowAbout" + this.developers[i]
+        element.removeCue()
+        element.removeClass(selector)
+        }
+
+      }
+
     }
 
   }

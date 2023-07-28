@@ -46,17 +46,20 @@ export class GroupCustomizationService {
       // add parent nodes
       for (let id of developerIds) {
         let name = this._g.cy.$('#' + id).data().id;
-        // for each director, generate a compound node
+        // for each developer, generate a compound node
         this._cyService.addParentNode(name);
-        // add the director to the compound node
+        // add the developer to the compound node
         this._g.cy.$('#' + id).move({ parent: 'c' + id });
       }
 
       // assign nodes to parents
       for (let [k, v] of Object.entries(commit2developer)) {
-        // if a movie has less than 2 directors add, those movies to the cluster of director
-          // add movies to the compound node
-          this._g.cy.$('#' + k).move({ parent: 'c' + v[0] });
+        // if a artifact has less than 2 developer add, those artifacts to the cluster of developer
+          // add developer to the compound node
+          if (v['length'] < 2) {
+            this._g.cy.$('#' + k).move({ parent: 'c' + v[0] });
+          }
+          
       }
     } else {
       const clusters = {};
@@ -64,8 +67,10 @@ export class GroupCustomizationService {
         clusters[id] = [id];
       }
       for (let [k, v] of Object.entries(developerIds)) {
-        // if a movie has less than 2 directors add, those movies to the cluster of director
+        // if a artifact has less than 2 developer add, those artifacts to the cluster of developer
+        if (v['length'] < 2) {
           clusters[v[0]].push(k);
+        }
       }
       this._g.layout.clusters = Object.values(clusters);
     }

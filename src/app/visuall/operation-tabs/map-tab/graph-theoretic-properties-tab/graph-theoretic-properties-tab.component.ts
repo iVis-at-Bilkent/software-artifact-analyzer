@@ -278,6 +278,16 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       
     }
   }
+  knowAboutScore (elems, scores: number []){
+
+    for (let i = 0; i < elems.length; i++) {
+      let badges = [0];
+      badges = [scores[i]];
+      this.generateBadge4Elem(elems[i], badges);
+
+      
+    }
+  }
 
   generateBadge4Elem(e, badges: number[]) {
     const div = document.createElement('div');
@@ -286,7 +296,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     div.style.top = '0px';
     div.style.left = '0px';
     document.getElementById('cy').appendChild(div);
-
+    console.log(this.isMapNodeSizes , this.isMapBadgeSizes)
     if (this.isMapNodeSizes || this.isMapBadgeSizes) {
       let sum = 0;
       for (let i = 0; i < badges.length; i++) {
@@ -323,8 +333,12 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       if (this.isMapBadgeSizes) {
         let b = this.currNodeSize + 20;
         let a = Math.max(5, this.currNodeSize - 20);
+        
         let x = e.data('__graphTheoreticProp');
+        console.log(x)
+        console.log(this.currNodeSize)
         ratio = ((b - a) * x / this.maxPropValue + a) / this.currNodeSize;
+        console.log(this.maxPropValue)
       } else {
         ratio = this.currNodeSize / this.NODE_SIZE;
       }

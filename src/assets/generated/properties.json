@@ -69,6 +69,10 @@
       "end": "datetime",
       "createdAt": "datetime"
     },
+    "COMMENTED": {
+      "id": "string",
+      "commentCount": "string"
+    },
     "ASSIGNED_BY": {
       "id": "string",
       "createdAt": "datetime",

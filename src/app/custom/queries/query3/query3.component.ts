@@ -13,7 +13,7 @@ import { getCyStyleFromColorAndWid, readTxtFile, isJson } from 'src/app/visuall/
 import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/group-customization.service';
 import { debounce2, debounce, COLLAPSED_EDGE_CLASS, mapColor } from 'src/app/visuall/constants';
-import { GraphTheoreticPropertiesTabComponent } from 'src/app/visuall/operation-tabs/map-tab/graph-theoretic-properties-tab/graph-theoretic-properties-tab.component'
+import { TheoreticPropertiesCustomService } from 'src/app/custom/theoretic-properties-custom.service'
 export interface DeveloperData {
   name: string;
   score: number;
@@ -36,7 +36,6 @@ export class Query3Component implements OnInit {
   scores = [];
   developersName = [];
   reviewers: string[] = [];
-
   commits = [];
   seeds = [];
   number = 3;
@@ -51,9 +50,14 @@ export class Query3Component implements OnInit {
   graphResponse = null;
   clearTableFilter = new Subject<boolean>();
   cluster = true;
+  size = false;
+  readonly ZOOM_THRESHOLD = 0.8;
+  readonly NODE_SIZE = 40;
+  maxPropValue = 1;
+  currNodeSize = this.NODE_SIZE;
   algorithm = null;
 
-  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService) {
+  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService) {
     this.prs = [];
     this.developers = [];
     this.scores = [];
@@ -135,6 +139,7 @@ export class Query3Component implements OnInit {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       x.data.forEach(element => {
+        console.log(x)
         this.developers.push(element[2])
         this.developersName.push("'" + element[1] + "'")
         this.scores.push(element[0])
@@ -190,10 +195,10 @@ export class Query3Component implements OnInit {
     const cql = ` MATCH (pr:PullRequest{name:'${this.pr}'})-[*]->(file:File)
     MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${this.pr}'})
     with collect(file.name) as filenames, collect(dp.name) as dnames
-    MATCH (a:Developer)-[r*0..3]-(b:File)
-    WHERE b.name IN filenames and  NOT(a.name IN dnames) and ${dateFilter}
-    WITH DISTINCT ID(a) As id,  a.name AS name, round(toFloat(SUM(1.0/size(r)) ) * 100)/100 AS score , filenames as f, dnames as d
-    RETURN  id, name, score  ORDER BY ${orderExpr} LIMIT ${this.number}`;
+    MATCH path=(a:Developer)-[r*0..3]-(b:File)
+    WHERE b.name IN filenames and  NOT(a.name IN dnames) 
+    WITH DISTINCT a AS developer, round(toFloat(SUM(1.0 / size(r))) * 100) / 100 AS score
+    RETURN ID(developer) AS id, developer.name AS name, score ORDER BY ${orderExpr} LIMIT ${this.number}`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
 
   }
@@ -226,16 +231,19 @@ export class Query3Component implements OnInit {
         this.graphResponse = x;
       }
       this.clusterByDeveloper();
+      this.devSize();
     };
 
-
+    const dateFilter = this.getDateRangeCQL();
     const cql = `
     UNWIND [${this.developersName}] AS dID
     MATCH (pr:PullRequest{name:'${this.pr}'})
     OPTIONAL Match(pr)-[e1:INCLUDES]->(n1:Commit)-[e2:CONTAINS]->(n2:File)<-[e3:CONTAINS]-(n3:Commit)<-[e4:REFERENCED|INCLUDES]-(n4)-[e5]-(n5:Developer{name:dID}) 
     OPTIONAL Match (pr)-[e11:INCLUDES]->(n11:Commit)-[e21:CONTAINS]->(n21:File)<-[e31:CONTAINS]-(n31:Commit)<-[e41:COMMITTED]-(n41:Developer{name:dID})
     OPTIONAL Match (pr)-[e6]-(n6:Developer{name:dID})
-    return pr,e1,e2,e3,e4,n1,n2,n3,n4,e5,e11,e21,e31,e41,n11,n21,n31,n41, n5,n6,e6`
+    with [n1,n2,n3,n4,n11,n21,n31,n41, n5,n6] as nodes, pr, [e1,e2,e3,e4,e5,e11,e21,e31,e41] as edges
+    WHERE  ${dateFilter}
+    return pr,nodes, edges`
     this._dbService.runQuery(cql, cb);
   }
 
@@ -304,7 +312,9 @@ export class Query3Component implements OnInit {
     WHERE ID(n41) = dID
     OPTIONAL Match (pr)-[e6]-(n6:Developer{name:dID})
     WHERE ID(n6) = dID
-    return pr,e1,e2,e3,e4,n1,n2,n3,n4,e5,e11,e21,e31,e41,n11,n21,n31,n41, n5,n6,e6`
+    with [n1,n2,n3,n4,n11,n21,n31,n41, n5,n6] as nodes, pr, [e1,e2,e3,e4,e5,e11,e21,e31,e41] as edges
+    WHERE  ${dateFilter}
+    return pr,nodes, edges`
     this._dbService.runQuery(cql, cb);
   }
 
@@ -423,15 +433,67 @@ export class Query3Component implements OnInit {
     }
     return s;
   }
+
   devSize() {
-    for (let i = 0; i < this.developers.length - 1; i++) {
-      const div = document.createElement('div');
-      div.innerHTML = this.getHtml([this.scores[i]]);
-      div.style.position = 'absolute';
-      div.style.top = '100px';
-      div.style.left = '100px';
-      // this._g.cy.nodes('#n' +this.developers[i]).addClass("addBadge")
-      document.getElementById('cy').append(div);
+    if (this.size) {
+      for (let i = 0; i < this.developers.length - 1; i++) {
+        let element = this._g.cy.nodes('#n' + this.developers[i])[0]
+        if (element._private.classes.values().next().value == 'Developer') {
+          let selector = "knowAbout" + this.developers[i]
+          element.addClass(selector);
+          console.log(element)
+          const div1 = document.createElement("div");
+          let number = this.scores[i];
+          if (number > 0) {
+            div1.innerHTML = `<span class="badge rounded-pill bg-primary">${number}</span>`;
+            element.addCue({
+              htmlElem: div1,
+              id: element._private.data.name,
+              show: "always",
+              position: "top-right",
+              marginX: "%0",
+              marginY: "%8",
+              cursor: "pointer",
+              zIndex: 1000,
+
+            });
+            let avgSize = this.currNodeSize ;
+            let maxVal = Math.max(...this.scores);
+            console.log(avgSize,maxVal )
+            this._g.cy.style().selector(`node.${selector}`)
+              .style(
+                {
+                  'width': (e) => {
+                    let b = avgSize + 20;
+                    let a = Math.max(5, avgSize - 20);
+                    let x = this.scores[i] ;
+                    return ((b - a) * x / maxVal + a) + 'px';
+                  },
+                  'height': (e) => {
+                    let b = avgSize + 20;
+                    let a = Math.max(5, avgSize - 20);
+                    let x = this.scores[i];
+                    return (((b - a) * x / maxVal + a) * e.height() / e.width()) + 'px';
+                  }
+                })
+              .update();
+          }
+        }
+      }
+
+
+    }
+    else {
+      for (let i = 0; i < this.developers.length - 1; i++) {
+        let element = this._g.cy.nodes('#n' + this.developers[i])[0];
+        if (element._private.classes.values().next().value == 'Developer') {
+        let selector = "knowAbout" + this.developers[i]
+        element.removeCue()
+        element.removeClass(selector)
+        }
+
+      }
+
     }
 
   }
@@ -444,7 +506,18 @@ export class Query3Component implements OnInit {
     }
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `a.start > ${d1} AND b.createdAt > ${d1} AND a.end < ${d2} AND b.end < ${d2}`;
+    const a = new Date(d1);
+    const c = new Date(d2);
+    const b = a.toISOString()
+    const d = c.toISOString()
+
+    return `ALL(node IN nodes WHERE
+      ((node:Issue) AND ${d2}  >= node.createdAt AND ${d1} <= node.closeDate) OR
+      ((node:Commit)  AND ${d2}>= node.createdAt  AND ${d1} <= node.end) OR
+      ((node:PullRequest)  AND ${d2} >=  node.createdAt  AND ${d1} <= node.closeDate) OR
+      ((node:File) AND ${d2} >= node.createdAt ) OR
+      ((node:Developer) AND ${d2}>=  node.start )
+    )`;
   }
 
 }
