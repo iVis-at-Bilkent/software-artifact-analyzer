@@ -11,10 +11,8 @@ import { Query1Component } from '../queries/query1/query1.component';
 import { Query2Component } from '../queries/query2/query2.component';
 import { Query3Component } from '../queries/query3/query3.component';
 import { Query4Component } from '../queries/query4/query4.component';
-import { Query1Component as CommitsComponent } from '../queries/query1/query1.component'; // Replace with the actual path to your components and the desired aliases
-import { Query2Component as StrongCollaboratorsComponent } from '../queries/query2/query2.component';
-import { Query3Component as RecommendedReviewersComponent } from'../queries/query3/query3.component';
-import { Query4Component as ExpertsComponent } from '../queries/query4/query4.component';
+import { Query7Component } from '../queries/query7/query7.component';
+import { Query8Component } from '../queries/query8/query8.component';
 @Component({
   selector: 'app-object-queries',
   templateUrl: './object-queries.component.html',
@@ -36,6 +34,8 @@ export class ObjectQueriesComponent implements OnInit {
   constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient,private modalService: NgbModal) {
     this.developerQueries = [
       { component: Query1Component, text: 'Get Commits' },
+      { component: Query7Component, text: 'Get Collaborators' },
+      { component: Query8Component, text: 'Get Comment Only Collaborators' },
     ];
     this.prQueries = [
       { component: Query3Component, text: 'Get Recommended Reviewers' },

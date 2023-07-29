@@ -28,6 +28,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from './modal-content/modal-content.component';
 import { Query4Component } from './queries/query4/query4.component';
 import { Query2Component } from './queries/query2/query2.component';
+import { Query7Component } from './queries/query7/query7.component';
+import { Query8Component } from './queries/query8/query8.component';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
@@ -53,7 +55,9 @@ import { Query2Component } from './queries/query2/query2.component';
     SameResolverCloserComponent,
     ModalContentComponent,
     Query4Component,
-    Query2Component],
+    Query2Component,
+    Query7Component,
+    Query8Component],
   // declarations: [AsdComponent],
   imports: [
     HttpClientModule,
