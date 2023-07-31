@@ -6,8 +6,8 @@ import { TableViewInput, TableDataType, TableFiltering, TableRowMeta, TableData 
 import { Subject } from 'rxjs';
 import { buildIdFilter, getOrderByExpression4Query, getQueryCondition4TxtFilter } from '../../queries/query-helper';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
-import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
-
+import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from 'src/app/visuall/constants';
+import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
 export interface Collaborator {
   Name: string;
   Collaboration: number;
@@ -20,7 +20,10 @@ export interface Collaborator {
 export class Query7Component implements OnInit {
   
   developer: String = "";
-  tableInput: TableViewInput = {
+  developers: number [] = [];
+  developersName : String [] = [];
+  scores: number [] = [];
+   tableInput: TableViewInput = {
     columns: ['name','collaboration'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
   };
@@ -34,9 +37,13 @@ export class Query7Component implements OnInit {
 
   ngOnInit() {
     this.developer = this._g.cy.$(':selected')[0]._private.data.name;
-    setTimeout(() => {
-      
-    }, 0);
+    let name = "";
+    setInterval(() => {
+      if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "Developer" && this._g.cy.$(':selected')[0]._private.data.name !== name) {
+        name = this._g.cy.$(':selected')[0]._private.data.name
+        this.developer = this._g.cy.$(':selected')[0]._private.data.name;
+      }
+    }, 500)
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
   }
@@ -50,8 +57,16 @@ export class Query7Component implements OnInit {
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
+    this.developers = [];
+    this.developersName = [];
+    this.scores = [];
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
+      x.data.forEach(element => {
+        this.developers.push(element[2])
+        this.developersName.push("'" + element[1] + "'")
+        this.scores.push(element[0])
+      });
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
@@ -80,17 +95,29 @@ export class Query7Component implements OnInit {
     const txtCondition = getQueryCondition4TxtFilter(filter, ['Developer'], isIgnoreCase);
     const ui2Db = {'name': 'n.name' };
     const orderExpr = getOrderByExpression4Query(filter, 'collaboration', 'desc', ui2Db);
-    const dateFilter = this.getDateRangeCQL();
     let dataCnt = this.tableInput.pageSize;
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-
+    const f1 = this.dateFilterFromUserPref('n', true);
+    const f2 = this.dateFilterFromUserPref('issue', true);
+    const f3 = this.dateFilterFromUserPref('d1', true);
+    let f = '';
+    if (f1.length > 0) {
+      f += ' WHERE ' + f1.substr(5);
+    }
+    if (f2.length > 0) {
+      f += f2;
+    }
+    if (f3.length > 0) {
+      f += f3;
+    }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (d1:Developer {name: '${this.developer}'}) 
     MATCH (n:Developer)
-    WHERE d1 <> n and ${dateFilter} 
-    MATCH (d1)-[]->(issue:Issue)<-[]-(n) WITH n, COUNT(DISTINCT issue) AS collaboration   
+    WHERE d1 <> n
+    MATCH p = (d1)-[]->(issue:Issue)<-[]-(n)  ${f} 
+    WITH n, COUNT(DISTINCT issue) AS collaboration   
     RETURN ID(n) as id, n.name AS name, collaboration ORDER BY ${orderExpr} LIMIT ${this.number} 
    `
     this._dbService.runQuery(cql, cb, DbResponseType.table);
@@ -111,6 +138,13 @@ export class Query7Component implements OnInit {
       if (!filter || this.graphResponse == null) {
         this.graphResponse = x;
       }
+      const seedNodes = this._g.cy.nodes(this.developers.map(x => '#n' + x).join());
+      const currHighlightIdx = this._g.userPrefs.currHighlightIdx.getValue();
+      if (currHighlightIdx == 0) {
+        this._g.viewUtils.highlight(seedNodes, 1);
+      } else {
+        this._g.viewUtils.highlight(seedNodes, 0);
+      }
     };
     if (isClientSidePagination && filter && this.graphResponse) {
       this._cyService.loadElementsFromDatabase(this.filterGraphResponse(this.graphResponse), this.tableInput.isMergeGraph);
@@ -120,17 +154,28 @@ export class Query7Component implements OnInit {
     const txtCondition = getQueryCondition4TxtFilter(filter, ['Developer'], isIgnoreCase);
     const ui2Db = {'name': 'n.name' };
     const orderExpr = getOrderByExpression4Query(filter, 'score', 'desc', ui2Db);
-    const dateFilter = this.getDateRangeCQL();
-    
+    const f1 = this.dateFilterFromUserPref('n', true);
+    const f2 = this.dateFilterFromUserPref('issue', true);
+    const f3 = this.dateFilterFromUserPref('d1', true);
+    let f = '';
+    if (f1.length > 0) {
+      f += ' WHERE ' + f1.substr(5);
+    }
+    if (f2.length > 0) {
+      f += f2;
+    }
+    if (f3.length > 0) {
+      f += f3;
+    }   
 
    const cql = `MATCH (d1:Developer {name: '${this.developer}'}) 
    MATCH (n:Developer)
-   WHERE d1 <> n   and ${dateFilter} 
-   MATCH p = (d1)-[]->(issue:Issue)<-[]-(n)
-   WITH n, COUNT(DISTINCT issue) AS score, collect(p) AS paths
+   WHERE d1 <> n  
+   MATCH p = (d1)-[]->(issue:Issue)<-[]-(n) ${f} 
+   WITH n, COUNT(DISTINCT issue) AS score, collect(p) AS paths, d1
    ORDER BY ${orderExpr}
    LIMIT ${this.number} 
-   RETURN paths;
+   RETURN d1, paths;
   `
     this._dbService.runQuery(cql, cb);
    
@@ -188,12 +233,13 @@ export class Query7Component implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
 
-    const cql =     `MATCH (d1:Developer {name: '${this.developer}'}) 
+    const cql =    
+     `MATCH (d1:Developer {name: '${this.developer}'}) 
     MATCH (n:Developer)
     WHERE d1 <> n  and ${idFilter} 
     MATCH p = (d1)-[]->(issue:Issue)<-[]-(n)
-    WITH n, COUNT(DISTINCT issue) AS score, collect(p) AS paths
-    RETURN paths;
+    WITH n, COUNT(DISTINCT issue) AS score, collect(p) AS paths, d1
+    RETURN d1, paths;
    `
     this._dbService.runQuery(cql, cb);
   }
@@ -261,19 +307,47 @@ export class Query7Component implements OnInit {
   // tableInput is already filtered. Use that to filter graph elements.
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
 
-
-  private getDateRangeCQL() {
-    const isLimit = this._g.userPrefs.isLimitDbQueries2range.getValue();
-    if (!isLimit) {
-      return 'TRUE';
+  private dateFilterFromUserPref(varName: string, isNode: boolean): string {
+    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
+      return '';
     }
-    const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
-    const n = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    const a = new Date(d1 );
-    const c = new Date(n);
-    const b = a.toISOString()
-    const d =c.toISOString()
+    let s = '';
+    let keys = [];
 
-    return ` ${n} >= n.createdAt  AND ${d1}<= n.closeDate`;
+    if (isNode) {
+      keys = Object.keys(this._g.appDescription.getValue().objects);
+    } else {
+      keys = Object.keys(this._g.appDescription.getValue().relations);
+    }
+
+    const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
+    const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
+    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
+    const mapping = this._g.appDescription.getValue().timebarDataMapping;
+
+    if (!mapping || Object.keys(mapping).length < 1) {
+      return '';
+    }
+
+    s = ' AND (';
+    for (const k of keys) {
+      if (!mapping[k]) {
+        continue;
+      }
+      const p1 = `COALESCE(${varName}.${mapping[k].begin_datetime}, ${LONG_MIN})`;
+      const p2 = `COALESCE(${varName}.${mapping[k].end_datetime}, ${LONG_MAX})`;
+      const bothNull = `(${varName}.${mapping[k].end_datetime} IS NULL AND ${varName}.${mapping[k].begin_datetime} IS NULL)`
+      if (inclusionType == TimebarGraphInclusionTypes.overlaps) {
+        s += `(${bothNull} OR (${p1} <= ${d2} AND ${p2} >= ${d1})) AND`;
+      } else if (inclusionType == TimebarGraphInclusionTypes.contains) {
+        s += `(${bothNull} OR (${d1} <= ${p1} AND ${d2} >= ${p2})) AND`;
+      } else if (inclusionType == TimebarGraphInclusionTypes.contained_by) {
+        s += `(${bothNull} OR (${p1} <= ${d1} AND ${p2} >= ${d2})) AND`;
+      }
+
+    }
+    s = s.slice(0, -4)
+    s += ')'
+    return s;
   }
 }

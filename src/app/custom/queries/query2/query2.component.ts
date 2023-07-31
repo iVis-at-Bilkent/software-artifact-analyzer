@@ -89,12 +89,12 @@
   
       const r = `[${skip}..${skip + dataCnt}]`;
       const cql=`MATCH (issue:Issue {name:'${this.issue}'})
-      WITH issue, [collabs in issue.collaborators] AS collaborators
-      UNWIND collaborators AS collaborator
-      WITH issue as issue, apoc.convert.fromJsonMap(collaborator) as collab
-      MATCH (n:Developer {name: collab.name})
+      WITH issue, [cmtr in issue.commenterList] AS commenterList
+      UNWIND commenterList AS commenter
+      WITH issue as issue, apoc.convert.fromJsonMap(commenter) as cmtr
+      MATCH (n:Developer {name: cmtr.name})
       WHERE ${dateFilter} 
-      RETURN ID(n) as id, n.name as developer, collab.count as count ORDER BY ${orderExpr}`
+      RETURN ID(n) as id, n.name as developer, cmtr.count as count ORDER BY ${orderExpr}`
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     }
     loadGraph(skip: number, filter?: TableFiltering) {
@@ -123,10 +123,10 @@
       const dateFilter = this.getDateRangeCQL();
   
       const cql =  `MATCH (issue:Issue {name:'${this.issue}'})
-      WITH issue, [collabs in issue.collaborators] AS collaborators
-      UNWIND collaborators AS collaborator
-      WITH issue as issue, apoc.convert.fromJsonMap(collaborator) as collab
-      MATCH (n:Developer {name: collab.name})
+      WITH issue, [cmtr in issue.commenterList] AS commenterList
+      UNWIND commenterList AS commenter
+      WITH issue as issue, apoc.convert.fromJsonMap(commenter) as cmtr
+      MATCH (n:Developer {name: cmtr.name})
       WITH issue, n
       WHERE ${dateFilter}
       MATCH path = shortestPath((issue)-[*1..3]-(n))
@@ -169,10 +169,10 @@
       const dateFilter = this.getDateRangeCQL();
       const ui2Db = {'issue': 'n.name'};
       const cql =`MATCH (issue:Issue {name:'${this.issue}'})
-      WITH issue, [collabs in issue.collaborators] AS collaborators
-      UNWIND collaborators AS collaborator
-      WITH issue as issue, apoc.convert.fromJsonMap(collaborator) as collab
-      MATCH (n:Developer {name: collab.name})
+      WITH issue, [cmtr in issue.commenterList] AS commenterList
+      UNWIND commenterList AS commenter
+      WITH issue as issue, apoc.convert.fromJsonMap(commenter) as cmtr
+      MATCH (n:Developer {name: cmtr.name})
       WITH issue, n
       WHERE ${idFilter}
       MATCH path = shortestPath((issue)-[*1..3]-(n))

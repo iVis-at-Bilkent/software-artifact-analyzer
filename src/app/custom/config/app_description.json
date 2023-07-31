@@ -216,6 +216,8 @@
       "isBidirectional": false,
       "properties": {
         "id":"string",
+        "createdAt":"datetime",
+        "end":"datetime",
         "commentCount":"string"
       },
       "style": {
@@ -665,6 +667,10 @@
       "end_datetime": "end"
     },
     "COMMITTED": {
+      "begin_datetime": "createdAt",
+      "end_datetime": "end"
+    },
+    "COMMENTED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },

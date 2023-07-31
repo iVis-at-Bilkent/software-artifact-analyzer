@@ -14,11 +14,12 @@ import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/group-customization.service';
 import { debounce2, debounce, COLLAPSED_EDGE_CLASS, mapColor } from 'src/app/visuall/constants';
 import { TheoreticPropertiesCustomService } from 'src/app/custom/theoretic-properties-custom.service'
+import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from 'src/app/visuall/constants';
+import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
 export interface DeveloperData {
   name: string;
   score: number;
   id: number;
-
 }
 @Component({
   selector: 'app-query3',
@@ -139,7 +140,6 @@ export class Query3Component implements OnInit {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       x.data.forEach(element => {
-        console.log(x)
         this.developers.push(element[2])
         this.developersName.push("'" + element[1] + "'")
         this.scores.push(element[0])
@@ -176,29 +176,30 @@ export class Query3Component implements OnInit {
     const txtCondition = getQueryCondition4TxtFilter(filter, ['score'], isIgnoreCase);
     const ui2Db = { 'name': 'name', "score": "score" };
     const orderExpr = getOrderByExpression4Query(filter, 'score', 'desc', ui2Db);
-    const dateFilter = this.getDateRangeCQL();
+    const f1 = this.dateFilterFromUserPref('a', true);
+    const f2 = this.dateFilterFromUserPref('b', true);
+    let f = '';
+    if (f1.length > 0) {
+      f += ' WHERE ' + f1.substr(5);
+    }
+    if (f2.length > 0) {
+      f += f2;
+    }
     let dataCnt = this.tableInput.pageSize;
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-    /* FOR DEM0 PURPOSESSSS
-    const cql = ` MATCH (pr:PullRequest{name:'${this.pr}'})-[*]->(file:File)
-    MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${this.pr}'})
+    const cql = ` 
+    MATCH (pr:PullRequest{name:'${this.pr}'})-[]-(:Commit)-[]-(file:File)
+    MATCH (dp:Developer)-[]-(:Commit)-[]-(pr:PullRequest {name:'${this.pr}'})
     with collect(file.name) as filenames, collect(dp.name) as dnames
-    MATCH (a:Developer)-[r*0..3]-(b:File)
-    WHERE b.name IN filenames and  NOT(a.name IN dnames) and ${dateFilter}
-    WITH DISTINCT ID(a) As id,  a.name AS name,  SUM(1.0/size(r)) AS score , filenames as f, dnames as d
-    RETURN  id, name, score  ORDER BY ${orderExpr} LIMIT ${this.number}`;
-    */
-
-    const cql = ` MATCH (pr:PullRequest{name:'${this.pr}'})-[*]->(file:File)
-    MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${this.pr}'})
-    with collect(file.name) as filenames, collect(dp.name) as dnames
-    MATCH path=(a:Developer)-[r*0..3]-(b:File)
+    MATCH path=(a:Developer)-[r*0..3]-(b:File)  ${f} 
     WHERE b.name IN filenames and  NOT(a.name IN dnames) 
-    WITH DISTINCT a AS developer, round(toFloat(SUM(1.0 / size(r))) * 100) / 100 AS score
-    RETURN ID(developer) AS id, developer.name AS name, score ORDER BY ${orderExpr} LIMIT ${this.number}`;
+    WITH reduce(prod = 1, edge IN relationships(path)  | prod * edge.recency) AS multipliedRecency, a,r,b
+    WITH DISTINCT a AS developer, round(toFloat(SUM(multipliedRecency / size(r)^2)) * 100) / 100 AS score
+    RETURN ID(developer) AS id, developer.name AS name, score ORDER BY score desc LIMIT ${this.number}
+    ` 
     this._dbService.runQuery(cql, cb, DbResponseType.table);
 
   }
@@ -233,8 +234,6 @@ export class Query3Component implements OnInit {
       this.clusterByDeveloper();
       this.devSize();
     };
-
-    const dateFilter = this.getDateRangeCQL();
     const cql = `
     UNWIND [${this.developersName}] AS dID
     MATCH (pr:PullRequest{name:'${this.pr}'})
@@ -242,7 +241,6 @@ export class Query3Component implements OnInit {
     OPTIONAL Match (pr)-[e11:INCLUDES]->(n11:Commit)-[e21:CONTAINS]->(n21:File)<-[e31:CONTAINS]-(n31:Commit)<-[e41:COMMITTED]-(n41:Developer{name:dID})
     OPTIONAL Match (pr)-[e6]-(n6:Developer{name:dID})
     with [n1,n2,n3,n4,n11,n21,n31,n41, n5,n6] as nodes, pr, [e1,e2,e3,e4,e5,e11,e21,e31,e41] as edges
-    WHERE  ${dateFilter}
     return pr,nodes, edges`
     this._dbService.runQuery(cql, cb);
   }
@@ -303,7 +301,6 @@ export class Query3Component implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = { 'Title': 'n.primary_title' };
     const orderExpr = getOrderByExpression4Query(null, 'score', 'desc', ui2Db);
-    const dateFilter = this.getDateRangeCQL();
     const cql = ` UNWIND [${e.dbIds}]  AS dID
     MATCH (pr:PullRequest{name:'${this.pr}'})
     OPTIONAL Match(pr)-[e1:INCLUDES]->(n1:Commit)-[e2:CONTAINS]->(n2:File)<-[e3:CONTAINS]-(n3:Commit)<-[e4:REFERENCED|INCLUDES]-(n4)-[e5]-(n5:Developer) 
@@ -313,7 +310,6 @@ export class Query3Component implements OnInit {
     OPTIONAL Match (pr)-[e6]-(n6:Developer{name:dID})
     WHERE ID(n6) = dID
     with [n1,n2,n3,n4,n11,n21,n31,n41, n5,n6] as nodes, pr, [e1,e2,e3,e4,e5,e11,e21,e31,e41] as edges
-    WHERE  ${dateFilter}
     return pr,nodes, edges`
     this._dbService.runQuery(cql, cb);
   }
@@ -441,25 +437,11 @@ export class Query3Component implements OnInit {
         if (element._private.classes.values().next().value == 'Developer') {
           let selector = "knowAbout" + this.developers[i]
           element.addClass(selector);
-          console.log(element)
           const div1 = document.createElement("div");
           let number = this.scores[i];
           if (number > 0) {
-            div1.innerHTML = `<span class="badge rounded-pill bg-primary">${number}</span>`;
-            element.addCue({
-              htmlElem: div1,
-              id: element._private.data.name,
-              show: "always",
-              position: "top-right",
-              marginX: "%0",
-              marginY: "%8",
-              cursor: "pointer",
-              zIndex: 1000,
-
-            });
             let avgSize = this.currNodeSize ;
             let maxVal = Math.max(...this.scores);
-            console.log(avgSize,maxVal )
             this._g.cy.style().selector(`node.${selector}`)
               .style(
                 {
@@ -477,6 +459,18 @@ export class Query3Component implements OnInit {
                   }
                 })
               .update();
+              div1.innerHTML = `<span class="badge rounded-pill bg-primary">${number}</span>`;
+              element.addCue({
+                htmlElem: div1,
+                id: element._private.data.name,
+                show: "always",
+                position: "top-right",
+                marginX: "%0",
+                marginY: "%8",
+                cursor: "pointer",
+                zIndex: 1000,
+  
+              });
           }
         }
       }
@@ -498,26 +492,48 @@ export class Query3Component implements OnInit {
 
   }
 
-
-  private getDateRangeCQL() {
-    const isLimit = this._g.userPrefs.isLimitDbQueries2range.getValue();
-    if (!isLimit) {
-      return 'TRUE';
+  private dateFilterFromUserPref(varName: string, isNode: boolean): string {
+    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
+      return '';
     }
+    let s = '';
+    let keys = [];
+
+    if (isNode) {
+      keys = Object.keys(this._g.appDescription.getValue().objects);
+    } else {
+      keys = Object.keys(this._g.appDescription.getValue().relations);
+    }
+
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    const a = new Date(d1);
-    const c = new Date(d2);
-    const b = a.toISOString()
-    const d = c.toISOString()
+    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
+    const mapping = this._g.appDescription.getValue().timebarDataMapping;
 
-    return `ALL(node IN nodes WHERE
-      ((node:Issue) AND ${d2}  >= node.createdAt AND ${d1} <= node.closeDate) OR
-      ((node:Commit)  AND ${d2}>= node.createdAt  AND ${d1} <= node.end) OR
-      ((node:PullRequest)  AND ${d2} >=  node.createdAt  AND ${d1} <= node.closeDate) OR
-      ((node:File) AND ${d2} >= node.createdAt ) OR
-      ((node:Developer) AND ${d2}>=  node.start )
-    )`;
+    if (!mapping || Object.keys(mapping).length < 1) {
+      return '';
+    }
+
+    s = ' AND (';
+    for (const k of keys) {
+      if (!mapping[k]) {
+        continue;
+      }
+      const p1 = `COALESCE(${varName}.${mapping[k].begin_datetime}, ${LONG_MIN})`;
+      const p2 = `COALESCE(${varName}.${mapping[k].end_datetime}, ${LONG_MAX})`;
+      const bothNull = `(${varName}.${mapping[k].end_datetime} IS NULL AND ${varName}.${mapping[k].begin_datetime} IS NULL)`
+      if (inclusionType == TimebarGraphInclusionTypes.overlaps) {
+        s += `(${bothNull} OR (${p1} <= ${d2} AND ${p2} >= ${d1})) AND`;
+      } else if (inclusionType == TimebarGraphInclusionTypes.contains) {
+        s += `(${bothNull} OR (${d1} <= ${p1} AND ${d2} >= ${p2})) AND`;
+      } else if (inclusionType == TimebarGraphInclusionTypes.contained_by) {
+        s += `(${bothNull} OR (${p1} <= ${d1} AND ${p2} >= ${d2})) AND`;
+      }
+
+    }
+    s = s.slice(0, -4)
+    s += ')'
+    return s;
   }
 
 }

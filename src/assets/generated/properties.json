@@ -71,6 +71,8 @@
     },
     "COMMENTED": {
       "id": "string",
+      "createdAt": "datetime",
+      "end": "datetime",
       "commentCount": "string"
     },
     "ASSIGNED_BY": {

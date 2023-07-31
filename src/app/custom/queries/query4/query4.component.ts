@@ -11,6 +11,8 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 import { getCyStyleFromColorAndWid, readTxtFile, isJson } from 'src/app/visuall/constants';
 import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/group-customization.service';
+import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from 'src/app/visuall/constants';
+import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
 export interface DeveloperData {
   name: string;
   score: number;
@@ -137,24 +139,25 @@ export class Query4Component implements OnInit {
     const txtCondition = getQueryCondition4TxtFilter(filter, ['score'], isIgnoreCase);
     const ui2Db = { 'name': 'name', "score": "score" };
     const orderExpr = getOrderByExpression4Query(filter, 'score', 'desc', ui2Db);
-    const dateFilter = this.getDateRangeCQL();
+    const f1 = this.dateFilterFromUserPref('a', true);
+    const f2 = this.dateFilterFromUserPref('b', true);
+    let f = '';
+    if (f1.length > 0) {
+      f += ' WHERE ' + f1.substr(5);
+    }
+    if (f2.length > 0) {
+      f += f2;
+    }
     let dataCnt = this.tableInput.pageSize;
     if (isClientSidePagination) {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-    /* FOR DEM0 PURPOSESSSS
-    const cql = ` MATCH (pr:PullRequest{name:'${this.pr}'})-[*]->(file:File)
-    MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${this.pr}'})
-    with collect(file.name) as filenames, collect(dp.name) as dnames
-    MATCH (a:Developer)-[r*0..3]-(b:File)
-    WHERE b.name IN filenames and  NOT(a.name IN dnames) and ${dateFilter}
-    WITH DISTINCT ID(a) As id,  a.name AS name,  SUM(1.0/size(r)) AS score , filenames as f, dnames as d
-    RETURN  id, name, score  ORDER BY ${orderExpr} LIMIT ${this.number}`;
-    */
 
-    const cql = `MATCH (b:File {name : '${this.file}'})-[r*0..3]-(a:Developer)
-    WITH DISTINCT ID(a) As id,  a.name AS name, round(toFloat(SUM(1.0/size(r)) ) * 100)/100 AS score 
+    const cql = `MATCH path=(b:File {name : '${this.file}'})-[r*0..3]-(a:Developer)  ${f} 
+    WHERE NONE(rel in relationships(path) WHERE type(rel) = 'COMMENTED')
+    WITH reduce(prod = 1, edge IN relationships(path)  | prod * edge.recency) AS multipliedRecency, a,r,b
+    WITH DISTINCT ID(a) As id,  a.name AS name,round(toFloat(SUM(multipliedRecency / size(r)^2)) * 100) / 100 AS score
     RETURN  id, name, score  ORDER BY ${orderExpr} LIMIT ${this.number}`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
 
@@ -256,7 +259,6 @@ export class Query4Component implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = { 'Title': 'n.primary_title' };
     const orderExpr = getOrderByExpression4Query(null, 'score', 'desc', ui2Db);
-    const dateFilter = this.getDateRangeCQL();
     const cql = `UNWIND [${this.developersName}] AS dID
     MATCH path=(b:File {name : '${this.file}'})-[r*0..3]-(a:Developer {name : dID})
     WITH  collect(path) AS paths
@@ -437,14 +439,47 @@ export class Query4Component implements OnInit {
 
   }
 
-  private getDateRangeCQL() {
-    const isLimit = this._g.userPrefs.isLimitDbQueries2range.getValue();
-    if (!isLimit) {
-      return 'TRUE';
+  private dateFilterFromUserPref(varName: string, isNode: boolean): string {
+    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
+      return '';
     }
+    let s = '';
+    let keys = [];
+
+    if (isNode) {
+      keys = Object.keys(this._g.appDescription.getValue().objects);
+    } else {
+      keys = Object.keys(this._g.appDescription.getValue().relations);
+    }
+
     const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
     const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    return `a.start > ${d1} AND b.createdAt > ${d1} AND a.end < ${d2} AND b.end < ${d2}`;
-  }
+    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
+    const mapping = this._g.appDescription.getValue().timebarDataMapping;
 
+    if (!mapping || Object.keys(mapping).length < 1) {
+      return '';
+    }
+
+    s = ' AND (';
+    for (const k of keys) {
+      if (!mapping[k]) {
+        continue;
+      }
+      const p1 = `COALESCE(${varName}.${mapping[k].begin_datetime}, ${LONG_MIN})`;
+      const p2 = `COALESCE(${varName}.${mapping[k].end_datetime}, ${LONG_MAX})`;
+      const bothNull = `(${varName}.${mapping[k].end_datetime} IS NULL AND ${varName}.${mapping[k].begin_datetime} IS NULL)`
+      if (inclusionType == TimebarGraphInclusionTypes.overlaps) {
+        s += `(${bothNull} OR (${p1} <= ${d2} AND ${p2} >= ${d1})) AND`;
+      } else if (inclusionType == TimebarGraphInclusionTypes.contains) {
+        s += `(${bothNull} OR (${d1} <= ${p1} AND ${d2} >= ${p2})) AND`;
+      } else if (inclusionType == TimebarGraphInclusionTypes.contained_by) {
+        s += `(${bothNull} OR (${p1} <= ${d1} AND ${p2} >= ${d2})) AND`;
+      }
+
+    }
+    s = s.slice(0, -4)
+    s += ')'
+    return s;
+  }
 }
