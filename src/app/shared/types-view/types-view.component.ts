@@ -38,7 +38,9 @@ export class TypesViewComponent implements OnInit, OnDestroy {
           }
         }
       }
+      this.filterElesByClass('COMMENTED',false)
     });
+    
   }
 
   filterElesByClass(className: string, isNode: boolean) {
