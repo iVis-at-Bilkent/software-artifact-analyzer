@@ -431,6 +431,25 @@ export class Query3Component implements OnInit {
   }
 
   devSize() {
+    if(this.size){  
+      let elements = this._g.cy.nodes(this.developers.map(x => '#n' + x).join());
+      let devs = elements.filter((element) => element._private.classes.values().next().value == 'Developer');
+      this._gt.knowAboutScore(devs, this.scores)
+      this._gt.showHideBadges(true)
+    }
+    else {
+      for (let i = 0; i < this.developers.length - 1; i++) {
+        let element = this._g.cy.nodes('#n' + this.developers[i])[0];
+        if (element._private.classes.values().next().value == 'Developer') {
+        element.removeClass('graphTheoreticDisplay')
+        }
+
+      }
+      this._gt.showHideBadges(false)
+
+    }
+
+    /*
     if (this.size) {
       for (let i = 0; i < this.developers.length - 1; i++) {
         let element = this._g.cy.nodes('#n' + this.developers[i])[0]
@@ -489,7 +508,7 @@ export class Query3Component implements OnInit {
       }
 
     }
-
+*/
   }
 
   private dateFilterFromUserPref(varName: string, isNode: boolean): string {

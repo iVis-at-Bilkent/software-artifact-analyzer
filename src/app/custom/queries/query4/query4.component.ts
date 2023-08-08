@@ -13,6 +13,7 @@ import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/group-customization.service';
 import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from 'src/app/visuall/constants';
 import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
+import { TheoreticPropertiesCustomService } from 'src/app/custom/theoretic-properties-custom.service'
 export interface DeveloperData {
   name: string;
   score: number;
@@ -57,7 +58,7 @@ export class Query4Component implements OnInit {
   currNodeSize = this.NODE_SIZE;
   algorithm = null;
 
-  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService) {
+  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService) {
     this.files = [];
     this.developers = [];
     this.scores = [];
@@ -143,7 +144,7 @@ export class Query4Component implements OnInit {
     const f2 = this.dateFilterFromUserPref('b', true);
     let f = '';
     if (f1.length > 0) {
-      f += ' WHERE ' + f1.substr(5);
+      f += ' AND ' + f1.substr(5);
     }
     if (f2.length > 0) {
       f += f2;
@@ -154,10 +155,10 @@ export class Query4Component implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
 
-    const cql = `MATCH path=(b:File {name : '${this.file}'})-[r*0..3]-(a:Developer)  ${f} 
-    WHERE NONE(rel in relationships(path) WHERE type(rel) = 'COMMENTED')
+    const cql = `MATCH path=(b:File {name : '${this.file}'})-[r*0..3]-(a:Developer)  
+    WHERE NONE(rel in relationships(path) WHERE type(rel) = 'COMMENTED') ${f} 
     WITH reduce(prod = 1, edge IN relationships(path)  | prod * edge.recency) AS multipliedRecency, a,r,b
-    WITH DISTINCT ID(a) As id,  a.name AS name,round(toFloat(SUM(multipliedRecency / size(r)^2)) * 100) / 100 AS score
+    WITH DISTINCT ID(a) As id,  a.name AS name,round(toFloat(SUM(multipliedRecency / size(r))) * 100) / 100 AS score
     RETURN  id, name, score  ORDER BY ${orderExpr} LIMIT ${this.number}`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
 
@@ -191,6 +192,7 @@ export class Query4Component implements OnInit {
         this.graphResponse = x;
       }
       this.clusterByDeveloper();
+      this.devSize();
     };
 
 
@@ -376,6 +378,24 @@ export class Query4Component implements OnInit {
 
   }
   devSize() {
+    if(this.size){
+      let elements = this._g.cy.nodes(this.developers.map(x => '#n' + x).join());
+      let devs = elements.filter((element) => element._private.classes.values().next().value == 'Developer');
+      this._gt.knowAboutScore(devs, this.scores)
+      this._gt.showHideBadges(true)
+    }
+    else {
+      for (let i = 0; i < this.developers.length - 1; i++) {
+        let element = this._g.cy.nodes('#n' + this.developers[i])[0];
+        if (element._private.classes.values().next().value == 'Developer') {
+        element.removeClass('graphTheoreticDisplay')
+        }
+
+      }
+      this._gt.showHideBadges(false)
+
+    }
+    /*
     if (this.size) {
       for (let i = 0; i < this.developers.length - 1; i++) {
         let element = this._g.cy.nodes('#n' + this.developers[i])[0]
@@ -436,7 +456,7 @@ export class Query4Component implements OnInit {
       }
 
     }
-
+*/
   }
 
   private dateFilterFromUserPref(varName: string, isNode: boolean): string {

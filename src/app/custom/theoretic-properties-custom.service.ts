@@ -5,10 +5,20 @@ import { formatNumber } from '@angular/common';
 import { CytoscapeService } from '../visuall/cytoscape.service';
 import { debounce2, debounce, COLLAPSED_EDGE_CLASS, mapColor } from '../visuall/constants';
 import { Subscription } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class TheoreticPropertiesCustomService {
+
+
+  private _adjustSizeMethods: { name: string, fn: any }[];
+  get adjustSizeMethods(): { name: string, fn: any }[] {
+    return this._adjustSizeMethods;
+  }
+
+
+
 
   isOnSelected = false;
   isDirectedGraph = false;
@@ -27,9 +37,9 @@ export class TheoreticPropertiesCustomService {
   currNodeSize = this.NODE_SIZE;
   appDescSubs: Subscription;
 
-  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) { }
+  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) { 
 
-  ngOnInit() {
+    this._adjustSizeMethods = [{ name: 'By know about score ', fn: (elems, scores) => { this.knowAboutScore(elems, scores) } }];
     this._cyService.setRemovePoppersFn(this.destroyCurrentPoppers.bind(this));
     this._g.cy.on('remove', (e) => { this.destroyPopper(e.target.id()) });
     this._g.appDescription.subscribe(x => {
@@ -39,11 +49,6 @@ export class TheoreticPropertiesCustomService {
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.appDescSubs) {
-      this.appDescSubs.unsubscribe();
-    }
-  }
 
   runProperty() {
     this.cySelector = '';
@@ -68,15 +73,20 @@ export class TheoreticPropertiesCustomService {
     return 1;
   }
 
-  knowAboutScore (elems, scores: number []){
-    console.log("come ere")
+  knowAboutScore (elems, scores){
+    this.cySelector = '';
+    this.destroyCurrentPoppers();
+    let m = Math.max(...scores);
+    console.log(m)
+    this.maxPropValue = m;
     for (let i = 0; i < elems.length; i++) {
       let badges = [0];
       badges = [scores[i]];
-      this.generateBadge4Elem(elems[i][0], badges);
-
-      
+      this.generateBadge4Elem(elems[i][0], badges);   
     }
+    this._cyService.setNodeSizeOnGraphTheoreticProp(m, this.currNodeSize);
+    this.setBadgeColorsAndCoords();
+
   }
 
   generateBadge4Elem(e, badges: number[]) {
@@ -85,7 +95,6 @@ export class TheoreticPropertiesCustomService {
     div.style.position = 'absolute';
     div.style.top = '0px';
     div.style.left = '0px';
-    console.log("jhjh geldii")
     document.getElementById('cy').appendChild(div);
     this.isMapBadgeSizes = true;
     this.isMapNodeSizes = true;
