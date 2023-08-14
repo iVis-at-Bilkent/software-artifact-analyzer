@@ -296,7 +296,6 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     div.style.top = '0px';
     div.style.left = '0px';
     document.getElementById('cy').appendChild(div);
-    console.log(this.isMapNodeSizes , this.isMapBadgeSizes)
     if (this.isMapNodeSizes || this.isMapBadgeSizes) {
       let sum = 0;
       for (let i = 0; i < badges.length; i++) {
@@ -335,10 +334,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
         let a = Math.max(5, this.currNodeSize - 20);
         
         let x = e.data('__graphTheoreticProp');
-        console.log(x)
-        console.log(this.currNodeSize)
         ratio = ((b - a) * x / this.maxPropValue + a) / this.currNodeSize;
-        console.log(this.maxPropValue)
       } else {
         ratio = this.currNodeSize / this.NODE_SIZE;
       }

@@ -211,9 +211,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
     }
     obj.next(val);
     this._profile.saveUserPrefs();
-    console.log(userPref)
     const cb = (x) => {
-      console.log(x)
     }
     let cql = "";
     if (userPref == "anomalyDefaultValues.ignoreBug") {

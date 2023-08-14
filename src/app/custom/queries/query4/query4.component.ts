@@ -154,8 +154,24 @@ export class Query4Component implements OnInit {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-
-    const cql = `MATCH path=(b:File {name : '${this.file}'})-[r*0..3]-(a:Developer)  
+    const cql = ` 
+    MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: '${this.file}'})
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
+    
+    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) AS allPaths
+    
+    UNWIND allPaths AS path
+    WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path
+    
+    WITH a, path, SUM(multipliedRecency / length(path)^2) AS rawScore
+    
+    WITH a, rawScore
+    RETURN ID(a) AS id, a.name AS name, round(toFloat(SUM(rawScore)) * 100) / 100 AS score
+    ORDER BY score DESC
+    LIMIT ${this.number}
+    ` 
+    const cql2 = `MATCH path=(b:File {name : '${this.file}'})-[r*0..3]-(a:Developer)  
     WHERE NONE(rel in relationships(path) WHERE type(rel) = 'COMMENTED') ${f} 
     WITH reduce(prod = 1, edge IN relationships(path)  | prod * edge.recency) AS multipliedRecency, a,r,b
     WITH DISTINCT ID(a) As id,  a.name AS name,round(toFloat(SUM(multipliedRecency / size(r))) * 100) / 100 AS score
@@ -195,13 +211,22 @@ export class Query4Component implements OnInit {
       this.devSize();
     };
 
-
-    const cql = `
-    UNWIND [${this.developersName}] AS dID
-    MATCH path=(b:File {name : '${this.file}'})-[r*0..3]-(a:Developer {name : dID})
-    WITH  collect(path) AS paths
-    UNWIND paths AS path
-    RETURN  nodes(path) AS nodes, relationships(path) AS relationships`
+    const cql = ` 
+    MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: '${this.file}'})
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
+    
+    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) AS allPaths
+    
+    UNWIND allPaths AS path
+    WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path
+    
+    WITH a, path, SUM(multipliedRecency / length(path)^2) AS rawScore
+    
+    WITH a, rawScore,path
+    RETURN ID(a) AS id, a.name AS name, round(toFloat(SUM(rawScore)) * 100) / 100 AS score, COLLECT(path) AS paths
+    ORDER BY score DESC
+    LIMIT ${this.number}`
     this._dbService.runQuery(cql, cb);
   }
 
@@ -261,8 +286,13 @@ export class Query4Component implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = { 'Title': 'n.primary_title' };
     const orderExpr = getOrderByExpression4Query(null, 'score', 'desc', ui2Db);
+
+
     const cql = `UNWIND [${this.developersName}] AS dID
-    MATCH path=(b:File {name : '${this.file}'})-[r*0..3]-(a:Developer {name : dID})
+    MATCH path1=(a:Developer {name: dID})-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: '${this.file}'})
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
+    
     WITH  collect(path) AS paths
     UNWIND paths AS path
     RETURN  nodes(path) AS nodes, relationships(path) AS relationships`

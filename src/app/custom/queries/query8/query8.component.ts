@@ -64,7 +64,6 @@ export class Query8Component implements OnInit {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       x.data.forEach(element => {
-        console.log(element)
         this.developers.push(element[3])
         this.developersName.push("'" + element[2] + "'")
         this.scores.push(element[0])

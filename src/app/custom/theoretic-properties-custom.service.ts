@@ -77,7 +77,6 @@ export class TheoreticPropertiesCustomService {
     this.cySelector = '';
     this.destroyCurrentPoppers();
     let m = Math.max(...scores);
-    console.log(m)
     this.maxPropValue = m;
     for (let i = 0; i < elems.length; i++) {
       let badges = [0];
@@ -98,7 +97,6 @@ export class TheoreticPropertiesCustomService {
     document.getElementById('cy').appendChild(div);
     this.isMapBadgeSizes = true;
     this.isMapNodeSizes = true;
-    console.log(this.isMapNodeSizes , this.isMapBadgeSizes)
     if (true) {
       let sum = 0;
       for (let i = 0; i < badges.length; i++) {
@@ -130,7 +128,6 @@ export class TheoreticPropertiesCustomService {
   
   private setBadgeCoords(e, div: HTMLDivElement) {
     // let the nodes resize first
-    console.log(e)
     setTimeout(() => {
       let ratio = 1;
       if (true) {
@@ -139,7 +136,6 @@ export class TheoreticPropertiesCustomService {
         
         let x = e.data('__graphTheoreticProp');
         ratio = ((b - a) * x / this.maxPropValue + a) / this.currNodeSize;
-        console.log(this.maxPropValue)
       } else {
         ratio = this.currNodeSize / this.NODE_SIZE;
       }

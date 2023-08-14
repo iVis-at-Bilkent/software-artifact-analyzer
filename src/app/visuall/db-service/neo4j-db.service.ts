@@ -18,6 +18,7 @@ export class Neo4jDb implements DbService {
   runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
     const conf = environment.dbConfig;
     const url = conf.url;
+    console.log(query)
     const username = conf.username;
     const password = conf.password;
     const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
