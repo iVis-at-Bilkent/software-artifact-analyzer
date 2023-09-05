@@ -7,17 +7,7 @@ import layoutUtilities from 'cytoscape-layout-utilities';
 import cise from 'cytoscape-cise';
 import cytoscape from 'cytoscape';
 import timebar from '../../lib/timebar/cytoscape-timebar';
-import cytoscapeVisualCues from '../../lib/cytoscape-visual-cues/cytoscape-visual-cues';
-import {
-  addCue,
-  removeCue,
-  updateCue,
-  getCueData,
-  showCue,
-  hideCue,
-  setActiveInstance,
-  getActiveInstanceId,
-} from "../../lib/cytoscape-visual-cues/cytoscape-visual-cues";
+import cytoscapeVisualCues from '../../lib/cytoscape-visual-cues/cytoscape-visual-cues.esm';
 
 import * as $ from 'jquery';
 import { GlobalVariableService } from './global-variable.service';
@@ -36,7 +26,7 @@ export class CyExtService {
   registerExtensions() {
     // register timebar extension
     timebar(cytoscape);
-    // register cues extention
+    // register cues extension
     cytoscapeVisualCues(cytoscape);
     // register navigator extension
     navigator(cytoscape);
@@ -51,31 +41,6 @@ export class CyExtService {
     // use cise layout algorithm
     cytoscape.use(cise);
     panzoom(cytoscape);  // register extension
-    /**
-    // use addCue cue algorithm
-    cytoscape.use(addCue)
-
-    // use removeCue cue algorithm
-    cytoscape.use(removeCue)
-
-    // use updateCue cue algorithm
-    cytoscape.use(updateCue)
-
-    // use getCueData cue algorithm
-    cytoscape.use(getCueData)
-
-    // use showCue cue algorithm
-    cytoscape.use(showCue)
-
-    // use hideCue cue algorithm
-    cytoscape.use(hideCue)
-
-    // use setActiveInstance cue algorithm
-    cytoscape.use(setActiveInstance)
-
-    // use getActiveInstanceId cue algorithm
-    cytoscape.use(getActiveInstanceId)
- */
 
   }
 

@@ -196,11 +196,13 @@ export class Query3Component implements OnInit {
     WITH collect(distinct file.name) as filenames, collect(distinct dp) as developers
     
     UNWIND filenames as file
-    MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: file})
-    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: file})
-    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: file})
+    MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: file})<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path4=(a)-[:REVIEWED | OPENED | MERGED]-(:PullRequest)-[:INCLUDES]->(:Commit)-[:CONTAINS]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path5=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b)-[:RENAMED_TO]-()<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
     
-    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) AS allPaths, developers
+    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3)  + COLLECT(path4) + COLLECT(path5) AS allPaths, developers
     
     UNWIND allPaths AS path
     WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path, developers
@@ -254,10 +256,11 @@ export class Query3Component implements OnInit {
     
     UNWIND filenames as file
     MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: file})<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: file})<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: file})<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    
-    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) AS allPaths, developers
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path4=(a)-[:REVIEWED | OPENED | MERGED]-(:PullRequest)-[:INCLUDES]->(:Commit)-[:CONTAINS]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path5=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b)-[:RENAMED_TO]-()<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3)  + COLLECT(path4) + COLLECT(path5) AS allPaths, developers
     
     UNWIND allPaths AS path
     WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path, developers
@@ -334,10 +337,12 @@ export class Query3Component implements OnInit {
     
     UNWIND filenames as file
     MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: file})<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: file})<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: file})<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path4=(a)-[:REVIEWED | OPENED | MERGED]-(:PullRequest)-[:INCLUDES]->(:Commit)-[:CONTAINS]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
+    OPTIONAL MATCH path5=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b)-[:RENAMED_TO]-()<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
     
-    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) AS allPaths, developers
+    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) + COLLECT(path4) + COLLECT(path5) AS allPaths, developers
     
     UNWIND allPaths AS path
     WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path, developers

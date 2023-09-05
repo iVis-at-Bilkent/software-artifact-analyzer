@@ -123,6 +123,7 @@
       "properties": {
         "name":"string",
         "mergeStatus":"enum,string",
+        "headBranch":"string",
         "createdAt": "datetime",
         "closeDate":"datetime",
         "changeLineOfCode":"int",

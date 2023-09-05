@@ -156,10 +156,11 @@ export class Query4Component implements OnInit {
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql = ` 
     MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
-    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: '${this.file}'})
-    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
-    
-    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) AS allPaths
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b)
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b)
+    OPTIONAL MATCH path4=(a)-[:REVIEWED | OPENED | MERGED]-(:PullRequest)-[:INCLUDES]->(:Commit)-[:CONTAINS]->(b)
+    OPTIONAL MATCH path5=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->()-[:RENAMED_TO]-(b)
+    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3)  + COLLECT(path4) + COLLECT(path5) AS allPaths
     
     UNWIND allPaths AS path
     WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path
@@ -213,10 +214,11 @@ export class Query4Component implements OnInit {
 
     const cql = ` 
     MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
-    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: '${this.file}'})
-    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
-    
-    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) AS allPaths
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b)
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b)
+    OPTIONAL MATCH path4=(a)-[:REVIEWED | OPENED | MERGED]-(:PullRequest)-[:INCLUDES]->(:Commit)-[:CONTAINS]->(b)
+    OPTIONAL MATCH path5=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->()-[:RENAMED_TO]-(b)
+    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3)  + COLLECT(path4) + COLLECT(path5) AS allPaths
     
     UNWIND allPaths AS path
     WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path
@@ -289,12 +291,15 @@ export class Query4Component implements OnInit {
 
 
     const cql = `UNWIND [${this.developersName}] AS dID
-    MATCH path1=(a:Developer {name: dID})-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
-    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b:File {name: '${this.file}'})
-    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
+    MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
+    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b)
+    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b)
+    OPTIONAL MATCH path4=(a)-[:REVIEWED | OPENED | MERGED]-(:PullRequest)-[:INCLUDES]->(:Commit)-[:CONTAINS]->(b)
+    OPTIONAL MATCH path5=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->()-[:RENAMED_TO]-(b)
+    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3)  + COLLECT(path4) + COLLECT(path5) AS allPaths
     
-    WITH  collect(path) AS paths
-    UNWIND paths AS path
+    UNWIND allPaths AS path
+    WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path
     RETURN  nodes(path) AS nodes, relationships(path) AS relationships`
     this._dbService.runQuery(cql, cb);
   }
