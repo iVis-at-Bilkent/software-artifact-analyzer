@@ -142,7 +142,6 @@ export class Query3Component implements OnInit {
     const cb = (x) => {
       this.developers = x.data[0][0]
       this.scores = x.data[0][2]
-      console.log(this.developers)
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
@@ -201,7 +200,7 @@ export class Query3Component implements OnInit {
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     const cbSub1 = (x) => {
-      console.log(x.data)
+  
       this.ignoredDevelopers = x.data[0][0]
       this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct ID(f)) AS fileIds  RETURN fileIds`, cbSub2, DbResponseType.table, false);
     }
@@ -221,11 +220,9 @@ export class Query3Component implements OnInit {
       this.seeds = []
 
       const cbSub1 = (y) => {
-        let result = this.prepareElems4Cy(x)
-        console.log(y)
+        let result = x
         result.nodes = result.nodes.concat(y.nodes)
         result.edges = result.edges.concat(y.edges)
-        console.log(result)
         if (isClientSidePagination) {
           this._cyService.loadElementsFromDatabase(this.filterGraphResponse(result), this.tableInput.isMergeGraph);
           this.seeds = this.developers;
@@ -279,7 +276,7 @@ export class Query3Component implements OnInit {
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph([${this.fileIds}], ['COMMENTED'],'Developer',[${this.ignoredDevelopers}],3,${this.number}, false,
-      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 
   fillTable(data: DeveloperData[], totalDataCount: number | null) {
@@ -317,51 +314,79 @@ export class Query3Component implements OnInit {
   }
 
   getDataForQueryResult(e: TableRowMeta) {
+    let filter =  this.tableFilter;
+    const skip = (this.tableInput.currPage - 1) * this.tableInput.pageSize;
+    const idFilter = buildIdFilter(e.dbIds);
+    const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       this.seeds = []
-      this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
-      this.seeds = e.dbIds;
-      this.seeds.push(this.prId)
-      const seedNodes = this._g.cy.nodes(this.seeds.map(x => '#n' + x).join());
-      if (this._g.userPrefs.highlightStyles.length < 2) {
-        const cyStyle = getCyStyleFromColorAndWid('#0b9bcd', 4.5);
-        this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
-      }
-      const currHighlightIdx = this._g.userPrefs.currHighlightIdx.getValue();
-      if (currHighlightIdx == 0) {
-        this._g.viewUtils.highlight(seedNodes, 1);
-      } else {
-        this._g.viewUtils.highlight(seedNodes, 0);
-      }
-    }
 
-    const idFilter = buildIdFilter(e.dbIds);
-    const ui2Db = { 'Title': 'n.primary_title' };
-    const orderExpr = getOrderByExpression4Query(null, 'score', 'desc', ui2Db);
-    const cql = ` MATCH (pr:PullRequest{name: '${this.pr}'})-[:INCLUDES]->(commit:Commit)-[:CONTAINS]->(file:File)
-    MATCH (dp:Developer)-[:COMMITTED]->(commit)
-    WITH collect(distinct file.name) as filenames, collect(distinct dp) as developers
-    
-    UNWIND filenames as file
-    MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: file})<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    OPTIONAL MATCH path4=(a)-[:REVIEWED | OPENED | MERGED]-(:PullRequest)-[:INCLUDES]->(:Commit)-[:CONTAINS]->(b)<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    OPTIONAL MATCH path5=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b)-[:RENAMED_TO]-()<-[:CONTAINS]-(:Commit)<-[:INCLUDES]-(pr)
-    
-    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3) + COLLECT(path4) + COLLECT(path5) AS allPaths, developers
-    
-    UNWIND allPaths AS path
-    WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path, developers
-    
-    WITH a, path, SUM(multipliedRecency / length(path)^2) AS rawScore, developers
-    
-    WITH a, rawScore, developers,path
-    WHERE NOT a IN developers and ${idFilter}
-    RETURN ID(a) AS id, a.name AS name, round(toFloat(SUM(rawScore)) * 100) / 100 AS score, COLLECT(path) AS paths
-    ORDER BY score DESC
-    LIMIT ${this.number}`
-    this._dbService.runQuery(cql, cb);
+      const cbSub1 = (y) => {
+        let result = x
+        result.nodes = result.nodes.concat(y.nodes)
+        result.edges = result.edges.concat(y.edges)
+        if (isClientSidePagination) {
+          this._cyService.loadElementsFromDatabase(this.filterGraphResponse(result), this.tableInput.isMergeGraph);
+          this.seeds = this.developers;
+          this.seeds.push(this.prId)
+          const seedNodes = this._g.cy.nodes(this.seeds.map(x => '#n' + x).join());
+          if (this._g.userPrefs.highlightStyles.length < 2) {
+            const cyStyle = getCyStyleFromColorAndWid('#0b9bcd', 4.5);
+            this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
+          }
+          const currHighlightIdx = this._g.userPrefs.currHighlightIdx.getValue();
+          if (currHighlightIdx == 0) {
+            this._g.viewUtils.highlight(seedNodes, 1);
+          } else {
+            this._g.viewUtils.highlight(seedNodes, 0);
+          }
+        }
+        else {
+          this._cyService.loadElementsFromDatabase(result, this.tableInput.isMergeGraph);
+        }
+        if (!filter || this.graphResponse == null) {
+          this.graphResponse = x;
+        }
+        this.clusterByDeveloper();
+        this.devSize();
+      }
+      this._dbService.runQuery(`MATCH p=(N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File)   RETURN p`, cbSub1, DbResponseType.graph, false);
+    };
+    let dataCnt = this.tableInput.pageSize;
+    if (isClientSidePagination) {
+      dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
+    }
+    const r = `[${skip}..${skip + dataCnt}]`;
+
+    const t = filter.txt ?? '';
+    const pageSize = this.getPageSize4Backend();
+    const currPage = filter.skip ? Math.floor(filter.skip / pageSize) + 1 : 1;
+    const orderBy = 'score';
+    let orderDir = 0;
+    if (filter.orderDirection == 'desc') {
+      orderDir = 1;
+    } else if (filter.orderDirection == '') {
+      orderDir = 2;
+    }
+    const timeMap = this.getTimebarMapping4Java();
+    let d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
+    let d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
+    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
+      d1 = 0;
+      d2 = 0;
+    }
+    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
+    const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
+    const cbSub2 = (x) => {
+      this.ignoredDevelopers = x.data[0][0]
+      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File)  WITH collect(distinct ID(f)) AS fileIds  RETURN fileIds`, cbSub3, DbResponseType.table, false);
+    }
+    const cbSub3 = (x) => {
+      this.fileIds = x.data[0][0]
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph([${this.fileIds}], ['COMMENTED'],'Developer',[${this.ignoredDevelopers}],3,${this.number}, false,
+      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
+    }
+    this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct ID(d)) AS ignoreDevs return ignoreDevs`, cbSub2, DbResponseType.table, false);
   }
 
   filterTable(filter: TableFiltering) {
@@ -491,7 +516,6 @@ export class Query3Component implements OnInit {
     else {
       for (let i = 0; i < this.developers.length - 1; i++) {
         let element = this._g.cy.nodes('#n' + this.developers[i])[0];
-        console.log(this.developers[i])
         if (element._private.classes.values().next().value == 'Developer') {
           element.removeClass('graphTheoreticDisplay')
         }

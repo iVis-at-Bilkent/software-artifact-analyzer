@@ -31,7 +31,7 @@ export function buildIdFilter(ids: string[] | number[], hasEnd = false, isEdgeQu
   if (ids === undefined) {
     return '';
   }
-  let varName = 'n';
+  let varName = 'c';
   if (isEdgeQuery) {
     varName = 'e';
   }
