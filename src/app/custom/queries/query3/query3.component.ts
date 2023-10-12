@@ -200,7 +200,6 @@ export class Query3Component implements OnInit {
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     const cbSub1 = (x) => {
-  
       this.ignoredDevelopers = x.data[0][0]
       this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct ID(f)) AS fileIds  RETURN fileIds`, cbSub2, DbResponseType.table, false);
     }
@@ -223,6 +222,10 @@ export class Query3Component implements OnInit {
         let result = x
         result.nodes = result.nodes.concat(y.nodes)
         result.edges = result.edges.concat(y.edges)
+        //If number of files more than 300 we will filter file nodes
+        if(this.fileIds.length>300){
+          result.nodes = result.nodes.filter(node => !node.labels.includes("File"));
+        }
         if (isClientSidePagination) {
           this._cyService.loadElementsFromDatabase(this.filterGraphResponse(result), this.tableInput.isMergeGraph);
           this.seeds = this.developers;
