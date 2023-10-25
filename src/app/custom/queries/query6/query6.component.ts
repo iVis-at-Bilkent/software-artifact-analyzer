@@ -93,7 +93,7 @@ export class Query6Component implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql = `MATCH (n : Issue) WHERE n.anomalyCount = ${this.count} and ${dateFilter} 
-    RETURN  distinct ID(n) as id , n.name  as issue, n.anomalyList as anomalies ORDER BY ${orderExpr}`;
+    RETURN  distinct elementId(n) as id , n.name  as issue, n.anomalyList as anomalies ORDER BY ${orderExpr}`;
     this._dbService.runQuery(cql, cb, DbResponseType.table); 
   }
 
@@ -138,15 +138,15 @@ export class Query6Component implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
-      else if (nodeIdDict[x.edges[i].startNode]) {
-        nodeIdDict[x.edges[i].endNode] = true;
+      else if (nodeIdDict[x.edges[i].startNodeElementId]) {
+        nodeIdDict[x.edges[i].endNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }

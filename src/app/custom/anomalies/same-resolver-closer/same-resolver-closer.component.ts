@@ -9,7 +9,6 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
 
 export interface Anomaly {
-  id:number;
   Developer: string;
   Issues: string;
   Count: number;
@@ -87,7 +86,7 @@ export class SameResolverCloserComponent implements OnInit {
 
     const cql = ` MATCH (n:Developer)-[r]->(issue:Issue)
     WHERE issue.resolver= n.name and issue.closer = n.name and ${dateFilter}
-    RETURN  ID(n) as id,  n.name AS Developer, Collect(distinct issue.name) AS Issues, count(distinct issue.name) as Count ORDER BY ${orderExpr} `
+    RETURN  ElementId(n) as id,  n.name AS Developer, Collect(distinct issue.name) AS Issues, count(distinct issue.name) as Count ORDER BY ${orderExpr} `
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -130,12 +129,12 @@ export class SameResolverCloserComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }
@@ -145,7 +144,7 @@ export class SameResolverCloserComponent implements OnInit {
 
   fillTable(data: Anomaly[], totalDataCount: number | null) {
     const uiColumns = ['id'].concat(this.tableInput.columns);
-    const columnTypes = [TableDataType.number, TableDataType.string, TableDataType.string,TableDataType.number];
+    const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string,TableDataType.number];
     this.tableInput.results = [];
   
     for (let i = 0; i < data.length; i++) {

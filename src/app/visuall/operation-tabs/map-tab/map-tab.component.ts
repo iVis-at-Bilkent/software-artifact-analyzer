@@ -437,10 +437,10 @@ export class MapTabComponent implements OnInit, OnDestroy {
     if (this.queryRule.isEdge) {
       r.graphData.edges = tmpData.map((x) => x.graph);
       for (let i = 0; i < r.graphData.edges.length; i++) {
-        const srcId = r.graphData.edges[i].startNode;
-        const tgtId = r.graphData.edges[i].endNode;
-        r.graphData.nodes.push(d.graphData.nodes.find((x) => x.id == srcId));
-        r.graphData.nodes.push(d.graphData.nodes.find((x) => x.id == tgtId));
+        const srcId = r.graphData.edges[i].startNodeElementId;
+        const tgtId = r.graphData.edges[i].endNodeElementId;
+        r.graphData.nodes.push(d.graphData.nodes.find((x) => x.elementId == srcId));
+        r.graphData.nodes.push(d.graphData.nodes.find((x) => x.elementId == tgtId));
       }
     } else {
       r.graphData.nodes = tmpData.map((x) => x.graph);
@@ -523,10 +523,14 @@ export class MapTabComponent implements OnInit, OnDestroy {
   filterElesByClass(e: { className: string; willBeShowed: boolean }) {
     if (e.willBeShowed) {
       this._g.hiddenClasses.delete(e.className);
-      this._g.viewUtils.show(this._g.cy.$("." + e.className));
+      if (this._g.cy.$("." + e.className).length > 0) {
+        this._g.viewUtils.show(this._g.cy.$("." + e.className));
+      }
     } else {
       this._g.hiddenClasses.add(e.className);
-      this._g.viewUtils.hide(this._g.cy.$("." + e.className));
+      if (this._g.cy.$("." + e.className).length > 0) {
+        this._g.viewUtils.hide(this._g.cy.$("." + e.className));
+      }
     }
     this.filter4Collapsed(e.className, e.willBeShowed);
     this._g.shownElemsChanged.next(true);
@@ -608,21 +612,21 @@ export class MapTabComponent implements OnInit, OnDestroy {
         this.tableInput.isMergeGraph && this._g.cy.elements().length > 0;
       let r: GraphResponse = {
         nodes: this.dbResponse.graphData.nodes.filter(
-          (x) => e.dbIds.findIndex((a) => a == x.id) > -1
+          (x) => e.dbIds.findIndex((a) => a == x.elementId) > -1
         ),
         edges: [],
       };
       if (this.queryRule.isEdge) {
         const edges = this.dbResponse.graphData.edges.filter(
-          (x) => e.dbIds.findIndex((a) => a == x.id) > -1
+          (x) => e.dbIds.findIndex((a) => a == x.elementId) > -1
         );
         const nodes = [];
         for (let i = 0; i < edges.length; i++) {
           const n1 = this.dbResponse.graphData.nodes.find(
-            (x) => x.id == edges[i].startNode
+            (x) => x.elementId == edges[i].startNodeElementId
           );
           const n2 = this.dbResponse.graphData.nodes.find(
-            (x) => x.id == edges[i].endNode
+            (x) => x.elementId == edges[i].endNodeElementId
           );
           nodes.push(n1, n2);
         }

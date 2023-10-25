@@ -91,7 +91,7 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     const cql=` MATCH (n:Issue) 
     WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-()   and ${dateFilter} 
     OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
-    RETURN  ID(n) as id,  n.name AS issue, d.name as related ORDER BY ${orderExpr}`
+    RETURN  ElementId(n) as id,  n.name AS issue, d.name as related ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -135,15 +135,15 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].startNode]) {
-        nodeIdDict[x.edges[i].endNode] = true;
+      if (nodeIdDict[x.edges[i].startNodeElementId]) {
+        nodeIdDict[x.edges[i].endNodeElementId] = true;
       }
-      else if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      else if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }
@@ -250,7 +250,6 @@ export class NotReferencedDuplicatesComponent implements OnInit {
 
   // tableInput is already filtered. Use that to filter graph elements.
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
-
 
   private getDateRangeCQL() {
     const isLimit = this._g.userPrefs.isLimitDbQueries2range.getValue();

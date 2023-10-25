@@ -94,7 +94,7 @@
       WITH issue as issue, apoc.convert.fromJsonMap(commenter) as cmtr
       MATCH (n:Developer {name: cmtr.name})
       WHERE ${dateFilter} 
-      RETURN ID(n) as id, n.name as developer, cmtr.count as count ORDER BY ${orderExpr}`
+      RETURN elementId(n) as id, n.name as developer, cmtr.count as count ORDER BY ${orderExpr}`
       this._dbService.runQuery(cql, cb, DbResponseType.table);
     }
     loadGraph(skip: number, filter?: TableFiltering) {

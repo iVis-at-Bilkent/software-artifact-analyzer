@@ -139,7 +139,7 @@ export class GlobalVariableService {
 
     hiddenSelector = hiddenSelector.substr(0, hiddenSelector.length - 1);
 
-    if (hiddenSelector.length > 1) {
+    if (hiddenSelector.length > 1 && this.cy.$(hiddenSelector).length>0 ) {
       this.viewUtils.hide(this.cy.$(hiddenSelector));
     }
 
@@ -202,11 +202,11 @@ export class GlobalVariableService {
     }, this.HISTORY_SNAP_DELAY);
   }
 
-  getLabels4Elems(elemIds: string[] | number[], isNode: boolean = true, objDatas: GraphElem[] = null): string {
+  getLabels4Elems(elemIds: string[] , isNode: boolean = true, objDatas: GraphElem[] = null): string {
     return this.getLabels4ElemsAsArray(elemIds, isNode, objDatas).join(',');
   }
 
-  getLabels4ElemsAsArray(elemIds: string[] | number[], isNode: boolean = true, objDatas: GraphElem[] = null): string[] {
+  getLabels4ElemsAsArray(elemIds: string[] , isNode: boolean = true, objDatas: GraphElem[] = null): string[] {
     let cyIds: string[] = [];
     let idChar = 'n';
     if (!isNode) {
@@ -228,7 +228,7 @@ export class GlobalVariableService {
     for (let i = 0; i < cyIds.length; i++) {
       let cName = '';
       if (!objDatas) {
-        cName = this.cy.$('#' + cyIds[i]).className()[0];
+        cName = this.cy.elements(`[id = "${cyIds[i]}"]`).className()[0];
       } else {
         cName = objDatas[i].classes.split(' ')[0];
       }
@@ -239,7 +239,7 @@ export class GlobalVariableService {
       } else {
         let propName = s.slice(s.indexOf('(') + 1, s.indexOf(')'));
         if (!objDatas) {
-          labels.push(this.cy.$('#' + cyIds[i]).data(propName));
+          labels.push(this.cy.elements(`[id = "${cyIds[i]}"]`).data(propName));
         } else {
           const currData = objDatas[i].data;
           let l = currData[propName];

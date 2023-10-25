@@ -43,26 +43,6 @@ export class ToolbarCustomizationService {
        "#FF9999", "#fe5050", "#FE0022", "#BC0000", "#9a0000"
     ]
 
-
-    /*
-    let redValue = 250;
-    let greenValue = 200;
-    let blueValue = 200;
-    for (let i = 0; i < 6; i++) {
-      let redHex = redValue.toString(16).padStart(2, '0');
-      let greenHex = greenValue.toString(16).padStart(2, '0');
-      let blueHex = blueValue.toString(16).padStart(2, '0');
-      let hexColor = '#' + redHex + greenHex + blueHex;
-      colors.push(hexColor);
-      greenValue -=40;
-      blueValue -= 40;
-      redValue -= 10;
-    }
-    for(let i = 6; i<11;i++){
-      colors.push('#721D1D');
-    }
-    
-    */
     return colors;
   }
   activateAnomalyCues() {
@@ -79,18 +59,21 @@ export class ToolbarCustomizationService {
             const size_y = 0.35 + 2 * Math.log(3*listOfAnomalies.length + 1) / 15;
             const font_size = 0.75 + Math.log(3*listOfAnomalies.length + 1) / 15;
             div1.innerHTML = `<span style="background-color:${color} !important; font-size:${font_size}em !important; padding-bottom:${size_y}em !important; padding-top:${size_y}em !important; padding-right:${size_x}em !important; padding-left:${size_x}em !important;border-radius:50%!important;" class="badge rounded-pill bg-primary">${number}</span>`;
-            element.addCue({
-              htmlElem: div1,
-              id:element._private.data.name,
-              show: "always",
-              position: "top-right",
-              marginX: "%0",
-              marginY: "%8",
-              cursor: "pointer",
-              zIndex: 1000,
-              tooltip: listOfAnomalies.join('\n')
-            
-            }); 
+            if(Object.keys(element.getCueData()).length === 0){
+              element.addCue({
+                htmlElem: div1,
+                id:element._private.data.name,
+                show: "always",
+                position: "top-right",
+                marginX: "%0",
+                marginY: "%8",
+                cursor: "pointer",
+                zIndex: 1000,
+                tooltip: listOfAnomalies.join('\n')
+              
+              }); 
+            }
+
           } 
         }
         const cql = `MATCH (n:Issue {name:'${element._private.data.name}'}) RETURN n.anomalyList as anomalyList , n.anomalyCount as anomalyCount`;

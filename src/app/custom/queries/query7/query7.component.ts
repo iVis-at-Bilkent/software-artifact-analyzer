@@ -118,7 +118,7 @@ export class Query7Component implements OnInit {
     WHERE d1 <> n
     MATCH p = (d1)-[]->(issue:Issue)<-[]-(n)  ${f} 
     WITH n, COUNT(DISTINCT issue) AS collaboration   
-    RETURN ID(n) as id, n.name AS name, collaboration ORDER BY ${orderExpr} LIMIT ${this.number} 
+    RETURN ElementId(n) as id, n.name AS name, collaboration ORDER BY ${orderExpr} LIMIT ${this.number} 
    `
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -138,7 +138,7 @@ export class Query7Component implements OnInit {
       if (!filter || this.graphResponse == null) {
         this.graphResponse = x;
       }
-      const seedNodes = this._g.cy.nodes(this.developers.map(x => '#n' + x).join());
+      const seedNodes = this._g.cy.nodes(this.developers.map(x => 'n' + x).join());
       const currHighlightIdx = this._g.userPrefs.currHighlightIdx.getValue();
       if (currHighlightIdx == 0) {
         this._g.viewUtils.highlight(seedNodes, 1);
@@ -189,15 +189,15 @@ export class Query7Component implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
-      else if (nodeIdDict[x.edges[i].startNode]) {
-        nodeIdDict[x.edges[i].endNode] = true;
+      else if (nodeIdDict[x.edges[i].startNodeElementId]) {
+        nodeIdDict[x.edges[i].endNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }

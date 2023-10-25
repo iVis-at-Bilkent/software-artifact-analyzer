@@ -40,7 +40,7 @@ export interface TableFiltering {
 }
 
 export interface TableRowMeta {
-  dbIds: number[] | string[];
+  dbIds:  string[];
   tableIdx: number[];
 }
 

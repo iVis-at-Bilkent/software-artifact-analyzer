@@ -156,7 +156,7 @@ export class CytoscapeService {
       let elemIds: string[] = [];
       let cyNodes = [];
       for (let i = 0; i < nodes.length; i++) {
-        let cyNodeId = 'n' + nodes[i].id;
+        let cyNodeId = 'n' + nodes[i].elementId;
         cyNodes.push(this.createCyNode(nodes[i], cyNodeId));
         elemIds.push(cyNodeId);
       }
@@ -167,7 +167,7 @@ export class CytoscapeService {
         collapsedEdgeIds = this.getCollapsedEdgeIds();
       }
       for (let i = 0; i < edges.length; i++) {
-        let cyEdgeId = 'e' + edges[i].id;
+        let cyEdgeId = 'e' + edges[i].elementId;
         if (collapsedEdgeIds[cyEdgeId]) {
           elemIds.push(collapsedEdgeIds[cyEdgeId]);
           continue;
@@ -189,7 +189,7 @@ export class CytoscapeService {
       for (let i = 0; i < cyEdges.length; i++) {
         const sId = cyEdges[i].data.source;
         const eId = cyEdges[i].data.target;
-        if ((this._g.cy.$id(sId).length < 1 && !nodes.find(x => x.id == sId)) || (this._g.cy.$id(eId).length < 1 && !nodes.find(x => x.id == eId))) {
+        if ((this._g.cy.$id(sId).length < 1 && !nodes.find(x => x.elementId == sId)) || (this._g.cy.$id(eId).length < 1 && !nodes.find(x => x.elementId == eId))) {
           continue;
         }
         filteredCyEdges.push(cyEdges[i]);
@@ -205,8 +205,8 @@ export class CytoscapeService {
       elemIds.push(...C.arrayDiff(compoundEdgeIds, compoundEdgeIds2));
   
       // elements might already exist but hidden, so show them
-      this._g.viewUtils.show(this._g.cy.$(elemIds.map(x => '#' + x).join(',')));
-  
+      const elemIdSet = new Set(elemIds);
+      this._g.viewUtils.show(this._g.cy.elements().filter(element => elemIdSet.has(element.id())));
       this._g.applyClassFiltering();
   
       if (isIncremental && !wasEmpty) {
@@ -257,15 +257,14 @@ export class CytoscapeService {
     let elemIds: string[] = [];
     let cyNodes = [];
     for (let i = 0; i < nodes.length; i++) {
-      let cyNodeId = 'n' + nodes[i].id;
+      let cyNodeId = 'n' + nodes[i].elementId;
       cyNodes.push(this.createCyNode(nodes[i], cyNodeId));
       elemIds.push(cyNodeId);
     }
-
     let cyEdges = [];
     let collapsedEdgeIds = {};
     for (let i = 0; i < edges.length; i++) {
-      let cyEdgeId = 'e' + edges[i].id;
+      let cyEdgeId = 'e' + edges[i].elementId;
       if (collapsedEdgeIds[cyEdgeId]) {
         elemIds.push(collapsedEdgeIds[cyEdgeId]);
         continue;
@@ -283,7 +282,7 @@ export class CytoscapeService {
     for (let i = 0; i < cyEdges.length; i++) {
       const sId = cyEdges[i].data.source;
       const eId = cyEdges[i].data.target;
-      if ((this._g.cy.$id(sId).length < 1 && !nodes.find(x => x.id == sId)) || (this._g.cy.$id(eId).length < 1 && !nodes.find(x => x.id == eId))) {
+      if ((this._g.cy.$id(sId).length < 1 && !nodes.find(x => x.elementId == sId)) || (this._g.cy.$id(eId).length < 1 && !nodes.find(x => x.elementId == eId))) {
         continue;
       }
       filteredCyEdges.push(cyEdges[i]);
@@ -296,7 +295,6 @@ export class CytoscapeService {
     }
     let compoundEdgeIds2 = this._g.cy.edges('.' + C.COLLAPSED_EDGE_CLASS).map(x => x.id());
     elemIds.push(...C.arrayDiff(compoundEdgeIds, compoundEdgeIds2));
-
     this._g.applyClassFiltering();
     const hasNew = this.hasNewElem(elemIds, prevElems);
     if (hasNew) {
@@ -389,7 +387,7 @@ export class CytoscapeService {
     let ele2highlight = this._g.cy.collection();
     const cnt = elemIds.length;
     for (let i = 0; i < cnt; i++) {
-      ele2highlight.merge('#' + elemIds.pop());
+      ele2highlight.merge(this._g.cy.$id(elemIds.pop()))
     }
     if (newElemIndicator == MergedElemIndicatorTypes.selection) {
       this._g.isSwitch2ObjTabOnSelect = false;
@@ -403,16 +401,15 @@ export class CytoscapeService {
   createCyNode(node: CyNode, id) {
     const classes = node.labels.join(' ');
     let properties = node.properties;
-    properties.id = id
-
+    properties.id = id;
     return { data: properties, classes: classes };
   }
 
   createCyEdge(edge: CyEdge, id) {
     let properties = edge.properties || {};
     properties.id = id;
-    properties.source = 'n' + edge.startNode;
-    properties.target = 'n' + edge.endNode;
+    properties.source = 'n' + edge.startNodeElementId;
+    properties.target = 'n' + edge.endNodeElementId;
 
     return { data: properties, classes: edge.type };
   }
@@ -646,9 +643,9 @@ export class CytoscapeService {
 
   addParentNode(idSuffix: string | number, parent = undefined): string {
     const id = 'c' + idSuffix;
-    const parentNode = this.createCyNode({ labels: [C.CLUSTER_CLASS], properties: { end_datetime: 0, begin_datetime: 0, name: name }, id: '' }, id);
+    const parentNode = this.createCyNode({ labels: [C.CLUSTER_CLASS], properties: { end_datetime: 0, begin_datetime: 0, name: name }, elementId: '' }, id);
     this._g.cy.add(parentNode);
-    this._g.cy.$('#' + id).move({ parent: parent });
+    this._g.cy.elements(`[id = "${id}"]`).move({ parent: parent });
     return id;
   }
 
@@ -920,7 +917,7 @@ export class CytoscapeService {
       }
       // add parents to non-compound nodes
       for (let n in clustering) {
-        this._g.cy.$('#' + n).move({ parent: 'c' + clustering[n] });
+        this._g.cy.elements(`[id = "${n}"]`).move({ parent: 'c' + clustering[n] });
       }
     } else {
       let arr = [];
@@ -951,11 +948,10 @@ export class CytoscapeService {
     if (this._g.userPrefs.groupingOption.getValue() == GroupingOptionTypes.compound) {
       // add parent nodes
       for (let id of directorIds) {
-        let name = this._g.cy.$('#' + id).data().name;
         // for each director, generate a compound node
         this.addParentNode(id);
         // add the director to the compound node
-        this._g.cy.$('#' + id).move({ parent: 'c' + id });
+        this._g.cy.elements(`[id = "${id}"]`).move({ parent: 'c' + id });
       }
 
       // assign nodes to parents
@@ -963,7 +959,7 @@ export class CytoscapeService {
         // if a movie has less than 2 directors add, those movies to the cluster of director
         if (v['length'] < 2) {
           // add movies to the compound node
-          this._g.cy.$('#' + k).move({ parent: 'c' + v[0] });
+          this._g.cy.elements(`[id = "${k}"]`).move({ parent: 'c' + v[0] });
         }
       }
     } else {

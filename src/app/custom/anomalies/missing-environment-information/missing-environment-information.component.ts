@@ -87,8 +87,8 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n) 
-    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and ${dateFilter}
-    RETURN  ID(n) as id, n.name as issue , n.reporter as reporter ORDER BY ${orderExpr}`
+    WHERE n.environment IS  NULL and n.affectedVersion = '' and ${dateFilter}
+    RETURN  ElementId(n) as id, n.name as issue , n.reporter as reporter ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -117,7 +117,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n) 
-    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = ''  and ${dateFilter}
+    WHERE n.environment IS  NULL and n.affectedVersion = ''  and ${dateFilter}
     OPTIONAL MATCH  (n)-[r:REPORTED]-(d)
      return n,r,d`
     this._dbService.runQuery(cql, cb);
@@ -132,15 +132,15 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
         if(x.edges[i].type ==="REPORTED"){
-          nodeIdDict[x.edges[i].startNode] = true;
+          nodeIdDict[x.edges[i].startNodeElementId] = true;
         }
         
       }
-      else if (nodeIdDict[x.edges[i].startNode]) {
+      else if (nodeIdDict[x.edges[i].startNodeElementId]) {
         if(x.edges[i].type ==="ASSIGNED_TO"){
-          nodeIdDict[x.edges[i].endNode] = true;
+          nodeIdDict[x.edges[i].endNodeElementId] = true;
         }
       }
       else{
@@ -148,7 +148,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }
@@ -185,7 +185,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH (n) 
-    WHERE NOT  EXISTS(n.environment) and n.affectedVersion = '' and ${idFilter}
+    WHERE n.environment IS  NULL and n.affectedVersion = '' and ${idFilter}
     OPTIONAL MATCH  (n)-[r:REPORTED]-(d)
      return n,r,d `
     this._dbService.runQuery(cql, cb);

@@ -31,7 +31,7 @@ export function buildIdFilter(ids: string[] | number[], hasEnd = false, isEdgeQu
   if (ids === undefined) {
     return '';
   }
-  let varName = 'c';
+  let varName = 'n';
   if (isEdgeQuery) {
     varName = 'e';
   }
@@ -40,7 +40,7 @@ export function buildIdFilter(ids: string[] | number[], hasEnd = false, isEdgeQu
     cql = '(';
   }
   for (let i = 0; i < ids.length; i++) {
-    cql += `ID(${varName})=${ids[i]} OR `
+    cql += `ElementId(${varName})='${ids[i]}' OR `
   }
 
   if (ids.length > 0) {

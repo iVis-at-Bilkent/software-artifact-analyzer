@@ -88,8 +88,8 @@ export class UnassignedBugsComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH(n:Issue{status:'Done'}) 
-    WHERE NOT EXISTS(n.assignee) and ${dateFilter} 
-    RETURN  ID(n) as id,  n.name AS issue, n.resolver as resolver ORDER BY ${orderExpr}`
+    WHERE n.assignee IS  NULL and ${dateFilter} 
+    RETURN  ElementId(n) as id,  n.name AS issue, n.resolver as resolver ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -117,7 +117,7 @@ export class UnassignedBugsComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue{status:'Done'}) WHERE NOT EXISTS(n.assignee)  AND ${dateFilter}
+    const cql = `MATCH (n:Issue{status:'Done'}) WHERE n.assignee  IS  NULL  AND ${dateFilter}
     OPTIONAL MATCH  (n)-[r:RESOLVED]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
    
@@ -131,12 +131,12 @@ export class UnassignedBugsComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }
@@ -173,7 +173,7 @@ export class UnassignedBugsComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH(n:Issue{status:'Done'})
-    WHERE NOT EXISTS(n.assignee) and ${idFilter} 
+    WHERE n.assignee IS  NULL and ${idFilter} 
     OPTIONAL MATCH  (n)-[r:RESOLVED]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
   }

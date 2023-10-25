@@ -1551,17 +1551,16 @@ export class ContextMenuCustomizationService {
       [ele.id().substr(1)],
       (x) => {
         x.nodes.forEach(element => {
-          if ((`n${element.id}` != targetNodeId) && (!queryMeta.targetType || queryMeta.targetType === element.labels[0])) {
+          if ((`n${element.elementId}` != targetNodeId) && (!queryMeta.targetType || queryMeta.targetType === element.labels[0])) {
             if(!queryMeta.isMultiLength){
-              const edge = this._g.cy.edges(`[source="${targetNodeId}"][target="n${element.id}"]`);
-              const edge2 = this._g.cy.edges(`[source="n${element.id}"][target="${targetNodeId}"]`);
+              const edge = this._g.cy.edges(`[source="${targetNodeId}"][target="n${element.elementId}"]`);
+              const edge2 = this._g.cy.edges(`[source="n${element.elementId}"][target="${targetNodeId}"]`);
               if(edge.nonempty() | edge2.nonempty()){
-                this._g.cy.$('#' + `n${element.id}`).select();
+                this._g.cy.elements(`[id = "n${element.elementId}"]`).select();
               } 
             }
             else{
-              this._g.cy.$('#' + `n${element.id}`).select();
-              
+              this._g.cy.elements(`[id = "n${element.elementId}"]`).select();           
             }
             
           }
@@ -1577,7 +1576,7 @@ export class ContextMenuCustomizationService {
   reportAnomaly(event) {
       const ele = event.target;
       this._g.cy.$().unselect();
-      this._g.cy.$('#' + ele.id()).select();
+      this._g.cy.elements(`[id = "n${ele.id()}"]`).select();
       this._g.openReportTab.next(true);
       if(this._g.openReportTab.getValue()){
         if (this._g.isSwitch2ObjTabOnSelect) {

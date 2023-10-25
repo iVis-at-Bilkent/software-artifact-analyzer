@@ -29,9 +29,9 @@ export class ElemOfInterestComponent implements OnInit {
   selectedNodeClicked(i: number) {
     this._g.isSwitch2ObjTabOnSelect = false;
     this.clickedNodeIdx = i;
-    const idSelector = '#n' + this.selectedNodes[i].dbId;
+    const idSelector = 'n' + this.selectedNodes[i].dbId;
     this._g.cy.$().unselect();
-    this._g.cy.$(idSelector).select();
+    this._g.cy.elements(`[id = "${idSelector}"]`).select();
     this._g.isSwitch2ObjTabOnSelect = true;
   }
 
@@ -73,7 +73,7 @@ export class ElemOfInterestComponent implements OnInit {
         if (arr.length < 0) {
           return;
         }
-        const idx4id = arr[0].indexOf('id');
+        const idx4id = arr[0].indexOf('elementId');
 
         for (let i = 1; i < arr.length; i++) {
           if (this.selectedNodes.find(x => x.dbId == arr[i][idx4id].substring(1))) {
@@ -106,8 +106,8 @@ export class ElemOfInterestComponent implements OnInit {
   removeSelected(i: number) {
     if (i == this.clickedNodeIdx) {
       this.clickedNodeIdx = -1;
-      const idSelector = '#n' + this.selectedNodes[i].dbId;
-      this._g.cy.$(idSelector).unselect();
+      const idSelector = 'n' + this.selectedNodes[i].dbId;
+      this._g.cy.$id(idSelector).unselect();
     } else if (i < this.clickedNodeIdx) {
       this.clickedNodeIdx--;
     }

@@ -105,7 +105,7 @@ export class Query1Component implements OnInit {
 
     const cql = `MATCH (n:Commit) <-[r:COMMITTED]-(d:Developer {name: '${this.developer}' })
     WHERE  ${dateFilter} 
-    RETURN collect(ID(n))${r} as id, n.name as commit, size(collect(ID(n))) as totalDataCount`;
+    RETURN collect(ElementId(n))${r} as id, n.name as commit, size(collect(ElementId(n))) as totalDataCount`;
     this._dbService.runQuery(cql, cb, DbResponseType.table);
 
   }
@@ -266,12 +266,12 @@ export class Query1Component implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }

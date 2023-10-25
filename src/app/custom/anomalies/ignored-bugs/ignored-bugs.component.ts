@@ -86,12 +86,12 @@ export class IgnoredBugsComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n)
-    WHERE exists(n.history) AND size(n.history) >= 2  AND ${dateFilter}
+    WHERE n.history IS NOT NULL AND size(n.history) >= 2  AND ${dateFilter}
     WITH n, range(0, size(n.history)-2) as index_range 
     UNWIND index_range as i
     WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
     WHERE duration.between(from, to).months > ${this.time} 
-    RETURN  distinct ID(n) as id , n.name as issue,  n.assignee as assignee, collect([from, to]) as dates ORDER BY  ${orderExpr} 
+    RETURN  distinct ElementId(n) as id , n.name as issue,  n.assignee as assignee, collect([from, to]) as dates ORDER BY  ${orderExpr} 
     SKIP ${skip} LIMIT ${dataCnt}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -121,7 +121,7 @@ export class IgnoredBugsComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql =`MATCH (n)
-    WHERE exists(n.history) AND size(n.history) >= 2 AND ${dateFilter}
+    WHERE n.history IS NOT NULL AND size(n.history) >= 2 AND ${dateFilter}
     WITH n, range(0, size(n.history)-2) as index_range 
     UNWIND index_range as i
     WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
@@ -140,12 +140,12 @@ export class IgnoredBugsComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].startNode]) {
-        nodeIdDict[x.edges[i].endNode] = true;
+      if (nodeIdDict[x.edges[i].startNodeElementId]) {
+        nodeIdDict[x.edges[i].endNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }
@@ -206,7 +206,7 @@ export class IgnoredBugsComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH (n)
-    WHERE exists(n.history) AND size(n.history) >= 2
+    WHERE n.history IS NOT NULL AND size(n.history) >= 2
     WITH n, range(0, size(n.history)-2) as index_range
     UNWIND index_range as i
     WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to

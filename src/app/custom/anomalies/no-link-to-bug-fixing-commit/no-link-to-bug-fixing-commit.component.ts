@@ -91,7 +91,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     WHERE NOT (n)-[:REFERENCED]->() and n.commitIds=[] and  ${dateFilter} 
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) 
-    RETURN  ID(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver ORDER BY ${orderExpr}`
+    RETURN  ElementId(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -134,15 +134,15 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
         if(x.edges[i].type ==="RESOLVED"){
-          nodeIdDict[x.edges[i].startNode] = true;
+          nodeIdDict[x.edges[i].startNodeElementId] = true;
         }
         
       }
-      else if (nodeIdDict[x.edges[i].startNode]) {
+      else if (nodeIdDict[x.edges[i].startNodeElementId]) {
         if(x.edges[i].type ==="ASSIGNED_TO"){
-          nodeIdDict[x.edges[i].endNode] = true;
+          nodeIdDict[x.edges[i].endNodeElementId] = true;
         }
       }
       else{
@@ -150,7 +150,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }

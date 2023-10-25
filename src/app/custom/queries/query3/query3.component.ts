@@ -19,7 +19,7 @@ import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
 export interface DeveloperData {
   name: string;
   score: number;
-  id: number;
+  id: string;
 }
 @Component({
   selector: 'app-query3',
@@ -30,9 +30,9 @@ export class Query3Component implements OnInit {
   githubHttpOptions: any;
   authentication: any;
   pr: string;
-  prId: number;
+  prId: string;
   prs: string[];
-  prIds: number[];
+  prIds: string[];
   developers = [];
   scores = [];
   fileIds = [];
@@ -70,7 +70,7 @@ export class Query3Component implements OnInit {
 
   ngOnInit() {
 
-    this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , ID(m) as id order by m.name ', (x) => {
+    this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , elementId(m) as id order by m.name ', (x) => {
       this.fillGenres(x)
     }, DbResponseType.table);
     let name = ""
@@ -201,14 +201,14 @@ export class Query3Component implements OnInit {
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     const cbSub1 = (x) => {
       this.ignoredDevelopers = x.data[0][0]
-      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct ID(f)) AS fileIds  RETURN fileIds`, cbSub2, DbResponseType.table, false);
+      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct elementId(f)) AS fileIds  RETURN fileIds`, cbSub2, DbResponseType.table, false);
     }
     const cbSub2 = (x) => {
       this.fileIds = x.data[0][0]
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable([${this.fileIds}], ['COMMENTED'],'Developer',[${this.ignoredDevelopers}],3,${this.number}, false,
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
     }
-    this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct ID(d)) AS ignoreDevs return ignoreDevs`, cbSub1, DbResponseType.table, false);
+    this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub1, DbResponseType.table, false);
 
 
   }
@@ -230,7 +230,8 @@ export class Query3Component implements OnInit {
           this._cyService.loadElementsFromDatabase(this.filterGraphResponse(result), this.tableInput.isMergeGraph);
           this.seeds = this.developers;
           this.seeds.push(this.prId)
-          const seedNodes = this._g.cy.nodes(this.seeds.map(x => '#n' + x).join());
+          const seedsSet = new Set(this.seeds.map(x => 'n' + x));
+          const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
           if (this._g.userPrefs.highlightStyles.length < 2) {
             const cyStyle = getCyStyleFromColorAndWid('#0b9bcd', 4.5);
             this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
@@ -278,12 +279,12 @@ export class Query3Component implements OnInit {
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph([${this.fileIds}], ['COMMENTED'],'Developer',[${this.ignoredDevelopers}],3,${this.number}, false,
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 
   fillTable(data: DeveloperData[], totalDataCount: number | null) {
-    const uiColumns = ['id'].concat(this.tableInput.columns);
+    const uiColumns = ['elementId'].concat(this.tableInput.columns);
     const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string, TableDataType.string];
 
     this.tableInput.results = [];
@@ -332,7 +333,8 @@ export class Query3Component implements OnInit {
           this._cyService.loadElementsFromDatabase(this.filterGraphResponse(result), this.tableInput.isMergeGraph);
           this.seeds = this.developers;
           this.seeds.push(this.prId)
-          const seedNodes = this._g.cy.nodes(this.seeds.map(x => '#n' + x).join());
+          const seedsSet = new Set(this.seeds.map(x => 'n' + x));
+          const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
           if (this._g.userPrefs.highlightStyles.length < 2) {
             const cyStyle = getCyStyleFromColorAndWid('#0b9bcd', 4.5);
             this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
@@ -382,14 +384,14 @@ export class Query3Component implements OnInit {
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     const cbSub2 = (x) => {
       this.ignoredDevelopers = x.data[0][0]
-      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File)  WITH collect(distinct ID(f)) AS fileIds  RETURN fileIds`, cbSub3, DbResponseType.table, false);
+      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File)  WITH collect(distinct elementId(f)) AS fileIds  RETURN fileIds`, cbSub3, DbResponseType.table, false);
     }
     const cbSub3 = (x) => {
       this.fileIds = x.data[0][0]
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph([${this.fileIds}], ['COMMENTED'],'Developer',[${this.ignoredDevelopers}],3,${this.number}, false,
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
     }
-    this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct ID(d)) AS ignoreDevs return ignoreDevs`, cbSub2, DbResponseType.table, false);
+    this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub2, DbResponseType.table, false);
   }
 
   filterTable(filter: TableFiltering) {
@@ -401,7 +403,7 @@ export class Query3Component implements OnInit {
   // zip paralel arrays 
   private preprocessTableData(data): DeveloperData[] {
     const dbColumns = data.columns as string[];
-    const uiColumns = ['id'].concat(this.tableInput.columns);
+    const uiColumns = ['elementId'].concat(this.tableInput.columns);
     let columnMapping = [];
     for (let i = 0; i < uiColumns.length; i++) {
       columnMapping.push(dbColumns.indexOf(uiColumns[i]));
@@ -511,14 +513,15 @@ export class Query3Component implements OnInit {
 
   devSize() {
     if (this.size) {
-      let elements = this._g.cy.nodes(this.developers.map(x => '#n' + x).join());
+      const developerSet = new Set(this.developers.map(x => 'n' + x));
+      let elements = this._g.cy.nodes().filter(element => developerSet.has(`${element.id()}`));
       let devs = elements.filter((element) => element._private.classes.values().next().value == 'Developer');
       this._gt.knowAboutScore(devs, this.scores)
       this._gt.showHideBadges(true)
     }
     else {
       for (let i = 0; i < this.developers.length - 1; i++) {
-        let element = this._g.cy.nodes('#n' + this.developers[i])[0];
+        let element = this._g.cy.nodes(`[id = "n${this.developers[i]}"]`)[0];
         if (element._private.classes.values().next().value == 'Developer') {
           element.removeClass('graphTheoreticDisplay')
         }
@@ -593,42 +596,5 @@ export class Query3Component implements OnInit {
     return s;
   }
 
-  prepareElems4Cy(data) {
-    const idxNodes = data.columns.indexOf('nodes');
-    const idxNodeId = data.columns.indexOf('nodeId');
-    const idxNodeClass = data.columns.indexOf('nodeClass');
-    const idxEdges = data.columns.indexOf('edges');
-    const idxEdgeId = data.columns.indexOf('edgeId');
-    const idxEdgeClass = data.columns.indexOf('edgeClass');
-    const idxEdgeSrcTgt = data.columns.indexOf('edgeSourceTargets');
-
-    const nodes = data.data[0][idxNodes];
-    const nodeClass = data.data[0][idxNodeClass];
-    const nodeId = data.data[0][idxNodeId];
-    const edges = data.data[0][idxEdges];
-    const edgeClass = data.data[0][idxEdgeClass];
-    const edgeId = data.data[0][idxEdgeId];
-    const edgeSrcTgt = data.data[0][idxEdgeSrcTgt];
-
-    const cyData = { nodes: [], edges: [] };
-    const nodeIdsDict = {};
-    for (let i = 0; i < nodes.length; i++) {
-      cyData.nodes.push({ id: nodeId[i], labels: [nodeClass[i]], properties: nodes[i] });
-      nodeIdsDict[nodeId[i]] = true;
-    }
-
-    for (let i = 0; i < edges.length; i++) {
-      const srcId = edgeSrcTgt[i][0];
-      const tgtId = edgeSrcTgt[i][1];
-      // check if src and target exist in cy or current data.
-      const isSrcLoaded = this.tableInput.isMergeGraph ? this._g.cy.$('#n' + srcId).length > 0 : false;
-      const isTgtLoaded = this.tableInput.isMergeGraph ? this._g.cy.$('#n' + tgtId).length > 0 : false;
-      if ((nodeIdsDict[srcId] || isSrcLoaded) && (nodeIdsDict[tgtId] || isTgtLoaded)) {
-        cyData.edges.push({ properties: edges[i], startNode: srcId, endNode: tgtId, id: edgeId[i], type: edgeClass[i] });
-      }
-    }
-
-    return cyData;
-  }
 
 }

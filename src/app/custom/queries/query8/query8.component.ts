@@ -123,7 +123,7 @@ export class Query8Component implements OnInit {
     SUM(comment1.commentCount + comment2.commentCount) AS totalComments
     WITH n, sharedIssues, totalComments, sharedIssues * totalComments AS score
     WHERE score > 0
-    RETURN ID(n) as id, n.name AS name, sharedIssues AS collaboration, score ORDER BY ${orderExpr}
+    RETURN ElementId(n) as id, n.name AS name, sharedIssues AS collaboration, score ORDER BY ${orderExpr}
     LIMIT ${this.number}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -195,15 +195,15 @@ export class Query8Component implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
-      else if (nodeIdDict[x.edges[i].startNode]) {
-        nodeIdDict[x.edges[i].endNode] = true;
+      else if (nodeIdDict[x.edges[i].startNodeElementId]) {
+        nodeIdDict[x.edges[i].endNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }

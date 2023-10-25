@@ -90,7 +90,7 @@ export class MissingPriorityComponent implements OnInit {
     const cql=` MATCH (n:Issue) WHERE n.priority  is NULL   and ${dateFilter} 
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) 
-    RETURN  ID(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver ORDER BY ${orderExpr}`
+    RETURN  ElementId(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -134,12 +134,12 @@ export class MissingPriorityComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }

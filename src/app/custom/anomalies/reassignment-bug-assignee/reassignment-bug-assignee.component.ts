@@ -91,7 +91,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
 
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=` MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${dateFilter} 
-    RETURN  ID(n) as id,  n.name AS issue, n.assigneeHistory as history,  n.assigneeChangeCount as count ORDER BY ${orderExpr}`
+    RETURN  ElementId(n) as id,  n.name AS issue, n.assigneeHistory as history,  n.assigneeChangeCount as count ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -132,7 +132,6 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
   }
   private filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
-   console.log(x)
     const nodeIdDict = {};
     const start_edges  = ["ASSIGNED_TO","ASSIGNED_BY", "REFERENCED"]
     const sink_edges  = ["COMMITTED","OPENED","MERGED", "REVIEWED", "CLOSED", "RESOLVED","REPORTED"]
@@ -141,16 +140,15 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        console.log(x.edges[i])
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
         if(sink_edges.includes(x.edges[i].type )){
-          nodeIdDict[x.edges[i].startNode] = true;
+          nodeIdDict[x.edges[i].startNodeElementId] = true;
         }
         
       }
-      else if (nodeIdDict[x.edges[i].startNode]) {
+      else if (nodeIdDict[x.edges[i].startNodeElementId]) {
         if(start_edges.includes(x.edges[i].type)){
-          nodeIdDict[x.edges[i].endNode] = true;
+          nodeIdDict[x.edges[i].endNodeElementId] = true;
         }
       }
       else{
@@ -158,7 +156,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }

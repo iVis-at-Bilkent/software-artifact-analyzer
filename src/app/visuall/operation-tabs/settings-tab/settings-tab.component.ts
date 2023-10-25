@@ -222,7 +222,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
                   END,
                   n.anomalyList = [x IN n.anomalyList WHERE x <> 'Ignored bug']
                   WITH n
-                  WHERE exists(n.history) AND size(n.history) >= 2
+                  WHERE n.history IS NOT NULL AND size(n.history) >= 2
                   WITH n, range(0, size(n.history)-2) as index_range
                   UNWIND index_range as i
                   WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to

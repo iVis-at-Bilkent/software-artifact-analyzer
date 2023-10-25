@@ -45,11 +45,11 @@ export class GroupCustomizationService {
     if (this._g.userPrefs.groupingOption.getValue() == GroupingOptionTypes.compound) {
       // add parent nodes
       for (let id of developerIds) {
-        let name = this._g.cy.$('#' + id).data().id;
+        let name = this._g.cy.elements(`[id = "${id}"]`).data().id;
         // for each developer, generate a compound node
         this._cyService.addParentNode(name);
         // add the developer to the compound node
-        this._g.cy.$('#' + id).move({ parent: 'c' + id });
+        this._g.cy.elements(`[id = "${id}"]`).move({ parent: 'c' + id });
       }
 
       // assign nodes to parents
@@ -57,7 +57,7 @@ export class GroupCustomizationService {
         // if a artifact has less than 2 developer add, those artifacts to the cluster of developer
           // add developer to the compound node
           if (v['length'] < 2) {
-            this._g.cy.$('#' + k).move({ parent: 'c' + v[0] });
+            this._g.cy.elements(`[id = "${k}"]`).move({ parent: 'c' + v[0] });
           }
           
       }

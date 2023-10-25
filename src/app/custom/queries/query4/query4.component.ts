@@ -17,7 +17,7 @@ import { TheoreticPropertiesCustomService } from 'src/app/custom/theoretic-prope
 export interface DeveloperData {
   name: string;
   score: number;
-  id: number;
+  id: String;
 
 }
 @Component({
@@ -29,9 +29,9 @@ export class Query4Component implements OnInit {
   githubHttpOptions: any;
   authentication: any;
   file: string;
-  fileId: number;
+  fileId: string;
   files: string[];
-  fileIds: number[];
+  fileIds: string[];
   developers = [];
   scores = [];
   developersName = [];
@@ -68,7 +68,7 @@ export class Query4Component implements OnInit {
 
   ngOnInit() {
 
-    this._dbService.runQuery('MATCH (m:File) return m.name as name , ID(m) as id order by m.name ', (x) => {
+    this._dbService.runQuery('MATCH (m:File) return m.name as name , elementId(m) as id order by m.name ', (x) => {
       this.fillGenres(x)
     }, DbResponseType.table);
     if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "File") {
@@ -164,7 +164,7 @@ export class Query4Component implements OnInit {
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable([${this.fileId}], ['COMMENTED'],'Developer',[],3,${this.number}, false,
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileId}'], ['COMMENTED'],'Developer',[],3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
   }
 
@@ -172,13 +172,13 @@ export class Query4Component implements OnInit {
   loadGraph(skip: number, filter?: TableFiltering) {
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
-      console.log(x)
       this.seeds = []
       if (isClientSidePagination) {
-        this._cyService.loadElementsFromDatabase(this.filterGraphResponse(this.prepareElems4Cy(x)), this.tableInput.isMergeGraph);
-        this.seeds = this.developers;
-        this.seeds.push(this.fileId)
-        const seedNodes = this._g.cy.nodes(this.seeds.map(x => '#n' + x).join());
+        this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
+        this.seeds = this.developers;  
+        this.seeds.push(this.fileId)       
+        const seedsSet = new Set(this.seeds.map(x => 'n' + x));
+        const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
         if (this._g.userPrefs.highlightStyles.length < 2) {
           const cyStyle = getCyStyleFromColorAndWid('#0b9bcd', 4.5);
           this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
@@ -192,7 +192,7 @@ export class Query4Component implements OnInit {
 
 
       } else {
-        this._cyService.loadElementsFromDatabase(this.prepareElems4Cy(x), this.tableInput.isMergeGraph);
+        this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph);
       }
       if (!filter || this.graphResponse == null) {
         this.graphResponse = x;
@@ -226,12 +226,12 @@ export class Query4Component implements OnInit {
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph([${this.fileId}], ['COMMENTED'],'Developer',[],3,${this.number}, false,
-      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],'Developer',[],3,${this.number}, false,
+      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 
   fillTable(data: DeveloperData[], totalDataCount: number | null) {
-    const uiColumns = ['id'].concat(this.tableInput.columns);
+    const uiColumns = ['elementId'].concat(this.tableInput.columns);
     const columnTypes = [TableDataType.string, TableDataType.string, TableDataType.string, TableDataType.string];
 
     this.tableInput.results = [];
@@ -270,7 +270,8 @@ export class Query4Component implements OnInit {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
       this.seeds = e.dbIds;
       this.seeds.push(this.fileId)
-      const seedNodes = this._g.cy.nodes(this.seeds.map(x => '#n' + x).join());
+      const seedsSet = new Set(this.seeds.map(x => 'n' + x));
+      const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
       if (this._g.userPrefs.highlightStyles.length < 2) {
         const cyStyle = getCyStyleFromColorAndWid('#0b9bcd', 4.5);
         this._g.viewUtils.addHighlightStyle(cyStyle.node, cyStyle.edge);
@@ -311,7 +312,7 @@ export class Query4Component implements OnInit {
   // zip paralel arrays 
   private preprocessTableData(data): DeveloperData[] {
     const dbColumns = data.columns as string[];
-    const uiColumns = ['id'].concat(this.tableInput.columns);
+    const uiColumns = ['elementId'].concat(this.tableInput.columns);
     let columnMapping = [];
     for (let i = 0; i < uiColumns.length; i++) {
       columnMapping.push(dbColumns.indexOf(uiColumns[i]));
@@ -412,14 +413,15 @@ export class Query4Component implements OnInit {
   }
   devSize() {
     if (this.size) {
-      let elements = this._g.cy.nodes(this.developers.map(x => '#n' + x).join());
+      const developerSet = new Set(this.developers.map(x => 'n' + x));
+      let elements = this._g.cy.nodes().filter(element => developerSet.has(`${element.id()}`));
       let devs = elements.filter((element) => element._private.classes.values().next().value == 'Developer');
       this._gt.knowAboutScore(devs, this.scores)
       this._gt.showHideBadges(true)
     }
     else {
       for (let i = 0; i < this.developers.length - 1; i++) {
-        let element = this._g.cy.nodes('#n' + this.developers[i])[0];
+        let element = this._g.cy.nodes(`[id = "n${this.developers[i]}"]`)[0];
         if (element._private.classes.values().next().value == 'Developer') {
           element.removeClass('graphTheoreticDisplay')
         }
@@ -494,41 +496,6 @@ export class Query4Component implements OnInit {
     return s;
   }
 
-  prepareElems4Cy(data) {
-    const idxNodes = data.columns.indexOf('nodes');
-    const idxNodeId = data.columns.indexOf('nodeId');
-    const idxNodeClass = data.columns.indexOf('nodeClass');
-    const idxEdges = data.columns.indexOf('edges');
-    const idxEdgeId = data.columns.indexOf('edgeId');
-    const idxEdgeClass = data.columns.indexOf('edgeClass');
-    const idxEdgeSrcTgt = data.columns.indexOf('edgeSourceTargets');
 
-    const nodes = data.data[0][idxNodes];
-    const nodeClass = data.data[0][idxNodeClass];
-    const nodeId = data.data[0][idxNodeId];
-    const edges = data.data[0][idxEdges];
-    const edgeClass = data.data[0][idxEdgeClass];
-    const edgeId = data.data[0][idxEdgeId];
-    const edgeSrcTgt = data.data[0][idxEdgeSrcTgt];
 
-    const cyData = { nodes: [], edges: [] };
-    const nodeIdsDict = {};
-    for (let i = 0; i < nodes.length; i++) {
-      cyData.nodes.push({ id: nodeId[i], labels: [nodeClass[i]], properties: nodes[i] });
-      nodeIdsDict[nodeId[i]] = true;
-    }
-
-    for (let i = 0; i < edges.length; i++) {
-      const srcId = edgeSrcTgt[i][0];
-      const tgtId = edgeSrcTgt[i][1];
-      // check if src and target exist in cy or current data.
-      const isSrcLoaded = this.tableInput.isMergeGraph ? this._g.cy.$('#n' + srcId).length > 0 : false;
-      const isTgtLoaded = this.tableInput.isMergeGraph ? this._g.cy.$('#n' + tgtId).length > 0 : false;
-      if ((nodeIdsDict[srcId] || isSrcLoaded) && (nodeIdsDict[tgtId] || isTgtLoaded)) {
-        cyData.edges.push({ properties: edges[i], startNode: srcId, endNode: tgtId, id: edgeId[i], type: edgeClass[i] });
-      }
-    }
-
-    return cyData;
-  }
 }

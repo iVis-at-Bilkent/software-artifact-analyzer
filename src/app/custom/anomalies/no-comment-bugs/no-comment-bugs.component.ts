@@ -88,7 +88,7 @@ export class NoCommentBugsComponent implements OnInit {
 
     const cql=`MATCH (n:Issue{status:'Done'})
     WHERE size(n.comments) = 0  and ${dateFilter} 
-    RETURN  ID(n) as id,  n.name AS issue ORDER BY ${orderExpr}`
+    RETURN  ElementId(n) as id,  n.name AS issue ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -132,12 +132,12 @@ export class NoCommentBugsComponent implements OnInit {
     }
     // add a node if an edge ends with that
     for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
+      if (nodeIdDict[x.edges[i].endNodeElementId]) {
+        nodeIdDict[x.edges[i].startNodeElementId] = true;
       }
     }
     for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
+      if (nodeIdDict[x.nodes[i].elementId]) {
         r.nodes.push(x.nodes[i]);
       }
     }

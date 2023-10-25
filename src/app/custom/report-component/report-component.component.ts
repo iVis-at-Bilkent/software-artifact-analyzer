@@ -478,7 +478,7 @@ export class ReportComponentComponent implements OnInit {
 
   async anomalyQ(anomalyName: string): Promise<any> {
     const cql =` MATCH (issue:Issue {name : '${this.issue_name}'})
-    WHERE EXISTS(issue.anomalyList) AND '${anomalyName}' IN issue.anomalyList
+    WHERE issue.anomalyList  IS NOT NULL AND '${anomalyName}' IN issue.anomalyList
     RETURN true`
     return await this.runAnomalyQuery(cql,anomalyName );
   }
