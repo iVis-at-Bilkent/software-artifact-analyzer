@@ -171,10 +171,11 @@ export class ReportComponentComponent implements OnInit {
 
 
   }
-  openModal(name, url): void {
+  openModal(name, url, templateType): void {
     const modalRef = this.modalService.open(ModalContentComponent);
     modalRef.componentInstance.name = name; // Pass data to the modal component
-    modalRef.componentInstance.url = url; // Pass data to the modal component
+    modalRef.componentInstance.url = url;
+    modalRef.componentInstance.templateType =templateType;
   }
   fillPr(data) {
     this.prs = [];
@@ -191,26 +192,32 @@ export class ReportComponentComponent implements OnInit {
 
   //Jira Issue Post Comment
   async postCommentIssue(issueKey: string) {
-    const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
-    let body = {
-      "header": this.comment_header,
-      "text": this.comment.substring(this.comment.indexOf("]") + 1),
-      "url": "http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this._g.cy.$(':selected')[0]._private.data.name,
-      "issueName": issueKey,
-      "imgData": this.dataURL ? this.dataURL.split(",")[1] : "",
-      "uploadImage": this.commentInput.addGraph
+    if(this.authentication.authenticated){
+      const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
+      let body = {
+        "header": this.comment_header,
+        "text": this.comment.substring(this.comment.indexOf("]") + 1),
+        "url": "http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this._g.cy.$(':selected')[0]._private.data.name,
+        "issueName": issueKey,
+        "imgData": this.dataURL ? this.dataURL.split(",")[1] : "",
+        "uploadImage": this.commentInput.addGraph
+      }
+      this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
+        .subscribe(
+          (response) => {
+            console.info('Confirm request success', response);
+            const url = `${this.authentication.jira_url}/browse/${issueKey}?focusedCommentId=${response["id"]} `
+            this.openModal("issue " + issueKey, url,'report')
+          },
+          (error) => {
+            console.error('Confirm request error:', error);
+          }
+        );
     }
-    this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
-      .subscribe(
-        (response) => {
-          console.info('Confirm request success', response);
-          const url = `${this.authentication.jira_url}/browse/${issueKey}?focusedCommentId=${response["id"]} `
-          this.openModal("issue " + issueKey, url)
-        },
-        (error) => {
-          console.error('Confirm request error:', error);
-        }
-      );
+    else{
+      this.openModal("","",'error')
+    }
+
   }
 
   updateFile(): Observable<any> {
@@ -225,6 +232,7 @@ export class ReportComponentComponent implements OnInit {
   }
   //Github PullRequest Post Comment To Pull Request
   async postCommentPr(prKey: string) {
+    if(this.authentication.authenticated){
     let commentBody = {
       body: `### ${this.comment_header}\n${this.comment}`
     };
@@ -239,7 +247,7 @@ export class ReportComponentComponent implements OnInit {
         };
         this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
           console.log('Comment posted successfully:', response);
-          this.openModal("pull request  " + prKey, response["html_url"])
+          this.openModal("pull request  " + prKey, response["html_url"],'report')
         }, error => {
           console.error('Error posting comment:', error);
         });
@@ -251,16 +259,19 @@ export class ReportComponentComponent implements OnInit {
     else {
       this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
-        this.openModal("pull request  " + prKey, response["html_url"])
+        this.openModal("pull request  " + prKey, response["html_url"],'report')
       }, error => {
         console.error('Error posting comment:', error);
       });
     }
-
+  }else{
+    this.openModal("","",'error')
+  }
 
   }
 
   async postCommentCommit(commitKey: string) {
+    if(this.authentication.authenticated){
     let commentBody = {
       body: "### " + this.comment_header + "\n" + this.comment
     };
@@ -273,7 +284,7 @@ export class ReportComponentComponent implements OnInit {
         };
         this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
           console.log('Comment posted successfully:', response);
-          this.openModal("commit  " + commitKey, response["html_url"])
+          this.openModal("commit  " + commitKey, response["html_url"],'report')
         }, error => {
           console.error('Error posting comment:', error);
         });
@@ -285,11 +296,14 @@ export class ReportComponentComponent implements OnInit {
     else {
       this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
         console.log('Comment posted successfully:', response);
-        this.openModal("commit  " + commitKey, response["html_url"])
+        this.openModal("commit  " + commitKey, response["html_url"],'report')
       }, error => {
         console.error('Error posting comment:', error);
       });
     }
+  }else{
+    this.openModal("","",'error')
+  }
   }
 
   onAddComment() {

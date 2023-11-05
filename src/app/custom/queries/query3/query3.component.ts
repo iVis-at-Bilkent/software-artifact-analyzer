@@ -16,6 +16,8 @@ import { debounce2, debounce, COLLAPSED_EDGE_CLASS, mapColor } from 'src/app/vis
 import { TheoreticPropertiesCustomService } from 'src/app/custom/theoretic-properties-custom.service'
 import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from 'src/app/visuall/constants';
 import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalContentComponent } from '../../modal-content/modal-content.component';
 export interface DeveloperData {
   name: string;
   score: number;
@@ -59,7 +61,7 @@ export class Query3Component implements OnInit {
   currNodeSize = this.NODE_SIZE;
   algorithm = null;
 
-  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService) {
+  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService, private modalService: NgbModal) {
     this.prs = [];
     this.developers = [];
     this.scores = [];
@@ -80,17 +82,6 @@ export class Query3Component implements OnInit {
     else {
       this.pr = this.prs[0]
     }
-    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
-      this.authentication = data;
-      this.githubHttpOptions = {
-        headers: new HttpHeaders({
-          'Authorization': `Bearer ${this.authentication.github_token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          "X-GitHub-Api-Version": "2022-11-28",
-          'Content-Type': 'application/json'
-        })
-      };
-    });
 
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
@@ -103,25 +94,43 @@ export class Query3Component implements OnInit {
     }, 500)
   }
   assign() {
-    this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
-    const url = `https://api.github.com/repos/${this.authentication.github_repo}/pulls/${this.pr}/requested_reviewers`;
-    const headers = {
-      'Accept': 'application/vnd.github+json',
-      'Authorization': `Bearer ${this.authentication.github_token}`,
-      'X-GitHub-Api-Version': '2022-11-28',
-      'Content-Type': 'application/json'
-    };
-    const body = {
-      reviewers: this.reviewers
-    };
+    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
+      this.authentication = data;
+      this.githubHttpOptions = {
+        headers: new HttpHeaders({
+          'Authorization': `Bearer ${this.authentication.github_token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          "X-GitHub-Api-Version": "2022-11-28",
+          'Content-Type': 'application/json'
+        })
+      };
+      if (this.authentication.authenticated) {
+        this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
+        const url = `https://api.github.com/repos/${this.authentication.github_repo}/pulls/${this.pr}/requested_reviewers`;
+        const headers = {
+          'Accept': 'application/vnd.github+json',
+          'Authorization': `Bearer ${this.authentication.github_token}`,
+          'X-GitHub-Api-Version': '2022-11-28',
+          'Content-Type': 'application/json'
+        };
+        const body = {
+          reviewers: this.reviewers
+        };
 
-    this.http.post(url, body, { headers }).subscribe(
-      (response) => {
-        console.log('Reviewers added successfully:', response);
-      },
-      (error) => {
-        console.error('Error adding reviewers:', error);
+        this.http.post(url, body, { headers }).subscribe(
+          (response) => {
+            this.openModal("Pull Request  " + this.pr, response["html_url"],'assigned')
+            console.log('Reviewers added successfully:', response);
+          },
+          (error) => {
+            console.error('Error adding reviewers:', error);
+          }
+
+        );
+      } else {
+        this.openModal("","",'error')
       }
+    }
     );
   }
 
@@ -318,7 +327,7 @@ export class Query3Component implements OnInit {
   }
 
   getDataForQueryResult(e: TableRowMeta) {
-    let filter =  this.tableFilter;
+    let filter = this.tableFilter;
     const skip = (this.tableInput.currPage - 1) * this.tableInput.pageSize;
     const idFilter = buildIdFilter(e.dbIds);
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
@@ -519,7 +528,7 @@ export class Query3Component implements OnInit {
   devSize() {
     if (this.size) {
       let devs = this._g.cy.collection();
-      this.developers.forEach(id =>{
+      this.developers.forEach(id => {
         devs = devs.union(this._g.cy.$id(`n${id}`));
       })
       this._gt.knowAboutScore(devs, this.scores)
@@ -544,6 +553,12 @@ export class Query3Component implements OnInit {
       pageSize = pageSize * this._g.userPrefs.dataPageLimit.getValue();
     }
     return pageSize;
+  }
+  openModal(name, url, templateType): void {
+    const modalRef = this.modalService.open(ModalContentComponent);
+    modalRef.componentInstance.name = name; // Pass data to the modal component
+    modalRef.componentInstance.url = url;
+    modalRef.componentInstance.templateType =templateType;
   }
 
   private getTimebarMapping4Java(): string {
