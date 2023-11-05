@@ -7,7 +7,8 @@ import { Subject } from 'rxjs';
 import { buildIdFilter, getOrderByExpression4Query, getQueryCondition4TxtFilter } from '../../queries/query-helper';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from 'src/app/visuall/constants';
-import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
+import { GroupingOptionTypes, TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
+import { GroupCustomizationService } from 'src/app/custom/group-customization.service';
 export interface Collaborator {
   Name: string;
   Collaboration: number;
@@ -20,7 +21,8 @@ export interface Collaborator {
 export class Query7Component implements OnInit {
   
   developer: String = "";
-  developers: number [] = [];
+  developerId : String = "";
+  developers: String [] = [];
   developersName : String [] = [];
   scores: number [] = [];
    tableInput: TableViewInput = {
@@ -32,7 +34,7 @@ export class Query7Component implements OnInit {
   graphResponse = null;
   clearTableFilter = new Subject<boolean>();
   number: Number = 3;
-  constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService) {
+  constructor(private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService) {
   }
 
   ngOnInit() {
@@ -42,6 +44,7 @@ export class Query7Component implements OnInit {
       if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "Developer" && this._g.cy.$(':selected')[0]._private.data.name !== name) {
         name = this._g.cy.$(':selected')[0]._private.data.name
         this.developer = this._g.cy.$(':selected')[0]._private.data.name;
+        this.developerId = this._g.cy.$(':selected')[0]._private.data.id;
       }
     }, 500)
     this.tableInput.results = [];
@@ -138,13 +141,21 @@ export class Query7Component implements OnInit {
       if (!filter || this.graphResponse == null) {
         this.graphResponse = x;
       }
-      const seedNodes = this._g.cy.nodes(this.developers.map(x => 'n' + x).join());
+      const seedsSet = new Set(this.developers.map(x => 'n' + x));
+      const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
       const currHighlightIdx = this._g.userPrefs.currHighlightIdx.getValue();
+      const developerNode = this._g.cy.nodes(`[id = "${this.developerId}"]`);
       if (currHighlightIdx == 0) {
         this._g.viewUtils.highlight(seedNodes, 1);
-      } else {
+        this._g.viewUtils.highlight(developerNode, 2);
+      } 
+      else if(currHighlightIdx == 2){
+        this._g.viewUtils.highlight(seedNodes, 1);
+        this._g.viewUtils.highlight(developerNode, 0);
+      }else {
         this._g.viewUtils.highlight(seedNodes, 0);
       }
+
     };
     if (isClientSidePagination && filter && this.graphResponse) {
       this._cyService.loadElementsFromDatabase(this.filterGraphResponse(this.graphResponse), this.tableInput.isMergeGraph);

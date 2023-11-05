@@ -175,7 +175,7 @@ export class Query4Component implements OnInit {
       this.seeds = []
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
-        this.seeds = this.developers;  
+        this.seeds = [...this.developers];
         this.seeds.push(this.fileId)       
         const seedsSet = new Set(this.seeds.map(x => 'n' + x));
         const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
@@ -268,7 +268,7 @@ export class Query4Component implements OnInit {
     const cb = (x) => {
       this.seeds = []
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
-      this.seeds = e.dbIds;
+      this.seeds = [...e.dbIds];
       this.seeds.push(this.fileId)
       const seedsSet = new Set(this.seeds.map(x => 'n' + x));
       const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
@@ -413,9 +413,10 @@ export class Query4Component implements OnInit {
   }
   devSize() {
     if (this.size) {
-      const developerSet = new Set(this.developers.map(x => 'n' + x));
-      let elements = this._g.cy.nodes().filter(element => developerSet.has(`${element.id()}`));
-      let devs = elements.filter((element) => element._private.classes.values().next().value == 'Developer');
+      let devs = this._g.cy.collection();
+      this.developers.forEach(id =>{
+        devs = devs.union(this._g.cy.$id(`n${id}`));
+      })
       this._gt.knowAboutScore(devs, this.scores)
       this._gt.showHideBadges(true)
     }

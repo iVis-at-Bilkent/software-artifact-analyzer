@@ -223,12 +223,12 @@ export class Query3Component implements OnInit {
         result.nodes = result.nodes.concat(y.nodes)
         result.edges = result.edges.concat(y.edges)
         //If number of files more than 300 we will filter file nodes
-        if(this.fileIds.length>300){
+        if (this.fileIds.length > 300) {
           result.nodes = result.nodes.filter(node => !node.labels.includes("File"));
         }
         if (isClientSidePagination) {
           this._cyService.loadElementsFromDatabase(this.filterGraphResponse(result), this.tableInput.isMergeGraph);
-          this.seeds = this.developers;
+          this.seeds = [...this.developers];
           this.seeds.push(this.prId)
           const seedsSet = new Set(this.seeds.map(x => 'n' + x));
           const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
@@ -331,7 +331,7 @@ export class Query3Component implements OnInit {
         result.edges = result.edges.concat(y.edges)
         if (isClientSidePagination) {
           this._cyService.loadElementsFromDatabase(this.filterGraphResponse(result), this.tableInput.isMergeGraph);
-          this.seeds = this.developers;
+          this.seeds = [...this.developers];
           this.seeds.push(this.prId)
           const seedsSet = new Set(this.seeds.map(x => 'n' + x));
           const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
@@ -413,7 +413,12 @@ export class Query3Component implements OnInit {
     for (let i = 0; i < rawData[0].length; i++) {
       const obj = {};
       for (let j = 0; j < columnMapping.length; j++) {
-        obj[uiColumns[j]] = rawData[columnMapping[j]][i];
+        if (uiColumns[j] == 'score') {
+          obj[uiColumns[j]] = rawData[columnMapping[j]][i].toFixed(2);
+        }
+        else {
+          obj[uiColumns[j]] = rawData[columnMapping[j]][i];
+        }
       }
       objArr.push(obj as DeveloperData)
     }
@@ -513,9 +518,10 @@ export class Query3Component implements OnInit {
 
   devSize() {
     if (this.size) {
-      const developerSet = new Set(this.developers.map(x => 'n' + x));
-      let elements = this._g.cy.nodes().filter(element => developerSet.has(`${element.id()}`));
-      let devs = elements.filter((element) => element._private.classes.values().next().value == 'Developer');
+      let devs = this._g.cy.collection();
+      this.developers.forEach(id =>{
+        devs = devs.union(this._g.cy.$id(`n${id}`));
+      })
       this._gt.knowAboutScore(devs, this.scores)
       this._gt.showHideBadges(true)
     }

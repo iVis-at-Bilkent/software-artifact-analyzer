@@ -21,7 +21,8 @@ export interface Collaborator {
 export class Query8Component implements OnInit {
   
   developer: String = "";
-  developers: number [] = [];
+  developerId : String = "";
+  developers: String [] = [];
   developersName : String [] = [];
   scores: number [] = [];
   tableInput: TableViewInput = {
@@ -43,6 +44,7 @@ export class Query8Component implements OnInit {
       if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "Developer" && this._g.cy.$(':selected')[0]._private.data.name !== name) {
         name = this._g.cy.$(':selected')[0]._private.data.name
         this.developer = this._g.cy.$(':selected')[0]._private.data.name;
+        this.developerId = this._g.cy.$(':selected')[0]._private.data.id;
       }
     }, 500)
     this.tableInput.results = [];
@@ -143,11 +145,18 @@ export class Query8Component implements OnInit {
       if (!filter || this.graphResponse == null) {
         this.graphResponse = x;
       }
-      const seedNodes = this._g.cy.nodes(this.developers.map(x => '#n' + x).join());
+      const seedsSet = new Set(this.developers.map(x => 'n' + x));
+      const seedNodes = this._g.cy.nodes().filter(element => seedsSet.has(element.id()));
       const currHighlightIdx = this._g.userPrefs.currHighlightIdx.getValue();
+      const developerNode = this._g.cy.nodes(`[id = "${this.developerId}"]`);
       if (currHighlightIdx == 0) {
         this._g.viewUtils.highlight(seedNodes, 1);
-      } else {
+        this._g.viewUtils.highlight(developerNode, 2);
+      } 
+      else if(currHighlightIdx == 2){
+        this._g.viewUtils.highlight(seedNodes, 1);
+        this._g.viewUtils.highlight(developerNode, 0);
+      }else {
         this._g.viewUtils.highlight(seedNodes, 0);
       }
     };

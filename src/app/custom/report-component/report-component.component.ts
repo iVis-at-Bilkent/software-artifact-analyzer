@@ -1,5 +1,5 @@
 
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GlobalVariableService } from '../../visuall/global-variable.service';
 import { Observable } from 'rxjs';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
@@ -58,19 +58,19 @@ export class ReportComponentComponent implements OnInit {
   selectedItem = new BehaviorSubject<any>(null);
 
 
-  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient,private modalService: NgbModal) {
+  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private modalService: NgbModal) {
     this.anomalies = [
-      { text: 'Unassigned Bugs', isEnable: true, name:"Unassigned issue"},
-      { text: 'No Link to Bug-Fixing Commit', isEnable: false, name:"No link to bug fixing commit or pull request"},
-      { text: 'Ignored Bugs', isEnable: true , name:"Ignored bug"},
-      { text: 'Missing Priority', isEnable: true  , name:"Missing Priority"},
-      { text: 'Missing Environment Information', isEnable: true  , name:"Missing Environment Information"},
-      { text: 'No comment bugs', isEnable: true  , name:"No comment on issue"},
-      { text: 'Non-Assignee Resolver of Bug' , isEnable: true  , name:"No assignee resolver"},
-      { text: 'Closed-Reopen Ping Pong', isEnable: true  , name:"Closed reopen ping pong"} ,
-      { text: 'Reassignment of Bug Assignee', isEnable: true  , name:"Reassignment of Bug Assignee"},
-      { text: 'Not Referenced Duplicates', isEnable: true  , name:"Not Referenced duplicate"},
-      { text: 'Same Resolver Closer', isEnable: true  , name:"Same resolver closer"}
+      { text: 'Unassigned Bugs', isEnable: true, name: "Unassigned issue" },
+      { text: 'No Link to Bug-Fixing Commit', isEnable: false, name: "No link to bug fixing commit or pull request" },
+      { text: 'Ignored Bugs', isEnable: true, name: "Ignored bug" },
+      { text: 'Missing Priority', isEnable: true, name: "Missing Priority" },
+      { text: 'Missing Environment Information', isEnable: true, name: "Missing Environment Information" },
+      { text: 'No comment bugs', isEnable: true, name: "No comment on issue" },
+      { text: 'Non-Assignee Resolver of Bug', isEnable: true, name: "No assignee resolver" },
+      { text: 'Closed-Reopen Ping Pong', isEnable: true, name: "Closed reopen ping pong" },
+      { text: 'Reassignment of Bug Assignee', isEnable: true, name: "Reassignment of Bug Assignee" },
+      { text: 'Not Referenced Duplicates', isEnable: true, name: "Not Referenced duplicate" },
+      { text: 'Same Resolver Closer', isEnable: true, name: "Same resolver closer" }
     ];
 
   }
@@ -164,7 +164,7 @@ export class ReportComponentComponent implements OnInit {
 
     }, 500)
 
-    
+
 
 
 
@@ -195,15 +195,15 @@ export class ReportComponentComponent implements OnInit {
     let body = {
       "header": this.comment_header,
       "text": this.comment.substring(this.comment.indexOf("]") + 1),
-      "url":"http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this._g.cy.$(':selected')[0]._private.data.name,
+      "url": "http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this._g.cy.$(':selected')[0]._private.data.name,
       "issueName": issueKey,
-      "imgData": this.dataURL?this.dataURL.split(",")[1]:"",
+      "imgData": this.dataURL ? this.dataURL.split(",")[1] : "",
       "uploadImage": this.commentInput.addGraph
     }
     this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
-          console.info('Confirm request success',response);
+          console.info('Confirm request success', response);
           const url = `${this.authentication.jira_url}/browse/${issueKey}?focusedCommentId=${response["id"]} `
           this.openModal("issue " + issueKey, url)
         },
@@ -225,27 +225,27 @@ export class ReportComponentComponent implements OnInit {
   }
   //Github PullRequest Post Comment To Pull Request
   async postCommentPr(prKey: string) {
-    let  commentBody = {
+    let commentBody = {
       body: `### ${this.comment_header}\n${this.comment}`
     };
 
     //If add graph is selected
     if (this.commentInput.addGraph) {
-        await this.updateFile().subscribe(response => {
+      await this.updateFile().subscribe(response => {
+        console.log('Comment posted successfully:', response);
+        this.imageUrl = response["content"]["download_url"]
+        commentBody = {
+          body: `### ${this.comment_header}\n${this.comment}\n![image](${this.imageUrl})`
+        };
+        this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
           console.log('Comment posted successfully:', response);
-          this.imageUrl = response["content"]["download_url"]
-          commentBody = {
-            body: `### ${this.comment_header}\n${this.comment}\n![image](${ this.imageUrl })`
-          };
-          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
-            console.log('Comment posted successfully:', response);
-            this.openModal("pull request  " + prKey, response["html_url"])
-          }, error => {
-            console.error('Error posting comment:', error);
-          });
+          this.openModal("pull request  " + prKey, response["html_url"])
         }, error => {
-          console.error('Error updating image:', error);
+          console.error('Error posting comment:', error);
         });
+      }, error => {
+        console.error('Error updating image:', error);
+      });
 
     }
     else {
@@ -265,21 +265,21 @@ export class ReportComponentComponent implements OnInit {
       body: "### " + this.comment_header + "\n" + this.comment
     };
     if (this.commentInput.addGraph) {
-        await this.updateFile().subscribe(response => {
+      await this.updateFile().subscribe(response => {
+        console.log('Comment posted successfully:', response);
+        this.imageUrl = response["content"]["download_url"]
+        commentBody = {
+          body: `###${this.comment_header}\n${this.comment}\n![image](${this.imageUrl})`
+        };
+        this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
           console.log('Comment posted successfully:', response);
-          this.imageUrl = response["content"]["download_url"]
-          commentBody = {
-            body: `###${this.comment_header}\n${this.comment}\n![image](${ this.imageUrl })`
-          };
-          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
-            console.log('Comment posted successfully:', response);
-            this.openModal("commit  " + commitKey, response["html_url"])
-          }, error => {
-            console.error('Error posting comment:', error);
-          });
+          this.openModal("commit  " + commitKey, response["html_url"])
         }, error => {
-          console.error('Error updating image:', error);
+          console.error('Error posting comment:', error);
         });
+      }, error => {
+        console.error('Error updating image:', error);
+      });
     }
 
     else {
@@ -380,8 +380,8 @@ export class ReportComponentComponent implements OnInit {
     image.onload = async () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = image.width/4;
-      canvas.height = image.height/4;
+      canvas.width = image.width / 4;
+      canvas.height = image.height / 4;
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       this.dataURL = canvas.toDataURL('image/png');
     };
@@ -477,10 +477,10 @@ export class ReportComponentComponent implements OnInit {
   }
 
   async anomalyQ(anomalyName: string): Promise<any> {
-    const cql =` MATCH (issue:Issue {name : '${this.issue_name}'})
+    const cql = ` MATCH (issue:Issue {name : '${this.issue_name}'})
     WHERE issue.anomalyList  IS NOT NULL AND '${anomalyName}' IN issue.anomalyList
     RETURN true`
-    return await this.runAnomalyQuery(cql,anomalyName );
+    return await this.runAnomalyQuery(cql, anomalyName);
   }
 
 
@@ -511,21 +511,21 @@ export class ReportComponentComponent implements OnInit {
   }
   async performSelection() {
     const prKey = this.commentInput.addGithub ? this.pr_name : this._g.cy.$(':selected')[0]._private.data.name;
-    this.comment = "[You can inspect artifact " +  this._g.cy.$(':selected')[0]._private.data.name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" +  this._g.cy.$(':selected')[0]._private.data.name + ")\n";
+    this.comment = "[You can inspect artifact " + this._g.cy.$(':selected')[0]._private.data.name + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this._g.cy.$(':selected')[0]._private.data.name + ")\n";
     if (this.commentInput.addGithub) {
-      if(this._g.cy.$(':selected')[0]._private.classes.values().next().value == "Developer"){
+      if (this._g.cy.$(':selected')[0]._private.classes.values().next().value == "Developer") {
         const developer_name = this._g.cy.$(':selected')[0]._private.data.name
         const pull_request_name = this.pr_name
         this.comment_header = "Report  @" + developer_name.replace(" ", "") + " "
       }
-      else if(this._g.cy.$(':selected')[0]._private.classes.values().next().value == "Commit"){
+      else if (this._g.cy.$(':selected')[0]._private.classes.values().next().value == "Commit") {
         const commit_name = this._g.cy.$(':selected')[0]._private.data.name
         const pull_request_name = this.pr_name
         this.comment_header = "Report  Commit " + commit_name + " "
-      }else{
+      } else {
         const file_name = this._g.cy.$(':selected')[0]._private.data.name
         const pull_request_name = this.pr_name
-        this.comment_header = "Report  File " + file_name + " "       
+        this.comment_header = "Report  File " + file_name + " "
       }
 
 
@@ -533,7 +533,7 @@ export class ReportComponentComponent implements OnInit {
     if (this.commentInput.addJira) {
       const developer_name = this._g.cy.$(':selected')[0]._private.data.name
       this.comment_header = "Report  @" + developer_name + " "
-    }    
+    }
     if (this.commentInput.addGraph) {
       this.saveAsPng(true);
     }
@@ -545,23 +545,39 @@ export class ReportComponentComponent implements OnInit {
         // Generate table header
         recomendation += 'Recommended developers are;\n';
         // Generate table body
-        x.data.forEach(data => {
-          if (data[1] != "") {
-            recomendation += `@${data[1].replace(' ', '')} with score ${data[0]}\n`
-          }
+        x.data[0][1].forEach((developer, index) => {
+          recomendation += `@${developer.replace(' ', '')} with score ${ x.data[0][2][index].toFixed(2)}\n`
+
         });
         this.comment = this.comment + recomendation
         this.commentInput.addReviewer = true
 
       }
-      const cql = ` MATCH (pr:PullRequest{name:'${prKey}'})-[*]->(file:File)
-      MATCH (dp:Developer)-[]-(Commit)-[]-(pr:PullRequest {name:'${prKey}'})
-      with collect(file.name) as filenames, collect(dp.name) as dnames
-      MATCH (a:Developer)-[r*0..3]-(b:File)
-      WHERE b.name IN filenames
-      WITH DISTINCT ID(a) As id,  a.name AS name, round(toFloat(SUM(1.0/size(r)) ) * 100)/100 AS score, filenames as f, dnames as d
-      RETURN  id, name, score  ORDER BY score LIMIT 3`;
-      this._dbService.runQuery(cql, cb, DbResponseType.table);
+      //const idFilter = buildIdFilter(e.dbIds);;
+      const orderBy = 'score';
+      let orderDir = 0;
+      const timeMap = this.getTimebarMapping4Java();
+      let d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
+      let d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
+      if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
+        d1 = 0;
+        d2 = 0;
+      }
+      let ignoredDevelopers;
+      let fileIds;
+      const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
+      const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
+      const cbSub1 = (x) => {
+        ignoredDevelopers = x.data[0][0]
+        this._dbService.runQuery(`MATCH (N:PullRequest{name:'${prKey}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct elementId(f)) AS fileIds  RETURN fileIds`, cbSub2, DbResponseType.table, false);
+      }
+      const cbSub2 = (x) => {
+        fileIds = x.data[0][0]
+        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${fileIds.join("','")}'], ['COMMENTED'],'Developer',['${ignoredDevelopers.join("','")}'],3,3, false,
+      225, 1, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+      }
+      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${prKey}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub1, DbResponseType.table, false);
+
     }
     if (this.commentInput.addAnomaly) {
 
@@ -583,6 +599,17 @@ export class ReportComponentComponent implements OnInit {
     }
 
 
+  }
+  private getTimebarMapping4Java(): string {
+    // {Person:["start_t", "end_t"]}
+    const mapping = this._g.appDescription.getValue().timebarDataMapping;
+    let s = '{'
+    for (const k in mapping) {
+      s += k + ':["' + mapping[k].begin_datetime + '","' + mapping[k].end_datetime + '"],';
+    }
+    s = s.slice(0, -1);
+    s += '}'
+    return s;
   }
 
   async reportAnomaly() {
