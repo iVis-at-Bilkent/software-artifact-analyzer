@@ -119,16 +119,17 @@ export class Query3Component implements OnInit {
 
         this.http.post(url, body, { headers }).subscribe(
           (response) => {
-            this.openModal("Pull Request  " + this.pr, response["html_url"],'assigned')
+            this.openModal('assigned',"Pull Request  " + this.pr, response["html_url"]);
             console.log('Reviewers added successfully:', response);
           },
           (error) => {
-            console.error('Error adding reviewers:', error);
+            console.log(error.error.message);
+            this.openModal( 'error', undefined, undefined,"Assignment error", error.error.message);
           }
 
         );
       } else {
-        this.openModal("","",'error')
+        this.openModal('error', undefined, undefined,"You are not authenticated","You are not authenticated for performing this task")
       }
     }
     );
@@ -554,11 +555,13 @@ export class Query3Component implements OnInit {
     }
     return pageSize;
   }
-  openModal(name, url, templateType): void {
+  openModal(templateType, name?, url?, title?, message?): void {
     const modalRef = this.modalService.open(ModalContentComponent);
     modalRef.componentInstance.name = name; // Pass data to the modal component
     modalRef.componentInstance.url = url;
     modalRef.componentInstance.templateType =templateType;
+    modalRef.componentInstance.message =message;
+    modalRef.componentInstance.title =title;
   }
 
   private getTimebarMapping4Java(): string {
