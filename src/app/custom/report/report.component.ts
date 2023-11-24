@@ -6,7 +6,7 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalContentComponent } from './../modal-content/modal-content.component';
+import { ModalContentComponent } from '../modal-content/modal-content.component';
 import { BehaviorSubject } from 'rxjs';
 
 interface Attachment {
@@ -20,11 +20,11 @@ export interface BoolSetting {
   name: string;
 }
 @Component({
-  selector: 'app-report-component',
-  templateUrl: './report-component.component.html',
-  styleUrls: ['./report-component.component.css']
+  selector: 'app-report',
+  templateUrl: './report.component.html',
+  styleUrls: ['./report.component.css']
 })
-export class ReportComponentComponent implements OnInit {
+export class ReportComponent implements OnInit {
   //MENU VARIABLES
   addMenu: any[];
   commentInput: any = {
@@ -37,7 +37,7 @@ export class ReportComponentComponent implements OnInit {
   issue_name: string = "";
   comment: string = '';
   comment_header: string;
-  className: string = ""
+  className: string = "";
 
   //RECOMMEND REVIEWER PR
   reviewerData: any[] = [];
@@ -59,6 +59,7 @@ export class ReportComponentComponent implements OnInit {
 
 
   constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private modalService: NgbModal) {
+
     this.anomalies = [
       { text: 'Unassigned Bugs', isEnable: true, name: "Unassigned issue" },
       { text: 'No Link to Bug-Fixing Commit', isEnable: false, name: "No link to bug fixing commit or pull request" },
@@ -99,6 +100,7 @@ export class ReportComponentComponent implements OnInit {
           this.comment = ""
           this.dataURL = ""
           this.pr_name = ""
+          this.issue_name =""
           this.comment_header = ""
           name = this._g.cy.$(':selected')[0]._private.data.name
           if (this.className == "Issue") {
@@ -116,10 +118,10 @@ export class ReportComponentComponent implements OnInit {
             addGithub: false,
             addReviewer: false,
           };
-          if  (this._g.openReportTab.getValue()) {
+          if (this._g.openReportTab.getValue()) {
             this.reportAnomaly()
           }
-          
+
         }
 
         if (this.className == "Issue") {
@@ -175,7 +177,7 @@ export class ReportComponentComponent implements OnInit {
     const modalRef = this.modalService.open(ModalContentComponent);
     modalRef.componentInstance.name = name; // Pass data to the modal component
     modalRef.componentInstance.url = url;
-    modalRef.componentInstance.templateType =templateType;
+    modalRef.componentInstance.templateType = templateType;
   }
   fillPr(data) {
     this.prs = [];
@@ -192,7 +194,7 @@ export class ReportComponentComponent implements OnInit {
 
   //Jira Issue Post Comment
   async postCommentIssue(issueKey: string) {
-    if(this.authentication.authenticated){
+    if (this.authentication.authenticated) {
       const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
       let body = {
         "header": this.comment_header,
@@ -207,15 +209,15 @@ export class ReportComponentComponent implements OnInit {
           (response) => {
             console.info('Confirm request success', response);
             const url = `${this.authentication.jira_url}/browse/${issueKey}?focusedCommentId=${response["id"]} `
-            this.openModal("issue " + issueKey, url,'report')
+            this.openModal("issue " + issueKey, url, 'report')
           },
           (error) => {
             console.error('Confirm request error:', error);
           }
         );
     }
-    else{
-      this.openModal("","",'error')
+    else {
+      this.openModal("", "", 'error')
     }
 
   }
@@ -232,78 +234,78 @@ export class ReportComponentComponent implements OnInit {
   }
   //Github PullRequest Post Comment To Pull Request
   async postCommentPr(prKey: string) {
-    if(this.authentication.authenticated){
-    let commentBody = {
-      body: `### ${this.comment_header}\n${this.comment}`
-    };
+    if (this.authentication.authenticated) {
+      let commentBody = {
+        body: `### ${this.comment_header}\n${this.comment}`
+      };
 
-    //If add graph is selected
-    if (this.commentInput.addGraph) {
-      await this.updateFile().subscribe(response => {
-        console.log('Comment posted successfully:', response);
-        this.imageUrl = response["content"]["download_url"]
-        commentBody = {
-          body: `### ${this.comment_header}\n${this.comment}\n![image](${this.imageUrl})`
-        };
+      //If add graph is selected
+      if (this.commentInput.addGraph) {
+        await this.updateFile().subscribe(response => {
+          console.log('Comment posted successfully:', response);
+          this.imageUrl = response["content"]["download_url"]
+          commentBody = {
+            body: `### ${this.comment_header}\n${this.comment}\n![image](${this.imageUrl})`
+          };
+          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
+            console.log('Comment posted successfully:', response);
+            this.openModal("pull request  " + prKey, response["html_url"], 'report')
+          }, error => {
+            console.error('Error posting comment:', error);
+          });
+        }, error => {
+          console.error('Error updating image:', error);
+        });
+
+      }
+      else {
         this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
           console.log('Comment posted successfully:', response);
-          this.openModal("pull request  " + prKey, response["html_url"],'report')
+          this.openModal("pull request  " + prKey, response["html_url"], 'report')
         }, error => {
           console.error('Error posting comment:', error);
         });
-      }, error => {
-        console.error('Error updating image:', error);
-      });
-
+      }
+    } else {
+      this.openModal("", "", 'error')
     }
-    else {
-      this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${prKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
-        console.log('Comment posted successfully:', response);
-        this.openModal("pull request  " + prKey, response["html_url"],'report')
-      }, error => {
-        console.error('Error posting comment:', error);
-      });
-    }
-  }else{
-    this.openModal("","",'error')
-  }
 
   }
 
   async postCommentCommit(commitKey: string) {
-    if(this.authentication.authenticated){
-    let commentBody = {
-      body: "### " + this.comment_header + "\n" + this.comment
-    };
-    if (this.commentInput.addGraph) {
-      await this.updateFile().subscribe(response => {
-        console.log('Comment posted successfully:', response);
-        this.imageUrl = response["content"]["download_url"]
-        commentBody = {
-          body: `###${this.comment_header}\n${this.comment}\n![image](${this.imageUrl})`
-        };
+    if (this.authentication.authenticated) {
+      let commentBody = {
+        body: "### " + this.comment_header + "\n" + this.comment
+      };
+      if (this.commentInput.addGraph) {
+        await this.updateFile().subscribe(response => {
+          console.log('Comment posted successfully:', response);
+          this.imageUrl = response["content"]["download_url"]
+          commentBody = {
+            body: `###${this.comment_header}\n${this.comment}\n![image](${this.imageUrl})`
+          };
+          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
+            console.log('Comment posted successfully:', response);
+            this.openModal("commit  " + commitKey, response["html_url"], 'report')
+          }, error => {
+            console.error('Error posting comment:', error);
+          });
+        }, error => {
+          console.error('Error updating image:', error);
+        });
+      }
+
+      else {
         this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
           console.log('Comment posted successfully:', response);
-          this.openModal("commit  " + commitKey, response["html_url"],'report')
+          this.openModal("commit  " + commitKey, response["html_url"], 'report')
         }, error => {
           console.error('Error posting comment:', error);
         });
-      }, error => {
-        console.error('Error updating image:', error);
-      });
+      }
+    } else {
+      this.openModal("", "", 'error')
     }
-
-    else {
-      this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/commits/${commitKey}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
-        console.log('Comment posted successfully:', response);
-        this.openModal("commit  " + commitKey, response["html_url"],'report')
-      }, error => {
-        console.error('Error posting comment:', error);
-      });
-    }
-  }else{
-    this.openModal("","",'error')
-  }
   }
 
   onAddComment() {
@@ -560,7 +562,7 @@ export class ReportComponentComponent implements OnInit {
         recomendation += 'Recommended developers are;\n';
         // Generate table body
         x.data[0][1].forEach((developer, index) => {
-          recomendation += `@${developer.replace(' ', '')} with score ${ x.data[0][2][index].toFixed(2)}\n`
+          recomendation += `@${developer.replace(' ', '')} with score ${x.data[0][2][index].toFixed(2)}\n`
 
         });
         this.comment = this.comment + recomendation

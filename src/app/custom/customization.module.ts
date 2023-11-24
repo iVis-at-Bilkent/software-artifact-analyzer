@@ -9,7 +9,7 @@ import { Query6Component } from './queries/query6/query6.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
-import { ReportComponentComponent } from './report-component/report-component.component';
+import { ReportComponent } from './report/report.component';
 import { ObjectQueriesComponent } from './object-queries/object-queries.component'
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
@@ -39,7 +39,7 @@ import { Query8Component } from './queries/query8/query8.component';
     Query1Component,
     Query3Component,
     Query6Component,
-    ReportComponentComponent,
+    ReportComponent,
     ObjectQueriesComponent,
     Query5Component,
     UnassignedBugsComponent,
@@ -74,7 +74,7 @@ export class CustomizationModule {
   // static operationTabs: { component: any, text: string }[] = [{ component: Query5Component, text: 'Get Anomalies' }];
   static operationTabs: { component: any, text: string }[] = [];
   static reportTab: { component: any, text: string }[] = [
-    { component: ReportComponentComponent, text: 'Report' }
+    { component: ReportComponent, text: 'Report' }
   ];
   static objSubTabs: { component: any, text: string }[] = [
     { component: ObjectQueriesComponent, text: 'Queries' }
