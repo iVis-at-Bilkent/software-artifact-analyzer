@@ -251,7 +251,7 @@ export class Query8Component implements OnInit {
     const cql=`
     MATCH (d1:Developer {name: '${this.developer}'})
     MATCH (n:Developer)
-    WHERE d1 <> n and and ${idFilter} 
+    WHERE d1 <> n AND ${idFilter} 
     MATCH p =  (d1)-[comment1:COMMENTED]->(issue:Issue)<-[comment2:COMMENTED]-(n)
     WITH n, COUNT(DISTINCT issue) AS sharedIssues,
     SUM(comment1.commentCount + comment2.commentCount) AS totalComments, p

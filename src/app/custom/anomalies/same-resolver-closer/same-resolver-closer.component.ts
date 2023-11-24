@@ -196,7 +196,7 @@ export class SameResolverCloserComponent implements OnInit {
     
     const cql = ` MATCH (n:Developer)-[r1:RESOLVED ]->(issue:Issue)
     MATCH (n)-[r2:CLOSED]->(issue)
-    WHERE issue.resolver= n.name and issue.closer = n.name  AND ${idFilter} and and ${dateFilter} 
+    WHERE issue.resolver= n.name and issue.closer = n.name  AND ${idFilter} AND ${dateFilter} 
     RETURN  n, r1,r2, issue SKIP 0 `
     this._dbService.runQuery(cql, cb);
   }
