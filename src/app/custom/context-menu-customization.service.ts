@@ -1576,7 +1576,8 @@ export class ContextMenuCustomizationService {
   reportAnomaly(event) {
       const ele = event.target;
       this._g.cy.$().unselect();
-      this._g.cy.elements(`[id = "n${ele.id()}"]`).select();
+      this._g.cy.$id(ele.id()).select();
+      console.log(ele)
       this._g.openReportTab.next(true);
       if(this._g.openReportTab.getValue()){
         if (this._g.isSwitch2ObjTabOnSelect) {

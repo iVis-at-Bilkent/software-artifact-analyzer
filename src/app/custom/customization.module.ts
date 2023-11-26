@@ -9,7 +9,7 @@ import { Query6Component } from './queries/query6/query6.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
-import { ReportComponent } from './report/report.component';
+import { ReportComponent } from './report-tab/report.component';
 import { ObjectQueriesComponent } from './object-queries/object-queries.component'
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
@@ -30,6 +30,11 @@ import { Query4Component } from './queries/query4/query4.component';
 import { Query2Component } from './queries/query2/query2.component';
 import { Query7Component } from './queries/query7/query7.component';
 import { Query8Component } from './queries/query8/query8.component';
+import { ReportIssueComponent } from './report-tab/sub-report-tabs/report-issue/report-issue.component';
+import { ReportPrComponent } from './report-tab/sub-report-tabs/report-pr/report-pr.component';
+import { ReportDeveloperComponent } from './report-tab/sub-report-tabs/report-developer/report-developer.component';
+import { ReportCommitComponent } from './report-tab/sub-report-tabs/report-commit/report-commit.component';
+import { ReportFileComponent } from './report-tab/sub-report-tabs/report-file/report-file.component';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
@@ -57,8 +62,12 @@ import { Query8Component } from './queries/query8/query8.component';
     Query4Component,
     Query2Component,
     Query7Component,
-    Query8Component],
-  // declarations: [AsdComponent],
+    Query8Component,
+    ReportIssueComponent,
+    ReportPrComponent,
+    ReportDeveloperComponent,
+    ReportCommitComponent,
+    ReportFileComponent],
   imports: [
     HttpClientModule,
     BrowserModule,
