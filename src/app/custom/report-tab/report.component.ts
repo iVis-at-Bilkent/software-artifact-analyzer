@@ -29,7 +29,7 @@ export class ReportComponent implements OnInit {
 
     ngOnInit() {
         setInterval(() => {
-            if (this._g.cy.$(':selected')[0]._private.data.name !== this.name) {
+            if ( this._g.cy.$(':selected')[0] && this._g.cy.$(':selected')[0]._private.data.name !== this.name) {
                 this.name = this._g.cy.$(':selected')[0]._private.data.name
                 this.loadComponent();
             }

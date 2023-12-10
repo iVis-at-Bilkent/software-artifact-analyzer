@@ -21,6 +21,10 @@ export class Neo4jDb implements DbService {
     console.log(query)
     const username = conf.username;
     const password = conf.password;
+
+    //For experiment
+    // Start time
+    const startTime = new Date();
     const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
     this._g.setLoadingStatus(true);
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
@@ -80,10 +84,22 @@ export class Neo4jDb implements DbService {
       }
       this._g.statusMsg.next('');
       if (responseType == DbResponseType.graph) {
+        const endTime = new Date();
+        // Calculate the time difference
+        const elapsedTime = endTime.getTime() - startTime.getTime();
+        console.log(`Elapsed Time: ${elapsedTime} milliseconds for graph`);
         callback(this.extractGraph(x));
       } else if (responseType == DbResponseType.table || responseType == DbResponseType.count) {
+        const endTime = new Date();
+        // Calculate the time difference
+        const elapsedTime = endTime.getTime() - startTime.getTime();
+        console.log(`Elapsed Time: ${elapsedTime} milliseconds for table`);
         callback(this.extractTable(x, isTimeboxed));
       } else if (responseType == DbResponseType.generic) {
+        const endTime = new Date();
+        // Calculate the time difference
+        const elapsedTime = endTime.getTime() - startTime.getTime();
+        console.log(`Elapsed Time: ${elapsedTime} milliseconds`);
         callback(this.extractGenericData(x, isTimeboxed));
       }
     }, errFn);
