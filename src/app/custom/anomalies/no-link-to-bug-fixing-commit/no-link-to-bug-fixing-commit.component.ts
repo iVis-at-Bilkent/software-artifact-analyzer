@@ -189,7 +189,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
     
-    const cql = `MATCH (n:Issue{status:'Done'})
+    const cql = `MATCH (n:Issue)
     WHERE 'No link to bug fixing commit or pull request' IN n.anomalyList AND  ${idFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,d,d2,r,r2`
