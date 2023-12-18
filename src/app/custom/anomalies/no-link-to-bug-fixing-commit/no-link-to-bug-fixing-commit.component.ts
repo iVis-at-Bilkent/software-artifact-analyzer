@@ -87,7 +87,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql=`MATCH (n:Issue{status:'Done' })
+    const cql=`MATCH (n:Issue)
     WHERE 'No link to bug fixing commit or pull request' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) 
@@ -118,7 +118,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const ui2Db = { 'issue': 'n.name'};
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
-    const cql = `MATCH (n:Issue{status:'Done' })
+    const cql = `MATCH (n:Issue)
     WHERE 'No link to bug fixing commit or pull request' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,r,r2 `
