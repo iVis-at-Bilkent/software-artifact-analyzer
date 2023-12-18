@@ -90,7 +90,8 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     }
 
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql=` MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${dateFilter} 
+    const cql=` MATCH (n:Issue)
+    WHERE 'Reassignment of Bug Assignee' IN n.anomalyList AND ${dateFilter} 
     RETURN  ElementId(n) as id,  n.name AS issue, n.assigneeHistory as history,  n.assigneeChangeCount as count ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -121,7 +122,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
 
     const cql =  ` MATCH (n:Issue)
-    WHERE n.assigneeChangeCount >= ${this.count} 
+    WHERE 'Reassignment of Bug Assignee' IN n.anomalyList 
     WITH n, [assignee IN n.assigneeHistory ] AS assignees
     UNWIND assignees AS assignee
     OPTIONAL MATCH path =(n)-[*1..2]-(developer: Developer)
@@ -192,7 +193,8 @@ export class ReassignmentBugAssigneeComponent implements OnInit {
     }
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
-    const cql = `  MATCH (n:Issue) WHERE n.assigneeChangeCount>=${this.count} and ${idFilter} 
+    const cql = `  MATCH (n:Issue) 
+    WHERE 'Reassignment of Bug Assignee' IN n.anomalyList and ${idFilter} 
     OPTIONAL MATCH (n)-[r]-(d) 
     return n,d,r`
     this._dbService.runQuery(cql, cb);

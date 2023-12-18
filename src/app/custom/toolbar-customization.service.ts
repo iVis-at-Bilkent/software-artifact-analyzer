@@ -47,6 +47,7 @@ export class ToolbarCustomizationService {
   }
   activateAnomalyCues() {
     const colors = this.generateRedShades()
+    const startTime = new Date();
     this._g.cy.nodes().filter(':visible').forEach(async (element )=> {
       if (element._private.classes.values().next().value == 'Issue') {
         const cb = (x) => {
@@ -79,8 +80,10 @@ export class ToolbarCustomizationService {
         const cql = `MATCH (n:Issue {name:'${element._private.data.name}'}) RETURN n.anomalyList as anomalyList , n.anomalyCount as anomalyCount`;
         this._dbService.runQuery(cql, cb,  DbResponseType.table);
       }
-
     });
+    const endTime = new Date();
+    const elapsedTime = endTime.getTime() - startTime.getTime();
+    console.log(`Elapsed Time: ${elapsedTime} milliseconds`);
     
 
   }

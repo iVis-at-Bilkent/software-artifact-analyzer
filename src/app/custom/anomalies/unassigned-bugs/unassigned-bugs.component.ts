@@ -87,8 +87,8 @@ export class UnassignedBugsComponent implements OnInit {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql=`MATCH(n:Issue{status:'Done'}) 
-    WHERE n.assignee IS  NULL and ${dateFilter} 
+    const cql=`MATCH(n:Issue) 
+    WHERE 'Unassigned issue' IN n.anomalyList AND ${dateFilter}
     RETURN  ElementId(n) as id,  n.name AS issue, n.resolver as resolver ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -117,7 +117,8 @@ export class UnassignedBugsComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = `MATCH (n:Issue{status:'Done'}) WHERE n.assignee  IS  NULL  AND ${dateFilter}
+    const cql = `MATCH (n:Issue) 
+    WHERE 'Unassigned issue' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH  (n)-[r:RESOLVED]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
    
@@ -172,8 +173,8 @@ export class UnassignedBugsComponent implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
     
-    const cql = `MATCH(n:Issue{status:'Done'})
-    WHERE n.assignee IS  NULL and ${idFilter} 
+    const cql = `MATCH(n:Issue)
+    WHERE 'Unassigned issue' IN n.anomalyList AND  ${idFilter} 
     OPTIONAL MATCH  (n)-[r:RESOLVED]-(d) return n,d,r`
     this._dbService.runQuery(cql, cb);
   }

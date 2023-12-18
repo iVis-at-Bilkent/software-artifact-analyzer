@@ -89,10 +89,8 @@ export class NoAssigneeResolverBugComponent implements OnInit {
 
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n:Issue)
-    WHERE n.assignee IS NOT NULL AND n.resolver IS NOT NULL 
-    WITH n, n.assignee AS assignee, n.resolver AS resolver
-    WHERE assignee <> resolver  and ${dateFilter} 
-    RETURN ElementId(n) as id, n.name as issue, assignee, resolver ORDER BY ${orderExpr}`
+    WHERE 'No assignee resolver' IN n.anomalyList AND ${dateFilter}
+    RETURN ElementId(n) as id, n.name as issue, n.assignee as assignee, n.resolver as resolver ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
   loadGraph(skip: number, filter?: TableFiltering) {
@@ -122,7 +120,7 @@ export class NoAssigneeResolverBugComponent implements OnInit {
     
     const cql = `MATCH (n:Issue)-[r1:ASSIGNED_TO]-(assignee:Developer),
      (n:Issue)<-[r2:RESOLVED]-(resolver:Developer)
-    WHERE assignee <> resolver and ${dateFilter} 
+     WHERE 'No assignee resolver' IN n.anomalyList AND ${dateFilter}
     RETURN n, assignee, resolver, r2,r1`
     this._dbService.runQuery(cql, cb);
    
@@ -178,7 +176,7 @@ export class NoAssigneeResolverBugComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH (resolver:Developer)-[r2:RESOLVED]->(n:Issue)-[r1:ASSIGNED_TO]-(assignee:Developer)
-    WHERE assignee <> resolver  and ${idFilter}
+    WHERE 'No assignee resolver' IN n.anomalyList AND ${idFilter}
     RETURN n, assignee, resolver, r2,r1  `
     this._dbService.runQuery(cql, cb);
   }

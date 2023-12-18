@@ -89,7 +89,7 @@ export class NotReferencedDuplicatesComponent implements OnInit {
 
 
     const cql=` MATCH (n:Issue) 
-    WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-()   and ${dateFilter} 
+    WHERE 'Not Referenced duplicate' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
     RETURN  ElementId(n) as id,  n.name AS issue, d.name as related ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
@@ -120,7 +120,7 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n:Issue)
-    WHERE n.duplicate='True' AND NOT (n)-[:DUPLICATES]-() and ${dateFilter} 
+    WHERE 'Not Referenced duplicate' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
     RETURN n,r,d`
     this._dbService.runQuery(cql, cb);
@@ -180,7 +180,7 @@ export class NotReferencedDuplicatesComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH (n:Issue)
-    WHERE n.duplicate='True'  AND NOT (n)-[:DUPLICATES]-() and ${idFilter}
+    WHERE 'Not Referenced duplicate' IN n.anomalyList and ${idFilter}
     OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
     RETURN n,r,d  `
     this._dbService.runQuery(cql, cb);

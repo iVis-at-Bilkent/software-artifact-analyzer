@@ -225,7 +225,8 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
                   WHERE n.history IS NOT NULL AND size(n.history) >= 2
                   WITH n, range(0, size(n.history)-2) as index_range
                   UNWIND index_range as i
-                  WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+                  WITH n, i, toInteger(n.history[i]) as fromMillis, toInteger(n.history[i+1]) as toMillis\
+                  WITH n, i, datetime({epochMillis: fromMillis}) as from, datetime({epochMillis: toMillis}) as to\
                   WHERE duration.between(from, to).months > ${val}
                   WITH DISTINCT n
                   SET n.anomalyList = coalesce(n.anomalyList, []) + ['Ignored bug'], n.anomalyCount = coalesce(n.anomalyCount, 0) + 1

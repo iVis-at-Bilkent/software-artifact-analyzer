@@ -93,7 +93,6 @@ export class SameResolverCloserComponent implements OnInit {
     if (!this.tableInput.isLoadGraph) {    
       return;
     } 
-    const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)

@@ -88,7 +88,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n:Issue{status:'Done' })
-    WHERE NOT (n)-[:REFERENCED]->() and n.commitIds=[] and  ${dateFilter} 
+    WHERE 'No link to bug fixing commit or pull request' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) 
     RETURN  ElementId(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver ORDER BY ${orderExpr}`
@@ -119,7 +119,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     const cql = `MATCH (n:Issue{status:'Done' })
-    WHERE NOT (n)-[:REFERENCED]->() and n.commitIds=[] and ${dateFilter} 
+    WHERE 'No link to bug fixing commit or pull request' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,r,r2 `
     this._dbService.runQuery(cql, cb);
@@ -190,7 +190,7 @@ export class NoLinkToBugFixingCommitComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH (n:Issue{status:'Done'})
-    WHERE NOT (n)-[:REFERENCED]->() and n.commitIds=[] and ${idFilter}
+    WHERE 'No link to bug fixing commit or pull request' IN n.anomalyList AND  ${idFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);

@@ -84,7 +84,8 @@ export class ClosedReopenPingPongComponent implements OnInit {
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql=` MATCH (n:Issue) WHERE n.reopenCount>=${this.count}  and ${dateFilter} 
+    const cql=` MATCH (n:Issue) 
+    WHERE 'Closed reopen ping pong' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2)
     RETURN  ElementId(n) as id,  n.name AS issue, d.name as assignee, d2.name as resolver,  n.reopenCount as count ORDER BY ${orderExpr}`
@@ -115,7 +116,8 @@ export class ClosedReopenPingPongComponent implements OnInit {
     const orderExpr = getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this.getDateRangeCQL();
     
-    const cql = ` MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${dateFilter} 
+    const cql = ` MATCH (n:Issue) 
+    WHERE 'Closed reopen ping pong' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);
@@ -170,7 +172,9 @@ export class ClosedReopenPingPongComponent implements OnInit {
     }
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};
-    const cql = `  MATCH (n:Issue) WHERE n.reopenCount>=${this.count} and ${idFilter} 
+    const cql = `  
+    MATCH (n:Issue) 
+    WHERE 'Closed reopen ping pong' IN n.anomalyList AND ${idFilter} 
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,d,d2,r,r2`
     this._dbService.runQuery(cql, cb);

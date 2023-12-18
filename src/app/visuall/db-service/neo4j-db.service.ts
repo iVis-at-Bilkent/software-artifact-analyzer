@@ -18,20 +18,20 @@ export class Neo4jDb implements DbService {
   runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
     const conf = environment.dbConfig;
     const url = conf.url;
-    console.log(query)
+    //console.log(query)
     const username = conf.username;
     const password = conf.password;
 
     //For experiment
     // Start time
-    const startTime = new Date();
+    //const startTime = new Date();
     const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
     this._g.setLoadingStatus(true);
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     const q = isTimeboxed
       ? `CALL apoc.cypher.run("${query}", null ) YIELD value RETURN value`
       : query;
-    console.log(q);
+    //console.log(q);
     this._g.statusMsg.next('Executing database query...');
     const requestBody = {
       statements: [{
@@ -84,22 +84,22 @@ export class Neo4jDb implements DbService {
       }
       this._g.statusMsg.next('');
       if (responseType == DbResponseType.graph) {
-        const endTime = new Date();
+        //const endTime = new Date();
         // Calculate the time difference
-        const elapsedTime = endTime.getTime() - startTime.getTime();
-        console.log(`Elapsed Time: ${elapsedTime} milliseconds for graph`);
+        //const elapsedTime = endTime.getTime() - startTime.getTime();
+        //console.log(`Elapsed Time: ${elapsedTime} milliseconds for graph`);
         callback(this.extractGraph(x));
       } else if (responseType == DbResponseType.table || responseType == DbResponseType.count) {
-        const endTime = new Date();
+        //const endTime = new Date();
         // Calculate the time difference
-        const elapsedTime = endTime.getTime() - startTime.getTime();
-        console.log(`Elapsed Time: ${elapsedTime} milliseconds for table`);
+        // const elapsedTime = endTime.getTime() - startTime.getTime();
+        //console.log(`Elapsed Time: ${elapsedTime} milliseconds for table`);
         callback(this.extractTable(x, isTimeboxed));
       } else if (responseType == DbResponseType.generic) {
-        const endTime = new Date();
+        //const endTime = new Date();
         // Calculate the time difference
-        const elapsedTime = endTime.getTime() - startTime.getTime();
-        console.log(`Elapsed Time: ${elapsedTime} milliseconds`);
+        //const elapsedTime = endTime.getTime() - startTime.getTime();
+        //console.log(`Elapsed Time: ${elapsedTime} milliseconds`);
         callback(this.extractGenericData(x, isTimeboxed));
       }
     }, errFn);
@@ -466,7 +466,7 @@ export class Neo4jDb implements DbService {
         r.tableData.data = obj.edgeIds.map((x, i) => [x, obj.edges[i]]);
         r.graphData.nodes = r.graphData.nodes.concat(obj.srcNodeIds.map((x, i) => { return { properties: obj.srcNodes[i], labels: obj.srcNodeTypes[i], elementId: x }; }));
         r.graphData.nodes = r.graphData.nodes.concat(obj.tgtNodeIds.map((x, i) => { return { properties: obj.tgtNodes[i], labels: obj.tgtNodeTypes[i], elementId: x }; }));
-        r.graphData.edges = obj.edgeIds.map((x, i) => { return { properties: obj.edges[i], type: obj.edgeTypes[i],elementId:x, startNodeElementId: obj.srcNodeIds[i], endNodeElementId: obj.tgtNodeIds[i] }; });
+        r.graphData.edges = obj.edgeIds.map((x, i) => { return { properties: obj.edges[i], type: obj.edgeTypes[i], elementId: x, startNodeElementId: obj.srcNodeIds[i], endNodeElementId: obj.tgtNodeIds[i] }; });
       }
 
       return r;

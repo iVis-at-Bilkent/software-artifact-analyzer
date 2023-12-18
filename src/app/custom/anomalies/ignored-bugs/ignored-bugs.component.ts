@@ -89,7 +89,8 @@ export class IgnoredBugsComponent implements OnInit {
     WHERE n.history IS NOT NULL AND size(n.history) >= 2  AND ${dateFilter}
     WITH n, range(0, size(n.history)-2) as index_range 
     UNWIND index_range as i
-    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+    WITH n, i, toInteger(n.history[i]) as fromMillis, toInteger(n.history[i+1]) as toMillis\
+    WITH n, i, datetime({epochMillis: fromMillis}) as from, datetime({epochMillis: toMillis}) as to\
     WHERE duration.between(from, to).months > ${this.time} 
     RETURN  distinct ElementId(n) as id , n.name as issue,  n.assignee as assignee, collect([from, to]) as dates ORDER BY  ${orderExpr} 
     SKIP ${skip} LIMIT ${dataCnt}`
@@ -121,11 +122,7 @@ export class IgnoredBugsComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql =`MATCH (n)
-    WHERE n.history IS NOT NULL AND size(n.history) >= 2 AND ${dateFilter}
-    WITH n, range(0, size(n.history)-2) as index_range 
-    UNWIND index_range as i
-    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
-    WHERE duration.between(from, to).months > ${this.time}  
+    WHERE 'Ignored bug' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n) -[r:ASSIGNED_TO]-(t) WHERE t.name = n.assignee
     RETURN  n , t ,r   `
     this._dbService.runQuery(cql, cb);
@@ -206,12 +203,8 @@ export class IgnoredBugsComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH (n)
-    WHERE n.history IS NOT NULL AND size(n.history) >= 2
-    WITH n, range(0, size(n.history)-2) as index_range
-    UNWIND index_range as i
-    WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
-    WHERE duration.between(from, to).months > ${this.time} and ${idFilter}
-    OPTIONAL MATCH  (n)-[r:ASSIGNED_TO]-(d) 
+    WHERE 'Ignored bug' IN n.anomalyList AND ${idFilter}
+    OPTIONAL MATCH (n) -[r:ASSIGNED_TO]-(t) WHERE t.name = n.assignee
     RETURN  n,r,d `
     this._dbService.runQuery(cql, cb);
   }

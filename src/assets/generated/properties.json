@@ -1,13 +1,11 @@
 {
   "nodes": {
     "Commit": {
-      "id": "string",
       "createdAt": "datetime",
       "name": "string",
       "end": "datetime"
     },
     "Developer": {
-      "id": "string",
       "name": "string",
       "authorEmail": "string",
       "start": "datetime",
@@ -15,7 +13,6 @@
     },
     "File": {
       "name": "string",
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
@@ -27,7 +24,6 @@
       "createdAt": "datetime",
       "closeDate": "datetime",
       "resolutionDate": "datetime",
-      "id": "string",
       "title": "string",
       "url": "string",
       "reporter": "string",
@@ -49,120 +45,99 @@
       "closeDate": "datetime",
       "changeLineOfCode": "int",
       "numberOfCommits": "int",
-      "id": "string",
+      "numberOfChangeFiles": "int",
       "title": "string",
       "url": "string"
     }
   },
   "edges": {
     "BLOCKS": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "ASSIGNED_TO": {
-      "id": "string",
       "end": "datetime",
       "createdAt": "datetime"
     },
     "RESOLVED": {
-      "id": "string",
       "end": "datetime",
       "createdAt": "datetime"
     },
     "COMMENTED": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime",
       "commentCount": "string"
     },
     "ASSIGNED_BY": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "COMMITTED": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "DEPENDS_UPON": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "DUPLICATES": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "FIXES": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "CONTAINS": {
-      "id": "string",
+      "changeLOC": "integer",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "INCLUDES": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "INCORPORATES": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "IS_A_CLONE_OF": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "OPENED": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "REFERENCED": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "RELATES_TO": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "MERGED": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "RENAMED_TO": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "REPORTED": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "CLOSED": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "REVIEWED": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "SUPERSEDES": {
-      "id": "string",
       "createdAt": "datetime",
       "end": "datetime"
     }

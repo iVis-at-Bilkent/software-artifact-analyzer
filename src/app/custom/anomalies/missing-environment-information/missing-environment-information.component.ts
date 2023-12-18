@@ -87,7 +87,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     }
     const r = `[${skip}..${skip + dataCnt}]`;
     const cql=`MATCH (n) 
-    WHERE n.environment IS  NULL and n.affectedVersion = '' and ${dateFilter}
+    WHERE 'Missing Environment Information' IN n.anomalyList AND ${dateFilter}
     RETURN  ElementId(n) as id, n.name as issue , n.reporter as reporter ORDER BY ${orderExpr}`
     this._dbService.runQuery(cql, cb, DbResponseType.table);
   }
@@ -117,7 +117,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     const dateFilter = this.getDateRangeCQL();
     
     const cql = `MATCH (n) 
-    WHERE n.environment IS  NULL and n.affectedVersion = ''  and ${dateFilter}
+    WHERE 'Missing Environment Information' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH  (n)-[r:REPORTED]-(d)
      return n,r,d`
     this._dbService.runQuery(cql, cb);
@@ -185,7 +185,7 @@ export class MissingEnvironmentInformationComponent implements OnInit {
     const ui2Db = {'issue': 'n.name'};
     
     const cql = `MATCH (n) 
-    WHERE n.environment IS  NULL and n.affectedVersion = '' and ${idFilter}
+    WHERE 'Missing Environment Information' IN n.anomalyList AND  ${idFilter}
     OPTIONAL MATCH  (n)-[r:REPORTED]-(d)
      return n,r,d `
     this._dbService.runQuery(cql, cb);
