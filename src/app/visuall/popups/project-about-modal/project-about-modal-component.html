@@ -1,0 +1,17 @@
+<!-- Modal about project-->
+<div class="modal-header">
+  <div class="modal-title va-heading1 text-center">About Project</div>
+  <div>
+    <button #closeBtn type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')">
+      
+    </button>
+  </div>
+</div>
+<div class="modal-body text-center">
+  <div class="va-text">
+    <p><strong>Project Name:</strong> {{projectName}}</p>
+    <p><strong>GitHub URL:</strong> <a href="{{githubUrl}}" target="_blank">{{githubUrl}}</a></p>
+    <p><strong>Jira URL:</strong> <a href="{{jiraUrl}}" target="_blank">{{jiraUrl}}</a></p>
+  </div>
+</div>

@@ -119,17 +119,17 @@ export class Query3Component implements OnInit {
 
         this.http.post(url, body, { headers }).subscribe(
           (response) => {
-            this.openModal('assigned',"Pull Request  " + this.pr, response["html_url"]);
+            this.openModal('assigned', "Pull Request  " + this.pr, response["html_url"]);
             console.log('Reviewers added successfully:', response);
           },
           (error) => {
             console.log(error.error.message);
-            this.openModal( 'error', undefined, undefined,"Assignment error", error.error.message);
+            this.openModal('error', undefined, undefined, "Assignment error", error.error.message);
           }
 
         );
       } else {
-        this.openModal('error', undefined, undefined,"You are not authenticated","You are not authenticated for performing this task")
+        this.openModal('error', undefined, undefined, "You are not authenticated", "You are not authenticated for performing this task")
       }
     }
     );
@@ -215,8 +215,10 @@ export class Query3Component implements OnInit {
     }
     const cbSub2 = (x) => {
       this.fileIds = x.data[0][0]
+      if (this.fileIds.length > 0) {
       this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+      }
     }
     this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub1, DbResponseType.table, false);
 
@@ -289,8 +291,10 @@ export class Query3Component implements OnInit {
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
+    if (this.fileIds.length > 0) {
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
+    }
   }
 
   fillTable(data: DeveloperData[], totalDataCount: number | null) {
@@ -398,8 +402,10 @@ export class Query3Component implements OnInit {
     }
     const cbSub3 = (x) => {
       this.fileIds = x.data[0][0]
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
+      if (this.fileIds.length > 0) {
+        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
+      }
     }
     this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub2, DbResponseType.table, false);
   }
@@ -559,9 +565,9 @@ export class Query3Component implements OnInit {
     const modalRef = this.modalService.open(ModalContentComponent);
     modalRef.componentInstance.name = name; // Pass data to the modal component
     modalRef.componentInstance.url = url;
-    modalRef.componentInstance.templateType =templateType;
-    modalRef.componentInstance.message =message;
-    modalRef.componentInstance.title =title;
+    modalRef.componentInstance.templateType = templateType;
+    modalRef.componentInstance.message = message;
+    modalRef.componentInstance.title = title;
   }
 
   private getTimebarMapping4Java(): string {

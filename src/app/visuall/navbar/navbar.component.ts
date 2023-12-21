@@ -14,9 +14,7 @@ import { SaveProfileModalComponent } from '../popups/save-profile-modal/save-pro
 import { URLLoadService } from '../load-from-url.service';
 import { GroupingOptionTypes } from '../user-preference';
 import { Subscription } from 'rxjs';
-import { DialogElementsExample } from './dialog-elements-example';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialog} from '@angular/material/dialog';
+import { ProjectBuilderDialogComponent } from './project-builder/project-builder-dialog-component';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -25,10 +23,10 @@ import {MatDialog} from '@angular/material/dialog';
 export class NavbarComponent implements OnInit, OnDestroy {
   @ViewChild('file', { static: false }) file;
   @NgModule({
-    imports: [DialogElementsExample],
-    declarations: [DialogElementsExample],
+    imports: [ProjectBuilderDialogComponent],
+    declarations: [ProjectBuilderDialogComponent],
     providers: [],
-    bootstrap: [DialogElementsExample]
+    bootstrap: [ProjectBuilderDialogComponent]
  })
  
   menu: NavbarDropdown[];

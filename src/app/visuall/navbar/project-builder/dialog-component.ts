@@ -6,17 +6,17 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Component({
-  selector: 'dialog-elements-example-dialog',
-  templateUrl: 'dialog-elements-example-dialog.html',
-  styleUrls: ['dialog-elements-example.css']
+  selector: 'dialog-component',
+  styleUrls: ['project-builder-dialog-component.css'],
+  templateUrl: 'dialog-component.html',
 })
 @Pipe({
   name: 'safe'
 })
-export class DialogElementsExampleDialog implements OnInit {
+export class DialogComponent implements OnInit {
   public safeSrc: SafeResourceUrl;
   private timeoutRef: any;
-  constructor(private http: HttpClient, private elRef: ElementRef, private router: Router, private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<DialogElementsExampleDialog>) {
+  constructor(private http: HttpClient, private elRef: ElementRef, private router: Router, private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<DialogComponent>) {
   }
 
   ngOnInit() {

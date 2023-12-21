@@ -16,6 +16,7 @@ import { CytoscapeComponent } from './cytoscape/cytoscape.component';
 import { SaveAsPngModalComponent } from './popups/save-as-png-modal/save-as-png-modal.component';
 import { QuickHelpModalComponent } from './popups/quick-help-modal/quick-help-modal.component';
 import { AboutModalComponent } from './popups/about-modal/about-modal.component';
+import {ProjectAboutModalComponent} from './popups/project-about-modal/project-about-modal-component';
 import { ObjectTabComponent } from './operation-tabs/object-tab/object-tab.component';
 import { MapTabComponent } from './operation-tabs/map-tab/map-tab.component';
 import { SettingsTabComponent } from './operation-tabs/settings-tab/settings-tab.component';
@@ -38,10 +39,10 @@ import { CustomizationModule } from '../custom/customization.module';
 import { PanelContainerComponent } from './panel-container/panel-container.component';
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {DialogElementsExample} from './navbar/dialog-elements-example';
+import {ProjectBuilderDialogComponent} from './navbar/project-builder/project-builder-dialog-component';
 @NgModule({
   declarations: [
-    DialogElementsExample,
+    ProjectBuilderDialogComponent,
     AppComponent,
     NavbarComponent,
     ToolbarComponent,
@@ -51,6 +52,7 @@ import {DialogElementsExample} from './navbar/dialog-elements-example';
     SaveAsPngModalComponent,
     QuickHelpModalComponent,
     AboutModalComponent,
+    ProjectAboutModalComponent,
     ObjectTabComponent,
     MapTabComponent,
     SettingsTabComponent,
