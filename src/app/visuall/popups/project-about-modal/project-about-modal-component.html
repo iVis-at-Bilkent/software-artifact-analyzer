@@ -4,14 +4,57 @@
   <div>
     <button #closeBtn type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
       (click)="activeModal.dismiss('Cross click')">
-      
+
     </button>
   </div>
 </div>
 <div class="modal-body text-center">
   <div class="va-text">
-    <p><strong>Project Name:</strong> {{projectName}}</p>
-    <p><strong>GitHub URL:</strong> <a href="{{githubUrl}}" target="_blank">{{githubUrl}}</a></p>
-    <p><strong>Jira URL:</strong> <a href="{{jiraUrl}}" target="_blank">{{jiraUrl}}</a></p>
+    <p>
+      <b>Project Name:</b> {{projectName}}
+    </p>
+    <p>
+      <b>GitHub URL:</b> <a href="{{githubUrl}}" target="_blank">url</a>
+    </p>
+    <p>
+      <b>Jira URL:</b> <a href="{{jiraUrl}}" target="_blank">url</a>
+    </p>
+  </div>
+  <div>
+    <div class="va-heading1">Project Statistics</div>
+    <div class="va-text">
+      <div class="statistics-row va-text">
+        <div class="statistic">
+          <b>Number of Nodes:</b> {{this.statistic.node}}
+        </div>
+        <div class="statistic">
+          <b>Number of Edges:</b> {{this.statistic.edge}}
+        </div>
+      </div>
+  
+      <div class="statistics-row va-text">
+        <div class="statistic">
+          <b><img src="app/custom/assets/developer.svg" alt="Developer Icon" width="20" height="20"> Number of Developers:</b> {{this.statistic.developerNode}}
+        </div>
+        <div class="statistic">
+          <b><img src="app/custom/assets/issue.svg" alt="Issue Icon" width="20" height="20"> Number of Issues:</b> {{this.statistic.issueNode}}
+        </div>
+      </div>
+  
+      <div class="statistics-row va-text">
+        <div class="statistic">
+          <b><img src="app/custom/assets/pull-request.svg" alt="Pull Request Icon" width="20" height="20"> Number of Pull Requests:</b> {{this.statistic.prNode}}
+        </div>
+        <div class="statistic">
+          <b><img src="app/custom/assets/commit.svg" alt="Commit Icon" width="20" height="20"> Number of Commits:</b> {{this.statistic.commitNode}}
+        </div>
+      </div>
+  
+      <div class="statistics-row va-text">
+        <div class="statistic">
+          <b><img src="app/custom/assets/file.svg" alt="File Icon" width="20" height="20"> Number of Files:</b> {{this.statistic.fileNode}}
+        </div>
+      </div>
+    </div>
   </div>
 </div>

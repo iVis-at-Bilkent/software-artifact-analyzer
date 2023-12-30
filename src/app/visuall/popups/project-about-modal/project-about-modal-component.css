@@ -1,0 +1,11 @@
+
+.statistics-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    align-content: flex-end;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    margin-bottom: 1vh;
+
+}
