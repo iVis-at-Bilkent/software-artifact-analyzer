@@ -40,6 +40,7 @@ export class Query4Component implements OnInit {
   commits = [];
   seeds = [];
   number = 3;
+  recency: boolean = false;
   assigned: boolean = false
   tableFilter: TableFiltering = { orderBy: null, orderDirection: null, txt: '', skip: null };
   tableInput: TableViewInput = {
@@ -162,9 +163,10 @@ export class Query4Component implements OnInit {
       d1 = 0;
       d2 = 0;
     }
+    
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileId}'], ['COMMENTED'],'Developer',[],3,${this.number}, false,
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileId}'], ['COMMENTED'],'Developer',[],'${this.recency?'recency':'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
   }
 
@@ -226,7 +228,7 @@ export class Query4Component implements OnInit {
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],'Developer',[],3,${this.number}, false,
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],'Developer',[],'${this.recency?'recency':'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 
@@ -322,7 +324,12 @@ export class Query4Component implements OnInit {
     for (let i = 0; i < rawData[0].length; i++) {
       const obj = {};
       for (let j = 0; j < columnMapping.length; j++) {
-        obj[uiColumns[j]] = rawData[columnMapping[j]][i];
+        if (uiColumns[j] == 'score') {
+          obj[uiColumns[j]] = rawData[columnMapping[j]][i].toFixed(5);
+        }
+        else {
+          obj[uiColumns[j]] = rawData[columnMapping[j]][i];
+        }
       }
       objArr.push(obj as DeveloperData)
     }

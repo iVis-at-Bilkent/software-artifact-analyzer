@@ -60,6 +60,7 @@ export class Query3Component implements OnInit {
   maxPropValue = 1;
   currNodeSize = this.NODE_SIZE;
   algorithm = null;
+  recency: boolean = false;
 
   constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService, private modalService: NgbModal) {
     this.prs = [];
@@ -216,7 +217,7 @@ export class Query3Component implements OnInit {
     const cbSub2 = (x) => {
       this.fileIds = x.data[0][0]
       if (this.fileIds.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
       }
     }
@@ -292,7 +293,7 @@ export class Query3Component implements OnInit {
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     if (this.fileIds.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
     }
   }
@@ -403,7 +404,7 @@ export class Query3Component implements OnInit {
     const cbSub3 = (x) => {
       this.fileIds = x.data[0][0]
       if (this.fileIds.length > 0) {
-        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],3,${this.number}, false,
+        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
       }
     }

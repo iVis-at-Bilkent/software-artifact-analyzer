@@ -149,7 +149,7 @@
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
+      "properties": { "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -169,7 +169,8 @@
       "source": "Issue",
       "target": "Developer",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "end": "datetime",
         "createdAt": "datetime"
       },
@@ -189,7 +190,8 @@
       "source": "Developer",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "end": "datetime",
         "createdAt": "datetime"
       },
@@ -209,7 +211,8 @@
       "source": "Developer",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float", 
         "createdAt": "datetime",
         "end": "datetime",
         "commentCount": "string"
@@ -230,7 +233,8 @@
       "source": "Issue",
       "target": "Developer",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -250,7 +254,8 @@
       "source": "Developer",
       "target": "Commit",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -270,7 +275,8 @@
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -290,7 +296,8 @@
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -311,6 +318,7 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
+         "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -330,7 +338,8 @@
       "source": "Commit",
       "target": "File",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "changeLOC": "integer",
         "createdAt": "datetime",
         "end": "datetime"
@@ -352,6 +361,7 @@
       "target": "Commit",
       "isBidirectional": false,
       "properties": {
+         "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -372,6 +382,7 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -392,6 +403,7 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
+         "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -412,6 +424,7 @@
       "target": "PullRequest",
       "isBidirectional": false,
       "properties": {
+         "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -432,6 +445,7 @@
       "target": "Commit",
       "isBidirectional": false,
       "properties": {
+         "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -451,7 +465,8 @@
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -471,7 +486,8 @@
       "source": "Developer",
       "target": "PullRequest",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -491,7 +507,8 @@
       "source": "File",
       "target": "File",
       "isBidirectional": false,
-      "properties": {
+      "properties": { 
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -512,6 +529,7 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
+         "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -532,6 +550,7 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
+         "recency":"float",
 
         "createdAt": "datetime",
         "end": "datetime"
@@ -553,6 +572,7 @@
       "target": "PullRequest",
       "isBidirectional": false,
       "properties": {
+         "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },
@@ -573,6 +593,7 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
+        "recency":"float",
         "createdAt": "datetime",
         "end": "datetime"
       },

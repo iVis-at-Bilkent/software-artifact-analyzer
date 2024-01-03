@@ -52,92 +52,114 @@
   },
   "edges": {
     "BLOCKS": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "ASSIGNED_TO": {
+      "recency": "float",
       "end": "datetime",
       "createdAt": "datetime"
     },
     "RESOLVED": {
+      "recency": "float",
       "end": "datetime",
       "createdAt": "datetime"
     },
     "COMMENTED": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime",
       "commentCount": "string"
     },
     "ASSIGNED_BY": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "COMMITTED": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "DEPENDS_UPON": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "DUPLICATES": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "FIXES": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "CONTAINS": {
+      "recency": "float",
       "changeLOC": "integer",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "INCLUDES": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "INCORPORATES": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "IS_A_CLONE_OF": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "OPENED": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "REFERENCED": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "RELATES_TO": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "MERGED": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "RENAMED_TO": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "REPORTED": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "CLOSED": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "REVIEWED": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "SUPERSEDES": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     }
