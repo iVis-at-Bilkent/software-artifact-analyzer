@@ -31,7 +31,7 @@ export class Neo4jDb implements DbService {
     const q = isTimeboxed
       ? `CALL apoc.cypher.run("${query}", null ) YIELD value RETURN value`
       : query;
-    //console.log(q);
+    console.log(q);
     this._g.statusMsg.next('Executing database query...');
     const requestBody = {
       statements: [{

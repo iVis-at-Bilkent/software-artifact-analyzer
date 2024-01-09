@@ -11,6 +11,7 @@ import { LouvainClustering } from '../../lib/louvain-clustering/LouvainClusterin
 import { CyExtService } from './cy-ext.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
+import html2canvas from 'html2canvas';
 @Injectable({
   providedIn: 'root'
 })
@@ -617,9 +618,10 @@ export class CytoscapeService {
 
   saveAsPng(isWholeGraph: boolean) {
     const options = { bg: 'white', scale: 3, full: isWholeGraph };
-    const base64png: string = this._g.cy.png(options);
-    // just giving base64 string as link gives error on big images
-    fetch(base64png)
+    //const base64png: string = this._g.cy.png(options);
+    const base64png =this._g.cy.pngFull(options, ['cy-context-menus-cxt-menu','cy-panzoom']);
+    base64png.then((result) => {
+      fetch(result)
       .then(res => res.blob())
       .then(x => {
         const anchor = document.createElement('a');
@@ -628,6 +630,9 @@ export class CytoscapeService {
         anchor.click();
         return x;
       })
+    }).catch((error) => {
+      console.error(error); // Handle errors
+    });
   }
 
   deleteSelected(event) {
