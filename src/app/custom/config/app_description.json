@@ -34,7 +34,7 @@
     "Developer": {
       "properties": {
         "name": "string",
-        "authorEmail": "string",
+        "email": "string",
         "start": "datetime",
         "end": "datetime"
       },
