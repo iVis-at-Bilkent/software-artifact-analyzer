@@ -32,6 +32,7 @@ export class Query4Component implements OnInit {
   fileId: string;
   files: string[];
   fileIds: string[];
+  possibleDevelopers: string[];
   developers = [];
   scores = [];
   developersName = [];
@@ -61,6 +62,7 @@ export class Query4Component implements OnInit {
 
   constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService) {
     this.files = [];
+    this.possibleDevelopers = [];
     this.developers = [];
     this.scores = [];
     this.developersName = [];
@@ -103,6 +105,7 @@ export class Query4Component implements OnInit {
     this.developers = [];
     this.scores = [];
     this.fileId = this.fileIds[this.files.indexOf(this.file)]
+  
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       this.developers = x.data[0][0]
@@ -166,8 +169,18 @@ export class Query4Component implements OnInit {
     
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileId}'], ['COMMENTED'],'Developer',[],'${this.recency?'recency':'none'}',3,${this.number}, false,
-      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+
+    const cbSub1 = (x) => {
+      this.possibleDevelopers = x.data[0][0]
+      if (this.possibleDevelopers.length > 0) {
+        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileId}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
+        ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+      }
+    }
+
+      this._dbService.runQuery(`MATCH (file:File)-[*1..${this.number}]-(developer:Developer)
+      WHERE elementId(file) = '${this.fileId}'
+      RETURN COLLECT(DISTINCT elementId(developer)) AS developersList`, cbSub1, DbResponseType.table, false);
   }
 
 
@@ -228,7 +241,7 @@ export class Query4Component implements OnInit {
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],'Developer',[],'${this.recency?'recency':'none'}',3,${this.number}, false,
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 
@@ -289,20 +302,20 @@ export class Query4Component implements OnInit {
     const idFilter = buildIdFilter(e.dbIds);
     const ui2Db = { 'Title': 'n.primary_title' };
     const orderExpr = getOrderByExpression4Query(null, 'score', 'desc', ui2Db);
-
-
-    const cql = `UNWIND [${this.developersName}] AS dID
-    MATCH path1=(a:Developer)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(b:File {name: '${this.file}'})
-    OPTIONAL MATCH path2=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->(:File)-[:RENAMED_TO]->(b)
-    OPTIONAL MATCH path3=(a)-[:ASSIGNED_BY | ASSIGNED_TO | REPORTED | RESOLVED | CLOSED]-(:Issue)-[:REFERENCED]->(:Commit)-[:CONTAINS]->(b)
-    OPTIONAL MATCH path4=(a)-[:REVIEWED | OPENED | MERGED]-(:PullRequest)-[:INCLUDES]->(:Commit)-[:CONTAINS]->(b)
-    OPTIONAL MATCH path5=(a)-[:COMMITTED]->(:Commit)-[:CONTAINS]->()-[:RENAMED_TO]-(b)
-    WITH a, COLLECT(path1) + COLLECT(path2) + COLLECT(path3)  + COLLECT(path4) + COLLECT(path5) AS allPaths
-    
-    UNWIND allPaths AS path
-    WITH a, REDUCE(prod = 1, edge IN relationships(path) | prod * edge.recency) AS multipliedRecency, path
-    RETURN  nodes(path) AS nodes, relationships(path) AS relationships`
-    this._dbService.runQuery(cql, cb);
+    const pageSize = this.getPageSize4Backend();
+    const orderBy = 'score';
+    let orderDir = 0;
+    const timeMap = this.getTimebarMapping4Java();
+    let d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
+    let d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
+    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
+      d1 = 0;
+      d2 = 0;
+    }
+    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
+    const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
+    ${pageSize}, 1, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 
   filterTable(filter: TableFiltering) {

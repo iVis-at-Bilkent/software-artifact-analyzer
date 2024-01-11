@@ -121,19 +121,43 @@ export class ReportPrComponent implements OnInit {
         d2 = 0;
       }
       let ignoredDevelopers;
+      let possibleDevelopers
       let fileIds;
       const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
       const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
+      
       const cbSub1 = (x) => {
-        ignoredDevelopers = x.data[0][0]
-        this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.key}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct elementId(f)) AS fileIds  RETURN fileIds`, cbSub2, DbResponseType.table, false);
+        fileIds = x.data[0][0]
+        if (fileIds.length > 0) {
+        this._dbService.runQuery(`MATCH (file:File)-[*1..3]-(developer:Developer)
+        WHERE elementId(file) IN ['${fileIds.join("','")}'] 
+        RETURN COLLECT(DISTINCT elementId(developer)) AS developersList`, cbSub2, DbResponseType.table, false);
+        }
       }
       const cbSub2 = (x) => {
-        fileIds = x.data[0][0]
-        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${fileIds.join("','")}'], ['COMMENTED'],'Developer',['${ignoredDevelopers.join("','")}'],3,3, false,
-      225, 1, null, false, 'score', 0, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+        possibleDevelopers = x.data[0][0]
+        if (possibleDevelopers.length > 0) {
+          this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.key}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) 
+          WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub3, DbResponseType.table, false);
+        }
       }
-      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.key}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub1, DbResponseType.table, false);
+      const cbSub3 = (x) => {
+        let ignoredDevelopers = x.data[0][0]
+        console.log(possibleDevelopers, ignoredDevelopers)
+        possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
+        if (possibleDevelopers.length > 0) {
+          this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${fileIds.join("','")}'], ['COMMENTED'],['${possibleDevelopers.join("','")}'],'recency',3,3, false,
+       225, 1, null, false, 'score', 0,${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+        }
+      }
+  
+  
+      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.key}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct elementId(f)) AS fileIds  RETURN fileIds`, cbSub1, DbResponseType.table, false);
+
+
+
+
+
     }
   }
 

@@ -38,7 +38,7 @@ export class Query3Component implements OnInit {
   developers = [];
   scores = [];
   fileIds = [];
-  ignoredDevelopers = [];
+  possibleDevelopers: string[] = [];
   reviewers: string[] = [];
   commits = [];
   seeds = [];
@@ -67,7 +67,7 @@ export class Query3Component implements OnInit {
     this.developers = [];
     this.scores = [];
     this.fileIds = [];
-    this.ignoredDevelopers = [];
+    this.possibleDevelopers = [];
     this.commits = [];
   }
 
@@ -211,18 +211,31 @@ export class Query3Component implements OnInit {
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     const cbSub1 = (x) => {
-      this.ignoredDevelopers = x.data[0][0]
-      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct elementId(f)) AS fileIds  RETURN fileIds`, cbSub2, DbResponseType.table, false);
-    }
-    const cbSub2 = (x) => {
       this.fileIds = x.data[0][0]
       if (this.fileIds.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
+      this._dbService.runQuery(`MATCH (file:File)-[*1..${this.number}]-(developer:Developer)
+      WHERE elementId(file) IN ['${this.fileIds.join("','")}'] 
+      RETURN COLLECT(DISTINCT elementId(developer)) AS developersList`, cbSub2, DbResponseType.table, false);
+      }
+    }
+    const cbSub2 = (x) => {
+      this.possibleDevelopers = x.data[0][0]
+      if (this.possibleDevelopers.length > 0) {
+        this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) 
+        WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub3, DbResponseType.table, false);
+      }
+    }
+    const cbSub3 = (x) => {
+      let ignoredDevelopers = x.data[0][0]
+      this.possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
+      if (this.possibleDevelopers.length > 0) {
+        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
       }
     }
-    this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub1, DbResponseType.table, false);
 
+
+    this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File) WITH collect(distinct elementId(f)) AS fileIds  RETURN fileIds`, cbSub1, DbResponseType.table, false);
 
   }
 
@@ -292,8 +305,8 @@ export class Query3Component implements OnInit {
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    if (this.fileIds.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
+    if (this.fileIds.length > 0 && this.possibleDevelopers.length>0) {
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
     }
   }
@@ -397,18 +410,10 @@ export class Query3Component implements OnInit {
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    const cbSub2 = (x) => {
-      this.ignoredDevelopers = x.data[0][0]
-      this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File)  WITH collect(distinct elementId(f)) AS fileIds  RETURN fileIds`, cbSub3, DbResponseType.table, false);
-    }
-    const cbSub3 = (x) => {
-      this.fileIds = x.data[0][0]
-      if (this.fileIds.length > 0) {
-        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],'Developer',['${this.ignoredDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
+    if (this.fileIds.length > 0 && this.possibleDevelopers.length>0) {
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
-      }
     }
-    this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub2, DbResponseType.table, false);
   }
 
   filterTable(filter: TableFiltering) {
