@@ -11,17 +11,17 @@
 <div class="modal-body text-center">
   <div class="va-text">
     <p>
-      <b>Project Name:</b> {{projectName}}
+      <b>Name: </b> {{projectName}}
     </p>
     <p>
-      <b>GitHub URL:</b> <a href="{{githubUrl}}" target="_blank">url</a>
+      <b>GitHub: </b> <a href="{{githubUrl}}" target="_blank">url</a>
     </p>
     <p>
-      <b>Jira URL:</b> <a href="{{jiraUrl}}" target="_blank">url</a>
+      <b>Jira: </b> <a href="{{jiraUrl}}" target="_blank">url</a>
     </p>
   </div>
   <div>
-    <div class="va-heading1">Project Statistics</div>
+    <div class="va-heading1">Statistics</div>
     <div class="va-text">
       <div class="statistics-row va-text">
         <div class="statistic">
@@ -34,25 +34,25 @@
   
       <div class="statistics-row va-text">
         <div class="statistic">
-          <b><img src="app/custom/assets/developer.svg" alt="Developer Icon" width="20" height="20">Developers:</b> {{this.statistic.developerNode}}
+          <b><img src="app/custom/assets/developer.svg" alt="Developer Icon" width="20" height="20">  Developers:</b> {{this.statistic.developerNode}}
         </div>
         <div class="statistic">
-          <b><img src="app/custom/assets/issue.svg" alt="Issue Icon" width="20" height="20">Issues:</b> {{this.statistic.issueNode}}
-        </div>
-      </div>
-  
-      <div class="statistics-row va-text">
-        <div class="statistic">
-          <b><img src="app/custom/assets/pull-request.svg" alt="Pull Request Icon" width="20" height="20">Pull Requests:</b> {{this.statistic.prNode}}
-        </div>
-        <div class="statistic">
-          <b><img src="app/custom/assets/commit.svg" alt="Commit Icon" width="20" height="20">Commits:</b> {{this.statistic.commitNode}}
+          <b><img src="app/custom/assets/issue.svg" alt="Issue Icon" width="20" height="20">  Issues:</b> {{this.statistic.issueNode}}
         </div>
       </div>
   
       <div class="statistics-row va-text">
         <div class="statistic">
-          <b><img src="app/custom/assets/file.svg" alt="File Icon" width="20" height="20">Files:</b> {{this.statistic.fileNode}}
+          <b><img src="app/custom/assets/pull-request.svg" alt="Pull Request Icon" width="20" height="20">  Pull Requests:</b> {{this.statistic.prNode}}
+        </div>
+        <div class="statistic">
+          <b><img src="app/custom/assets/commit.svg" alt="Commit Icon" width="20" height="20">  Commits:</b> {{this.statistic.commitNode}}
+        </div>
+      </div>
+  
+      <div class="statistics-row va-text">
+        <div class="statistic">
+          <b><img src="app/custom/assets/file.svg" alt="File Icon" width="20" height="20">  Files:</b> {{this.statistic.fileNode}}
         </div>
       </div>
     </div>
