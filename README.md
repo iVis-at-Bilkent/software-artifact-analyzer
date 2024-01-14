@@ -6,7 +6,7 @@ Software Artifact Analyzer (SAA) was built on a [fork](https://help.github.com/e
 
 ## Key Features
 
-- **Context Menu**: Implemented using the [cytoscape.js-context-menus](https://github.com/iVis-at-Bilkent/cytoscape.js-context-menus)l ibrary, the context menu is node-specific, allowing users to perform operations tailored to each node type. Relation-based queries enable users to reveal connections between different node types.
+- **Context Menu**: Implemented using the [cytoscape.js-context-menus](https://github.com/iVis-at-Bilkent/cytoscape.js-context-menus) library, the context menu is node-specific, allowing users to perform operations tailored to each node type. Relation-based queries enable users to reveal connections between different node types.
 ![Context Menu](https://github.com/iVis-at-Bilkent/software-artifact-analyzer/assets/59064089/e300f599-0025-41c0-b32f-d478f04f9585)
 
 - **Grouping Nodes**: SAA facilitates the grouping of nodes based on developers, enhancing visualization to understand relationships and dynamics within a software project.
