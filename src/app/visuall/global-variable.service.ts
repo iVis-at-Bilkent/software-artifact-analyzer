@@ -41,6 +41,7 @@ export class GlobalVariableService {
   cyNaviPositionSetter: any;
   appDescription = new BehaviorSubject<any>(null);
   dataModel = new BehaviorSubject<any>(null);
+  endPoints = new BehaviorSubject<any>(null); 
   enums = new BehaviorSubject<any>(null);
   initialQuery: string="";
   //The anomaly settings
@@ -74,6 +75,10 @@ export class GlobalVariableService {
 
     this._http.get('./assets/generated/properties.json').subscribe(x => {
       this.dataModel.next(x);
+    }, this.showErr.bind(this));
+
+    this._http.get('./assets/generated/endpoints.json').subscribe(x => {
+      this.endPoints.next(x);
     }, this.showErr.bind(this));
 
     this._http.get('/app/custom/config/enums.json').subscribe(x => {

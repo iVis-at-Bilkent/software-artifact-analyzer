@@ -1,0 +1,90 @@
+{
+  "BLOCKS": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Issue"
+  },
+  "ASSIGNED_TO": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Developer"
+  },
+  "RESOLVED": {
+    "sourceNodeType": "Developer",
+    "targetNodeType": "Issue"
+  },
+  "COMMENTED": {
+    "sourceNodeType": "Developer",
+    "targetNodeType": "Issue"
+  },
+  "ASSIGNED_BY": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Developer"
+  },
+  "COMMITTED": {
+    "sourceNodeType": "Developer",
+    "targetNodeType": "Commit"
+  },
+  "DEPENDS_UPON": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Issue"
+  },
+  "DUPLICATES": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Issue"
+  },
+  "FIXES": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Issue"
+  },
+  "CONTAINS": {
+    "sourceNodeType": "Commit",
+    "targetNodeType": "File"
+  },
+  "INCLUDES": {
+    "sourceNodeType": "PullRequest",
+    "targetNodeType": "Commit"
+  },
+  "INCORPORATES": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Issue"
+  },
+  "IS_A_CLONE_OF": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Issue"
+  },
+  "OPENED": {
+    "sourceNodeType": "Developer",
+    "targetNodeType": "PullRequest"
+  },
+  "REFERENCED": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Commit"
+  },
+  "RELATES_TO": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Issue"
+  },
+  "MERGED": {
+    "sourceNodeType": "Developer",
+    "targetNodeType": "PullRequest"
+  },
+  "RENAMED_TO": {
+    "sourceNodeType": "File",
+    "targetNodeType": "File"
+  },
+  "REPORTED": {
+    "sourceNodeType": "Developer",
+    "targetNodeType": "Issue"
+  },
+  "CLOSED": {
+    "sourceNodeType": "Developer",
+    "targetNodeType": "Issue"
+  },
+  "REVIEWED": {
+    "sourceNodeType": "Developer",
+    "targetNodeType": "PullRequest"
+  },
+  "SUPERSEDES": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Issue"
+  }
+}
