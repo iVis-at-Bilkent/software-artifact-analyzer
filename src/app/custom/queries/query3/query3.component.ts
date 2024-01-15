@@ -145,7 +145,6 @@ export class Query3Component implements OnInit {
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
-    this.assigned = true
     this.developers = [];
     this.scores = [];
     this.prId = this.prIds[this.prs.indexOf(this.pr)]
@@ -153,6 +152,12 @@ export class Query3Component implements OnInit {
     const cb = (x) => {
       this.developers = x.data[0][0]
       this.scores = x.data[0][2]
+      if(this.developers.length > 0){
+        this.assigned = true
+      }
+      else{
+        this.assigned = false
+      }
       const processedTableData = this.preprocessTableData(x);
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
@@ -227,7 +232,8 @@ export class Query3Component implements OnInit {
     }
     const cbSub3 = (x) => {
       let ignoredDevelopers = x.data[0][0]
-      this.possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
+      this.possibleDevelopers = this.possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
+      console.log(this.possibleDevelopers, ignoredDevelopers)
       if (this.possibleDevelopers.length > 0) {
         this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
