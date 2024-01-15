@@ -162,7 +162,11 @@ export class Query6Component implements OnInit {
     for (let i = 0; i < data.length; i++) {
       const row: TableData[] = [];
       for (let j = 0; j < uiColumns.length; j++) {
-        row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
+        if(data[i][uiColumns[j]].length == 0){
+          row.push({ type: TableDataType.string, val: "None"})
+        }else{
+          row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
+        }    
       }
       row.push(); 
       this.tableInput.results.push(row)
