@@ -105,7 +105,7 @@ export class ReportPrComponent implements OnInit {
         if(x.data[0][1].length>0){
           recommendation += 'Recommended developers are;\n';
           x.data[0][1].forEach((developer, index) => {
-            recommendation += `@${developer.replace(' ', '')} with score ${x.data[0][2][index].toFixed(2)}\n`
+            recommendation += `@${developer.replace(' ', '')} with score ${x.data[0][2][index].toFixed(5)}\n`
           });
         }
         else{

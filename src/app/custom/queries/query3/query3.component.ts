@@ -442,7 +442,7 @@ export class Query3Component implements OnInit {
       const obj = {};
       for (let j = 0; j < columnMapping.length; j++) {
         if (uiColumns[j] == 'score') {
-          obj[uiColumns[j]] = rawData[columnMapping[j]][i].toFixed(2);
+          obj[uiColumns[j]] = rawData[columnMapping[j]][i].toFixed(5);
         }
         else {
           obj[uiColumns[j]] = rawData[columnMapping[j]][i];
