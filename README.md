@@ -48,21 +48,7 @@ This tool empowers developers with the ability to detect anomalies, make informe
 A User Guide for SAA can be found [here](https://docs.google.com/document/d/1MHoBk2O2AREYiKwqZuDkHLkdlWwUkYMHzeuugqnVxFY/edit?usp=sharing). 
 
 ## Credits
-
-Icons made by [Freepik](http://www.freepik.com), 
-[Daniel Bruce](http://www.flaticon.com/authors/daniel-bruce), 
-[TutsPlus](http://www.flaticon.com/authors/tutsplus),
-[Robin Kylander](http://www.flaticon.com/authors/robin-kylander),
-[Catalin Fertu](http://www.flaticon.com/authors/catalin-fertu),
-[Yannick](http://www.flaticon.com/authors/yannick),
-[Icon Works](http://www.flaticon.com/authors/icon-works),
-[Flaticon](http://www.flaticon.com) and licensed with 
-[Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
-
-Third-party libraries:
-[Cytoscape.js](https://github.com/cytoscape/cytoscape.js) and many of its extensions,
-[Angular](https://angular.io/),
-[Google Charts](https://developers.google.com/chart/) and npm dependecies inside package.json file.
+[Visuall](https://github.com/ugurdogrusoz/visuall) and dependencies including cytoscape.js.
 
 ## About
 SAA is being developed by [i-Vis Research Lab](http://www.cs.bilkent.edu.tr/~ivis/)  and [BILSEN Research Group](https://bilsen.cs.bilkent.edu.tr/)  at Bilkent University.
