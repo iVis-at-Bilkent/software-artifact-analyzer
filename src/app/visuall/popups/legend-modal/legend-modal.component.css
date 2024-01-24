@@ -1,0 +1,31 @@
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modal-body {
+    padding: 20px; /* Adjust as needed */
+  }
+  
+  .legend-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  
+  .legend-item {
+    text-align: center;
+  }
+  
+  
+  .legend-item2 img {
+    max-width: 100%; 
+    margin-bottom: 10px; 
+  }
+  
+  .legend-item1 img {
+    max-width: 70%; 
+    margin-bottom: 10px; 
+  }
+  

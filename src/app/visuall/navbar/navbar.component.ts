@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SaveAsPngModalComponent } from '../popups/save-as-png-modal/save-as-png-modal.component';
 import { AboutModalComponent } from '../popups/about-modal/about-modal.component';
 import { QuickHelpModalComponent } from '../popups/quick-help-modal/quick-help-modal.component';
+import { LegendModalComponent } from '../popups/legend-modal/legend-modal.component';
 import { NavbarCustomizationService } from '../../custom/navbar-customization.service';
 import { NavbarDropdown, NavbarAction } from './inavbar';
 import { UserProfileService } from '../user-profile.service';
@@ -80,7 +81,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
       },
       {
         dropdown: 'Help', actions: [{ txt: 'Quick Help', id: 'nbi50', fn: 'openQuickHelp', isStd: true },
-        { txt: 'About', id: 'nbi51', fn: 'openAbout', isStd: true }]
+        { txt: 'Legend', id: 'nbi51', fn: 'openLegend', isStd: true },
+        { txt: 'About', id: 'nbi52', fn: 'openAbout', isStd: true }]
       },
       {
         dropdown: 'Data', actions: [{ txt: 'Sample Data', id: 'nbi60', fn: 'getSampleData', isStd: true },
@@ -184,6 +186,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   recalculateLayout() { this._g.performLayout(true); }
 
   openQuickHelp() { this._modalService.open(QuickHelpModalComponent); }
+
+  openLegend() { this._modalService.open(LegendModalComponent); }
 
   openAbout() { this._modalService.open(AboutModalComponent); }
 

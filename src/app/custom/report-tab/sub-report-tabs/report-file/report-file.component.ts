@@ -93,7 +93,7 @@ export class ReportFileComponent implements OnInit {
   async performSelection() {
     this.comment.body = "[You can inspect artifact " + this.key + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this.key + ")\n";
     if (this.commentInput.addGraph) {
-      this.saveAsPng(true);
+      this.saveAsPng(false);
     }
   }
 
@@ -150,11 +150,11 @@ export class ReportFileComponent implements OnInit {
     modalRef.componentInstance.templateType = templateType;
   }
 
-  saveAsPng(isWholeGraph: boolean) {
+  async saveAsPng(isWholeGraph: boolean) {
     const options = { bg: 'white', scale: 2, full: isWholeGraph };
-    const base64png: string = this._g.cy.png(options);
+    const base64png =this._g.cy.pngFull(options, ['cy-context-menus-cxt-menu','cy-panzoom']);
     const image = new Image();
-    image.src = base64png;
+    image.src = await base64png;
     image.onload = async () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');

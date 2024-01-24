@@ -96,7 +96,7 @@ export class ReportPrComponent implements OnInit {
   async performSelection() {
     this.comment.body = "[You can inspect artifact " + this.key + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this.key + ")\n";
     if (this.commentInput.addGraph) {
-      this.saveAsPng(true);
+      this.saveAsPng(false);
     }
     if (this.commentInput.addReviewer) {
       const cb = (x) => {
@@ -143,8 +143,7 @@ export class ReportPrComponent implements OnInit {
       }
       const cbSub3 = (x) => {
         let ignoredDevelopers = x.data[0][0]
-        console.log(possibleDevelopers, ignoredDevelopers)
-        possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
+        possibleDevelopers = possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
         if (possibleDevelopers.length > 0) {
           this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${fileIds.join("','")}'], ['COMMENTED'],['${possibleDevelopers.join("','")}'],'recency',3,3, false,
        225, 1, null, false, 'score', 0,${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
@@ -215,11 +214,11 @@ export class ReportPrComponent implements OnInit {
     modalRef.componentInstance.templateType = templateType;
   }
 
-  saveAsPng(isWholeGraph: boolean) {
+  async saveAsPng(isWholeGraph: boolean) {
     const options = { bg: 'white', scale: 2, full: isWholeGraph };
-    const base64png: string = this._g.cy.png(options);
+    const base64png =this._g.cy.pngFull(options, ['cy-context-menus-cxt-menu','cy-panzoom']);
     const image = new Image();
-    image.src = base64png;
+    image.src = await base64png;
     image.onload = async () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');

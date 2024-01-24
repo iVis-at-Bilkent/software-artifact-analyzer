@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CytoscapeComponent } from './cytoscape/cytoscape.component';
 import { SaveAsPngModalComponent } from './popups/save-as-png-modal/save-as-png-modal.component';
 import { QuickHelpModalComponent } from './popups/quick-help-modal/quick-help-modal.component';
+import { LegendModalComponent } from './popups/legend-modal/legend-modal.component';
 import { AboutModalComponent } from './popups/about-modal/about-modal.component';
 import {ProjectAboutModalComponent} from './popups/project-about-modal/project-about-modal-component';
 import { ObjectTabComponent } from './operation-tabs/object-tab/object-tab.component';
@@ -51,6 +52,7 @@ import {ProjectBuilderDialogComponent} from './navbar/project-builder/project-bu
     CytoscapeComponent,
     SaveAsPngModalComponent,
     QuickHelpModalComponent,
+    LegendModalComponent,
     AboutModalComponent,
     ProjectAboutModalComponent,
     ObjectTabComponent,
