@@ -7,7 +7,7 @@ import { QuickHelpModalComponent } from '../popups/quick-help-modal/quick-help-m
 import { LegendModalComponent } from '../popups/legend-modal/legend-modal.component';
 import { GlobalVariableService } from '../global-variable.service';
 import { getPropNamesFromObj } from '../constants';
-import { ToolbarCustomizationService } from '../../custom/toolbar-customization.service';
+import { ToolbarCustomizationService } from '../../custom/customization-service/toolbar-customization.service';
 import { ToolbarDiv, ToolbarAction } from './itoolbar';
 import { Subscription } from 'rxjs';
 import { UserProfileService } from '../user-profile.service';

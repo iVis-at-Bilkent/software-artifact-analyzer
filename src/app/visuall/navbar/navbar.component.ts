@@ -7,7 +7,7 @@ import { SaveAsPngModalComponent } from '../popups/save-as-png-modal/save-as-png
 import { AboutModalComponent } from '../popups/about-modal/about-modal.component';
 import { QuickHelpModalComponent } from '../popups/quick-help-modal/quick-help-modal.component';
 import { LegendModalComponent } from '../popups/legend-modal/legend-modal.component';
-import { NavbarCustomizationService } from '../../custom/navbar-customization.service';
+import { NavbarCustomizationService } from '../../custom/customization-service/navbar-customization.service';
 import { NavbarDropdown, NavbarAction } from './inavbar';
 import { UserProfileService } from '../user-profile.service';
 import { readTxtFile, CLUSTER_CLASS } from '../constants';

@@ -7,7 +7,7 @@ import { isPrimitiveType, debounce, LAYOUT_ANIM_DUR, COLLAPSED_EDGE_CLASS, COLLA
 import { GraphHistoryItem, GraphElem } from './db-service/data-types';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorModalComponent } from './popups/error-modal/error-modal.component';
-import { CyStyleCustomizationService } from '../custom/cy-style-customization.service';
+import { CyStyleCustomizationService } from '../custom/customization-service/cy-style-customization.service';
 
 @Injectable({
   providedIn: 'root'

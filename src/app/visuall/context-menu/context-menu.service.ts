@@ -4,7 +4,7 @@ import * as contextMenus from 'cytoscape-context-menus';
 import { CytoscapeService } from '../cytoscape.service';
 import { GlobalVariableService } from '../global-variable.service';
 import { ContextMenuItem } from './icontext-menu';
-import { ContextMenuCustomizationService } from '../../custom/context-menu-customization.service';
+import { ContextMenuCustomizationService } from '../../custom/customization-service/context-menu-customization.service';
 import { COLLAPSED_EDGE_CLASS, CLUSTER_CLASS } from './../constants';
 
 @Injectable({

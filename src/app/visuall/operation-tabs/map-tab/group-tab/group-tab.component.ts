@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CytoscapeService } from '../../../cytoscape.service';
 import { areSetsEqual } from '../../../constants';
 import { GlobalVariableService } from '../../../global-variable.service';
-import { GroupCustomizationService } from '../../../../custom/group-customization.service';
+import { GroupCustomizationService } from '../../../../custom/customization-service/group-customization.service';
 @Component({
   selector: 'app-group-tab',
   templateUrl: './group-tab.component.html',
