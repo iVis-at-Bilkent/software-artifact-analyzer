@@ -1,29 +1,11 @@
-import { Component, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { NavbarDropdown } from '../../visuall/navbar/inavbar';
 import { GlobalVariableService } from '../../visuall/global-variable.service';
-import { ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material/menu';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { Neo4jDb } from '../../visuall/db-service/neo4j-db.service';
 @Injectable({
   providedIn: 'root'
 })
-/** Custom menu items and action functions for the items should be added to this class.
- * You might need to import other services but you should only edit this file.
- * Using 'menu' function, provided items will be added to navbar.
- * 'isStd' property must be false for all items.
- * If 'dropdown' is not existing inside standard menu, it will be added as a new item.
- sample menu   
- this._menu = [{
-      dropdown: 'File', actions: [{ txt: 'Custom Action 1', id: '', fn: 'fn1', isStd: false }]
-    },
-    {
-      dropdown: 'Custom DropDown 1', actions: [{ txt: 'Custom Action 1', id: '', fn: 'fn2', isStd: false }]
-    }];
- **/
-
 
 export class NavbarCustomizationService {
 
@@ -38,37 +20,12 @@ export class NavbarCustomizationService {
         dropdown: 'Highlight', actions: [{ txt: 'Check Anomalies', id: '', fn: 'activateAnomalyCues', isStd: false }]
       },
     ];
-    // this._menu = [{
-    //   dropdown: 'File', actions: [{ txt: 'Custom Action 1', id: '', fn: 'fn1', isStd: false }]
-    // },
-    // {
-    //   dropdown: 'Custom DropDown 1', actions: [{ txt: 'Custom Action 2', id: '', fn: 'fn2', isStd: false }]
-    // }];
   }
-
-
   generateRedShades() {
     let colors = [];
     colors = [
       "#FF9999", "#fe5050", "#FE0022", "#BC0000", "#9a0000"
     ]
-
-
-    /*
-    let redValue = 280;
-    let greenValue = 80;
-    let blueValue = 80;
-    for (let i = 0; i < 11; i++) {
-      let redHex = redValue.toString(16).padStart(2, '0');
-      let greenHex = greenValue.toString(16).padStart(2, '0');
-      let blueHex = blueValue.toString(16).padStart(2, '0');
-      let hexColor = '#' + redHex + greenHex + blueHex;
-      colors.push(hexColor);
-      redValue -= 30;
-      greenValue -= 6;
-      blueValue -= 6;
-    }
-    */
     return colors;
   }
   activateAnomalyCues() {
@@ -105,27 +62,15 @@ export class NavbarCustomizationService {
                 cursor: "pointer",
                 zIndex: 1000,
                 tooltip: listOfAnomalies.join('\n')
-
               });
             }
           }
-
         }
         const cql = `MATCH (n:Issue {name:'${element._private.data.name}'}) RETURN n.anomalyList as anomalyList , n.anomalyCount as anomalyCount`;
         this._dbService.runQuery(cql, cb, DbResponseType.table);
       }
-
     });
-
-
-
   }
-
-
-  // fn2() {
-  //   console.log('fn2 called');
-  // }
-
 }
 
 

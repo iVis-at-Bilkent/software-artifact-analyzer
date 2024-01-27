@@ -16,10 +16,6 @@ export class TheoreticPropertiesCustomService {
   get adjustSizeMethods(): { name: string, fn: any }[] {
     return this._adjustSizeMethods;
   }
-
-
-
-
   isOnSelected = false;
   isDirectedGraph = false;
   isMapNodeSizes = true;

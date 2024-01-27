@@ -14,7 +14,7 @@ import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/customization-service/group-customization.service';
 import { TheoreticPropertiesCustomService } from 'src/app/custom/customization-service/theoretic-properties-custom.service'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalContentComponent } from '../../object-tab/modal-content/modal-content.component';
+import { ModalContentComponent } from '../../operational-tabs/object-tab/modal-content/modal-content.component';
 export interface DeveloperData {
   name: string;
   score: number;

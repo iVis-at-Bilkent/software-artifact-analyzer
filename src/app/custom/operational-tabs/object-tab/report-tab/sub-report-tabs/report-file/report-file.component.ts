@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { GlobalVariableService } from '../../../../../visuall/global-variable.service';
+import { GlobalVariableService } from '../../../../../../visuall/global-variable.service';
 import { Observable } from 'rxjs';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Neo4jDb } from '../../../../../visuall/db-service/neo4j-db.service';
+import { Neo4jDb } from '../../../../../../visuall/db-service/neo4j-db.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from '../../../modal-content/modal-content.component';
 

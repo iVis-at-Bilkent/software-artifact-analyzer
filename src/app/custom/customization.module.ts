@@ -9,8 +9,8 @@ import { AnomalyStatisticComponent } from './analyses/anomalies/anomaly-statisti
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
-import { ReportComponent } from './object-tab/report-tab/report.component';
-import { ObjectQueriesComponent } from './object-tab/object-queries-tab/object-queries.component'
+import { ReportComponent } from './operational-tabs/object-tab/report-tab/report.component';
+import { ObjectQueriesComponent } from './operational-tabs/object-tab/object-queries-tab/object-queries.component'
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { UnassignedBugsComponent } from './analyses/anomalies/unassigned-bugs/unassigned-bugs.component';
@@ -25,16 +25,16 @@ import { NoAssigneeResolverBugComponent } from './analyses/anomalies/no-assignee
 import { ClosedReopenPingPongComponent } from './analyses/anomalies/closed-reopen-ping-pong/closed-reopen-ping-pong.component';
 import { SameResolverCloserComponent } from './analyses/anomalies/same-resolver-closer/same-resolver-closer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ModalContentComponent } from './object-tab/modal-content/modal-content.component';
+import { ModalContentComponent } from './operational-tabs/object-tab/modal-content/modal-content.component';
 import { ExpertRecommendationComponent } from './analyses/expert-recommendation/expert-recommendation.component';
 import { CommentContributorsComponent } from './analyses/comment-contributors/comment-contributors.component';
 import { CollaboratorsComponent } from './analyses/collaborators/collaborators.component';
 import { CommentCollaboratorsComponent } from './analyses/comment-collaborators/comment-collaborators.component';
-import { ReportIssueComponent } from './object-tab/report-tab/sub-report-tabs/report-issue/report-issue.component';
-import { ReportPrComponent } from './object-tab/report-tab/sub-report-tabs/report-pr/report-pr.component';
-import { ReportDeveloperComponent } from './object-tab/report-tab/sub-report-tabs/report-developer/report-developer.component';
-import { ReportCommitComponent } from './object-tab/report-tab/sub-report-tabs/report-commit/report-commit.component';
-import { ReportFileComponent } from './object-tab/report-tab/sub-report-tabs/report-file/report-file.component';
+import { ReportIssueComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-issue/report-issue.component';
+import { ReportPrComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-pr/report-pr.component';
+import { ReportDeveloperComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-developer/report-developer.component';
+import { ReportCommitComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-commit/report-commit.component';
+import { ReportFileComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-file/report-file.component';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 

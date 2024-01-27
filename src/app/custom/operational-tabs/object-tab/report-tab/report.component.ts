@@ -1,8 +1,8 @@
 
 
 import { Component, ViewChild, ViewContainerRef, ComponentRef, OnInit } from '@angular/core';
-import { GlobalVariableService } from '../../../visuall/global-variable.service';
-import { Neo4jDb } from '../../../visuall/db-service/neo4j-db.service';
+import { GlobalVariableService } from '../../../../visuall/global-variable.service';
+import { Neo4jDb } from '../../../../visuall/db-service/neo4j-db.service';
 import { BehaviorSubject } from 'rxjs';
 import { ReportIssueComponent } from './sub-report-tabs/report-issue/report-issue.component';
 import { ReportPrComponent } from './sub-report-tabs/report-pr/report-pr.component';

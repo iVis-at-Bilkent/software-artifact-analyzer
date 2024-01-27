@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { GlobalVariableService } from '../../../visuall/global-variable.service';
+import { GlobalVariableService } from '../../../../visuall/global-variable.service';
 import { Observable } from 'rxjs';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Neo4jDb } from '../../../visuall/db-service/neo4j-db.service';
+import { Neo4jDb } from '../../../../visuall/db-service/neo4j-db.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from '../modal-content/modal-content.component';
 import { BehaviorSubject } from 'rxjs';
-import { DeveloperCommitsComponent } from '../../analyses/developer-commits/developer-commits.component';
-import { CommentContributorsComponent } from '../../analyses/comment-contributors/comment-contributors.component';
-import { ReviewerRecommendationComponent } from '../../analyses/reviewer-recommendation/reviewer-recommendation.component';
-import { ExpertRecommendationComponent } from '../../analyses/expert-recommendation/expert-recommendation.component';
-import { CollaboratorsComponent } from '../../analyses/collaborators/collaborators.component';
-import { CommentCollaboratorsComponent } from '../../analyses/comment-collaborators/comment-collaborators.component';
+import { DeveloperCommitsComponent } from '../../../analyses/developer-commits/developer-commits.component';
+import { CommentContributorsComponent } from '../../../analyses/comment-contributors/comment-contributors.component';
+import { ReviewerRecommendationComponent } from '../../../analyses/reviewer-recommendation/reviewer-recommendation.component';
+import { ExpertRecommendationComponent } from '../../../analyses/expert-recommendation/expert-recommendation.component';
+import { CollaboratorsComponent } from '../../../analyses/collaborators/collaborators.component';
+import { CommentCollaboratorsComponent } from '../../../analyses/comment-collaborators/comment-collaborators.component';
 @Component({
   selector: 'app-object-queries',
   templateUrl: './object-queries.component.html',
