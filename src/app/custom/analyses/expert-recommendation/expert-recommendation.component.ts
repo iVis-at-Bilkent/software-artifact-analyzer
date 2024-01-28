@@ -11,9 +11,9 @@ import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-t
 import { getCyStyleFromColorAndWid, readTxtFile, isJson } from 'src/app/visuall/constants';
 import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/customization-service/group-customization.service';
-import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from 'src/app/visuall/constants';
-import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
 import { TheoreticPropertiesCustomService } from 'src/app/custom/customization-service/theoretic-properties-custom.service'
+import { QueryComponent } from '../query.component.interface';
+
 export interface DeveloperData {
   name: string;
   score: number;
@@ -25,7 +25,7 @@ export interface DeveloperData {
   templateUrl: './expert-recommendation.component.html',
   styleUrls: ['./expert-recommendation.component.css']
 })
-export class ExpertRecommendationComponent implements OnInit {
+export class ExpertRecommendationComponent implements OnInit, QueryComponent<DeveloperData> {
   githubHttpOptions: any;
   authentication: any;
   file: string;
@@ -342,7 +342,7 @@ export class ExpertRecommendationComponent implements OnInit {
     return objArr;
   }
 
-  private filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
+  filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;
@@ -376,7 +376,7 @@ export class ExpertRecommendationComponent implements OnInit {
 
   // tableInput is already filtered. Use that to filter graph elements.
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
-  private filterGraphResponse(x: GraphResponse): GraphResponse {
+  filterGraphResponse(x: GraphResponse): GraphResponse {
     /*
     const r: GraphResponse = { nodes: [], edges: x.edges };
     const nodeIdDict = {};

@@ -86,7 +86,6 @@ export class CustomizationModule {
     { component: ReportComponent, text: 'Report' },
     { component: ObjectQueriesComponent, text: 'Queries' }
   ];
-
   static mapSubTabs: { component: any, text: string }[] = [];
   static databaseSubTabs: { component: any, text: string }[] = [];
   static settingsSubTabs: { component: any, text: string }[] = [];

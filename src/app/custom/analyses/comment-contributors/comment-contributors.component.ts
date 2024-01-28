@@ -6,7 +6,7 @@
   import { Subject } from 'rxjs';
   import { QueryHelperService} from '../query-helper.service';
   import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
-  import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
+  import { QueryComponent } from '../query.component.interface';
   
   export interface Developer {
     Developer: string;
@@ -17,7 +17,7 @@
     templateUrl: './comment-contributors.component.html',
     styleUrls: ['./comment-contributors.component.css']
   })
-  export class CommentContributorsComponent implements OnInit {
+  export class CommentContributorsComponent implements OnInit, QueryComponent<Developer> {
     tableInput: TableViewInput = {
       columns: ['developer','count'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
       resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
@@ -134,7 +134,7 @@
       this._dbService.runQuery(cql, cb);
      
     }
-    private filterGraphResponse(x: GraphResponse): GraphResponse {
+    filterGraphResponse(x: GraphResponse): GraphResponse {
       const r: GraphResponse = { nodes: x.nodes, edges: x.edges };
       return r;
     }
@@ -190,7 +190,7 @@
     }
 
   
-    private filterTableResponse(x: Developer[], filter: TableFiltering): Developer[] {
+    filterTableResponse(x: Developer[], filter: TableFiltering): Developer[] {
       if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
         const skip = filter && filter.skip ? filter.skip : 0;
         this.tableInput.resultCnt = x.length;

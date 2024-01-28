@@ -7,8 +7,10 @@ import { Subject } from 'rxjs';
 import { QueryHelperService} from '../query-helper.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from 'src/app/visuall/constants';
-import { GroupingOptionTypes, TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
+import { TimebarGraphInclusionTypes } from 'src/app/visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/customization-service/group-customization.service';
+import { QueryComponent } from '../query.component.interface';
+
 export interface Collaborator {
   Name: string;
   Collaboration: number;
@@ -18,7 +20,7 @@ export interface Collaborator {
   templateUrl: './collaborators.component.html',
   styleUrls: ['./collaborators.component.css']
 })
-export class CollaboratorsComponent implements OnInit {
+export class CollaboratorsComponent implements OnInit, QueryComponent<Collaborator>{
   
   developer: String = "";
   developerId : String = "";
@@ -192,7 +194,7 @@ export class CollaboratorsComponent implements OnInit {
     this._dbService.runQuery(cql, cb);
    
   }
-  private filterGraphResponse(x: GraphResponse): GraphResponse {
+  filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
    
     const nodeIdDict = {};
@@ -285,7 +287,7 @@ export class CollaboratorsComponent implements OnInit {
     return objArr;
   }
 
-  private filterTableResponse(x: Collaborator[], filter: TableFiltering): Collaborator[] {
+  filterTableResponse(x: Collaborator[], filter: TableFiltering): Collaborator[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;

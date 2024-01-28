@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as C from 'src/app/visuall/constants';
 import { Neo4jDb } from '../../../visuall/db-service/neo4j-db.service';
@@ -15,6 +16,7 @@ import { GroupCustomizationService } from 'src/app/custom/customization-service/
 import { TheoreticPropertiesCustomService } from 'src/app/custom/customization-service/theoretic-properties-custom.service'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from '../../operational-tabs/object-tab/modal-content/modal-content.component';
+import { QueryComponent } from '../query.component.interface';
 export interface DeveloperData {
   name: string;
   score: number;
@@ -25,7 +27,7 @@ export interface DeveloperData {
   templateUrl: './reviewer-recommendation.component.html',
   styleUrls: ['./reviewer-recommendation.component.css']
 })
-export class ReviewerRecommendationComponent implements OnInit {
+export class ReviewerRecommendationComponent implements OnInit, QueryComponent<DeveloperData> {
   githubHttpOptions: any;
   authentication: any;
   pr: string;
@@ -59,15 +61,16 @@ export class ReviewerRecommendationComponent implements OnInit {
   algorithm = null;
   recency: boolean = false;
 
-  constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, private _g: GlobalVariableService, 
-    private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService, private modalService: NgbModal, private _h: QueryHelperService) {
-    this.prs = [];
-    this.developers = [];
-    this.scores = [];
-    this.fileIds = [];
-    this.possibleDevelopers = [];
-    this.commits = [];
-  }
+  constructor(
+    private http: HttpClient,
+    private _dbService: Neo4jDb,
+    private _cyService: CytoscapeService,
+    private _g: GlobalVariableService,
+    private _group: GroupCustomizationService,
+    private _gt: TheoreticPropertiesCustomService,
+    private modalService: NgbModal,
+    private _h: QueryHelperService
+  ) {}
 
   ngOnInit() {
     this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , elementId(m) as id order by m.name ', (x) => {
@@ -373,7 +376,7 @@ export class ReviewerRecommendationComponent implements OnInit {
   }
 
 
-  private filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
+  filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;
@@ -407,7 +410,7 @@ export class ReviewerRecommendationComponent implements OnInit {
 
   // tableInput is already filtered. Use that to filter graph elements.
   // For this query, we should specifically bring the related nodes and their 1-neighborhood
-  private filterGraphResponse(x: GraphResponse): GraphResponse {
+  filterGraphResponse(x: GraphResponse): GraphResponse {
     /*
     const r: GraphResponse = { nodes: [], edges: x.edges };
     const nodeIdDict = {};

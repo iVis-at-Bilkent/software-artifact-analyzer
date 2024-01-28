@@ -6,7 +6,7 @@ import { TableViewInput, TableDataType, TableFiltering, TableRowMeta, TableData 
 import { Subject } from 'rxjs';
 import { QueryHelperService} from '../query-helper.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
-
+import { QueryComponent } from '../query.component.interface';
 //This query is for 
 export interface CommitData {
   id: string;
@@ -18,7 +18,7 @@ export interface CommitData {
   styleUrls: ['./developer-commits.component.css']
 })
 
-export class DeveloperCommitsComponent implements OnInit {
+export class DeveloperCommitsComponent implements OnInit, QueryComponent<CommitData> {
   developer: string;
   developers: string[];
   tableInput: TableViewInput = {
@@ -204,7 +204,7 @@ export class DeveloperCommitsComponent implements OnInit {
     }
   }
 
-  private filterTableResponse(x: CommitData[], filter: TableFiltering): CommitData[] {
+  filterTableResponse(x: CommitData[], filter: TableFiltering): CommitData[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;
@@ -236,7 +236,7 @@ export class DeveloperCommitsComponent implements OnInit {
     return filtered.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
   }
 
-  private filterGraphResponse(x: GraphResponse): GraphResponse {
+  filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
 
     const nodeIdDict = {};

@@ -6,7 +6,7 @@ import { TableViewInput, TableDataType, TableFiltering, TableRowMeta, TableData 
 import { Subject } from 'rxjs';
 import { QueryHelperService} from '../../query-helper.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
-import { getCyStyleFromColorAndWid } from 'src/app/visuall/constants';
+import { QueryComponent } from '../../query.component.interface';
 
 export interface Anomaly {
   Issue: string;
@@ -18,7 +18,7 @@ export interface Anomaly {
   templateUrl: './no-assignee-resolver-bug.component.html',
   styleUrls: ['./no-assignee-resolver-bug.component.css']
 })
-export class NoAssigneeResolverBugComponent implements OnInit {
+export class NoAssigneeResolverBugComponent implements OnInit, QueryComponent<Anomaly> {
 
 
   
@@ -125,7 +125,7 @@ export class NoAssigneeResolverBugComponent implements OnInit {
     this._dbService.runQuery(cql, cb);
    
   }
-  private filterGraphResponse(x: GraphResponse): GraphResponse {
+  filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
    
     const nodeIdDict = {};
@@ -190,7 +190,7 @@ export class NoAssigneeResolverBugComponent implements OnInit {
     }
   }
 
-  private filterTableResponse(x: Anomaly[], filter: TableFiltering): Anomaly[] {
+  filterTableResponse(x: Anomaly[], filter: TableFiltering): Anomaly[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;

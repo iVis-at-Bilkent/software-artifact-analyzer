@@ -6,6 +6,7 @@ import { TableViewInput, TableDataType, TableFiltering, TableRowMeta, TableData 
 import { Subject } from 'rxjs';
 import { QueryHelperService} from '../../query-helper.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
+import { QueryComponent } from '../../query.component.interface';
 
 export interface Anomaly {
   issue: string;
@@ -16,9 +17,7 @@ export interface Anomaly {
   templateUrl: './anomaly-statistic.component.html',
   styleUrls: ['./anomaly-statistic.component.css']
 })
-export class AnomalyStatisticComponent implements OnInit {
-
-
+export class AnomalyStatisticComponent implements OnInit, QueryComponent<Anomaly> {
   tableInput: TableViewInput = {
     columns: ['issue','anomalies'], results: [], results2: [],isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Issue', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true, isSelect: false
@@ -129,7 +128,7 @@ export class AnomalyStatisticComponent implements OnInit {
     this._dbService.runQuery(cql, cb);
 
   }
-  private filterGraphResponse(x: GraphResponse): GraphResponse {
+  filterGraphResponse(x: GraphResponse): GraphResponse {
     const r: GraphResponse = { nodes: [], edges: x.edges };
    
     const nodeIdDict = {};
@@ -198,7 +197,7 @@ export class AnomalyStatisticComponent implements OnInit {
     }
   }
 
-  private filterTableResponse(x: Anomaly[], filter: TableFiltering): Anomaly[] {
+  filterTableResponse(x: Anomaly[], filter: TableFiltering): Anomaly[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;
@@ -229,8 +228,6 @@ export class AnomalyStatisticComponent implements OnInit {
     const skip = filter && filter.skip ? filter.skip : 0;
     return filtered.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
   }
-  // tableInput is already filtered. Use that to filter graph elements.
-  // For this query, we should specifically bring the related nodes and their 1-neighborhood
 
 
 }
