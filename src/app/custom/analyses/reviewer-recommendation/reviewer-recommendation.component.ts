@@ -27,7 +27,7 @@ export interface DeveloperData {
   templateUrl: './reviewer-recommendation.component.html',
   styleUrls: ['./reviewer-recommendation.component.css']
 })
-export class ReviewerRecommendationComponent implements OnInit, QueryComponent<DeveloperData> {
+export class ReviewerRecommendationComponent implements OnInit {
   githubHttpOptions: any;
   authentication: any;
   pr: string;
@@ -70,7 +70,14 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     private _gt: TheoreticPropertiesCustomService,
     private modalService: NgbModal,
     private _h: QueryHelperService
-  ) {}
+  ) {
+    this.prs = [];
+    this.developers = [];
+    this.scores = [];
+    this.fileIds = [];
+    this.possibleDevelopers = [];
+    this.commits = [];
+  }
 
   ngOnInit() {
     this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , elementId(m) as id order by m.name ', (x) => {
@@ -122,7 +129,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
         cnt = limit4clientSidePaginated;
       }
       if (isClientSidePagination) {
-        this.fillTable(this.filterTableResponse(x, filter), cnt);
+        this.fillTable(this.filterTableResponse(processedTableData, filter), cnt);
       } else {
         this.fillTable(processedTableData, cnt);
       }
@@ -376,10 +383,11 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   }
 
 
-  filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
+  private filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;
+      console.log(x)
       return x.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
     }
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
