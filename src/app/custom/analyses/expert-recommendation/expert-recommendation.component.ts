@@ -292,7 +292,7 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
       }
     }
 
-    const idFilter = this._h.buildIdFilter(e.dbIds);
+    const idFilter = e.dbIds.join("','");
     const ui2Db = { 'Title': 'n.primary_title' };
     const orderExpr = this._h.getOrderByExpression4Query(null, 'score', 'desc', ui2Db);
     const pageSize = this.getPageSize4Backend();
@@ -307,7 +307,7 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],['${idFilter}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
     ${pageSize}, 1, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 
@@ -317,30 +317,6 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     this.loadTable(skip, filter);
   }
 
-  // zip paralel arrays 
-  private preprocessTableData(data): DeveloperData[] {
-    const dbColumns = data.columns as string[];
-    const uiColumns = ['elementId'].concat(this.tableInput.columns);
-    let columnMapping = [];
-    for (let i = 0; i < uiColumns.length; i++) {
-      columnMapping.push(dbColumns.indexOf(uiColumns[i]));
-    }
-    const rawData = data.data[0];
-    const objArr: DeveloperData[] = [];
-    for (let i = 0; i < rawData[0].length; i++) {
-      const obj = {};
-      for (let j = 0; j < columnMapping.length; j++) {
-        if (uiColumns[j] == 'score') {
-          obj[uiColumns[j]] = rawData[columnMapping[j]][i].toFixed(5);
-        }
-        else {
-          obj[uiColumns[j]] = rawData[columnMapping[j]][i];
-        }
-      }
-      objArr.push(obj as DeveloperData)
-    }
-    return objArr;
-  }
 
   filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {

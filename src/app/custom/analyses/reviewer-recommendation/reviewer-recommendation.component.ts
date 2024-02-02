@@ -8,7 +8,7 @@ import { GlobalVariableService } from '../../../visuall/global-variable.service'
 import { formatNumber } from '@angular/common';
 import { TableViewInput, TableDataType, TableFiltering, TableRowMeta, TableData } from '../../../shared/table-view/table-view-types';
 import { Subject } from 'rxjs';
-import { QueryHelperService} from '../query-helper.service';
+import { QueryHelperService } from '../query-helper.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
 import { getCyStyleFromColorAndWid, readTxtFile, isJson } from 'src/app/visuall/constants';
 import { GroupingOptionTypes } from '../../../visuall/user-preference';
@@ -27,7 +27,7 @@ export interface DeveloperData {
   templateUrl: './reviewer-recommendation.component.html',
   styleUrls: ['./reviewer-recommendation.component.css']
 })
-export class ReviewerRecommendationComponent implements OnInit {
+export class ReviewerRecommendationComponent implements OnInit, QueryComponent<DeveloperData> {
   githubHttpOptions: any;
   authentication: any;
   pr: string;
@@ -81,7 +81,7 @@ export class ReviewerRecommendationComponent implements OnInit {
 
   ngOnInit() {
     this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , elementId(m) as id order by m.name ', (x) => {
-      this.fillGenres(x)
+      this.fillOptions(x)
     }, DbResponseType.table);
     let name = ""
     if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "PullRequest") {
@@ -90,10 +90,8 @@ export class ReviewerRecommendationComponent implements OnInit {
     else {
       this.pr = this.prs[0]
     }
-
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
-
     setInterval(() => {
       if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "PullRequest" && this._g.cy.$(':selected')[0]._private.data.name !== name) {
         name = this._g.cy.$(':selected')[0]._private.data.name
@@ -292,7 +290,7 @@ export class ReviewerRecommendationComponent implements OnInit {
     this.tableFilled.next(true);
   }
 
-  fillGenres(data) {
+  fillOptions(data) {
     this.prs = [];
     this.prIds = [];
     for (let i = 0; i < data.data.length; i++) {
@@ -301,14 +299,12 @@ export class ReviewerRecommendationComponent implements OnInit {
     for (let i = 0; i < data.data.length; i++) {
       this.prIds.push(data.data[i][1]);
     }
-
-
   }
 
   getDataForQueryResult(e: TableRowMeta) {
     let filter = this.tableFilter;
     const skip = (this.tableInput.currPage - 1) * this.tableInput.pageSize;
-    const idFilter = this._h.buildIdFilter(e.dbIds);
+    const idFilter = e.dbIds.join("','");
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       this.seeds = []
@@ -371,7 +367,7 @@ export class ReviewerRecommendationComponent implements OnInit {
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     if (this.fileIds.length > 0 && this.possibleDevelopers.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],['${idFilter}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
     }
   }
@@ -383,11 +379,10 @@ export class ReviewerRecommendationComponent implements OnInit {
   }
 
 
-  private filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
+  filterTableResponse(x: DeveloperData[], filter: TableFiltering): DeveloperData[] {
     if (!filter || ((!filter.txt || filter.txt.length < 1) && filter.orderDirection == '' && (!filter.skip || filter.skip == 0))) {
       const skip = filter && filter.skip ? filter.skip : 0;
       this.tableInput.resultCnt = x.length;
-      console.log(x)
       return x.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
     }
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
@@ -416,28 +411,8 @@ export class ReviewerRecommendationComponent implements OnInit {
     return filtered.slice(skip, skip + this._g.userPrefs.dataPageSize.getValue());
   }
 
-  // tableInput is already filtered. Use that to filter graph elements.
-  // For this query, we should specifically bring the related nodes and their 1-neighborhood
-  filterGraphResponse(x: GraphResponse): GraphResponse {
-    /*
-    const r: GraphResponse = { nodes: [], edges: x.edges };
-    const nodeIdDict = {};
-    for (let i = 0; i < this.tableInput.results.length; i++) {
-      nodeIdDict[this.tableInput.results[i][0].val] = true;
-    }
-    // add a node if an edge ends with that
-    for (let i = 0; i < x.edges.length; i++) {
-      if (nodeIdDict[x.edges[i].endNode]) {
-        nodeIdDict[x.edges[i].startNode] = true;
-      }
-    }
 
-    for (let i = 0; i < x.nodes.length; i++) {
-      if (nodeIdDict[x.nodes[i].id]) {
-        r.nodes.push(x.nodes[i]);
-      }
-    }
-    */
+  filterGraphResponse(x: GraphResponse): GraphResponse {
     return x;
   }
 
