@@ -136,7 +136,6 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
       this.fillTable(this.filterTableResponse(this.tableResponse, filter), null);
       return;
     }
-    //const idFilter = this._h. buildIdFilter(e.dbIds);
     const isIgnoreCase = this._g.userPrefs.isIgnoreCaseInText.getValue();
     const txtCondition = this._h.getQueryCondition4TxtFilter(filter, ['score'], isIgnoreCase);
     const ui2Db = { 'name': 'name', "score": "score" };

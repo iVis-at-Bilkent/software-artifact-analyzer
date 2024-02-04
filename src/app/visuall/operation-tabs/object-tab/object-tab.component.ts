@@ -22,17 +22,17 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   clearMultiObjTableFilter = new Subject<boolean>();
   isShowStatsTable: boolean = false;
   isShowObjTable = false;
+  singleObj = false;
+  customSubTabsObj: { component: any, text: string }[] = CustomizationModule.objSubTabsOne;
   customSubTabs: { component: any, text: string }[] = CustomizationModule.objSubTabs;
 
   tableInput: TableViewInput = {
     columns: ['Type', 'Count', 'Selected', 'Hidden'], isHide0: true, results: [], resultCnt: 0, currPage: 1, pageSize: 20, tableTitle: 'Statistics',
-    isShowExportAsCSV: true, isLoadGraph: true, columnLimit: 5, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true,
-    results2: []
+    isShowExportAsCSV: true, isLoadGraph: true, columnLimit: 5, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true
   };
   multiObjTableInp: TableViewInput = {
     columns: ['Type'], isHide0: true, results: [], resultCnt: 0, currPage: 1, pageSize: 20, isReplace_inHeaders: true, tableTitle: 'Properties',
-    isShowExportAsCSV: true, isEmphasizeOnHover: true, isLoadGraph: true, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true,
-    results2: []
+    isShowExportAsCSV: true, isEmphasizeOnHover: true, isLoadGraph: true, isMergeGraph: false, isNodeData: false, isUseCySelector4Highlight: true, isHideLoadGraph: true
   };
   private NODE_TYPE = '_NODE_';
   private EDGE_TYPE = '_EDGE_';
@@ -87,6 +87,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
   showObjectProps() {
     let selected = this._g.cy.$(':selected');
+    this.singleObj =  (this._g.cy.nodes(':selected').length === 1);
     this.isShowObjTable = false;
     if (selected.filter('.' + COLLAPSED_EDGE_CLASS).length > 0) {
       this.isShowObjTable = true;

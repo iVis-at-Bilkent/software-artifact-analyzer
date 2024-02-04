@@ -79,36 +79,39 @@ import { ReportFileComponent } from './operational-tabs/object-tab/report-tab/su
 })
 
 export class CustomizationModule {
-  
+
   static operationTabs: { component: any, text: string }[] = [];
-  
-  static objSubTabs: { component: any, text: string }[] = [
-    { component: ReportComponent, text: 'Report' },
-    { component: ObjectQueriesComponent, text: 'Queries' }
+
+  static objSubTabs: { component: any, text: string }[] = [];
+
+  static objSubTabsOne: { component: any, text: string } [] = [
+    { component: ReportComponent, text: 'Report'},
+    { component: ObjectQueriesComponent, text: 'Queries'}
   ];
-  static mapSubTabs: { component: any, text: string }[] = [];
-  static databaseSubTabs: { component: any, text: string }[] = [];
-  static settingsSubTabs: { component: any, text: string }[] = [];
-  static queries: { component: any, text: string }[] = [
-    { component: DeveloperCommitsComponent, text: 'Get Commits of Developer' },
-    { component: ReviewerRecommendationComponent, text: 'Get Recommended Reviewers' },
-    { component: AnomalyComponent, text: 'Get Anomalies' },
-    { component: AnomalyStatisticComponent, text: 'Get Anomaly Statistics' }
-  ];
+   
+  static mapSubTabs: { component: any, text: string } [] = [];
+  static databaseSubTabs: { component: any, text: string } [] = [];
+  static settingsSubTabs: { component: any, text: string } [] = [];
+  static queries: { component: any, text: string } [] = [
+  { component: DeveloperCommitsComponent, text: 'Get Commits of Developer' },
+  { component: ReviewerRecommendationComponent, text: 'Get Recommended Reviewers' },
+  { component: AnomalyComponent, text: 'Get Anomalies' },
+  { component: AnomalyStatisticComponent, text: 'Get Anomaly Statistics' }
+];
 
   static db: DbService;
   static defaultTimebarMetrics: TimebarMetric[];
-  constructor(private _db: Neo4jDb) {
-    CustomizationModule.db = _db;
-    const andCond: Rule = { ruleOperator: 'OR' };
-    const issueCond1: Rule = { propertyOperand: 'priority', propertyType: 'string', rawInput: 'Critical', inputOperand: 'Critical', ruleOperator: null, operator: '=' };
-    const issueCond2: Rule = { propertyOperand: 'priority', propertyType: 'string', rawInput: 'Blocker', inputOperand: 'Blocker', ruleOperator: null, operator: '=' };
-    const root1: RuleNode = { r: andCond, parent: null, children: [] };
-    const child1: RuleNode = { r: issueCond1, parent: root1, children: [] };
-    const child2: RuleNode = { r: issueCond2, parent: root1, children: [] };
-    root1.children = [child1, child2];
-    CustomizationModule.defaultTimebarMetrics = [
-      { incrementFn: null, name: 'serious issue', className: 'Issue', rules: root1, color: '#3366cc' },
-    ];
-  }
+constructor(private _db: Neo4jDb) {
+  CustomizationModule.db = _db;
+  const andCond: Rule = { ruleOperator: 'OR' };
+  const issueCond1: Rule = { propertyOperand: 'priority', propertyType: 'string', rawInput: 'Critical', inputOperand: 'Critical', ruleOperator: null, operator: '=' };
+  const issueCond2: Rule = { propertyOperand: 'priority', propertyType: 'string', rawInput: 'Blocker', inputOperand: 'Blocker', ruleOperator: null, operator: '=' };
+  const root1: RuleNode = { r: andCond, parent: null, children: [] };
+  const child1: RuleNode = { r: issueCond1, parent: root1, children: [] };
+  const child2: RuleNode = { r: issueCond2, parent: root1, children: [] };
+  root1.children = [child1, child2];
+  CustomizationModule.defaultTimebarMetrics = [
+    { incrementFn: null, name: 'serious issue', className: 'Issue', rules: root1, color: '#3366cc' },
+  ];
+}
 }

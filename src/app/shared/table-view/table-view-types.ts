@@ -10,7 +10,7 @@ export interface TableData {
 export interface TableViewInput {
   // first property of every result must be ID
   results: TableData[][];
-  results2: number[];
+  results2?: number[];
   columns: string[];
   isLoadGraph: boolean;
   isMergeGraph: boolean;
