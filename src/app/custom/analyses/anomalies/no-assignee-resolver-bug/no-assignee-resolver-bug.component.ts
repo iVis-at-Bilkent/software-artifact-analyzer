@@ -98,7 +98,7 @@ export class NoAssigneeResolverBugComponent implements OnInit, QueryComponent<An
       return;
     } 
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
-    
+    let fn = (x) => { cb(x); this._g.add2GraphHistory(`Get Anomalies: No assignee resolver bugs`); };
     const cb = (x) => {
       
       if (isClientSidePagination) {
@@ -122,7 +122,7 @@ export class NoAssigneeResolverBugComponent implements OnInit, QueryComponent<An
      (n:Issue)<-[r2:RESOLVED]-(resolver:Developer)
      WHERE 'No assignee resolver' IN n.anomalyList AND ${dateFilter}
     RETURN n, assignee, resolver, r2,r1`
-    this._dbService.runQuery(cql, cb);
+    this._dbService.runQuery(cql, fn);
    
   }
   filterGraphResponse(x: GraphResponse): GraphResponse {
@@ -171,6 +171,11 @@ export class NoAssigneeResolverBugComponent implements OnInit, QueryComponent<An
   getDataForQueryResult(e: TableRowMeta) {
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
+      const names = []
+      e.dbIds.forEach(nodeId => {
+        names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+      });
+      this._g.add2GraphHistory(`Get Anomalies: No assignee resolver bugs (${names.join(", ")})`);
     }
     const idFilter = this._h. buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};

@@ -96,7 +96,7 @@ export class NoCommentBugsComponent implements OnInit, QueryComponent<Anomaly> {
       return;
     } 
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
-    
+    let fn = (x) => { cb(x); this._g.add2GraphHistory(`Get Anomalies: No comment bugs`); };
     const cb = (x) => {
       
       if (isClientSidePagination) {
@@ -120,7 +120,7 @@ export class NoCommentBugsComponent implements OnInit, QueryComponent<Anomaly> {
     WHERE 'No comment on issue' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:ASSIGNED_TO]-(d) 
     OPTIONAL MATCH (n)-[r2:RESOLVED]-(d2) return n,d,d2,r,r2`
-    this._dbService.runQuery(cql, cb);
+    this._dbService.runQuery(cql, fn);
    
   }
   filterGraphResponse(x: GraphResponse): GraphResponse {
@@ -169,6 +169,11 @@ export class NoCommentBugsComponent implements OnInit, QueryComponent<Anomaly> {
   getDataForQueryResult(e: TableRowMeta) {
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
+      const names = []
+      e.dbIds.forEach(nodeId => {
+        names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+      });
+      this._g.add2GraphHistory(`Get Anomalies: No comment bugs (${names.join(", ")})`);
     }
     const idFilter = this._h. buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};

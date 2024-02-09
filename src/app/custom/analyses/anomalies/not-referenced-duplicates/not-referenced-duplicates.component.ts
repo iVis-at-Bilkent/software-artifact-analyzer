@@ -98,6 +98,7 @@ export class NotReferencedDuplicatesComponent implements OnInit, QueryComponent<
     if (!this.tableInput.isLoadGraph) {    
       return;
     } 
+    let fn = (x) => { cb(x); this._g.add2GraphHistory(`Get Anomalies: Not referenced duplicates bugs`); };
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
     
     const cb = (x) => {
@@ -123,7 +124,7 @@ export class NotReferencedDuplicatesComponent implements OnInit, QueryComponent<
     WHERE 'Not Referenced duplicate' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH (n)-[r:RELATES_TO]-(d) 
     RETURN n,r,d`
-    this._dbService.runQuery(cql, cb);
+    this._dbService.runQuery(cql, fn);
    
   }
   filterGraphResponse(x: GraphResponse): GraphResponse {
@@ -175,6 +176,11 @@ export class NotReferencedDuplicatesComponent implements OnInit, QueryComponent<
   getDataForQueryResult(e: TableRowMeta) {
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
+      const names = []
+      e.dbIds.forEach(nodeId => {
+        names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+      });
+      this._g.add2GraphHistory(`Get Anomalies: Not referenced duplicates bugs (${names.join(", ")})`);
     }
     const idFilter = this._h. buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};

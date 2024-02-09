@@ -87,10 +87,9 @@ export class UnassignedBugsComponent implements OnInit, QueryComponent<Anomaly> 
     if (!this.tableInput.isLoadGraph) {    
       return;
     } 
-    const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
-    
+    const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';    
+    let fn = (x) => { cb(x); this._g.add2GraphHistory(`Get Anomalies: Unassigned bugs`); };
     const cb = (x) => {
-      
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
       } else {
@@ -108,7 +107,7 @@ export class UnassignedBugsComponent implements OnInit, QueryComponent<Anomaly> 
     const cql = `MATCH (n:Issue) 
     WHERE 'Unassigned issue' IN n.anomalyList AND ${dateFilter}
     OPTIONAL MATCH  (n)-[r:RESOLVED]-(d) return n,d,r`
-    this._dbService.runQuery(cql, cb);
+    this._dbService.runQuery(cql, fn);
    
   }
   filterGraphResponse(x: GraphResponse): GraphResponse {
@@ -156,6 +155,11 @@ export class UnassignedBugsComponent implements OnInit, QueryComponent<Anomaly> 
   getDataForQueryResult(e: TableRowMeta) {
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
+      const names = []
+      e.dbIds.forEach(nodeId => {
+        names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+      });
+      this._g.add2GraphHistory(`Get Anomalies: Unassigned bugs (${names.join(", ")})`);
     }
     const idFilter = this._h.buildIdFilter(e.dbIds);
     

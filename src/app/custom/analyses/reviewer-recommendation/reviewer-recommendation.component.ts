@@ -201,15 +201,17 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       this.seeds = []
-
+      this._g.add2GraphHistory(`Reviewer recommendation for the pull request #${this.pr}`);
       const cbSub1 = (y) => {
         let result = x
         result.nodes = result.nodes.concat(y.nodes)
         result.edges = result.edges.concat(y.edges)
         //If number of files more than 300 we will filter file nodes
+        /*
         if (this.fileIds.length > 300) {
           result.nodes = result.nodes.filter(node => !node.labels.includes("File"));
         }
+        */
         if (isClientSidePagination) {
           this._cyService.loadElementsFromDatabase(this.filterGraphResponse(result), this.tableInput.isMergeGraph);
           this.seeds = [...this.developers];
@@ -336,6 +338,11 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
         if (!filter || this.graphResponse == null) {
           this.graphResponse = x;
         }
+        const names = []
+        e.dbIds.forEach(nodeId => {
+          names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+        });
+        this._g.add2GraphHistory(`Reviewer recommendation for the pull request #${this.pr} (${names.join(", ")})`);
         this.clusterByDeveloper();
         this.devSize();
       }

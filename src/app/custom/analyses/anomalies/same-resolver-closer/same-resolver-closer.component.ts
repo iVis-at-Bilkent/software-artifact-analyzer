@@ -94,7 +94,7 @@ export class SameResolverCloserComponent implements OnInit, QueryComponent<Anoma
     if (!this.tableInput.isLoadGraph) {    
       return;
     } 
-    
+    let fn = (x) => { cb(x); this._g.add2GraphHistory(`Get Anomalies: Same resolver closer bugs`); };
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
       
@@ -117,7 +117,7 @@ export class SameResolverCloserComponent implements OnInit, QueryComponent<Anoma
     MATCH (n)-[r2:CLOSED]->(issue)
     WHERE issue.resolver= n.name and issue.closer = n.name  AND ${dateFilter}
     RETURN  n, r1,r2, issue SKIP 0 `
-    this._dbService.runQuery(cql, cb);
+    this._dbService.runQuery(cql, fn);
    
   }
   filterGraphResponse(x: GraphResponse): GraphResponse {
@@ -181,19 +181,23 @@ export class SameResolverCloserComponent implements OnInit, QueryComponent<Anoma
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
       let nodeIds = []
       let edegeIds = []
-      
       x.nodes.forEach(node => {
         nodeIds.push(node.id)
       });
       x.edges.forEach(edge => {
         edegeIds.push(edge.id)
       });
+      const names = []
+      e.dbIds.forEach(nodeId => {
+        names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+      });
+      this._g.add2GraphHistory(`Get Anomalies: Same resolver closer bugs (${names.join(", ")})`);
     }
     const idFilter = this._h. buildIdFilter(e.dbIds);
     const ui2Db = { 'Developer': 'Developer' ,'Issues': 'Issues','Count': 'Count'};
     const orderExpr =this._h.getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter = this._h.getDateRangeCQL();
-    
+
     const cql = ` MATCH (n:Developer)-[r1:RESOLVED ]->(issue:Issue)
     MATCH (n)-[r2:CLOSED]->(issue)
     WHERE issue.resolver= n.name and issue.closer = n.name  AND ${idFilter} AND ${dateFilter} 

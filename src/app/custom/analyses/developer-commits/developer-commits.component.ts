@@ -115,7 +115,7 @@ export class DeveloperCommitsComponent implements OnInit, QueryComponent<CommitD
       return;
     }
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
-
+    let fn = (x) => { cb(x); this._g.add2GraphHistory(`Get commits of the developer ${this.developer}`); };
     const cb = (x) => {
 
       if (isClientSidePagination) {
@@ -145,7 +145,7 @@ export class DeveloperCommitsComponent implements OnInit, QueryComponent<CommitD
     WHERE  ${dateFilter} 
     RETURN d,n,r
     SKIP ${skip} LIMIT ${dataCnt}`;
-    this._dbService.runQuery(cql, cb);
+    this._dbService.runQuery(cql, fn);
 
   }
 
@@ -180,7 +180,14 @@ export class DeveloperCommitsComponent implements OnInit, QueryComponent<CommitD
     }
   }
   getDataForQueryResult(e: TableRowMeta) {
-    const cb = (x) => this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
+    const cb = (x) => {
+      this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
+      const names = []
+      e.dbIds.forEach(nodeId => {
+        names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+      });
+      this._g.add2GraphHistory(`Get commits of the developer ${this.developer} (${names.join(", ")})`);
+    }
 
     const idFilter = this._h. buildIdFilter(e.dbIds);
     const ui2Db = { 'name': 'n.name' };

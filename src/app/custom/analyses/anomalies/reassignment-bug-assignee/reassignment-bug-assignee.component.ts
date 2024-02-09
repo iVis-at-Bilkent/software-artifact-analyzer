@@ -101,7 +101,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit, QueryComponent<
       return;
     } 
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';   
-    
+    let fn = (x) => { cb(x); this._g.add2GraphHistory(`Get Anomalies: Reassignment bug assignee`); };
     const cb = (x) => {
       
       if (isClientSidePagination) {
@@ -128,7 +128,7 @@ export class ReassignmentBugAssigneeComponent implements OnInit, QueryComponent<
     OPTIONAL MATCH path =(n)-[*1..2]-(developer: Developer)
     WHERE developer.name =assignee and  ${dateFilter} 
     RETURN n,  developer AS assignee,relationships(path) AS edges`
-    this._dbService.runQuery(cql, cb);
+    this._dbService.runQuery(cql, fn);
    
   }
   filterGraphResponse(x: GraphResponse): GraphResponse {
@@ -190,6 +190,11 @@ export class ReassignmentBugAssigneeComponent implements OnInit, QueryComponent<
     this.count=  this._g.userPrefs?.anomalyDefaultValues?.assigneeChangeCount.getValue() ||1;
     const cb = (x) => {
       this._cyService.loadElementsFromDatabase(x, this.tableInput.isMergeGraph)
+      const names = []
+      e.dbIds.forEach(nodeId => {
+        names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+      });
+      this._g.add2GraphHistory(`Get Anomalies: Get Anomalies: Reassignment bug assignee (${names.join(", ")})`);
     }
     const idFilter = this._h. buildIdFilter(e.dbIds);
     const ui2Db = {'issue': 'n.name'};

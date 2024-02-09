@@ -32,6 +32,7 @@ export class ObjectQueriesComponent implements OnInit {
 
 
   constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient,private modalService: NgbModal) {
+    /*
     this.developerQueries = [
       { component: DeveloperCommitsComponent, text: 'Get Commits' },
       { component: CollaboratorsComponent, text: 'Get Collaborators' },
@@ -46,6 +47,18 @@ export class ObjectQueriesComponent implements OnInit {
     this.issueQueries = [
       { component: CommentContributorsComponent, text: 'Get Comment Contributors' },
     ];  
+    this.commitQueries = [
+    ];  
+    */
+    this.developerQueries = [
+      { component: DeveloperCommitsComponent, text: 'Get Commits' }]
+    this.prQueries = [
+      { component: ReviewerRecommendationComponent, text: 'Get Recommended Reviewers' },
+    ]; 
+    this.fileQueries = [
+      { component: ExpertRecommendationComponent, text: 'Get Experts' },
+    ];    
+    this.issueQueries = [];  
     this.commitQueries = [
     ];  
     this.selectedIdx = -1;

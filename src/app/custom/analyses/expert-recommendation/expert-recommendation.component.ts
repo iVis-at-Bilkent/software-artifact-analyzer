@@ -180,6 +180,7 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
       this.seeds = []
+      this._g.add2GraphHistory(`Expert recommendation for the file #${this.file}`);
       if (isClientSidePagination) {
         this._cyService.loadElementsFromDatabase(this.filterGraphResponse(x), this.tableInput.isMergeGraph);
         this.seeds = [...this.developers];
@@ -289,6 +290,13 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
       } else {
         this._g.viewUtils.highlight(seedNodes, 0);
       }
+      const names = []
+      e.dbIds.forEach(nodeId => {
+        names.push(this._g.cy.$id(`n${nodeId}`)._private.data.name)
+      });
+      this._g.add2GraphHistory(`Expert recommendation for the file #${this.file} (${names.join(", ")})`);
+      this.clusterByDeveloper();
+      this.devSize();
     }
 
     const idFilter = e.dbIds.join("','");
@@ -387,15 +395,24 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     else {
       // expand all collapsed without animation (sync)
       this._g.expandCollapseApi.expandAll(C.EXPAND_COLLAPSE_FAST_OPT);
-      const compounNodes = this._g.cy.$('.' + C.CLUSTER_CLASS);
+      let clusterSelector = '';
+      C.CLUSTER_CLASS.forEach((className, index) => {
+        if (index !== 0) {
+          // Add a comma and a space before adding the next class
+          clusterSelector += ', ';
+        }
+        // Concatenate the class name
+        clusterSelector += '.' + className;
+      });
+      const compounNodes = this._g.cy.$(clusterSelector);
       const clusters: string[][] = [];
       for (let i = 0; i < compounNodes.length; i++) {
-        const cluster = compounNodes[i].children().not('.' + C.CLUSTER_CLASS).map(x => x.id());
+        const cluster = compounNodes[i].children().not(clusterSelector).map(x => x.id());
         clusters.push(cluster);
       }
       this._g.layout.clusters = clusters;
       // delete the compound nodes
-      this._cyService.removeGroup4Selected(this._g.cy.nodes('.' + C.CLUSTER_CLASS), true, true);
+      this._cyService.removeGroup4Selected(this._g.cy.nodes(clusterSelector), true, true);
     }
 
   }
