@@ -395,6 +395,8 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     else {
       // expand all collapsed without animation (sync)
       this._g.expandCollapseApi.expandAll(C.EXPAND_COLLAPSE_FAST_OPT);
+      const compounNodes = this._g.cy.$('.' + C.CLUSTER_CLASS);
+      /*
       let clusterSelector = '';
       C.CLUSTER_CLASS.forEach((className, index) => {
         if (index !== 0) {
@@ -405,14 +407,17 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
         clusterSelector += '.' + className;
       });
       const compounNodes = this._g.cy.$(clusterSelector);
+      */
       const clusters: string[][] = [];
       for (let i = 0; i < compounNodes.length; i++) {
-        const cluster = compounNodes[i].children().not(clusterSelector).map(x => x.id());
+        //const cluster = compounNodes[i].children().not(clusterSelector).map(x => x.id());
+        const cluster = compounNodes[i].children().not('.' + C.CLUSTER_CLASS).map(x => x.id());
         clusters.push(cluster);
       }
       this._g.layout.clusters = clusters;
       // delete the compound nodes
-      this._cyService.removeGroup4Selected(this._g.cy.nodes(clusterSelector), true, true);
+      this._cyService.removeGroup4Selected(this._g.cy.nodes('.' + C.CLUSTER_CLASS), true, true);
+      //this._cyService.removeGroup4Selected(this._g.cy.nodes(clusterSelector), true, true);
     }
 
   }

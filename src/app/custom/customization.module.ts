@@ -35,7 +35,6 @@ import { ReportPrComponent } from './operational-tabs/object-tab/report-tab/sub-
 import { ReportDeveloperComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-developer/report-developer.component';
 import { ReportCommitComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-commit/report-commit.component';
 import { ReportFileComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-file/report-file.component';
-import {GroupByFolderComponent} from './operational-tabs/map-tab/group-by-folder/group-by-folder.component';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
@@ -48,7 +47,6 @@ import {GroupByFolderComponent} from './operational-tabs/map-tab/group-by-folder
     ReportComponent,
     ObjectQueriesComponent,
     AnomalyComponent,
-    GroupByFolderComponent,
     UnassignedBugsComponent,
     NoLinkToBugFixingCommitComponent,
     IgnoredBugsComponent,
@@ -91,9 +89,7 @@ export class CustomizationModule {
     { component: ObjectQueriesComponent, text: 'Queries'}
   ];
    
-  static mapSubTabs: { component: any, text: string } [] = [
-    { component: GroupByFolderComponent, text: 'Cluster by Folder' },
-  ];
+  static mapSubTabs: { component: any, text: string } [] = [];
   static databaseSubTabs: { component: any, text: string } [] = [];
   static settingsSubTabs: { component: any, text: string } [] = [];
   static queries: { component: any, text: string } [] = [
