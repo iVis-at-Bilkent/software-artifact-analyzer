@@ -71,7 +71,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Work: " },
+                  { isNode: true, customTxt: "Show developer work: " },
                   {}
                 );
               },
@@ -83,7 +83,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Hide Work: " },
+                  { isNode: true, customTxt: "Hide developer work: " },
                   {}
                 );
               },
@@ -103,7 +103,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Show reported issues: " },
                 { edgeType: "REPORTED", targetType: "Issue" }
               );
             },
@@ -115,7 +115,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Hide reported issues: " },
                 { edgeType: "REPORTED", targetType: "Issue" }
               );
             },
@@ -127,7 +127,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Show issues assigned by: " },
                 { edgeType: "ASSIGNED_BY", targetType: "Issue" }
               );
             },
@@ -139,7 +139,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Hide issues assigned by: " },
                 { edgeType: "ASSIGNED_BY", targetType: "Issue" }
               );
             },
@@ -151,7 +151,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Show issues assigned to: " },
                 { edgeType: "ASSIGNED", targetType: "Issue" }
               );
             },
@@ -163,7 +163,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Hide issues assigned to: " },
                 { edgeType: "ASSIGNED", targetType: "Issue" }
               );
             },
@@ -175,7 +175,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Show issues resolved: " },
                 { edgeType: "RESOLVED", targetType: "Issue" }
               );
             },
@@ -187,7 +187,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Hide issues resolved: " },
                 { edgeType: "RESOLVED", targetType: "Issue" }
               );
             },
@@ -199,7 +199,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Show issues closed: " },
                 { edgeType: "CLOSED", targetType: "Issue" }
               );
             },
@@ -211,7 +211,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Hide issues closed: " },
                 { edgeType: "CLOSED", targetType: "Issue" }
               );
             },
@@ -232,7 +232,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Pull Requests: " },
+                  { isNode: true, customTxt: "Show pull requests opened: " },
                   { edgeType: "OPENED", targetType: "PullRequest" }
                 );
               },
@@ -244,7 +244,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Pull Requests: " },
+                  { isNode: true, customTxt: "Hide pull requests opened: " },
                   { edgeType: "OPENED", targetType: "PullRequest" }
                 );
               },
@@ -256,7 +256,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Pull Requests: " },
+                  { isNode: true, customTxt: "Show pull requests merged: " },
                   { edgeType: "MERGED", targetType: "PullRequest" }
                 );
               },
@@ -268,7 +268,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Pull Requests: " },
+                  { isNode: true, customTxt: "Hide pull requests merged: " },
                   { edgeType: " MERGED", targetType: "PullRequest" }
                 );
               },
@@ -280,7 +280,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Pull Requests: " },
+                  { isNode: true, customTxt: "Show pull requests reviewed: " },
                   { edgeType: "REVIEWED", targetType: "PullRequest" }
                 );
               },
@@ -292,7 +292,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Pull Requests: " },
+                  { isNode: true, customTxt: "Hide pull requests reviewed: " },
                   { edgeType: "REVIEWED", targetType: "PullRequest" }
                 );
               },
@@ -304,7 +304,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Committed Pull Requests: " },
+                  { isNode: true, customTxt: "Show pull requests committed: " },
                   {
                     isMultiLength: true,
                     edgeType: this._developer_commit_pull_request,
@@ -320,7 +320,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Committed Pull Requests: " },
+                  { isNode: true, customTxt: "Hide pull requests committed: " },
                   {
                     isMultiLength: true,
                     edgeType: this._developer_commit_pull_request,
@@ -344,7 +344,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Commits: " },
+                { isNode: true, customTxt: "Show commits: " },
                 {
                   isMultiLength: false,
                   edgeType: this._developer_commits,
@@ -360,7 +360,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Commits: " },
+                { isNode: true, customTxt: "Hide commits: " },
                 {
                   isMultiLength: false,
                   edgeType: this._developer_commits,
@@ -383,7 +383,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Commits: " },
+                { isNode: true, customTxt: "Show files committed into: " },
                 {
                   isMultiLength: true,
                   edgeType: this._developer_commits_file,
@@ -399,7 +399,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Commits: " },
+                { isNode: true, customTxt: "Hide  files committed into: " },
                 {
                   isMultiLength: true,
                   edgeType: this._developer_commits_file,
@@ -423,7 +423,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Developers: " },
+                { isNode: true, customTxt: "Show developers reviewed: " },
                 {
                   isMultiLength: true,
                   edgeType: this._developers_reviewBy_developer,
@@ -439,7 +439,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Developers: " },
+                { isNode: true, customTxt: "Hide developers reviewed: " },
                 {
                   isMultiLength: true,
                   edgeType: this._developers_reviewBy_developer,
@@ -464,7 +464,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Files: " },
+                { isNode: true, customTxt: "Show all related: " },
                 {}
               );
             },
@@ -476,7 +476,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Hide Related: " },
+                { isNode: true, customTxt: "Hide all related: " },
                 {}
               );
             },
@@ -496,7 +496,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Pull Request: " },
+                { isNode: true, customTxt: "Show pull request: " },
                 {
                   edgeType: this._commit_pr,
                   targetType: "PullRequest"
@@ -511,7 +511,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Pull Request: " },
+                { isNode: true, customTxt: "Hide pull request: " },
                 {
                   edgeType: this._commit_pr,
                   targetType: "PullRequest"
@@ -533,7 +533,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show File: " },
+                { isNode: true, customTxt: "Show files modified: " },
                 {
                   edgeType: this._commit_file,
                   targetType: "File"
@@ -548,7 +548,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show File: " },
+                { isNode: true, customTxt: "Hide files modified: " },
                 {
                   edgeType: this._commit_file,
                   targetType: "File"
@@ -570,7 +570,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Show issues referenced: " },
                 {
                   edgeType: this._commit_issue,
                   targetType: "Issue"
@@ -585,7 +585,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue: " },
+                { isNode: true, customTxt: "Hide issues referenced: " },
                 {
                   edgeType: this._commit_issue,
                   targetType: "Issue"
@@ -610,7 +610,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developer: " },
+                  { isNode: true, customTxt: "Show author: " },
                   {
                     edgeType: this._commit_developer,
                     targetType: "Developer"
@@ -625,7 +625,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developer: " },
+                  { isNode: true, customTxt: "Hide author: " },
                   {
                     edgeType: this._commit_developer,
                     targetType: "Developer"
@@ -640,7 +640,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developer: " },
+                  { isNode: true, customTxt: "Show reviewer: " },
                   { edgeType: this._commit_review_developer, isMultiLength: true }
                 );
               },
@@ -652,7 +652,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Hide Developer: " },
+                  { isNode: true, customTxt: "Hide reviewer: " },
                   {
                     edgeType: this._commit_review_developer,
                     isMultiLength: true,
@@ -676,7 +676,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue Related Nodes: " },
+                { isNode: true, customTxt: "Show all related: " },
                 {}
               );
             },
@@ -688,7 +688,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Hide Related: " },
+                { isNode: true, customTxt: "Hide all related: " },
                 {}
               );
             },
@@ -707,7 +707,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show issue related pull request nodes: " },
+                { isNode: true, customTxt: "Show pull request referenced: " },
                 {
                   edgeType: "REFERENCED",
                   targetType: "PullRequest"
@@ -722,7 +722,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show issue related pull request nodes: " },
+                { isNode: true, customTxt: "Hide pull request referenced: " },
                 {
                   edgeType: "REFERENCED",
                   targetType: "PullRequest"
@@ -744,7 +744,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Related Files: " },
+                { isNode: true, customTxt: "Show related files: " },
                 {
                   edgeType: this._get_files_for_issue_relation,
                   isMultiLength: true,
@@ -760,7 +760,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Related Files: " },
+                { isNode: true, customTxt: "Hide related files: " },
                 {
                   edgeType: this._get_files_for_issue_relation,
                   isMultiLength: true,
@@ -785,7 +785,7 @@ export class ContextMenuCustomizationService {
               const node = x.target || x.cyTarget;
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue Related Commits Nodes1: " },
+                { isNode: true, customTxt: "Show referenced commits: " },
                 {
                   edgeType: this._get_commit_for_issue_relation,
                   isMultiLength: false,
@@ -802,7 +802,7 @@ export class ContextMenuCustomizationService {
               const node = x.target || x.cyTarget;
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issue Related Commits Nodes1: " },
+                { isNode: true, customTxt: "Hide referenced commits: " },
                 {
                   edgeType: this._get_commit_for_issue_relation,
                   isMultiLength: false,
@@ -828,7 +828,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers who worked on the solution: " },
+                  { isNode: true, customTxt: "Show developers who worked on the solution: " },
                   {
                     edgeType: this._get_developer_for_issue_relation,
                     isMultiLength: true,
@@ -844,7 +844,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers who worked on the solution: " },
+                  { isNode: true, customTxt: "Hide developers who worked on the solution: " },
                   {
                     edgeType: this._get_developer_for_issue_relation,
                     isMultiLength: true,
@@ -860,7 +860,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Show reporter: " },
                   {
                     edgeType: "REPORTED",
                     isMultiLength: false,
@@ -876,7 +876,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Hide reporter: " },
                   {
                     edgeType: "REPORTED",
                     isMultiLength: false,
@@ -892,7 +892,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Show assignee: " },
                   {
                     edgeType: "ASSIGNED_TO",
                     isMultiLength: false,
@@ -908,7 +908,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Hide assignee: " },
                   {
                     edgeType: "ASSIGNED_TO",
                     isMultiLength: false,
@@ -924,7 +924,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Show assigner: " },
                   {
                     edgeType: "ASSIGNED_BY",
                     isMultiLength: false,
@@ -940,7 +940,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Hide assigner: " },
                   {
                     edgeType: "ASSIGNED_BY",
                     isMultiLength: false,
@@ -956,7 +956,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Show resolver: " },
                   {
                     edgeType: "RESOLVED",
                     isMultiLength: false,
@@ -972,7 +972,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Hide resolver: " },
                   {
                     edgeType: "RESOLVED",
                     isMultiLength: false,
@@ -988,7 +988,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Show closer: " },
                   {
                     edgeType: "CLOSED",
                     isMultiLength: false,
@@ -1004,7 +1004,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Developers related to issue: " },
+                  { isNode: true, customTxt: "Hide closer: " },
                   {
                     edgeType: "CLOSED",
                     isMultiLength: false,
@@ -1030,7 +1030,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Issues: " },
+                  { isNode: true, customTxt: "Show related issues: " },
                   {
                     edgeType: this._issue_issue,
                     targetType: "Issue"
@@ -1045,7 +1045,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Issues: " },
+                  { isNode: true, customTxt: "Hide related issues: " },
                   {
                     edgeType: this._issue_issue,
                     targetType: "Issue"
@@ -1055,7 +1055,16 @@ export class ContextMenuCustomizationService {
             },
           ]
       },
+      {
+        id: "report_anomaly",
+        content: "Report Anomalies",
+        selector: "node.Issue",
+        hasTrailingDivider: true,
+        onClickFunction: (x) => {
+          this.reportAnomaly(x);
+        },
 
+      },
       //Pull Request
       {
         id: "pr",
@@ -1071,7 +1080,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Pull Request Related Nodes: " },
+                  { isNode: true, customTxt: "Show referenced pull requests: " },
                   {}
                 );
               },
@@ -1083,7 +1092,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Hide Related: " },
+                  { isNode: true, customTxt: "Hide referenced pull requests: " },
                   {}
                 );
               },
@@ -1104,7 +1113,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Issue: " },
+                  { isNode: true, customTxt: "Show referenced issues: " },
                   {
                     edgeType: this._pr_issue,
                     targetType: "Issue"
@@ -1119,7 +1128,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Issue: " },
+                  { isNode: true, customTxt: "Hide referenced issues: " },
                   {
                     edgeType: this._pr_issue,
                     targetType: "Issue"
@@ -1143,7 +1152,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developers: " },
+                  { isNode: true, customTxt: "Show opener: " },
                   {
                     edgeType: "OPENED",
                     targetType: "Developer"
@@ -1158,7 +1167,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developers: " },
+                  { isNode: true, customTxt: "Hide opener: " },
                   {
                     edgeType: "OPENED",
                     targetType: "Developer"
@@ -1173,7 +1182,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developers: " },
+                  { isNode: true, customTxt: "Show merger: " },
                   {
                     edgeType: "MERGED",
                     targetType: "Developer"
@@ -1188,7 +1197,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developers: " },
+                  { isNode: true, customTxt: "Hide merger: " },
                   {
                     edgeType: "MERGED",
                     targetType: "Developer"
@@ -1203,7 +1212,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developers: " },
+                  { isNode: true, customTxt: "Show reviewer: " },
                   {
                     edgeType: "REVIEWED",
                     targetType: "Developer"
@@ -1218,7 +1227,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Developers: " },
+                  { isNode: true, customTxt: "Hide reviewer: " },
                   {
                     edgeType: "REVIEWED",
                     targetType: "Developer"
@@ -1242,7 +1251,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Commits: " },
+                  { isNode: true, customTxt: "Show commits: " },
                   {
                     edgeType: this._pr_commit,
                     targetType: "Commit"
@@ -1257,7 +1266,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Commits: " },
+                  { isNode: true, customTxt: "Hide commits: " },
                   {
                     edgeType: this._pr_commit,
                     targetType: "Commit"
@@ -1281,7 +1290,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Files: " },
+                  { isNode: true, customTxt: "Show modified files: " },
                   {
                     edgeType: this._pr_file, isMultiLength: true,
                     targetType: "File"
@@ -1296,7 +1305,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Files: " },
+                  { isNode: true, customTxt: "Hide modified files: " },
                   {
                     edgeType: this._pr_file, isMultiLength: true,
                     targetType: "File"
@@ -1305,16 +1314,6 @@ export class ContextMenuCustomizationService {
               },
             },
           ]
-      },
-      {
-        id: "report_anomaly",
-        content: "Report Anomalies",
-        selector: "node.Issue",
-        hasTrailingDivider: true,
-        onClickFunction: (x) => {
-          this.reportAnomaly(x);
-        },
-
       },
       //File 
       {
@@ -1331,7 +1330,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show File Renamed To: " },
+                  { isNode: true, customTxt: "Show all related: " },
                   {}
                 );
               },
@@ -1343,7 +1342,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Hide Related: " },
+                  { isNode: true, customTxt: "Hide all related: " },
                   {}
                 );
               },
@@ -1364,7 +1363,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show File: " },
+                  { isNode: true, customTxt: "Show renamed files: " },
                   {
                     edgeType: this._file_file,
                     targetType: "File"
@@ -1379,7 +1378,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show File: " },
+                  { isNode: true, customTxt: "Hide renamed files: " },
                   {
                     edgeType: this._file_file,
                     targetType: "File"
@@ -1402,7 +1401,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show Commits: " },
+                  { isNode: true, customTxt: "Show commits: " },
                   { edgeType: this._file_commit }
                 );
               },
@@ -1414,7 +1413,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Hide Commits: " },
+                  { isNode: true, customTxt: "Hide commits: " },
                   {
                     edgeType: this._file_commit,
                     targetType: "Commit"
@@ -1436,7 +1435,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Developers: " },
+                { isNode: true, customTxt: "Show developers committed into: " },
                 {
                   edgeType: this._file_developer, isMultiLength: true,
                   targetType: "Developer"
@@ -1451,7 +1450,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Developers: " },
+                { isNode: true, customTxt: "Hide developers committed into: " },
                 {
                   edgeType: this._file_developer, isMultiLength: true,
                   targetType: "Developer"
@@ -1474,7 +1473,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Pull Requests: " },
+                { isNode: true, customTxt: "Show pull requests make change: " },
                 { edgeType: this._file_pull_request, isMultiLength: true, targetType: "PullRequest" }
               );
             },
@@ -1486,7 +1485,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Hide Pull Requests: " },
+                { isNode: true, customTxt: "Hide pull requests make change: " },
                 { edgeType: this._file_pull_request, isMultiLength: true, targetType: "PullRequest" }
               );
             },
@@ -1506,7 +1505,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issues: " },
+                { isNode: true, customTxt: "Show related issues: " },
                 { edgeType: this._file_issue, isMultiLength: true, targetType: "Issue" }
               );
             },
@@ -1518,7 +1517,7 @@ export class ContextMenuCustomizationService {
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
-                { isNode: true, customTxt: "Show Issues: " },
+                { isNode: true, customTxt: "Hide related issues: " },
                 { edgeType: this._file_issue, isMultiLength: true, targetType: "Issue" }
               );
             },
