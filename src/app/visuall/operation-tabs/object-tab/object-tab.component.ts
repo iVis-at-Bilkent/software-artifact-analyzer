@@ -16,6 +16,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   nodeClasses: Set<string>;
   edgeClasses: Set<string>;
   selectedClasses: string;
+  selectedItemPropsURL: any[];
   selectedItemProps: any[];
   tableFilled = new Subject<boolean>();
   multiObjTableFilled = new Subject<boolean>();
@@ -42,6 +43,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
   constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) {
     this.selectedItemProps = [];
+    this.selectedItemPropsURL = [];
   }
 
   ngOnInit() {
@@ -87,7 +89,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
   showObjectProps() {
     let selected = this._g.cy.$(':selected');
-    this.singleObj =  (this._g.cy.nodes(':selected').length === 1);
+    this.singleObj = (this._g.cy.nodes(':selected').length === 1);
     this.isShowObjTable = false;
     if (selected.filter('.' + COLLAPSED_EDGE_CLASS).length > 0) {
       this.isShowObjTable = true;
@@ -121,6 +123,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
     const selectedNodeCnt = this._g.cy.nodes(':selected').length;
     this.selectedClasses = '';
     this.selectedItemProps.length = 0;
+    this.selectedItemPropsURL.length = 0;
     if (compoundEdges.length < 1 || selectedNodeCnt > 0) {
       return;
     }
@@ -235,11 +238,14 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
       const attributeType = findTypeOfAttribute(key, properties.nodes, properties.edges);
       if (attributeType === 'datetime') {
-        if (typeof renderedValue !== 'undefined') {
+        if (typeof renderedValue !== 'undefined' && renderedValue < 2208988800000) {
           renderedValue = new Date(renderedValue).toLocaleString();
         } else {
-          renderedValue = '';
+          renderedValue = '-';
         }
+      }
+      if (key === 'url') {
+        this.selectedItemPropsURL.push({ key: renderedKey, val: renderedValue });
       }
 
       if (key.toLowerCase() === DATE_PROP_START ||
