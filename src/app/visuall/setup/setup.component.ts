@@ -36,7 +36,7 @@
 
   async ngOnInit(): Promise<void> {
     this.redirectUrlFlowJira = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
-    "http://saa.cs.bilkent.edu.tr/?setup=Jira" : 
+    "https://saa.cs.bilkent.edu.tr/?setup=Jira" : 
     `http://${window.location.hostname}:${window.location.port}/?setup=Jira`;
     if (this.setupValue == "GitHub") {
       this.github()
