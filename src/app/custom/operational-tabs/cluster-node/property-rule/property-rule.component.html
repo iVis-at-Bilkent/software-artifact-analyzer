@@ -1,0 +1,17 @@
+<div class="row m-1 g-0 justify-content-center">
+  
+  <div class="col-3 px-1">
+    <select autofocus class="form-select tight-select filter-form va-small-text prop" [(ngModel)]="selectedProp"
+      [disabled]="isGenericTypeSelected" (change)="changeSelectedProp()">
+      
+      <option *ngFor="let p of selectedClassProps" [value]="p" class="prop-opt">{{p}}</option>
+    </select>
+     <div  *ngIf="selectedProp ==='Folder'" class="d-flex align-items-center justify-content-center">
+      <label class=" va-text">level</label>
+      <input type="number" class="va-small-text m-2" [(ngModel)]="number" min="0" max="30" />  
+    </div>
+    
+  </div>
+
+ 
+</div>

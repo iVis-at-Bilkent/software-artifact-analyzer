@@ -1,0 +1,45 @@
+img {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+  margin-bottom: 2px;
+  padding-inline-start: 24px;
+}
+
+.caret {
+  color: #666666;
+  display: inline-block;
+}
+
+.curr-condition {
+  background: #F0F2F4;
+}
+
+.padding4 {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.black-up-triangle::after {
+  content: "\25B2";
+  display: inline-block;
+}
+
+.black-down-triangle::after {
+  content: "\25BC";
+  display: inline-block;
+}
+
+.white-down-triangle::after {
+  content: "\25BD";
+  display: inline-block;
+}
+
+.white-right-triangle::after {
+  content: "\25B7";
+  display: inline-block;
+}

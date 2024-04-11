@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="800px"
+   height="800px"
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg141"
+   sodipodi:docname="cluster.svg"
+   inkscape:version="1.2.1 (9c6d41e, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+  <sodipodi:namedview
+     id="namedview143"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.295"
+     inkscape:cx="396.61017"
+     inkscape:cy="401.69492"
+     inkscape:window-width="1680"
+     inkscape:window-height="997"
+     inkscape:window-x="1512"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Icon-Set-Filled" />
+  <title
+     id="title132">folder 2</title>
+  <desc
+     id="desc134">Created with Sketch Beta.</desc>
+  <defs
+     id="defs136" />
+  <g
+     id="Page-1"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd"
+     sketch:type="MSPage">
+    <g
+       id="Icon-Set-Filled"
+       sketch:type="MSLayerGroup"
+       transform="translate(-362.000000, -153.000000)"
+       fill="#000000">
+      <path
+         d="m 387.61016,161.30508 h -9.55085 c 0,-1.44146 -1.22182,-2.61017 -2.72881,-2.61017 h -4.09322 c -1.50698,0 -2.72881,1.16871 -2.72881,2.61017 v 3.91526 h 21.83051 v -1.30509 c 0,-1.44146 -1.22183,-2.61017 -2.72882,-2.61017 z m -19.10169,15.66102 c 0,1.44147 1.22183,2.61017 2.72881,2.61017 h 16.37288 c 1.50699,0 2.72882,-1.1687 2.72882,-2.61017 v -10.44068 h -21.83051 z"
+         id="folder-2"
+         sketch:type="MSShapeGroup"
+         style="stroke-width:0.6672;stroke-dasharray:none;opacity:1" />
+    </g>
+  </g>
+</svg>
