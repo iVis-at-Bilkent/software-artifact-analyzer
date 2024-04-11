@@ -41,6 +41,8 @@ import { PanelContainerComponent } from './panel-container/panel-container.compo
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ProjectBuilderDialogComponent} from './navbar/project-builder/project-builder-dialog-component';
+import { SetupComponent } from './setup/setup.component';
+
 @NgModule({
   declarations: [
     ProjectBuilderDialogComponent,
@@ -71,7 +73,8 @@ import {ProjectBuilderDialogComponent} from './navbar/project-builder/project-bu
     RuleTreeComponent,
     RuleDropdownComponent,
     PanelContainerComponent,
-    LoadGraphFromFileModalComponent
+    LoadGraphFromFileModalComponent,
+    SetupComponent
   ],
   imports: [
     MatDialogModule,

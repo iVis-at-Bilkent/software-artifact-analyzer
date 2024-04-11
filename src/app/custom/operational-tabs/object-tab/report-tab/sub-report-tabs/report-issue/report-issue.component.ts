@@ -143,8 +143,7 @@ export class ReportIssueComponent implements OnInit {
   }
 
   async postComment() {
-    if (this.authentication.authenticated) {
-      const authenticationString = btoa(`${this.authentication.jira_username}:${this.authentication.jira_token}`);
+    if (this.authentication.authenticated) { 
       let body = {
         "header": this.comment.header,
         "text": this.comment.body.substring(this.comment.body.indexOf("]") + 1),
@@ -157,7 +156,7 @@ export class ReportIssueComponent implements OnInit {
         .subscribe(
           (response) => {
             console.info('Confirm request success', response);
-            const url = `${this.authentication.jira_url}/browse/${this.key}?focusedCommentId=${response["id"]} `
+            const url = `${this.authentication.jira.jira_url}/browse/${this.key}?focusedCommentId=${response["id"]} `
             this.openModal("issue " + this.key, url, 'report')
           },
           (error) => {

@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+    <img src="assets/img/logo.svg" id="brand-logo" class="d-inline-block p-1" title="Logo">
+    <b class="va-title" [innerHTML]="tool"></b>
+  </a>
+</nav>
+<div>
+
+  <div *ngIf="setupValue === 'GitHub'" class="body">
+    <div class="container">
+      <h1>Install and Authenticate SAA from Jira For your Project</h1>
+      <a href="#"
+        class="table-header" (click)="directToJira()">
+        <img src="assets/img/jira.svg" class="d-inline-block p-1" id="img-logo">
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="setupValue === 'Jira'" class="body">
+    <div class="container">
+      <div *ngIf="landingTool !=='Github'">
+        <h1>Install and Authenticate SAA from Github For your Project</h1>
+        <a href="https://github.com/apps/software-artifact-analyzer"
+          class="table-header" (click)="directToGithub()">
+          <img src="assets/img/github.svg" class="d-inline-block p-1" id="img-logo">
+        </a>
+      </div>
+      <div *ngIf="landingTool === 'Github'" >
+          <img src="assets/img/neo4j.svg" class="d-inline-block p-1" id="img-logo" title="Logo">
+          <div class="container">
+            <h1>Neo4j® Setup</h1>
+            <form (ngSubmit)="onFormSubmit()">
+              <div class="form-group">
+                <label for="boltUrl">Bolt Url:</label>
+                <input type="text" id="boltUrl" name="boltUrl" [(ngModel)]="boltUrl" required>
+              </div>
+              <div class="form-group">
+                <label for="httpUrl">HTTP Url:</label>
+                <input type="text" id="httpUrl" name="httpUrl" [(ngModel)]="httpUrl" required>
+              </div>
+              <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" [(ngModel)]="neo4jUsername" required>
+              </div>
+              <div class="form-group">
+                <label for="userPassword">Password:</label>
+                <input type="password" id="userPassword" name="userPassword" [(ngModel)]="neo4jUserPassword" required>
+              </div>
+              <button type="submit">Connect</button>
+            </form>
+          </div>
+      </div>
+    </div>
+  </div>

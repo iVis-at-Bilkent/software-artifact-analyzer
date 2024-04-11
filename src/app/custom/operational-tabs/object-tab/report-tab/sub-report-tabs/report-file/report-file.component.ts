@@ -51,7 +51,7 @@ export class ReportFileComponent implements OnInit {
       this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
-          'Authorization': `Bearer ${this.authentication.github_token}`,
+          'Authorization': `Bearer ${this.authentication.github.access_token}`,
           'Accept': 'application/vnd.github.v3+json'
         })
       };
@@ -109,7 +109,7 @@ export class ReportFileComponent implements OnInit {
           commentBody = {
             body: `### ${this.comment.header}\n${this.comment.body}\n![image](${this.imageUrl})`
           };
-          this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${this.pr_key}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
+          this.http.post(`https://api.github.com/repos/${this.authentication.github.github_repo}/issues/${this.pr_key}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
             this.openModal("Pull Request " + this.pr_key, response["html_url"], 'report')
           }, error => {
             console.error('Error posting comment:', error);
@@ -120,7 +120,7 @@ export class ReportFileComponent implements OnInit {
 
       }
       else {
-        this.http.post(`https://api.github.com/repos/${this.authentication.github_repo}/issues/${this.pr_key}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
+        this.http.post(`https://api.github.com/repos/${this.authentication.github.github_repo}/issues/${this.pr_key}/comments`, commentBody, this.githubHttpOptions).subscribe(response => {
           console.log('Comment posted successfully:', response);
           this.openModal("Pull Request" + this.pr_key, response["html_url"], 'report')
         }, error => {
@@ -134,7 +134,7 @@ export class ReportFileComponent implements OnInit {
 
   updateFile(): Observable<any> {
     const filename = `image_${Date.now()}.png`;
-    const url = `https://api.github.com/repos/${this.authentication.github_repo}/contents/assets/${filename}`;
+    const url = `https://api.github.com/repos/${this.authentication.github.github_repo}/contents/assets/${filename}`;
     const body = {
       message: "Add image",
       content: `${this.dataURL.split(",")[1]}`

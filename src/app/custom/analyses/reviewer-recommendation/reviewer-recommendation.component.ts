@@ -511,7 +511,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
       this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
-          'Authorization': `Bearer ${this.authentication.github_token}`,
+          'Authorization': `Bearer ${this.authentication.github.access_token}`,
           'Accept': 'application/vnd.github.v3+json',
           "X-GitHub-Api-Version": "2022-11-28",
           'Content-Type': 'application/json'
@@ -522,7 +522,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
         const url = `https://api.github.com/repos/${this.authentication.github_repo}/pulls/${this.pr}/requested_reviewers`;
         const headers = {
           'Accept': 'application/vnd.github+json',
-          'Authorization': `Bearer ${this.authentication.github_token}`,
+          'Authorization': `Bearer ${this.authentication.github.access_token}`,
           'X-GitHub-Api-Version': '2022-11-28',
           'Content-Type': 'application/json'
         };
