@@ -75,7 +75,6 @@ export class Neo4jDb implements DbService {
       }
       this._g.setLoadingStatus(false);
     };
-    //console.log(username + ':' + password)
     this._http.post(url, requestBody, {
       headers: {
         'Accept': 'application/json; charset=UTF-8',
