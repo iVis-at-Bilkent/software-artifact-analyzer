@@ -31,7 +31,7 @@ export class ProjectAboutModalComponent implements OnInit, AfterViewChecked, OnD
       if (data) {
         this.projectName = data["github"]["github_repo"];
         this.githubUrl = "https://github.com/" + data["github"]["github_repo"];
-        this.jiraUrl = data["jira_url"] + "/projects/" + data["jira"]["jira_key"];
+        this.jiraUrl = data["jira"]["jira_url"] + "/projects/" + data["jira"]["jira_key"];
       }
     });
   }
