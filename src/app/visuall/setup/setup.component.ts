@@ -124,6 +124,7 @@
     let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
     "http://saa.cs.bilkent.edu.tr/api/authenticateJira" : 
     `http://${window.location.hostname}:4445/authenticateJira`;
+    console.log(body)
     this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
