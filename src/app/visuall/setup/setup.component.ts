@@ -26,7 +26,7 @@
     private jiraClientId: string = environment.jira.clientId;
     private jiraClientSecret: string = environment.jira.clientSecret;
     private jiraCode: string = '';
-    private redirectUrlFlowJira: string = `http://${window.location.hostname}:${window.location.port}/?setup=Jira`;
+    private redirectUrlFlowJira: string = '';
     //Neo4j Credentials
     private boltUrl: string = "bolt://ivis.cs.bilkent.edu.tr:3006";
     private httpUrl: string = "http://ivis.cs.bilkent.edu.tr:3004";
@@ -35,6 +35,9 @@
   constructor(private _g: GlobalVariableService, private route: ActivatedRoute, private http: HttpClient, private _http: HttpClient, private router: Router) { }
 
   async ngOnInit(): Promise<void> {
+    this.redirectUrlFlowJira = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/?setup=Jira" : 
+    `http://${window.location.hostname}:${window.location.port}/?setup=Jira`;
     if (this.setupValue == "GitHub") {
       this.github()
     }
