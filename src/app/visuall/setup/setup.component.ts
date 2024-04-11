@@ -74,7 +74,10 @@
     let body = {
       "params": credentials,
     }
-    this.http.post(`http://${window.location.hostname}:4445/connectNeo4j`, body, { headers: { 'Content-Type': 'application/json' } })
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/connectNeo4j" : 
+    `http://${window.location.hostname}:4445/connectNeo4j`;
+    this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
           console.info('Confirm request success', response);
@@ -115,7 +118,10 @@
     let body = {
       "params": params,
     }
-    this.http.post(`http://${window.location.hostname}:4445/authenticateJira`, body, { headers: { 'Content-Type': 'application/json' } })
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/authenticateJira" : 
+    `http://${window.location.hostname}:4445/authenticateJira`;
+    this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
           console.info('Confirm request success', response);
@@ -136,7 +142,10 @@
     let body = {
       "params": params,
     }
-    this.http.post(`http://${window.location.hostname}:4445/authenticateGithub`, body, { headers: { 'Content-Type': 'application/json' } })
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/authenticateGithub" : 
+    `http://${window.location.hostname}:4445/authenticateGithub`;
+    this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
           console.info('Confirm request success', response);

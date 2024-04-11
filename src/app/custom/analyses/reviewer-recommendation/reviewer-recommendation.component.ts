@@ -507,7 +507,10 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   }
 
   assign() {
-    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
+    `http://${window.location.hostname}:4445/getAuthentication`;
+    this.http.get(url).subscribe(data => {
       this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({

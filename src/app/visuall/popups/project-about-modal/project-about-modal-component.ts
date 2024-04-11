@@ -24,7 +24,10 @@ export class ProjectAboutModalComponent implements OnInit, AfterViewChecked, OnD
 
   ngOnInit() {
     this.statistic =this.modalConfig;
-    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
+    `http://${window.location.hostname}:4445/getAuthentication`;
+    this.http.get(url).subscribe(data => {
       if (data) {
         this.projectName = data["github"]["github_repo"];
         this.githubUrl = "https://github.com/" + data["github"]["github_repo"];
