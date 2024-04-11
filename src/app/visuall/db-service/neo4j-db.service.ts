@@ -6,21 +6,31 @@ import { Rule, ClassBasedRules, RuleNode } from '../operation-tabs/map-tab/query
 import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from '../constants';
 import { TableFiltering } from '../../shared/table-view/table-view-types';
 import { TimebarGraphInclusionTypes } from '../user-preference';
-import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+
+interface Config {
+  httpURL: string;
+  neo4jUsername: string;
+  neo4jUserPassword: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class Neo4jDb implements DbService {
 
+export class Neo4jDb implements DbService {
   constructor(protected _http: HttpClient, protected _g: GlobalVariableService) { }
 
-  runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
-    const conf = environment.dbConfig;
-    const url = conf.url;
+  loadConf(): Observable<Config> {
+    return this._http.get<Config>(`http://${window.location.hostname}:4445/getNeo4j`);
+  } 
+  
+  async runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
+    const conf = await this.loadConf().toPromise(); 
+    const url = conf.httpURL;
     //console.log(query)
-    const username = conf.username;
-    const password = conf.password;
+    const username = conf.neo4jUsername;
+    const password = conf.neo4jUserPassword;
 
     //For experiment
     // Start time
@@ -65,7 +75,7 @@ export class Neo4jDb implements DbService {
       }
       this._g.setLoadingStatus(false);
     };
-
+    //console.log(username + ':' + password)
     this._http.post(url, requestBody, {
       headers: {
         'Accept': 'application/json; charset=UTF-8',
@@ -105,11 +115,12 @@ export class Neo4jDb implements DbService {
     }, errFn);
   }
 
-  runQueryWithoutTimeBoxed(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
-    const conf = environment.dbConfig;
-    const url = conf.url;
-    const username = conf.username;
-    const password = conf.password;
+  async runQueryWithoutTimeBoxed(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
+    const conf = await this.loadConf().toPromise(); 
+    const url = conf.httpURL;
+    //console.log(query)
+    const username = conf.neo4jUsername;
+    const password = conf.neo4jUserPassword;
     const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
     this._g.setLoadingStatus(true);
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 10000;

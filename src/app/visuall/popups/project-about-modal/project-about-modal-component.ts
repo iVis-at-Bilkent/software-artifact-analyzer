@@ -26,9 +26,9 @@ export class ProjectAboutModalComponent implements OnInit, AfterViewChecked, OnD
     this.statistic =this.modalConfig;
     this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
       if (data) {
-        this.projectName = data["github_repo"];
-        this.githubUrl = "https://github.com/" + data["github_repo"];
-        this.jiraUrl = data["jira_url"] + "/projects/" + data["jira_key"];
+        this.projectName = data["github"]["github_repo"];
+        this.githubUrl = "https://github.com/" + data["github"]["github_repo"];
+        this.jiraUrl = data["jira_url"] + "/projects/" + data["jira"]["jira_key"];
       }
     });
   }
