@@ -5,7 +5,7 @@ import { TableViewInput, TableData, TableDataType, TableFiltering, property2Tabl
 import { Subject, Subscription } from 'rxjs';
 import { CytoscapeService } from '../../cytoscape.service';
 import { CustomizationModule } from '../../../custom/customization.module';
-
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-object-tab',
   templateUrl: './object-tab.component.html',
@@ -24,6 +24,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   isShowStatsTable: boolean = false;
   isShowObjTable = false;
   singleObj = false;
+  isOpen = false;
   customSubTabsObj: { component: any, text: string }[] = CustomizationModule.objSubTabsOne;
   customSubTabs: { component: any, text: string }[] = CustomizationModule.objSubTabs;
 
@@ -41,7 +42,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   appDescSubs: Subscription;
   dataModelSubs: Subscription;
 
-  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) {
+  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService,  private route: ActivatedRoute) {
     this.selectedItemProps = [];
     this.selectedItemPropsURL = [];
   }
@@ -72,6 +73,12 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
         this._cyService.showObjPropsFn = debounce(this.showObjectProps, OBJ_INFO_UPDATE_DELAY).bind(this);
         this._cyService.showStatsFn = debounce(this.showStats, OBJ_INFO_UPDATE_DELAY).bind(this);
       });
+    });
+
+    this.route.queryParamMap.subscribe(params => {
+      if (params.get('pr')) {
+        this.isOpen = true
+      }
     });
   }
 

@@ -13,6 +13,7 @@ import { ReviewerRecommendationComponent } from '../../../analyses/reviewer-reco
 import { ExpertRecommendationComponent } from '../../../analyses/expert-recommendation/expert-recommendation.component';
 import { CollaboratorsComponent } from '../../../analyses/collaborators/collaborators.component';
 import { CommentCollaboratorsComponent } from '../../../analyses/comment-collaborators/comment-collaborators.component';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-object-queries',
   templateUrl: './object-queries.component.html',
@@ -31,7 +32,7 @@ export class ObjectQueriesComponent implements OnInit {
   prQueries: { component: any, text: string }[] =[];
 
 
-  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient,private modalService: NgbModal) {
+  constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient,private modalService: NgbModal,  private route: ActivatedRoute) {
     /*
     this.developerQueries = [
       { component: DeveloperCommitsComponent, text: 'Get Commits' },
@@ -92,6 +93,14 @@ export class ObjectQueriesComponent implements OnInit {
             this.queries = this.fileQueries
           }
   }}}, 500)
+
+
+  this.route.queryParamMap.subscribe(params => {
+    if (params.get('pr')) {
+      this.selectedIdx = 0;
+    }
+  });
+
   }
 
 }

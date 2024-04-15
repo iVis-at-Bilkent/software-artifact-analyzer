@@ -17,6 +17,7 @@ import { TheoreticPropertiesCustomService } from 'src/app/custom/customization-s
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from '../../operational-tabs/object-tab/modal-content/modal-content.component';
 import { QueryComponent } from '../query.component.interface';
+import { ActivatedRoute } from '@angular/router';
 export interface DeveloperData {
   name: string;
   score: number;
@@ -69,7 +70,8 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     private _group: GroupCustomizationService,
     private _gt: TheoreticPropertiesCustomService,
     private modalService: NgbModal,
-    private _h: QueryHelperService
+    private _h: QueryHelperService,
+    private route: ActivatedRoute
   ) {
     this.prs = [];
     this.developers = [];
@@ -82,6 +84,15 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   ngOnInit() {
     this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , elementId(m) as id order by m.name ', (x) => {
       this.fillOptions(x)
+      this.route.queryParamMap.subscribe(params => {
+        if (params.get('pr')) {
+          this.size = true;
+          this.cluster = true;
+          this.recency = true;
+          this.tableInput.isLoadGraph = true;
+          this.prepareQuery()
+        }
+      });
     }, DbResponseType.table);
     let name = ""
     if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "PullRequest") {
