@@ -182,7 +182,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     const cbSub1 = (x) => {
       this.fileIds = x.data[0][0]
       if (this.fileIds.length > 0) {
-        this._dbService.runQuery(`MATCH (file:File)-[*1..${this.number}]-(developer:Developer)
+        this._dbService.runQuery(`MATCH (file:File)-[*1..3]-(developer:Developer)
       WHERE elementId(file) IN ['${this.fileIds.join("','")}'] 
       RETURN COLLECT(DISTINCT elementId(developer)) AS developersList`, cbSub2, DbResponseType.table, false);
       }

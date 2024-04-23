@@ -170,7 +170,7 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
       }
     }
 
-      this._dbService.runQuery(`MATCH (file:File)-[*1..${this.number}]-(developer:Developer)
+      this._dbService.runQuery(`MATCH (file:File)-[*1..3]-(developer:Developer)
       WHERE elementId(file) = '${this.fileId}'
       RETURN COLLECT(DISTINCT elementId(developer)) AS developersList`, cbSub1, DbResponseType.table, false);
   }
