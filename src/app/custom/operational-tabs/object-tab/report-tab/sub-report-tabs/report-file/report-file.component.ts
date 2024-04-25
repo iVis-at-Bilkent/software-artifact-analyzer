@@ -21,6 +21,7 @@ export class ReportFileComponent implements OnInit {
   key: string;
   pr_key: string;
   prs: string[];
+  filteredPrs: string[] = [];
   commentInput: any = {
     addGraph: false
   };
@@ -64,11 +65,15 @@ export class ReportFileComponent implements OnInit {
     for (let i = 0; i < data.data.length; i++) {
       this.prs.push(data.data[i][0]);
     }
+    this.filteredPrs = this.prs.slice();
   }
 
-  onSelectChange(){
-    this.comment.header = "Report  File " + this.key + " ";
+  filterOptionsPr(value: string) {
+    this.filteredPrs = this.prs.filter(pr =>
+      pr.toLowerCase().includes(value.toLowerCase())
+    );
   }
+
 
   addGraph() {
     if (!this.commentInput.addGraph) {
@@ -93,6 +98,7 @@ export class ReportFileComponent implements OnInit {
   }
 
   async performSelection() {
+    this.comment.header = "Report  File " + this.key + " ";
     this.comment.body = "[You can inspect artifact " + this.key + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this.key + ")\n";
     if (this.commentInput.addGraph) {
       this.saveAsPng(false);

@@ -13,6 +13,7 @@ import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/customization-service/group-customization.service';
 import { TheoreticPropertiesCustomService } from 'src/app/custom/customization-service/theoretic-properties-custom.service'
 import { QueryComponent } from '../query.component.interface';
+import { trimEnd } from 'cypress/types/lodash';
 
 export interface DeveloperData {
   name: string;
@@ -31,6 +32,7 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
   file: string;
   fileId: string;
   files: string[];
+  filteredFiles: string[]= [];
   fileIds: string[];
   possibleDevelopers: string[];
   developers = [];
@@ -88,7 +90,6 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
       if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "File" && this._g.cy.$(':selected')[0]._private.data.name !== name) {
         name = this._g.cy.$(':selected')[0]._private.data.name
         this.file = this._g.cy.$(':selected')[0]._private.data.name;
-        this.isObjectQuery = false
       }
     }, 500)
   }
@@ -268,8 +269,14 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     for (let i = 0; i < data.data.length; i++) {
       this.fileIds.push(data.data[i][1]);
     }
+    this.filteredFiles = this.files.slice();
+  }
 
 
+  filterOptions(value: string) {
+    this.filteredFiles = this.files.filter(dev =>
+      dev.toLowerCase().includes(value.toLowerCase())
+    );
   }
 
   getDataForQueryResult(e: TableRowMeta) {

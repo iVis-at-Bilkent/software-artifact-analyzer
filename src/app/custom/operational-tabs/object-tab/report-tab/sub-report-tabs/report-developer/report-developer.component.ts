@@ -22,6 +22,8 @@ export class ReportDeveloperComponent implements OnInit {
   pr_key: string;
   issue_key:string;
   prs: string[];
+  filteredPrs: string[] = [];
+  filteredIssues: string[] = [];
   issues: string[];
   commentInput: any = {
     addGraph: false, addReviewer: false
@@ -35,7 +37,6 @@ export class ReportDeveloperComponent implements OnInit {
   authentication: any;
   imageUrl: string;
   comment: any;
-
   constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -67,15 +68,26 @@ export class ReportDeveloperComponent implements OnInit {
     for (let i = 0; i < data.data.length; i++) {
       this.prs.push(data.data[i][0]);
     }
+    this.filteredPrs = this.prs.slice();
   }
   fillIssues(data) {
     this.issues = [];
     for (let i = 0; i < data.data.length; i++) {
       this.issues.push(data.data[i][0]);
     }
+    this.filteredIssues = this.issues.slice();
   }
-  onSelectChange() {
-    this.comment.header = "Report  File " + this.key + " ";
+
+  filterOptionsPr(value: string) {
+    this.filteredPrs = this.prs.filter(pr =>
+      pr.toLowerCase().includes(value)
+    );
+  }
+
+  filterOptionsIssue(value: string) {
+    this.filteredIssues = this.issues.filter(issue =>
+      issue.toLowerCase().includes(value.toLowerCase())
+    );
   }
 
   addGraph() {
@@ -138,7 +150,6 @@ export class ReportDeveloperComponent implements OnInit {
     }
     if (this.commentInput.addJira) {
       this.comment.header = "Report  @" + this.key.replace(" ", "") + " ";
-      
 
     }
   }
@@ -237,4 +248,10 @@ export class ReportDeveloperComponent implements OnInit {
     };
   }
 
+  onItemSelected(item: string) {
+    this.pr_key = item;
+    console.log('Selected Item:', item);
+  }
+
+  
 }

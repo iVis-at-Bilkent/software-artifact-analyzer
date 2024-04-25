@@ -2,10 +2,18 @@
   <div class="va-text">
     <div class="d-flex align-items-center justify-content-center">
       Developer
-      <select class="form-select tight-select filter-form va-small-text m-1" 
-        [(ngModel)]="developer">
-        <option *ngFor="let p of developers" [value]="p">{{p}}</option>
-      </select>
+      <input type = "text" 
+      value = {{developer}}
+      placeholder="Select a developer"
+      [(ngModel)]="developer" 
+      aria-label = "name" 
+      matInput 
+      class="form-select tight-select filter-form va-small-text m-1 developer-select" 
+      (input)="filterOptions($event.target.value)"
+      [matAutocomplete] = "auto">
+   <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="developer" classList="form-select tight-select filter-form va-small-text m-1 developer-select" >
+      <mat-option *ngFor = "let developer of filteredDevelopers"  class=" va-small-text" [value] = "developer"><span>{{developer}}</span></mat-option>
+   </mat-autocomplete>      
     </div>
   </div>
 </div>

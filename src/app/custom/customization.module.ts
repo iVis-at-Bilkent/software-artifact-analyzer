@@ -7,7 +7,7 @@ import { ReviewerRecommendationComponent } from './analyses/reviewer-recommendat
 import { AnomalyComponent } from './analyses/anomalies/anomaly/anomaly.component';
 import { AnomalyStatisticComponent } from './analyses/anomalies/anomaly-statistic/anomaly-statistic.component';
 import { SharedModule } from '../shared/shared.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
 import { ReportComponent } from './operational-tabs/object-tab/report-tab/report.component';
 import { ObjectQueriesComponent } from './operational-tabs/object-tab/object-queries-tab/object-queries.component'
@@ -35,6 +35,9 @@ import { ReportPrComponent } from './operational-tabs/object-tab/report-tab/sub-
 import { ReportDeveloperComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-developer/report-developer.component';
 import { ReportCommitComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-commit/report-commit.component';
 import { ReportFileComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-file/report-file.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete'
+import { MatInputModule } from '@angular/material/input';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
@@ -74,7 +77,12 @@ import { ReportFileComponent } from './operational-tabs/object-tab/report-tab/su
     CommonModule,
     SharedModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    ReactiveFormsModule
   ]
 })
 
@@ -95,6 +103,7 @@ export class CustomizationModule {
   static queries: { component: any, text: string } [] = [
   { component: DeveloperCommitsComponent, text: 'Get Commits of Developer' },
   { component: ReviewerRecommendationComponent, text: 'Get Recommended Reviewers' },
+  { component: ExpertRecommendationComponent, text: 'Get Experts' },
   { component: AnomalyComponent, text: 'Get Anomalies' },
   { component: AnomalyStatisticComponent, text: 'Get Anomaly Statistics' }
 ];

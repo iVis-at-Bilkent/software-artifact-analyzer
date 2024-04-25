@@ -2,10 +2,18 @@
   <div class="va-text">
     <div class="d-flex align-items-center justify-content-center">
       Pull Request 
-      <select class="form-select tight-select filter-form va-small-text m-1" id="genreSelector"
-        [(ngModel)]="pr">
-        <option *ngFor="let p of prs" [value]="p">#{{p}}</option>
-      </select>
+      <input type = "text" 
+      value = {{pr}}
+      placeholder=""
+      [(ngModel)]="pr" 
+      aria-label = "name" 
+      matInput 
+      class="form-select tight-select filter-form va-small-text m-1 pr-select" 
+      (input)="filterOptions($event.target.value)"
+      [matAutocomplete] = "auto">
+   <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="file" classList="form-select tight-select filter-form va-small-text m-1 pr-select" >
+      <mat-option *ngFor = "let pr of filteredPrs"  class=" va-small-text" [value] = "pr"><span>#{{pr}}</span></mat-option>
+   </mat-autocomplete>  
     </div>
   </div>
 </div>

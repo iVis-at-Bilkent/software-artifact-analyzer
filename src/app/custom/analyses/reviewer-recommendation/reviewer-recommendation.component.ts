@@ -34,6 +34,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   pr: string;
   prId: string;
   prs: string[];
+  filteredPrs: string[] = [];
   prIds: string[];
   developers = [];
   scores = [];
@@ -97,9 +98,6 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     let name = ""
     if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "PullRequest") {
       this.pr = this._g.cy.$(':selected')[0]._private.data.name;
-    }
-    else {
-      this.pr = this.prs[0]
     }
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
@@ -312,6 +310,12 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     for (let i = 0; i < data.data.length; i++) {
       this.prIds.push(data.data[i][1]);
     }
+    this.filteredPrs = this.prs.slice();
+  }
+  filterOptions(value: string) {
+    this.filteredPrs = this.prs.filter(pr =>
+      pr.toLowerCase().includes(value.toLowerCase())
+    );
   }
 
   getDataForQueryResult(e: TableRowMeta) {
