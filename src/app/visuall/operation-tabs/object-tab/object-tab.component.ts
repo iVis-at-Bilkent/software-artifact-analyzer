@@ -251,10 +251,8 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
         } else {
           renderedValue = '-';
         }
-        console.log(key.toLowerCase() )
-        if (key.toLowerCase() in DATE_PROP_START ||
-          key.toLowerCase() in DATE_PROP_END) {
-            console.log("Geldii")
+        if ( DATE_PROP_START.includes(key.toLowerCase()) ||
+          DATE_PROP_END.includes(key.toLowerCase() )) {
           this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
           continue;
         }
