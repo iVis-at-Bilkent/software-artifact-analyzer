@@ -42,7 +42,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   appDescSubs: Subscription;
   dataModelSubs: Subscription;
 
-  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService,  private route: ActivatedRoute) {
+  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService, private route: ActivatedRoute) {
     this.selectedItemProps = [];
     this.selectedItemPropsURL = [];
   }
@@ -210,6 +210,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
     let selected = this._g.cy.$(':selected').not('.' + CLUSTER_CLASS);
     this.selectedClasses = '';
     this.selectedItemProps.length = 0;
+    this.selectedItemPropsURL.length = 0;
     let hasNode = selected.filter('node').length > 0;
     if (hasNode && selected.filter('edge').length > 0) {
       return;
@@ -230,7 +231,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
     this.selectedClasses = classNames;
     this.selectedItemProps.length = 0;
-
+    this.selectedItemPropsURL.length = 0;
     let propKeys = Object.keys(props);
     // get ordered keys if only one item is selected
     if (selectedCount === 1) {
@@ -250,18 +251,21 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
         } else {
           renderedValue = '-';
         }
+        console.log(key.toLowerCase() )
+        if (key.toLowerCase() === DATE_PROP_START ||
+          key.toLowerCase() in DATE_PROP_END) {
+            console.log("Geldii")
+          this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
+          continue;
+        }
       }
-      if (key === 'url') {
+      else if (key === 'url') {
         this.selectedItemPropsURL.push({ key: renderedKey, val: renderedValue });
       }
-
-      if (key.toLowerCase() === DATE_PROP_START ||
-        key.toLowerCase() === DATE_PROP_END) {
+      else {
+        renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
         this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
-        continue;
       }
-      renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
-      this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
     }
   }
 
