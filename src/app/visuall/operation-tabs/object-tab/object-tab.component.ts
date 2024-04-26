@@ -252,7 +252,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
           renderedValue = '-';
         }
         console.log(key.toLowerCase() )
-        if (key.toLowerCase() === DATE_PROP_START ||
+        if (key.toLowerCase() in DATE_PROP_START ||
           key.toLowerCase() in DATE_PROP_END) {
             console.log("Geldii")
           this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
