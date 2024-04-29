@@ -590,11 +590,11 @@ export class Neo4jDb implements DbService {
       return `(${inputOp} IN x.${rule.propertyOperand})`;
     } else if (rule.propertyType == 'edge') {
       if (!rule.operator || !rule.inputOperand || rule.inputOperand.length < 1) {
-        return `( size((x)-[:${rule.propertyOperand}]-()) > 0 )`;
+        return `( COUNT{(x)-[:${rule.propertyOperand}]-()}> 0 )`;
       }
       const i = this.transformInp(rule, rule.inputOperand);
       const op = rule.operator != 'One of' ? rule.operator : 'IN';
-      return `( size((x)-[:${rule.propertyOperand}]-()) ${op} ${i} )`;
+      return `( COUNT{(x)-[:${rule.propertyOperand}]-()} ${op} ${i} )`;
     } else {
       if (rule.propertyType == 'string' && this._g.userPrefs.isIgnoreCaseInText.getValue()) {
         inputOp = inputOp.toLowerCase();
