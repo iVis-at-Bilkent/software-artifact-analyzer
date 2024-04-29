@@ -247,7 +247,12 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     for (let i = 0; i < data.length; i++) {
       const row: TableData[] = [];
       for (let j = 0; j < uiColumns.length; j++) {
-        row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
+        if(uiColumns[j] === "score"){
+          row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]].toFixed(2)) })
+        }else{
+          row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
+        }
+        
       }
       row.push();
       this.tableInput.results.push(row)
