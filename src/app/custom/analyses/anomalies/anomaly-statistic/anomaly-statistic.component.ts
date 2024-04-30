@@ -91,7 +91,7 @@ export class AnomalyStatisticComponent implements OnInit, QueryComponent<Anomaly
       dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
     const r = `[${skip}..${skip + dataCnt}]`;
-    const cql = `MATCH (n : Issue) WHERE n.anomalyCount = ${this.count} and ${dateFilter} 
+    const cql = `MATCH (n : Issue) WHERE n.anomalyCount >= ${this.count} and ${dateFilter} 
     RETURN  distinct elementId(n) as id , n.name  as issue, n.anomalyList as anomalies ORDER BY ${orderExpr}`;
     this._dbService.runQuery(cql, cb, DbResponseType.table); 
   }
@@ -123,7 +123,7 @@ export class AnomalyStatisticComponent implements OnInit, QueryComponent<Anomaly
     const orderExpr =this._h.getOrderByExpression4Query(null, 'Count', 'desc', ui2Db);
     const dateFilter =this._h.getDateRangeCQL();
     const cql = `MATCH (n : Issue)-[r]-(d:Developer)
-     WHERE n.anomalyCount = ${this.count}   and  ${dateFilter} 
+     WHERE n.anomalyCount >= ${this.count}   and  ${dateFilter} 
     RETURN  n,r,d`
     this._dbService.runQuery(cql, fn);
 
