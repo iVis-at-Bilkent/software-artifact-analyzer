@@ -541,7 +541,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
       };
       if (this.authentication.authenticated) {
         this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
-        const url = `https://api.github.com/repos/${this.authentication.github_repo}/pulls/${this.pr}/requested_reviewers`;
+        const url = `https://api.github.com/repos/${this.authentication.github.github_repo}/pulls/${this.pr}/requested_reviewers`;
         const headers = {
           'Accept': 'application/vnd.github+json',
           'Authorization': `Bearer ${this.authentication.github.access_token}`,
