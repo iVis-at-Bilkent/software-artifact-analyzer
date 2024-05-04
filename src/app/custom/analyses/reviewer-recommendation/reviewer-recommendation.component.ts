@@ -45,6 +45,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   seeds = [];
   number = 3;
   assigned: boolean = false
+  empty: boolean = false
   tableFilter: TableFiltering = { orderBy: null, orderDirection: null, txt: '', skip: null };
   tableInput: TableViewInput = {
     columns: ['name', 'score'], results: [], results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
@@ -127,7 +128,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
         this.assigned = true
       }
       else {
-        this.assigned = false
+        this.assigned = false    
       }
       const processedTableData = this._h.preprocessTableDataZip(x,['elementId'].concat(this.tableInput.columns));
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
@@ -179,6 +180,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     const cbSub1 = (x) => {
       this.fileIds = x.data[0][0]
+      
       if (this.fileIds.length > 0) {
         this._dbService.runQuery(`MATCH (file:File)-[*1..3]-(developer:Developer)
       WHERE elementId(file) IN ['${this.fileIds.join("','")}'] 
@@ -191,6 +193,9 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
         this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) 
         WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub3, DbResponseType.table, false);
       }
+      else{
+        this.empty = true
+      }
     }
     const cbSub3 = (x) => {
       let ignoredDevelopers = x.data[0][0]
@@ -198,6 +203,9 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
       if (this.possibleDevelopers.length > 0) {
         this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+      }
+      else{
+        this.empty = true
       }
     }
 

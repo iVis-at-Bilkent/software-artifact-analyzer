@@ -48,8 +48,7 @@
       <label class="form-label va-text">Merge</label>
     </div>
   </div>
-  
-  
   <app-table-view [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"
     (onFilteringChanged)="filterTable($event)" [clearFilter]="clearTableFilter">
   </app-table-view>
+  <div *ngIf="empty" class="va-text empty">Sorry there is no expert recommendation for this file. </div>

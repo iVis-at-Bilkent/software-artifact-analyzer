@@ -53,7 +53,7 @@
 <app-table-view [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"
   (onFilteringChanged)="filterTable($event)" [clearFilter]="clearTableFilter">
 </app-table-view>
-
+<div *ngIf="empty" class="va-text empty">Sorry there is no reviewer recommendation for this pull request. </div>
 <div class="d-flex align-items-center justify-content-center" *ngIf="assigned">
   <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="assign()" value="Assign">
 </div>

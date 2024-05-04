@@ -1,3 +1,10 @@
 .file-select{
     width: 20vw !important;
   }
+
+  .empty{
+    border: 1px solid #c9cacb;
+    padding: 10px;
+    border-radius: 0.375rem;
+    text-align: center;
+  }

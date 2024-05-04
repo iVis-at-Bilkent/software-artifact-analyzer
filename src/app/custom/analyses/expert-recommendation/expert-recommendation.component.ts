@@ -61,6 +61,7 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
   maxPropValue = 1;
   currNodeSize = this.NODE_SIZE;
   algorithm = null;
+  empty: boolean = false
 
   constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, 
     private _g: GlobalVariableService, private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService,  private _h: QueryHelperService) {
@@ -112,7 +113,9 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     const cb = (x) => {
       this.developers = x.data[0][0]
       this.scores = x.data[0][2]
-
+      if(this.developers = []){
+        this.empty = true
+      }
       const processedTableData =  this._h.preprocessTableDataZip(x,['elementId'].concat(this.tableInput.columns));
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
       let cnt = x.data.length;
@@ -168,6 +171,9 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
       if (this.possibleDevelopers.length > 0) {
         this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileId}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
         ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+      }
+      else{
+        this.empty = true
       }
     }
 
