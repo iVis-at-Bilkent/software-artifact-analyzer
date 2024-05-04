@@ -182,13 +182,16 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
       this.fileIds = x.data[0][0]
       
       if (this.fileIds.length > 0) {
-        this._dbService.runQuery(`MATCH (file:File)-[*1..3]-(developer:Developer)
-      WHERE elementId(file) IN ['${this.fileIds.join("','")}'] 
-      RETURN COLLECT(DISTINCT elementId(developer)) AS developersList`, cbSub2, DbResponseType.table, false);
+        this._dbService.runQuery(` MATCH (file:File)
+        WHERE elementId(file) IN ['${this.fileIds.join("','")}'] 
+        CALL apoc.path.subgraphAll(file, { relationshipFilter: null, minLevel: 0, maxLevel: 3, bfs: true }) 
+        YIELD nodes, relationships 
+        WITH [node IN nodes WHERE 'Developer' IN labels(node) | elementId(node)] AS NodeIDs
+        RETURN collect( distinct NodeIDs) as list `, cbSub2, DbResponseType.table, false);
       }
     }
     const cbSub2 = (x) => {
-      this.possibleDevelopers = x.data[0][0]
+      this.possibleDevelopers = Array.from(new Set(x.data[0][0].flat()));
       if (this.possibleDevelopers.length > 0) {
         this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) 
         WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub3, DbResponseType.table, false);
