@@ -37,6 +37,8 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   filteredPrs: string[] = [];
   prIds: string[];
   developers = [];
+  nodes = [];
+  edges = [];
   scores = [];
   fileIds = [];
   possibleDevelopers: string[] = [];
@@ -122,17 +124,23 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
 
     const cb = (x) => {
-      this.developers = x.data[0][0]
-      this.scores = x.data[0][2]
+      this.nodes = x.data[0][3]
+      this.edges = x.data[0][9]
+      this.developers = x.data[0][4]
+      this.scores = x.data[0][6]
+      let tableData = {
+        columns: [x.columns[4], x.columns[5], x.columns[6]],
+        data: [[x.data[0][4], x.data[0][5], x.data[0][6]]]
+      }
       if (this.developers.length > 0) {
         this.assigned = true
       }
       else {
-        this.assigned = false    
+        this.assigned = false
       }
-      const processedTableData = this._h.preprocessTableDataZip(x,['elementId'].concat(this.tableInput.columns));
+      const processedTableData = this._h.preprocessTableDataZip(tableData, ['elementId'].concat(this.tableInput.columns));
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
-      let cnt = x.data.length;
+      let cnt = processedTableData.length;
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
       }
@@ -204,10 +212,10 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
       let ignoredDevelopers = x.data[0][0]
       this.possibleDevelopers = this.possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
       if (this.possibleDevelopers.length > 0) {
-        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
+        this._dbService.runQuery(`CALL findNodesWithMostPathBetween(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
       }
-      else{
+      else {
         this.empty = true
       }
     }
@@ -259,35 +267,9 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
         this.devSize();
       }
       this._dbService.runQuery(`MATCH p=(N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File)   RETURN p`, cbSub1, DbResponseType.graph, false);
-    };
-    let dataCnt = this.tableInput.pageSize;
-    if (isClientSidePagination) {
-      dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-    const r = `[${skip}..${skip + dataCnt}]`;
-
-    const t = filter.txt ?? '';
-    const pageSize = this.getPageSize4Backend();
-    const currPage = filter.skip ? Math.floor(filter.skip / pageSize) + 1 : 1;
-    const orderBy = 'score';
-    let orderDir = 0;
-    if (filter.orderDirection == 'desc') {
-      orderDir = 1;
-    } else if (filter.orderDirection == '') {
-      orderDir = 2;
-    }
-    const timeMap = this.getTimebarMapping4Java();
-    let d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
-    let d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
-      d1 = 0;
-      d2 = 0;
-    }
-    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
-    const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    if (this.fileIds.length > 0 && this.possibleDevelopers.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
-      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
+    if (this.edges.length > 0 || this.developers.length > 0) {
+      this._dbService.runQuery(`MATCH (N)-[R]-() WHERE elementId(N) in  ['${this.nodes.join("','")}'] AND elementId(R) in  ['${this.edges.join("','")}'] return N,R`, cb, DbResponseType.graph, false);
     }
   }
 
@@ -404,7 +386,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     if (this.fileIds.length > 0 && this.possibleDevelopers.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],['${idFilter}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetween(['${this.fileIds.join("','")}'], ['COMMENTED'],['${idFilter}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
     }
   }
@@ -537,9 +519,9 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   }
 
   assign() {
-    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
-    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
-    `http://${window.location.hostname}:4445/getAuthentication`;
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ?
+      "http://saa.cs.bilkent.edu.tr/api/getAuthentication" :
+      `http://${window.location.hostname}:4445/getAuthentication`;
     this.http.get(url).subscribe(data => {
       this.authentication = data;
       this.githubHttpOptions = {
