@@ -61,7 +61,9 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
   maxPropValue = 1;
   currNodeSize = this.NODE_SIZE;
   algorithm = null;
-  empty: boolean = false
+  empty: boolean = false;
+  nodes = [];
+  edges = [];
 
   constructor(private http: HttpClient, private _dbService: Neo4jDb, private _cyService: CytoscapeService, 
     private _g: GlobalVariableService, private _group: GroupCustomizationService, private _gt: TheoreticPropertiesCustomService,  private _h: QueryHelperService) {
@@ -111,14 +113,21 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
   
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
     const cb = (x) => {
-      this.developers = x.data[0][0]
-      this.scores = x.data[0][2]
-      if(this.developers = []){
+      this.nodes = x.data[0][3]
+      this.edges = x.data[0][9]
+      this.developers = x.data[0][4]
+      this.scores = x.data[0][6]
+      let tableData = {
+        columns: [x.columns[4], x.columns[5], x.columns[6]],
+        data: [[x.data[0][4], x.data[0][5], x.data[0][6]]]
+      }
+
+      if(this.developers.length == 0){
         this.empty = true
       }
-      const processedTableData =  this._h.preprocessTableDataZip(x,['elementId'].concat(this.tableInput.columns));
+      const processedTableData = this._h.preprocessTableDataZip(tableData, ['elementId'].concat(this.tableInput.columns));
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
-      let cnt = x.data.length;
+      let cnt = processedTableData.length;
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
       }
@@ -167,9 +176,9 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
 
     const cbSub1 = (x) => {
-      this.possibleDevelopers = x.data[0][0]
+      this.possibleDevelopers = x.data[0][0][0]
       if (this.possibleDevelopers.length > 0) {
-        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileId}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
+        this._dbService.runQuery(`CALL findNodesWithMostPathBetween(['${this.fileId}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
         ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
       }
       else{
@@ -177,9 +186,12 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
       }
     }
 
-      this._dbService.runQuery(`MATCH (file:File)-[*1..3]-(developer:Developer)
+      this._dbService.runQuery(` MATCH (file:File)
       WHERE elementId(file) = '${this.fileId}'
-      RETURN COLLECT(DISTINCT elementId(developer)) AS developersList`, cbSub1, DbResponseType.table, false);
+      CALL apoc.path.subgraphAll(file, { relationshipFilter: null, minLevel: 0, maxLevel: 3, bfs: true }) 
+      YIELD nodes, relationships 
+      WITH [node IN nodes WHERE 'Developer' IN labels(node) | elementId(node)] AS NodeIDs
+      RETURN collect( distinct NodeIDs) as developersList `, cbSub1, DbResponseType.table, false);
   }
 
 
@@ -216,33 +228,9 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
       this.devSize();
     };
 
-    let dataCnt = this.tableInput.pageSize;
-    if (isClientSidePagination) {
-      dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
+    if (this.edges.length > 0 || this.developers.length > 0) {
+      this._dbService.runQuery(`MATCH (N)-[R]-() WHERE elementId(N) in  ['${this.nodes.join("','")}'] AND elementId(R) in  ['${this.edges.join("','")}'] return N,R`, cb, DbResponseType.graph, false);
     }
-    const r = `[${skip}..${skip + dataCnt}]`;
-
-    const t = filter.txt ?? '';
-    const pageSize = this.getPageSize4Backend();
-    const currPage = filter.skip ? Math.floor(filter.skip / pageSize) + 1 : 1;
-    const orderBy = 'score';
-    let orderDir = 0;
-    if (filter.orderDirection == 'desc') {
-      orderDir = 1;
-    } else if (filter.orderDirection == '') {
-      orderDir = 2;
-    }
-    const timeMap = this.getTimebarMapping4Java();
-    let d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
-    let d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
-      d1 = 0;
-      d2 = 0;
-    }
-    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
-    const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
-      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 
   fillTable(data: DeveloperData[], totalDataCount: number | null) {
@@ -332,7 +320,7 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileId}'], ['COMMENTED'],['${idFilter}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
+    this._dbService.runQuery(`CALL findNodesWithMostPathBetween(['${this.fileId}'], ['COMMENTED'],['${idFilter}'],'${this.recency?'recency':'none'}',3,${this.number}, false,
     ${pageSize}, 1, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
   }
 

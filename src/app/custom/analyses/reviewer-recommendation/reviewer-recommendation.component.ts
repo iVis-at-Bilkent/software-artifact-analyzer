@@ -301,7 +301,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
       for (let j = 0; j < uiColumns.length; j++) {
         if(uiColumns[j] === "score"){
           row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]].toFixed(2)) })
-        }else{
+        } else {
           row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
         }
       }
