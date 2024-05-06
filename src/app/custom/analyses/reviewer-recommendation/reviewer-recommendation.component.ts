@@ -197,6 +197,9 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
         WITH [node IN nodes WHERE 'Developer' IN labels(node) | elementId(node)] AS NodeIDs
         RETURN collect( distinct NodeIDs) as list `, cbSub2, DbResponseType.table, false);
       }
+      else{
+        this.empty = true
+      }
     }
     const cbSub2 = (x) => {
       this.possibleDevelopers = Array.from(new Set(x.data[0][0].flat()));
