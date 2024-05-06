@@ -120,6 +120,8 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
+    this.empty = false
+    this.assigned = false
     this.prId = this.prIds[this.prs.indexOf(this.pr)]
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
 
@@ -188,7 +190,6 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     const cbSub1 = (x) => {
       this.fileIds = x.data[0][0]
-      
       if (this.fileIds.length > 0) {
         this._dbService.runQuery(` MATCH (file:File)
         WHERE elementId(file) IN ['${this.fileIds.join("','")}'] 

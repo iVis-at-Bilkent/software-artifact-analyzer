@@ -48,7 +48,7 @@
       <label class="form-label va-text">Merge</label>
     </div>
   </div>
-  <app-table-view [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"
+  <app-table-view *ngIf="!empty"  [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"
     (onFilteringChanged)="filterTable($event)" [clearFilter]="clearTableFilter">
   </app-table-view>
   <div *ngIf="empty" class="va-text empty">No expert recommendation can be provided. </div>

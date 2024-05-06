@@ -106,7 +106,7 @@ export class ExpertRecommendationComponent implements OnInit, QueryComponent<Dev
 
 
   loadTable(skip: number, filter?: TableFiltering) {
-    this.assigned = true
+    this.empty = false
     this.developers = [];
     this.scores = [];
     this.fileId = this.fileIds[this.files.indexOf(this.file)]
