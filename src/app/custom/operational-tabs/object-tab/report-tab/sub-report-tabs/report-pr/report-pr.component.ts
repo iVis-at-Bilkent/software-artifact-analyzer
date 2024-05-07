@@ -45,8 +45,10 @@ export class ReportPrComponent implements OnInit {
       { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
       { label: 'Reviewer Recommendation ', value: this.commentInput.addReviewer, function: "addReviewer()" },
     ]
-
-    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
+    `http://${window.location.hostname}:4445/getAuthentication`;
+    this.http.get(url).subscribe(data => {
       this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
@@ -105,7 +107,7 @@ export class ReportPrComponent implements OnInit {
         if(x.data[0][1].length>0){
           recommendation += 'Recommended developers are;\n';
           x.data[0][1].forEach((developer, index) => {
-            recommendation += `@${developer.replace(' ', '')} with score ${x.data[0][2][index].toFixed(5)}\n`
+            recommendation += `@${developer.replace(' ', '')} with score ${x.data[0][2][index].toFixed(2)}\n`
           });
         }
         else{

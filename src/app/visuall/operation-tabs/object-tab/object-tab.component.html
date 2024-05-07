@@ -35,7 +35,7 @@
       </app-table-view>
     </div>
   </div>
-  <app-panel-container *ngIf="singleObj" [panels]="customSubTabsObj" [containerId]="'obj-custom-sub-tab'"> </app-panel-container>
+  <app-panel-container *ngIf="singleObj" [panels]="customSubTabsObj" [isOpen]="isOpen" [containerId]="'obj-custom-sub-tab'"> </app-panel-container>
   <app-panel-container  [panels]="customSubTabs" [containerId]="'obj-custom-sub-tab'"> </app-panel-container>
 
 </div>

@@ -22,6 +22,8 @@ export class ReportDeveloperComponent implements OnInit {
   pr_key: string;
   issue_key:string;
   prs: string[];
+  filteredPrs: string[] = [];
+  filteredIssues: string[] = [];
   issues: string[];
   commentInput: any = {
     addGraph: false, addReviewer: false
@@ -35,7 +37,6 @@ export class ReportDeveloperComponent implements OnInit {
   authentication: any;
   imageUrl: string;
   comment: any;
-
   constructor(public _dbService: Neo4jDb, private _g: GlobalVariableService, private http: HttpClient, private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -49,8 +50,10 @@ export class ReportDeveloperComponent implements OnInit {
       { label: 'On Issue', value: this.commentInput.addJira, function: "addJira()" },
       { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
     ]
-
-    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
+    `http://${window.location.hostname}:4445/getAuthentication`;
+    this.http.get(url).subscribe(data => {
       this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
@@ -65,15 +68,26 @@ export class ReportDeveloperComponent implements OnInit {
     for (let i = 0; i < data.data.length; i++) {
       this.prs.push(data.data[i][0]);
     }
+    this.filteredPrs = this.prs.slice();
   }
   fillIssues(data) {
     this.issues = [];
     for (let i = 0; i < data.data.length; i++) {
       this.issues.push(data.data[i][0]);
     }
+    this.filteredIssues = this.issues.slice();
   }
-  onSelectChange() {
-    this.comment.header = "Report  File " + this.key + " ";
+
+  filterOptionsPr(value: string) {
+    this.filteredPrs = this.prs.filter(pr =>
+      pr.toLowerCase().includes(value)
+    );
+  }
+
+  filterOptionsIssue(value: string) {
+    this.filteredIssues = this.issues.filter(issue =>
+      issue.toLowerCase().includes(value.toLowerCase())
+    );
   }
 
   addGraph() {
@@ -136,7 +150,6 @@ export class ReportDeveloperComponent implements OnInit {
     }
     if (this.commentInput.addJira) {
       this.comment.header = "Report  @" + this.key.replace(" ", "") + " ";
-      
 
     }
   }
@@ -182,7 +195,10 @@ export class ReportDeveloperComponent implements OnInit {
           "imgData": this.dataURL ? this.dataURL.split(",")[1] : "",
           "uploadImage": this.commentInput.addGraph
         }
-        this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
+        let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+        "http://saa.cs.bilkent.edu.tr/api/sendJiraComment" : 
+        `http://${window.location.hostname}:4445/sendJiraComment`;
+        this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
           .subscribe(
             (response) => {
               console.info('Confirm request success', response);
@@ -232,4 +248,10 @@ export class ReportDeveloperComponent implements OnInit {
     };
   }
 
+  onItemSelected(item: string) {
+    this.pr_key = item;
+    console.log('Selected Item:', item);
+  }
+
+  
 }

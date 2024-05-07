@@ -1,6 +1,9 @@
 <div>
     <div>
       <div class="flex">
+        <div>
+          <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="performSelection()" value="Add">
+        </div>        
         <div *ngFor="let item of addMenu; let i = index" class=" form-check va-text checkBox">
           <div class="flex-2">
             <label>
@@ -10,19 +13,21 @@
             </label>
           </div>
         </div>
-        <div>
-          <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="performSelection()" value="Add">
-        </div>
       </div>
       <div >
         <div class="form-group flex-pr d-flex align-items-center justify-content-center va-text">
           Pull Request
-          <select ngModel name="option" class="form-select tight-select filter-form va-small-text m-2" id="selectAction"
-            [(ngModel)]="pr_key" (ngModelChange)="onSelectChange()">
-            <option *ngFor="let op of prs" [value]="op">
-              #{{ op }}
-            </option>
-          </select>
+          <input type = "text" 
+          placeholder = "" 
+          aria-label = "key" 
+          matInput 
+          [(ngModel)]="pr_key" 
+          class="form-select tight-select filter-form va-small-text m-2 pr-select"
+          (input)="filterOptionsPr($event.target.value)"
+          [matAutocomplete] = "auto">
+       <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="pr_key" classList="form-select tight-select filter-form va-small-text m-2 pr-select">
+          <mat-option *ngFor = "let pr of filteredPrs"  class=" va-small-text" [value] = "pr"><span>#{{pr}}</span></mat-option>
+       </mat-autocomplete>
         </div>
       </div>
       <div class="form-group flex">

@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Routes, RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
-import {MatDialog} from '@angular/material/dialog';
+
 import {MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -42,6 +42,9 @@ import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-m
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ProjectBuilderDialogComponent} from './navbar/project-builder/project-builder-dialog-component';
 import { SetupComponent } from './setup/setup.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -81,6 +84,7 @@ import { SetupComponent } from './setup/setup.component';
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     NgbModule,
     AutoSizeInputModule,
     AngularDraggableModule,
@@ -88,6 +92,9 @@ import { SetupComponent } from './setup/setup.component';
     SharedModule,
     RouterModule.forRoot([]),
     BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   exports: [RouterModule,
     HttpClientModule],

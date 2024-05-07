@@ -21,6 +21,7 @@ export interface CommitData {
 export class DeveloperCommitsComponent implements OnInit, QueryComponent<CommitData> {
   developer: string;
   developers: string[];
+  filteredDevelopers: string[] = [];
   tableInput: TableViewInput = {
     columns: ['commit'], results: [], results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
     resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
@@ -38,21 +39,17 @@ export class DeveloperCommitsComponent implements OnInit, QueryComponent<CommitD
     if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "Developer") {
       this.developer = this._g.cy.$(':selected')[0]._private.data.name;
     }
-    else {
-      this.developer = "Davide Palmisano";
-
-    }
     setTimeout(() => {
       const dateFilter = this._h.getDateRangeCQL();
       this._dbService.runQuery(`MATCH (n:Developer) RETURN distinct n.name`, (x) => this.fillGenres(x), DbResponseType.table);
     }, 5);
     let name = ""
     setInterval(() => {
-      if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "Developer" && this._g.cy.$(':selected')[0]._private.data.name !== name) {
+      if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "Developer" && this._g.cy.$(':selected')[0]._private.data.name != name) {
         name = this._g.cy.$(':selected')[0]._private.data.name
         this.developer = this._g.cy.$(':selected')[0]._private.data.name;
       }
-    }, 500)
+    }, 1500)
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
   }
@@ -176,8 +173,14 @@ export class DeveloperCommitsComponent implements OnInit, QueryComponent<CommitD
     this.developers = [];
     for (let i = 0; i < data.data.length; i++) {
       this.developers.push(data.data[i].join(''));
-
     }
+    this.filteredDevelopers = this.developers.slice();
+  }
+
+  filterOptions(value: string) {
+    this.filteredDevelopers = this.developers.filter(dev =>
+      dev.toLowerCase().includes(value.toLowerCase())
+    );
   }
   getDataForQueryResult(e: TableRowMeta) {
     const cb = (x) => {

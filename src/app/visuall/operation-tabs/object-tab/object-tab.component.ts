@@ -5,7 +5,7 @@ import { TableViewInput, TableData, TableDataType, TableFiltering, property2Tabl
 import { Subject, Subscription } from 'rxjs';
 import { CytoscapeService } from '../../cytoscape.service';
 import { CustomizationModule } from '../../../custom/customization.module';
-
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-object-tab',
   templateUrl: './object-tab.component.html',
@@ -24,6 +24,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   isShowStatsTable: boolean = false;
   isShowObjTable = false;
   singleObj = false;
+  isOpen = false;
   customSubTabsObj: { component: any, text: string }[] = CustomizationModule.objSubTabsOne;
   customSubTabs: { component: any, text: string }[] = CustomizationModule.objSubTabs;
 
@@ -41,7 +42,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
   appDescSubs: Subscription;
   dataModelSubs: Subscription;
 
-  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) {
+  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService, private route: ActivatedRoute) {
     this.selectedItemProps = [];
     this.selectedItemPropsURL = [];
   }
@@ -72,6 +73,12 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
         this._cyService.showObjPropsFn = debounce(this.showObjectProps, OBJ_INFO_UPDATE_DELAY).bind(this);
         this._cyService.showStatsFn = debounce(this.showStats, OBJ_INFO_UPDATE_DELAY).bind(this);
       });
+    });
+
+    this.route.queryParamMap.subscribe(params => {
+      if (params.get('pr')) {
+        this.isOpen = true
+      }
     });
   }
 
@@ -203,6 +210,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
     let selected = this._g.cy.$(':selected').not('.' + CLUSTER_CLASS);
     this.selectedClasses = '';
     this.selectedItemProps.length = 0;
+    this.selectedItemPropsURL.length = 0;
     let hasNode = selected.filter('node').length > 0;
     if (hasNode && selected.filter('edge').length > 0) {
       return;
@@ -223,7 +231,7 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
 
     this.selectedClasses = classNames;
     this.selectedItemProps.length = 0;
-
+    this.selectedItemPropsURL.length = 0;
     let propKeys = Object.keys(props);
     // get ordered keys if only one item is selected
     if (selectedCount === 1) {
@@ -243,18 +251,19 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
         } else {
           renderedValue = '-';
         }
+        if ( DATE_PROP_START.includes(key.toLowerCase()) ||
+          DATE_PROP_END.includes(key.toLowerCase() )) {
+          this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
+          continue;
+        }
       }
-      if (key === 'url') {
+      else if (key === 'url') {
         this.selectedItemPropsURL.push({ key: renderedKey, val: renderedValue });
       }
-
-      if (key.toLowerCase() === DATE_PROP_START ||
-        key.toLowerCase() === DATE_PROP_END) {
+      else {
+        renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
         this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
-        continue;
       }
-      renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
-      this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
     }
   }
 

@@ -20,7 +20,12 @@ export class DialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.safeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`http://${window.location.hostname}:4450`);
+    const hostname = window.location.hostname;
+    if (hostname === 'saa.cs.bilkent.edu.tr') {
+        this.safeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`http://saa.cs.bilkent.edu.tr/ui/`);
+    } else {
+        this.safeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`http://${hostname}:4450`);
+    }
   }
   adjustSize() {
     const dialogEl = this.elRef.nativeElement.closest('.mat-dialog-container');

@@ -2,10 +2,18 @@
     <div class="va-text">
       <div  *ngIf="isObjectQuery"  class="d-flex align-items-center justify-content-center">
         File
-        <select class="form-select tight-select filter-form va-small-text m-1"
-          [(ngModel)]="file">
-          <option *ngFor="let p of files" [value]="p">#{{p}}</option>
-        </select>
+        <input type = "text" 
+        value = {{file}}
+        placeholder="Select a file"
+        [(ngModel)]="file" 
+        aria-label = "name" 
+        matInput 
+        class="form-select tight-select filter-form va-small-text m-1 file-select" 
+        (input)="filterOptions($event.target.value)"
+        [matAutocomplete] = "auto">
+     <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="file" classList="form-select tight-select filter-form va-small-text m-1 file-select" >
+        <mat-option *ngFor = "let file of filteredFiles"  class=" va-small-text large" [value] = "file"><span>{{file}}</span></mat-option>
+     </mat-autocomplete>    
       </div>
     </div>
   </div>
@@ -40,8 +48,7 @@
       <label class="form-label va-text">Merge</label>
     </div>
   </div>
-  
-  
-  <app-table-view [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"
+  <app-table-view *ngIf="!empty"  [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"
     (onFilteringChanged)="filterTable($event)" [clearFilter]="clearTableFilter">
   </app-table-view>
+  <div *ngIf="empty" class="va-text empty">No expert recommendation can be provided. </div>
