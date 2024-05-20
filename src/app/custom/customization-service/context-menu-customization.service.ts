@@ -24,7 +24,7 @@ export class ContextMenuCustomizationService {
   private _file_commit = "CONTAINS";
   private _file_developer = ["CONTAINS", "COMMITTED"];
   private _file_pull_request = ["CONTAINS", "INCLUDES"];
-  private _file_issue = ["CONTAINS", "REFERENCED"]
+  private _file_issue = ["CONTAINS","INCLUDES", "REFERENCED"]
   //PullRequest
   private _pr_issue = "REFERENCED";
   private _pr_developer = ["OPENED", "MERGED", "REVIEWED"];
@@ -33,7 +33,7 @@ export class ContextMenuCustomizationService {
   //Issue
   private _get_commit_for_issue_relation = "REFERENCED";
   private _get_developer_for_issue_relation = ["REFERENCED", "COMMITTED"]
-  private _get_files_for_issue_relation = ["REFERENCED", "CONTAINS"]
+  private _get_files_for_issue_relation = ["REFERENCED","INCLUDES", "CONTAINS"]
   private _get_developer_for_issue_relation2 = ["REPORTED", "ASSIGNED", "ASSIGNED_BY", "RESOLVED"];
   private _issue_issue = ["FIXES", "DEPENDS_UPON", "DUPLICATES", "BLOCKS", "INCORPORATES", "INCORPORATES", "RELATES_TO", "SUPERSEDES"]
   //Developer
