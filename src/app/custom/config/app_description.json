@@ -4,7 +4,7 @@
     "html_header": "Software Artifact Analyzer",
     "icon": "app/custom/assets/logo.svg",
     "version": "1.0.0 beta",
-    "company_name": "i-Vis at Bilkent",
+    "company_name": "Developed by i-Vis at Bilkent and BILSEN Bilkent University",
     "company_contact": "ivis@cs.bilkent.edu.tr"
   },
   "objects": {

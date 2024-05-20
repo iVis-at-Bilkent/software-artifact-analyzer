@@ -22,7 +22,10 @@ export class Neo4jDb implements DbService {
   constructor(protected _http: HttpClient, protected _g: GlobalVariableService) { }
 
   loadConf(): Observable<Config> {
-    return this._http.get<Config>(`http://${window.location.hostname}:4445/getNeo4j`);
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/getNeo4j" : 
+    `http://${window.location.hostname}:4445/getNeo4j`;
+    return this._http.get<Config>(url);
   } 
   
   async runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
@@ -587,11 +590,11 @@ export class Neo4jDb implements DbService {
       return `(${inputOp} IN x.${rule.propertyOperand})`;
     } else if (rule.propertyType == 'edge') {
       if (!rule.operator || !rule.inputOperand || rule.inputOperand.length < 1) {
-        return `( size((x)-[:${rule.propertyOperand}]-()) > 0 )`;
+        return `( COUNT{(x)-[:${rule.propertyOperand}]-()}> 0 )`;
       }
       const i = this.transformInp(rule, rule.inputOperand);
       const op = rule.operator != 'One of' ? rule.operator : 'IN';
-      return `( size((x)-[:${rule.propertyOperand}]-()) ${op} ${i} )`;
+      return `( COUNT{(x)-[:${rule.propertyOperand}]-()} ${op} ${i} )`;
     } else {
       if (rule.propertyType == 'string' && this._g.userPrefs.isIgnoreCaseInText.getValue()) {
         inputOp = inputOp.toLowerCase();

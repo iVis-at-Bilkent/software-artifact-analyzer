@@ -26,7 +26,7 @@
     private jiraClientId: string = environment.jira.clientId;
     private jiraClientSecret: string = environment.jira.clientSecret;
     private jiraCode: string = '';
-    private redirectUrlFlowJira: string = `http://${window.location.hostname}:${window.location.port}/?setup=Jira`;
+    private redirectUrlFlowJira: string = '';
     //Neo4j Credentials
     private boltUrl: string = "bolt://ivis.cs.bilkent.edu.tr:3006";
     private httpUrl: string = "http://ivis.cs.bilkent.edu.tr:3004";
@@ -35,6 +35,9 @@
   constructor(private _g: GlobalVariableService, private route: ActivatedRoute, private http: HttpClient, private _http: HttpClient, private router: Router) { }
 
   async ngOnInit(): Promise<void> {
+    this.redirectUrlFlowJira = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "https://saa.cs.bilkent.edu.tr/?setup=Jira" : 
+    `http://${window.location.hostname}:${window.location.port}/?setup=Jira`;
     if (this.setupValue == "GitHub") {
       this.github()
     }
@@ -46,7 +49,7 @@
     this.landingTool = "Github"
     const state = Math.random().toString(36).substring(2);
     //Will be change after production
-    const url = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=s8vxvG5qiNGENrtsijGbheoFuihyjCa2&scope=offline_access%20read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20write%3Ajira-work%20read%3Ajira-user%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2F%3Fsetup%3DJira&state=${state}&response_type=code&prompt=consent`
+    const url = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=s8vxvG5qiNGENrtsijGbheoFuihyjCa2&scope=offline_access%20read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20write%3Ajira-work%20read%3Ajira-user%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=https%3A%2F%2Fsaa.cs.bilkent.edu.tr%2F%3Fsetup%3DJira&state=${state}&response_type=code&prompt=consent`
     window.location.href = url;
   }
   directToGitHub() {
@@ -74,7 +77,10 @@
     let body = {
       "params": credentials,
     }
-    this.http.post(`http://${window.location.hostname}:4445/connectNeo4j`, body, { headers: { 'Content-Type': 'application/json' } })
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/connectNeo4j" : 
+    `http://${window.location.hostname}:4445/connectNeo4j`;
+    this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
           console.info('Confirm request success', response);
@@ -115,7 +121,11 @@
     let body = {
       "params": params,
     }
-    this.http.post(`http://${window.location.hostname}:4445/authenticateJira`, body, { headers: { 'Content-Type': 'application/json' } })
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/authenticateJira" : 
+    `http://${window.location.hostname}:4445/authenticateJira`;
+    console.log(body)
+    this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
           console.info('Confirm request success', response);
@@ -136,7 +146,10 @@
     let body = {
       "params": params,
     }
-    this.http.post(`http://${window.location.hostname}:4445/authenticateGithub`, body, { headers: { 'Content-Type': 'application/json' } })
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/authenticateGithub" : 
+    `http://${window.location.hostname}:4445/authenticateGithub`;
+    this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
       .subscribe(
         (response) => {
           console.info('Confirm request success', response);

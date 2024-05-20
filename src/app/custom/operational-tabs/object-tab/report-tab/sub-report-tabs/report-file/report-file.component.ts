@@ -21,6 +21,7 @@ export class ReportFileComponent implements OnInit {
   key: string;
   pr_key: string;
   prs: string[];
+  filteredPrs: string[] = [];
   commentInput: any = {
     addGraph: false
   };
@@ -46,8 +47,10 @@ export class ReportFileComponent implements OnInit {
     this.addMenu = [
       { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
     ]
-
-    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
+    `http://${window.location.hostname}:4445/getAuthentication`;
+    this.http.get(url).subscribe(data => {
       this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
@@ -62,11 +65,15 @@ export class ReportFileComponent implements OnInit {
     for (let i = 0; i < data.data.length; i++) {
       this.prs.push(data.data[i][0]);
     }
+    this.filteredPrs = this.prs.slice();
   }
 
-  onSelectChange(){
-    this.comment.header = "Report  File " + this.key + " ";
+  filterOptionsPr(value: string) {
+    this.filteredPrs = this.prs.filter(pr =>
+      pr.toLowerCase().includes(value.toLowerCase())
+    );
   }
+
 
   addGraph() {
     if (!this.commentInput.addGraph) {
@@ -91,6 +98,7 @@ export class ReportFileComponent implements OnInit {
   }
 
   async performSelection() {
+    this.comment.header = "Report  File " + this.key + " ";
     this.comment.body = "[You can inspect artifact " + this.key + " from this link](http://" + window.location.hostname + ":" + window.location.port + "/?name=" + this.key + ")\n";
     if (this.commentInput.addGraph) {
       this.saveAsPng(false);

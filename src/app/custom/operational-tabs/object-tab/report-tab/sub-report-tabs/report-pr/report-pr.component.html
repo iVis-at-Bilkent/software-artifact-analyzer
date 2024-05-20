@@ -2,6 +2,9 @@
     <div>
       
       <div class="flex">
+        <div>
+          <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="performSelection()" value="Add">
+        </div>
         <div *ngFor="let item of addMenu; let i = index" class=" form-check va-text checkBox">
           <div class="flex-2">
             <label>
@@ -10,9 +13,6 @@
               {{ item.label }}
             </label>
           </div>
-        </div>
-        <div>
-          <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="performSelection()" value="Add">
         </div>
       </div>
       <div class="form-group flex">

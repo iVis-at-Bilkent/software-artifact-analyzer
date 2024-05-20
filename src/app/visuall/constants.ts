@@ -4,8 +4,8 @@ export const HIGHLIGHT_ANIM_DUR = 400;
 export const HIGHLIGHT_WAIT_DUR = 1500;
 export const EV_MOUSE_ON = 'mouseover';
 export const EV_MOUSE_OFF = 'mouseout';
-export const DATE_PROP_START = 'start_time';
-export const DATE_PROP_END = 'end_time';
+export const DATE_PROP_START = ['start', 'createdat'];
+export const DATE_PROP_END = ['closedate', 'end'];
 export const CY_BATCH_END_DELAY = 100;
 export const OBJ_INFO_UPDATE_DELAY = 200;
 
@@ -310,7 +310,7 @@ export const deepCopy = <T>(target: T): T => {
     (target as any[]).forEach((v) => { cp.push(v); });
     return cp.map((n: any) => deepCopy<any>(n)) as any;
   }
-  if (typeof target === 'object' && target !== {}) {
+  if (typeof target === 'object') {
     const cp = { ...(target as { [key: string]: any }) } as { [key: string]: any };
     Object.keys(cp).forEach(k => {
       cp[k] = deepCopy<any>(cp[k]);

@@ -64,8 +64,10 @@ export class ReportIssueComponent implements OnInit {
       { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
       { label: 'Anomaly', value: this.commentInput.addAnomaly, function: "addAnomaly()" },
     ]
-
-    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
+    `http://${window.location.hostname}:4445/getAuthentication`;
+    this.http.get(url).subscribe(data => {
       this.authentication = data;
     });
 
@@ -152,7 +154,10 @@ export class ReportIssueComponent implements OnInit {
         "imgData": this.dataURL ? this.dataURL.split(",")[1] : "",
         "uploadImage": this.commentInput.addGraph
       }
-      this.http.post(`http://${window.location.hostname}:4445/sendJiraComment`, body, { headers: { 'Content-Type': 'application/json' } })
+      let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
+      "http://saa.cs.bilkent.edu.tr/api/sendJiraComment" : 
+      `http://${window.location.hostname}:4445/sendJiraComment`;
+      this.http.post(url, body, { headers: { 'Content-Type': 'application/json' } })
         .subscribe(
           (response) => {
             console.info('Confirm request success', response);

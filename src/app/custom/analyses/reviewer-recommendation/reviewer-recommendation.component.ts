@@ -17,6 +17,7 @@ import { TheoreticPropertiesCustomService } from 'src/app/custom/customization-s
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalContentComponent } from '../../operational-tabs/object-tab/modal-content/modal-content.component';
 import { QueryComponent } from '../query.component.interface';
+import { ActivatedRoute } from '@angular/router';
 export interface DeveloperData {
   name: string;
   score: number;
@@ -33,8 +34,11 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   pr: string;
   prId: string;
   prs: string[];
+  filteredPrs: string[] = [];
   prIds: string[];
   developers = [];
+  nodes = [];
+  edges = [];
   scores = [];
   fileIds = [];
   possibleDevelopers: string[] = [];
@@ -43,6 +47,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   seeds = [];
   number = 3;
   assigned: boolean = false
+  empty: boolean = false
   tableFilter: TableFiltering = { orderBy: null, orderDirection: null, txt: '', skip: null };
   tableInput: TableViewInput = {
     columns: ['name', 'score'], results: [], results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Developer', isShowExportAsCSV: true,
@@ -69,7 +74,8 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     private _group: GroupCustomizationService,
     private _gt: TheoreticPropertiesCustomService,
     private modalService: NgbModal,
-    private _h: QueryHelperService
+    private _h: QueryHelperService,
+    private route: ActivatedRoute
   ) {
     this.prs = [];
     this.developers = [];
@@ -82,13 +88,19 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   ngOnInit() {
     this._dbService.runQuery('MATCH (m:PullRequest) return m.name as name , elementId(m) as id order by m.name ', (x) => {
       this.fillOptions(x)
+      this.route.queryParamMap.subscribe(params => {
+        if (params.get('pr')) {
+          this.size = true;
+          this.cluster = true;
+          this.recency = true;
+          this.tableInput.isLoadGraph = true;
+          this.prepareQuery()
+        }
+      });
     }, DbResponseType.table);
     let name = ""
     if (this._g.cy.$(':selected').length > 0 && this._g.cy.$(':selected')[0]._private.classes.values().next().value === "PullRequest") {
       this.pr = this._g.cy.$(':selected')[0]._private.data.name;
-    }
-    else {
-      this.pr = this.prs[0]
     }
     this.tableInput.results = [];
     this._g.userPrefs.dataPageSize.subscribe(x => { this.tableInput.pageSize = x; });
@@ -108,21 +120,29 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   }
 
   loadTable(skip: number, filter?: TableFiltering) {
+    this.empty = false
+    this.assigned = false
     this.prId = this.prIds[this.prs.indexOf(this.pr)]
     const isClientSidePagination = this._g.userPrefs.queryResultPagination.getValue() == 'Client';
 
     const cb = (x) => {
-      this.developers = x.data[0][0]
-      this.scores = x.data[0][2]
+      this.nodes = x.data[0][3]
+      this.edges = x.data[0][9]
+      this.developers = x.data[0][4]
+      this.scores = x.data[0][6]
+      let tableData = {
+        columns: [x.columns[4], x.columns[5], x.columns[6]],
+        data: [[x.data[0][4], x.data[0][5], x.data[0][6]]]
+      }
       if (this.developers.length > 0) {
         this.assigned = true
       }
       else {
         this.assigned = false
       }
-      const processedTableData = this._h.preprocessTableDataZip(x,['elementId'].concat(this.tableInput.columns));
+      const processedTableData = this._h.preprocessTableDataZip(tableData, ['elementId'].concat(this.tableInput.columns));
       const limit4clientSidePaginated = this._g.userPrefs.dataPageSize.getValue() * this._g.userPrefs.dataPageLimit.getValue();
-      let cnt = x.data.length;
+      let cnt = processedTableData.length;
       if (isClientSidePagination && cnt > limit4clientSidePaginated) {
         cnt = limit4clientSidePaginated;
       }
@@ -171,24 +191,36 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     const cbSub1 = (x) => {
       this.fileIds = x.data[0][0]
       if (this.fileIds.length > 0) {
-        this._dbService.runQuery(`MATCH (file:File)-[*1..${this.number}]-(developer:Developer)
-      WHERE elementId(file) IN ['${this.fileIds.join("','")}'] 
-      RETURN COLLECT(DISTINCT elementId(developer)) AS developersList`, cbSub2, DbResponseType.table, false);
+        this._dbService.runQuery(` MATCH (file:File)
+        WHERE elementId(file) IN ['${this.fileIds.join("','")}'] 
+        CALL apoc.path.subgraphAll(file, { relationshipFilter: null, minLevel: 0, maxLevel: 3, bfs: true }) 
+        YIELD nodes, relationships 
+        WITH [node IN nodes WHERE 'Developer' IN labels(node) | elementId(node)] AS NodeIDs
+        RETURN collect( distinct NodeIDs) as list `, cbSub2, DbResponseType.table, false);
+      }
+      else{
+        this.empty = true
       }
     }
     const cbSub2 = (x) => {
-      this.possibleDevelopers = x.data[0][0]
+      this.possibleDevelopers = Array.from(new Set(x.data[0][0].flat()));
       if (this.possibleDevelopers.length > 0) {
         this._dbService.runQuery(`MATCH (N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:COMMITTED]-(d:Developer) 
         WITH collect(distinct elementId(d)) AS ignoreDevs return ignoreDevs`, cbSub3, DbResponseType.table, false);
+      }
+      else{
+        this.empty = true
       }
     }
     const cbSub3 = (x) => {
       let ignoredDevelopers = x.data[0][0]
       this.possibleDevelopers = this.possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
       if (this.possibleDevelopers.length > 0) {
-        this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
+        this._dbService.runQuery(`CALL findNodesWithMostPathBetween(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
+      }
+      else {
+        this.empty = true
       }
     }
 
@@ -239,35 +271,9 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
         this.devSize();
       }
       this._dbService.runQuery(`MATCH p=(N:PullRequest{name:'${this.pr}'})-[:INCLUDES]-(c:Commit)-[:CONTAINS]-(f:File)   RETURN p`, cbSub1, DbResponseType.graph, false);
-    };
-    let dataCnt = this.tableInput.pageSize;
-    if (isClientSidePagination) {
-      dataCnt = this._g.userPrefs.dataPageLimit.getValue() * this._g.userPrefs.dataPageSize.getValue();
     }
-    const r = `[${skip}..${skip + dataCnt}]`;
-
-    const t = filter.txt ?? '';
-    const pageSize = this.getPageSize4Backend();
-    const currPage = filter.skip ? Math.floor(filter.skip / pageSize) + 1 : 1;
-    const orderBy = 'score';
-    let orderDir = 0;
-    if (filter.orderDirection == 'desc') {
-      orderDir = 1;
-    } else if (filter.orderDirection == '') {
-      orderDir = 2;
-    }
-    const timeMap = this.getTimebarMapping4Java();
-    let d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
-    let d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
-      d1 = 0;
-      d2 = 0;
-    }
-    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
-    const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    if (this.fileIds.length > 0 && this.possibleDevelopers.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],['${this.possibleDevelopers.join("','")}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
-      ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
+    if (this.edges.length > 0 || this.developers.length > 0) {
+      this._dbService.runQuery(`MATCH (N)-[R]-() WHERE elementId(N) in  ['${this.nodes.join("','")}'] AND elementId(R) in  ['${this.edges.join("','")}'] return N,R`, cb, DbResponseType.graph, false);
     }
   }
 
@@ -279,7 +285,11 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     for (let i = 0; i < data.length; i++) {
       const row: TableData[] = [];
       for (let j = 0; j < uiColumns.length; j++) {
-        row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
+        if(uiColumns[j] === "score"){
+          row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]].toFixed(2)) })
+        } else {
+          row.push({ type: columnTypes[j], val: String(data[i][uiColumns[j]]) })
+        }
       }
       row.push();
       this.tableInput.results.push(row)
@@ -301,6 +311,12 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     for (let i = 0; i < data.data.length; i++) {
       this.prIds.push(data.data[i][1]);
     }
+    this.filteredPrs = this.prs.slice();
+  }
+  filterOptions(value: string) {
+    this.filteredPrs = this.prs.filter(pr =>
+      pr.toLowerCase().includes(value.toLowerCase())
+    );
   }
 
   getDataForQueryResult(e: TableRowMeta) {
@@ -374,7 +390,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     if (this.fileIds.length > 0 && this.possibleDevelopers.length > 0) {
-      this._dbService.runQuery(`CALL findNodesWithMostPathBetweenGraph(['${this.fileIds.join("','")}'], ['COMMENTED'],['${idFilter}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
+      this._dbService.runQuery(`CALL findNodesWithMostPathBetween(['${this.fileIds.join("','")}'], ['COMMENTED'],['${idFilter}'],'${this.recency ? 'recency' : 'none'}',3,${this.number}, false,
       ${pageSize}, ${currPage}, null, false, '${orderBy}', ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.graph, false);
     }
   }
@@ -507,7 +523,10 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   }
 
   assign() {
-    this.http.get(`http://${window.location.hostname}:4445/getAuthentication`).subscribe(data => {
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ?
+      "http://saa.cs.bilkent.edu.tr/api/getAuthentication" :
+      `http://${window.location.hostname}:4445/getAuthentication`;
+    this.http.get(url).subscribe(data => {
       this.authentication = data;
       this.githubHttpOptions = {
         headers: new HttpHeaders({
@@ -519,7 +538,7 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
       };
       if (this.authentication.authenticated) {
         this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
-        const url = `https://api.github.com/repos/${this.authentication.github_repo}/pulls/${this.pr}/requested_reviewers`;
+        const url = `https://api.github.com/repos/${this.authentication.github.github_repo}/pulls/${this.pr}/requested_reviewers`;
         const headers = {
           'Accept': 'application/vnd.github+json',
           'Authorization': `Bearer ${this.authentication.github.access_token}`,

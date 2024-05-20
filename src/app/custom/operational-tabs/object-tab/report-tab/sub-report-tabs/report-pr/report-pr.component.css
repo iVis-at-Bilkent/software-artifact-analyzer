@@ -39,14 +39,14 @@
       display: flex;
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
     }
     .checkBox{
       display: flex;
+      margin: 0.2rem;
       align-items: center !important;
     }
     .flex-pr{
-      margin-top: 1rem;
       align-items: center !important;
       display: flex;
     }

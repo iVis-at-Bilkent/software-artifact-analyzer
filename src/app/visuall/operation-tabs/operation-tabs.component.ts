@@ -6,7 +6,7 @@ import { QueryTabComponent } from './query-tab/query-tab.component';
 import { SettingsTabComponent } from './settings-tab/settings-tab.component';
 import { CustomizationModule } from '../../custom/customization.module';
 import { Subscription } from 'rxjs';
-
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-operation-tabs',
   templateUrl: './operation-tabs.component.html',
@@ -18,10 +18,16 @@ export class OperationTabsComponent implements OnDestroy {
   tabs: { component: any, text: string }[] = [{ component: ObjectTabComponent, text: 'Object' }, { component: MapTabComponent, text: 'Map' }, { component: QueryTabComponent, text: 'Database' }, { component: SettingsTabComponent, text: 'Settings' }];
   tabChangeSubs: Subscription;
 
-  constructor(private _g: GlobalVariableService) {
+  constructor(private _g: GlobalVariableService,  private route: ActivatedRoute) {
     this.currTab = this._g.operationTabChanged.getValue();
     this.tabChangeSubs = this._g.operationTabChanged.subscribe(x => { this.currTab = x });
     this.tabs = this.tabs.concat(CustomizationModule.operationTabs);
+    this.route.queryParamMap.subscribe(params => {
+      if (params.get('pr')) {
+        this.setTab(0)
+      }
+    });
+   
   }
 
   setTab(i: number) {
