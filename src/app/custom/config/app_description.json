@@ -442,7 +442,7 @@
     },
     "REFERENCED": {
       "source": "Issue",
-      "target": "Commit",
+      "target": "PullRequest",
       "isBidirectional": false,
       "properties": {
          "recency":"float",
@@ -461,6 +461,7 @@
         "color": "#4C5F7A"
       }
     },
+    
     "RELATES_TO": {
       "source": "Issue",
       "target": "Issue",
