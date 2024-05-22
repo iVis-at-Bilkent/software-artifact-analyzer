@@ -554,7 +554,7 @@ export class GlobalVariableService {
   }
 
   private addStyle4Emphasize() {
-    const color = '#da14ff';
+    const color = '#ed8410';
     const wid = this.userPrefs.highlightStyles[0].wid.getValue();
     const OPACITY_DIFF = 0.05;
 
