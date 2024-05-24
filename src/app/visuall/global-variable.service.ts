@@ -554,9 +554,9 @@ export class GlobalVariableService {
   }
 
   private addStyle4Emphasize() {
-    const color = '#ed8410';
+    const color = '#ff8a00';
     const wid = this.userPrefs.highlightStyles[0].wid.getValue() + 4;
-    const OPACITY_DIFF = 0.1;
+    const OPACITY_DIFF = 0.06;
 
     this.cy.style().selector('node.emphasize')
       .style({
