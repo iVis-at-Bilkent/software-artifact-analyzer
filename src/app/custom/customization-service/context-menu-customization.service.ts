@@ -6,6 +6,7 @@ import { ContextMenuItem } from "../../visuall/context-menu/icontext-menu";
 import { DbQueryMeta, HistoryMetaData } from "../../visuall/db-service/data-types";
 import { HttpClient } from '@angular/common/http';
 import { forEach } from "cypress/types/lodash";
+import { hide } from "@popperjs/core";
 
 @Injectable({
   providedIn: "root",
@@ -1542,31 +1543,37 @@ export class ContextMenuCustomizationService {
   deleteNeighbors(event, historyMeta: HistoryMetaData, queryMeta: DbQueryMeta) {
     const ele = event.target || event.cyTarget;
     const targetNodeId = ele._private.data.id;
-    let arr = this._g.cy.nodes().map(x => x.id())
+    let hideSet = this._g.cy.collection();
     this._dbService.getNeighbors(
       [ele.id().substr(1)],
       (x) => {
         x.nodes.forEach(element => {
           if ((`n${element.elementId}` != targetNodeId) && (!queryMeta.targetType || queryMeta.targetType === element.labels[0])) {
-            if(!queryMeta.isMultiLength){
+            if (!queryMeta.isMultiLength) {
               const edge = this._g.cy.edges(`[source="${targetNodeId}"][target="n${element.elementId}"]`);
               const edge2 = this._g.cy.edges(`[source="n${element.elementId}"][target="${targetNodeId}"]`);
-              if(edge.nonempty() | edge2.nonempty()){
-                this._g.cy.elements(`[id = "n${element.elementId}"]`).select();
-              } 
+              if (edge.nonempty() | edge2.nonempty()) {
+                hideSet = hideSet.add(this._g.cy.elements(`[id = "n${element.elementId}"]`));
+                console.log("girfiwwi")
+              }
+            } else {
+              hideSet = hideSet.add(this._g.cy.elements(`[id = "n${element.elementId}"]`));
+              console.log("girfii")
             }
-            else{
-              this._g.cy.elements(`[id = "n${element.elementId}"]`).select();           
-            }
-            
           }
-        },
-        )
-        this._cyService.showHideSelectedElements(true)
+        });
+        console.log(hideSet)
+        this._g.viewUtils.hide(hideSet);
+        this._cyService.hideCompounds(hideSet);
+        this._g.applyClassFiltering();
+        if (hideSet.size > 0) {
+          this._g.performLayout(false);
+        }
       },
       historyMeta,
       queryMeta
     );
+
   }
 
   reportAnomaly(event) {
