@@ -55,9 +55,13 @@
     "sourceNodeType": "Developer",
     "targetNodeType": "PullRequest"
   },
-  "REFERENCED": {
+  "REFERENCED_PR": {
     "sourceNodeType": "Issue",
     "targetNodeType": "PullRequest"
+  },
+  "REFERENCED_COMMIT": {
+    "sourceNodeType": "Issue",
+    "targetNodeType": "Commit"
   },
   "RELATES_TO": {
     "sourceNodeType": "Issue",

@@ -440,9 +440,29 @@
         "color": "#976e6e"
       }
     },
-    "REFERENCED": {
+    "REFERENCED_PR": {
       "source": "Issue",
       "target": "PullRequest",
+      "isBidirectional": false,
+      "properties": {
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
+      },
+      "style": {
+        "label": "referenced",
+        "width": "1px",
+        "font-size": "11px",
+        "line-color": "#4C5F7A",
+        "line-style": "solid",
+        "target-arrow-shape": "triangle",
+        "target-arrow-color": "#4C5F7A",
+        "text-rotation": "autorotate",
+        "color": "#4C5F7A"
+      }
+    },"REFERENCED_COMMIT": {
+      "source": "Issue",
+      "target": "Commit",
       "isBidirectional": false,
       "properties": {
          "recency":"float",
@@ -706,7 +726,11 @@
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },
-    "REFERENCED": {
+    "REFERENCED_COMMIT": {
+      "begin_datetime": "createdAt",
+      "end_datetime": "end"
+    },
+    "REFERENCED_PR": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
     },

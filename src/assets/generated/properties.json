@@ -123,7 +123,12 @@
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "REFERENCED": {
+    "REFERENCED_PR": {
+      "recency": "float",
+      "createdAt": "datetime",
+      "end": "datetime"
+    },
+    "REFERENCED_COMMIT": {
       "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"

@@ -15,30 +15,27 @@ export class ContextMenuCustomizationService {
   private _menu: ContextMenuItem[];
   //Commit
   private _commit_developer = "COMMITTED";
-  private _commit_pr = "REFERENCED";
+  private _commit_pr = "INCLUDES";
   private _commit_file = "CONTAINS";
-  private _commit_issue = "REFERENCED";
+  private _commit_issue = "REFERENCED_COMMIT";
   private _commit_review_developer = ["INCLUDES", "REVIEWED"]
   //File
   private _file_file = "RENAMED_TO";
   private _file_commit = "CONTAINS";
   private _file_developer = ["CONTAINS", "COMMITTED"];
   private _file_pull_request = ["CONTAINS", "INCLUDES"];
-  private _file_issue = ["CONTAINS","INCLUDES", "REFERENCED"]
+  private _file_issue = ["CONTAINS", "REFERENCED_COMMIT"]
+  //private _file_issue = [["CONTAINS","INCLUDES", "REFERENCED_PR"],["CONTAINS", "REFERENCED_COMMIT"]] (Visuall not let to run multilength multipath queries)
   //PullRequest
-  private _pr_issue = "REFERENCED";
-  private _pr_developer = ["OPENED", "MERGED", "REVIEWED"];
+  private _pr_issue = "REFERENCED_PR";
   private _pr_commit = "INCLUDES";
   private _pr_file = ["INCLUDES", "CONTAINS"]
   //Issue
-  private _get_commit_for_issue_relation = "REFERENCED";
-  private _get_developer_for_issue_relation = ["REFERENCED", "COMMITTED"]
-  private _get_files_for_issue_relation = ["REFERENCED","INCLUDES", "CONTAINS"]
-  private _get_developer_for_issue_relation2 = ["REPORTED", "ASSIGNED", "ASSIGNED_BY", "RESOLVED"];
+  private _get_commit_for_issue_relation = "REFERENCED_COMMIT";
+  private _get_developer_for_issue_relation = ["REFERENCED_COMMIT", "COMMITTED"]
+  private _get_files_for_issue_relation = ["REFERENCED_COMMIT", "CONTAINS"]
   private _issue_issue = ["FIXES", "DEPENDS_UPON", "DUPLICATES", "BLOCKS", "INCORPORATES", "INCORPORATES", "RELATES_TO", "SUPERSEDES"]
   //Developer
-  private _developer_pull_request = ["OPENED", "MERGED", "REVIEWED"];
-  private _developer_issue = "REPORTED";
   private _developer_commit_pull_request = ["COMMITTED", "INCLUDES"];
   private _developer_commits = "COMMITTED";
   private _developer_commits_file = ["COMMITTED", "CONTAINS"];
@@ -709,7 +706,7 @@ export class ContextMenuCustomizationService {
                 x,
                 { isNode: true, customTxt: "Show pull request referenced: " },
                 {
-                  edgeType: "REFERENCED",
+                  edgeType: "REFERENCED_PR",
                   targetType: "PullRequest"
                 }
               );
@@ -724,7 +721,7 @@ export class ContextMenuCustomizationService {
                 x,
                 { isNode: true, customTxt: "Hide pull request referenced: " },
                 {
-                  edgeType: "REFERENCED",
+                  edgeType: "REFERENCED_PR",
                   targetType: "PullRequest"
                 }
               );

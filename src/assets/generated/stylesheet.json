@@ -372,7 +372,21 @@
     }
   },
   {
-    "selector": "edge.REFERENCED",
+    "selector": "edge.REFERENCED_PR",
+    "style": {
+      "label": "referenced",
+      "width": "1px",
+      "font-size": "11px",
+      "line-color": "#4C5F7A",
+      "line-style": "solid",
+      "target-arrow-shape": "triangle",
+      "target-arrow-color": "#4C5F7A",
+      "text-rotation": "autorotate",
+      "color": "#4C5F7A"
+    }
+  },
+  {
+    "selector": "edge.REFERENCED_COMMIT",
     "style": {
       "label": "referenced",
       "width": "1px",
