@@ -1554,19 +1554,17 @@ export class ContextMenuCustomizationService {
               const edge2 = this._g.cy.edges(`[source="n${element.elementId}"][target="${targetNodeId}"]`);
               if (edge.nonempty() | edge2.nonempty()) {
                 hideSet = hideSet.add(this._g.cy.elements(`[id = "n${element.elementId}"]`));
-                console.log("girfiwwi")
               }
             } else {
               hideSet = hideSet.add(this._g.cy.elements(`[id = "n${element.elementId}"]`));
-              console.log("girfii")
             }
           }
         });
-        console.log(hideSet)
         this._g.viewUtils.hide(hideSet);
         this._cyService.hideCompounds(hideSet);
         this._g.applyClassFiltering();
-        if (hideSet.size > 0) {
+        if (hideSet.length > 0) {
+          console.log("sss")
           this._g.performLayout(false);
         }
       },
