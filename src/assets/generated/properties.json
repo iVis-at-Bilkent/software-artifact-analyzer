@@ -1,9 +1,10 @@
 {
   "nodes": {
     "Commit": {
-      "createdAt": "datetime",
       "name": "string",
-      "end": "datetime"
+      "createdAt": "datetime",
+      "end": "datetime",
+      "url": "string"
     },
     "Developer": {
       "name": "string",
@@ -14,7 +15,8 @@
     "File": {
       "name": "string",
       "createdAt": "datetime",
-      "end": "datetime"
+      "end": "datetime",
+      "url": "string"
     },
     "Issue": {
       "name": "string",

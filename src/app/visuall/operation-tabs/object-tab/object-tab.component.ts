@@ -257,13 +257,18 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
           continue;
         }
       }
-      else if (key === 'url') {
+      
+      else if (key === 'url' && renderedValue != undefined) {
         this.selectedItemPropsURL.push({ key: renderedKey, val: renderedValue });
       }
+      else if (key === 'url' && renderedValue == undefined) {
+        this.selectedItemProps.push({ key: renderedKey, val: '-' });
+      }    
       else {
         renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
         this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
       }
+      console.log(renderedValue)
     }
   }
 

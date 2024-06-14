@@ -10,9 +10,10 @@
   "objects": {
     "Commit": {
       "properties": {
-        "createdAt": "datetime",
         "name": "string",
-        "end": "datetime"
+        "createdAt": "datetime",
+        "end": "datetime",
+        "url":"string"
       },
       "style": {
         "label": "data(name)",
@@ -58,7 +59,8 @@
       "properties": {
         "name": "string",
         "createdAt": "datetime",
-        "end": "datetime"
+        "end": "datetime",
+        "url":"string"
       },
       "style": {
         "label": "data(name)",
