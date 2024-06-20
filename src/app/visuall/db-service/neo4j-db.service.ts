@@ -7,7 +7,7 @@ import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from '../constants';
 import { TableFiltering } from '../../shared/table-view/table-view-types';
 import { TimebarGraphInclusionTypes } from '../user-preference';
 import { Observable } from 'rxjs';
-
+import { BehaviorSubject } from 'rxjs';
 interface Config {
   httpURL: string;
   neo4jUsername: string;
@@ -19,17 +19,24 @@ interface Config {
 })
 
 export class Neo4jDb implements DbService {
-  constructor(protected _http: HttpClient, protected _g: GlobalVariableService) { }
+  enums = new BehaviorSubject<any>(null);
+  constructor(protected _http: HttpClient, protected _g: GlobalVariableService) {
+
+    this._http.get('/app/custom/config/enums.json').subscribe(x => {
+      this.enums.next(x)
+    });
+  }
 
   loadConf(): Observable<Config> {
-    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
-    "http://saa.cs.bilkent.edu.tr/api/getNeo4j" : 
-    `http://${window.location.hostname}:4445/getNeo4j`;
+    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ?
+      "http://saa.cs.bilkent.edu.tr/api/getNeo4j" :
+      `http://${window.location.hostname}:4445/getNeo4j`;
     return this._http.get<Config>(url);
-  } 
-  
+
+  }
+
   async runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
-    const conf = await this.loadConf().toPromise(); 
+    const conf = await this.loadConf().toPromise();
     const url = conf.httpURL;
     //console.log(query)
     const username = conf.neo4jUsername;
@@ -45,6 +52,7 @@ export class Neo4jDb implements DbService {
       ? `CALL apoc.cypher.run("${query}", null ) YIELD value RETURN value`
       : query;
     console.log(q);
+
     this._g.statusMsg.next('Executing database query...');
     const requestBody = {
       statements: [{
@@ -101,6 +109,58 @@ export class Neo4jDb implements DbService {
         //const elapsedTime = endTime.getTime() - startTime.getTime();
         //console.log(`Elapsed Time: ${elapsedTime} milliseconds for graph`);
         callback(this.extractGraph(x));
+        //You can add issue cues here maybe 
+          let addPriorityBadge = false;
+          this._g.cy.nodes().forEach(async (element) => {
+    
+            if (element._private.classes.values().next().value == 'Issue') {
+              const div1 = document.createElement("div");
+    
+              let type = element._private.data.issueType
+              let priority = element._private.data.priority
+              if (!Object.values(this.enums.getValue().issueType).includes(element._private.data.issueType)) {
+                type = 'Other';
+              }
+              for (let priorityList of Object.values(this.enums.getValue().priority)) {
+                if (Array.isArray(priorityList) && priorityList.includes(priority)) {
+                  priority = priorityList[0]
+                  addPriorityBadge = true;
+                  break
+                }
+              }
+              if (Object.keys(element.getCueData()).length === 0) {
+                element.addCue({
+                  htmlElem: div1,
+                  imgData: { width: 20, height: 20, src: "app/custom/assets/issue-types/" + type + ".svg" },
+                  id: element._private.data.name + element._private.data.issueType,
+                  show: "always",
+                  position: "top-left",
+                  marginX: 3,
+                  marginY: 3,
+                  cursor: "pointer",
+                  zIndex: 1000,
+                  tooltip: type
+                });
+                if (addPriorityBadge) {
+                  element.addCue({
+                    htmlElem: div1,
+                    imgData: { width: 25, height: 25, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
+                    id: element._private.data.name + element._private.data.priority,
+                    show: "always",
+                    position: "left",
+                    marginX: 0,
+                    marginY: 0,
+                    cursor: "pointer",
+                    zIndex: 1000,
+                    tooltip: element._private.data.priority
+                  });
+                }
+    
+              }
+            }
+          });
+        
+       
       } else if (responseType == DbResponseType.table || responseType == DbResponseType.count) {
         //const endTime = new Date();
         // Calculate the time difference
@@ -118,7 +178,7 @@ export class Neo4jDb implements DbService {
   }
 
   async runQueryWithoutTimeBoxed(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
-    const conf = await this.loadConf().toPromise(); 
+    const conf = await this.loadConf().toPromise();
     const url = conf.httpURL;
     //console.log(query)
     const username = conf.neo4jUsername;
@@ -239,7 +299,7 @@ export class Neo4jDb implements DbService {
     if (f2.length > 0) {
       f += f2;
     }
-    this.runQuery(`MATCH (n)-[e]-() ${f} RETURN n,e , rand() as r ORDER BY r limit 20`, callback);
+    this.runQuery(`MATCH (n)-[e]-() ${f} RETURN n,e , rand() as r ORDER BY r limit 50`, callback);
   }
 
   getFilteringResult(rules: ClassBasedRules, filter: TableFiltering, skip: number, limit: number, type: DbResponseType, callback: (x: GraphResponse | TableResponse) => any) {
@@ -406,7 +466,6 @@ export class Neo4jDb implements DbService {
   private extractGraph(response): GraphResponse {
     let nodes = [];
     let edges = [];
-
     const results = response.results[0];
     if (!results) {
       this._g.showErrorModal('Invalid Query', response.errors[0]);

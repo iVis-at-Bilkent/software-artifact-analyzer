@@ -10,8 +10,9 @@ import { UserProfileService } from './user-profile.service';
 import { LouvainClustering } from '../../lib/louvain-clustering/LouvainClustering';
 import { CyExtService } from './cy-ext.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClient } from '@angular/common/http';
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
-import html2canvas from 'html2canvas';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,9 +22,9 @@ export class CytoscapeService {
   showObjPropsFn: Function;
   showStatsFn: Function;
   louvainClusterer: LouvainClustering;
-
+  enums = new BehaviorSubject<any>(null);
   constructor(private _g: GlobalVariableService, private _timebarService: TimebarService, private _cyExtService: CyExtService,
-    private _profile: UserProfileService, private _ngZone: NgZone, private _modalService: NgbModal,) {
+    private _profile: UserProfileService, private _ngZone: NgZone, private _modalService: NgbModal, protected _http: HttpClient) {
     this.userPrefHelper = new UserPrefHelper(this, this._timebarService, this._g, this._profile);
     this.louvainClusterer = new LouvainClustering();
     this._timebarService.hideCompoundsFn = this.hideCompounds.bind(this);
@@ -145,14 +146,14 @@ export class CytoscapeService {
   }
 
   loadElementsFromDatabase(data: GraphResponse, isIncremental: boolean) {
-    if (!data || !data.nodes || !data.edges ) {
+    if (!data || !data.nodes || !data.edges) {
       this._g.showErrorModal('Empty Graph', 'Empty response from database!')
       return;
     }
-    if(data.nodes.length>0 || data.edges.length>0){
+    if (data.nodes.length > 0 || data.edges.length > 0) {
       const nodes = data.nodes;
       const edges = data.edges;
-  
+
       let current = this._g.cy.nodes(':visible');
       let elemIds: string[] = [];
       let cyNodes = [];
@@ -161,7 +162,7 @@ export class CytoscapeService {
         cyNodes.push(this.createCyNode(nodes[i], cyNodeId));
         elemIds.push(cyNodeId);
       }
-  
+
       let cyEdges = [];
       let collapsedEdgeIds = {};
       if (isIncremental) {
@@ -176,15 +177,15 @@ export class CytoscapeService {
         cyEdges.push(this.createCyEdge(edges[i], cyEdgeId));
         elemIds.push(cyEdgeId)
       }
-  
+
       this._g.switchLayoutRandomization(!isIncremental);
-  
+
       if (!isIncremental) {
         this._g.cy.elements().remove();
       }
       let prevElems = this._g.cy.$(':visible');
       const wasEmpty = this._g.cy.elements().length < 2;
-  
+
       this._g.cy.add(cyNodes);
       const filteredCyEdges = []
       for (let i = 0; i < cyEdges.length; i++) {
@@ -196,20 +197,20 @@ export class CytoscapeService {
         filteredCyEdges.push(cyEdges[i]);
       }
       const addedEdges = this._g.cy.add(filteredCyEdges);
-  
+
       let compoundEdgeIds = Object.values(collapsedEdgeIds) as string[];
       if (this._g.userPrefs.isCollapseMultiEdgesOnLoad.getValue()) {
         this.collapseMultiEdges(addedEdges, false);
       }
       let compoundEdgeIds2 = this._g.cy.edges('.' + C.COLLAPSED_EDGE_CLASS).map(x => x.id());
-  
+
       elemIds.push(...C.arrayDiff(compoundEdgeIds, compoundEdgeIds2));
-  
+
       // elements might already exist but hidden, so show them
       const elemIdSet = new Set(elemIds);
       this._g.viewUtils.show(this._g.cy.elements().filter(element => elemIdSet.has(element.id())));
       this._g.applyClassFiltering();
-  
+
       if (isIncremental && !wasEmpty) {
         let collection = this._g.cy.collection();
         for (let i = 0; i < cyNodes.length; i++) {
@@ -229,7 +230,58 @@ export class CytoscapeService {
       this.highlightElems(isIncremental, elemIds);
       this._g.isLoadFromDB = true;
     }
+    this._http.get('/app/custom/config/enums.json').subscribe(x => {
+      this.enums.next(x);
+      let addPriorityBadge = false;
+      this._g.cy.nodes().forEach(async (element) => {
 
+        if (element._private.classes.values().next().value == 'Issue') {
+          const div1 = document.createElement("div");
+
+          let type = element._private.data.issueType
+          let priority = element._private.data.priority
+          if (!Object.values(this.enums.getValue().issueType).includes(element._private.data.issueType)) {
+            type = 'Other';
+          }
+          for (let priorityList of Object.values(this.enums.getValue().priority)) {
+            if (Array.isArray(priorityList) && priorityList.includes(priority)) {
+              priority = priorityList[0]
+              addPriorityBadge = true;
+              break
+            }
+          }
+          if (Object.keys(element.getCueData()).length === 0) {
+            element.addCue({
+              htmlElem: div1,
+              imgData: { width: 20, height: 20, src: "app/custom/assets/issue-types/" + type + ".svg" },
+              id: element._private.data.name + element._private.data.issueType,
+              show: "always",
+              position: "top-left",
+              marginX: 3,
+              marginY: 3,
+              cursor: "pointer",
+              zIndex: 1000,
+              tooltip: type
+            });
+            if (addPriorityBadge) {
+              element.addCue({
+                htmlElem: div1,
+                imgData: { width: 25, height: 25, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
+                id: element._private.data.name + element._private.data.priority,
+                show: "always",
+                position: "left",
+                marginX: 0,
+                marginY: 0,
+                cursor: "pointer",
+                zIndex: 1000,
+                tooltip: element._private.data.priority
+              });
+            }
+
+          }
+        }
+      });
+    });
   }
 
   hasNewElem(newElemIds: string[], prevElems: any) {
@@ -619,17 +671,17 @@ export class CytoscapeService {
   saveAsPng(isWholeGraph: boolean) {
     const options = { bg: 'white', scale: 3, full: isWholeGraph };
     //const base64png: string = this._g.cy.png(options);
-    const base64png =this._g.cy.pngFull(options, ['cy-context-menus-cxt-menu','cy-panzoom']);
+    const base64png = this._g.cy.pngFull(options, ['cy-context-menus-cxt-menu', 'cy-panzoom']);
     base64png.then((result) => {
       fetch(result)
-      .then(res => res.blob())
-      .then(x => {
-        const anchor = document.createElement('a');
-        anchor.download = 'visuall.png';
-        anchor.href = (window.URL).createObjectURL(x);
-        anchor.click();
-        return x;
-      })
+        .then(res => res.blob())
+        .then(x => {
+          const anchor = document.createElement('a');
+          anchor.download = 'visuall.png';
+          anchor.href = (window.URL).createObjectURL(x);
+          anchor.click();
+          return x;
+        })
     }).catch((error) => {
       console.error(error); // Handle errors
     });
