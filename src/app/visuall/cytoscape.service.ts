@@ -587,7 +587,11 @@ export class CytoscapeService {
     this._g.cy.nodes().filter(':visible').forEach(element => {
       if (element._private.classes.values().next().value == 'Issue') {
         this._g.viewUtils.removeHighlights(element)
-        element.removeCue(element._private.data.name)
+        const elementCueValue = element.getCueData()
+        //Remove anomaly cues if exist
+        if (elementCueValue && elementCueValue[Object.keys(elementCueValue)[0]].hasOwnProperty(element._private.data.name)) {
+          element.removeCue(element._private.data.name)
+        }
       }
     }
     );

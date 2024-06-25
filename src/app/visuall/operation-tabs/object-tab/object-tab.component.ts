@@ -268,7 +268,6 @@ export class ObjectTabComponent implements OnInit, OnDestroy {
         renderedValue = this.getMappedProperty(this.selectedClasses, key, renderedValue);
         this.selectedItemProps.push({ key: renderedKey, val: renderedValue });
       }
-      console.log(renderedValue)
     }
   }
 

@@ -110,11 +110,11 @@
         "color": "#4C5F7A",
         "text-outline-width": "1px",
         "font-size": "11px",
-        "shape": "ellipse",
+        "shape": "rectangle",
         "background-fit": "contain",
         "background-image": "app/custom/assets/issue.svg",
-        "width": "24px",
-        "height": "24px"
+        "width": "32px",
+        "height": "32px"
       }
     },
     "PullRequest": {
@@ -777,6 +777,7 @@
     "dataPageSize": 15,
     "dataPageLimit": 15,
     "queryHistoryLimit": 10,
+    "contextMenuLimit": 7,
     "dbTimeout": 30,
     "tableColumnLimit": 3,
     "highlightStyles": [

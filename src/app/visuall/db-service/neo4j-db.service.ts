@@ -115,7 +115,7 @@ export class Neo4jDb implements DbService {
     
             if (element._private.classes.values().next().value == 'Issue') {
               const div1 = document.createElement("div");
-    
+              const div2 = document.createElement("div");
               let type = element._private.data.issueType
               let priority = element._private.data.priority
               if (!Object.values(this.enums.getValue().issueType).includes(element._private.data.issueType)) {
@@ -131,25 +131,26 @@ export class Neo4jDb implements DbService {
               if (Object.keys(element.getCueData()).length === 0) {
                 element.addCue({
                   htmlElem: div1,
-                  imgData: { width: 20, height: 20, src: "app/custom/assets/issue-types/" + type + ".svg" },
+                  imgData: { width: 18, height: 18, src: "app/custom/assets/issue-types/" + type + ".svg" },
                   id: element._private.data.name + element._private.data.issueType,
                   show: "always",
                   position: "top-left",
-                  marginX: 3,
-                  marginY: 3,
+                  marginY: "%21",
+                  marginX: "%24",
                   cursor: "pointer",
                   zIndex: 1000,
                   tooltip: type
                 });
                 if (addPriorityBadge) {
+                  console.log(element)
                   element.addCue({
-                    htmlElem: div1,
-                    imgData: { width: 25, height: 25, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
+                    htmlElem: div2,
+                    imgData: { width: 20, height: 20, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
                     id: element._private.data.name + element._private.data.priority,
                     show: "always",
                     position: "left",
-                    marginX: 0,
-                    marginY: 0,
+                    marginX: "%23",
+                    marginY: "%8",
                     cursor: "pointer",
                     zIndex: 1000,
                     tooltip: element._private.data.priority
@@ -242,25 +243,31 @@ export class Neo4jDb implements DbService {
       }
     }, errFn);
   }
-  getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, meta?: DbQueryMeta) {
+  getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, meta?: DbQueryMeta, limit?:number) {
     let isEdgeQuery = meta && meta.isEdgeQuery;
     const idFilter = this.buildIdFilter(elemIds, false, isEdgeQuery);
-    let edgeCql = '';
+    let edgeCql = "";
+    let recencyProduct ="";
     if (meta && meta.edgeType != undefined && typeof meta.edgeType == 'string' && meta.edgeType.length > 0) {
       edgeCql = `-[e:${meta.edgeType}`;
+      recencyProduct = "e.recency";
     } else if (meta && meta.edgeType != undefined && typeof meta.edgeType == 'object') {
       if (meta.isMultiLength) {
         for (let i = 0; i < meta.edgeType.length; i++) {
           if (i != meta.edgeType.length - 1) {
             edgeCql += `-[e${i}:${meta.edgeType[i]}]-()`;
+            recencyProduct += `e${i}.recency * `;
           } else {
             edgeCql += `-[e${i}:${meta.edgeType[i]}`;
+            recencyProduct += `e${i}.recency`;
           }
         }
       } else {
         edgeCql = `-[e:${meta.edgeType.join('|')}`;
+        recencyProduct = `e.recency`
       }
     } else {
+      recencyProduct = `e.recency`
       edgeCql = `-[e`;
     }
     let targetCql = '';
@@ -277,8 +284,13 @@ export class Neo4jDb implements DbService {
     } else {
       f2 += this.dateFilterFromUserPref('e', false);
     }
-
-    this.runQuery(`MATCH p=(n)${edgeCql}(${targetCql}) WHERE ${idFilter} ${f2} RETURN p`, callback);
+    if(limit){
+      console.log(limit)
+      this.runQuery(`MATCH p=(n)${edgeCql}(${targetCql}) WHERE ${idFilter} ${f2} RETURN p  ORDER BY ${recencyProduct} DESC LIMIT ${limit} `, callback);    
+    }else{
+      console.log(limit)
+      this.runQuery(`MATCH p=(n)${edgeCql}(${targetCql}) WHERE ${idFilter} ${f2} RETURN p`, callback);    
+    }
   }
 
   getElems(ids: string[] | number[], callback: (x: GraphResponse) => any, meta: DbQueryMeta) {
