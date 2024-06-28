@@ -26,6 +26,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   @ViewChild('dbQueryDate2', { static: false }) dbQueryDate2: ElementRef;
   dataPageSize: number;
   dataPageLimit: number;
+  queryNeighborLimit: number;
   queryHistoryLimit: number;
   dbTimeout: number;
   tableColumnLimit: number;
@@ -141,6 +142,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
     this.groupingOption = up.groupingOption.getValue();
     this.dataPageSize = up.dataPageSize.getValue();
     this.dataPageLimit = up.dataPageLimit.getValue();
+    this.queryNeighborLimit = up.queryNeighborLimit.getValue();
     this.queryHistoryLimit = up.queryHistoryLimit.getValue();
     this.dbTimeout = up.dbTimeout.getValue();
     this.tableColumnLimit = up.tableColumnLimit.getValue();

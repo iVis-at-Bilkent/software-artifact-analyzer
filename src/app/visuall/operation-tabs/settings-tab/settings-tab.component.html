@@ -104,6 +104,14 @@
       </div>
     </div>
     <div class="form-inline m-1">
+      <label class="va-text">Query neighbor limit </label>
+      <div class="mx-1">
+        <input type="number" max="10000" min="1"
+          (keydown.enter)="settingChanged(queryNeighborLimit, 'queryNeighborLimit')" [(ngModel)]="queryNeighborLimit"
+          class="form-control inp-3-char std-inp-hei va-small-text">
+      </div>
+    </div>
+    <div class="form-inline m-1">
       <label class="va-text">Query history limit</label>
       <div class="mx-1">
         <input type="number" max="100" min="1" (keydown.enter)="settingChanged(queryHistoryLimit, 'queryHistoryLimit')"

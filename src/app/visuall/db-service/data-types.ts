@@ -2,7 +2,7 @@ import { ClassBasedRules } from '../operation-tabs/map-tab/query-types';
 import { TableFiltering } from '../../shared/table-view/table-view-types';
 
 export interface DbService {
-  getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, queryMeta?: DbQueryMeta);
+  getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, queryMeta?: DbQueryMeta, limit?: number);
   getElems(ids: string[] | number[], callback: (x: GraphResponse) => any, meta: DbQueryMeta);
   getSampleData(callback: (x: GraphResponse) => any);
   getFilteringResult(rules: ClassBasedRules, filter: TableFiltering, skip: number, limit: number, type: DbResponseType, callback: (x: GraphResponse | TableResponse) => any);

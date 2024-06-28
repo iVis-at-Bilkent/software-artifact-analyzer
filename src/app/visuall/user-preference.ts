@@ -30,6 +30,7 @@ export interface UserPref {
   dataPageSize: BehaviorSubject<number>;
   dataPageLimit: BehaviorSubject<number>;
   queryHistoryLimit: BehaviorSubject<number>;
+  queryNeighborLimit: BehaviorSubject<number>;
   dbTimeout: BehaviorSubject<number>;
   tableColumnLimit: BehaviorSubject<number>;
   highlightStyles: { wid: BehaviorSubject<number>, color: BehaviorSubject<string> }[];

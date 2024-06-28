@@ -30,10 +30,26 @@ export class AppComponent {
         if (this.paramValue != "") {
           this._g.userPrefs.isLimitDbQueries2range.next(false)
           this._profile.saveUserPrefs();
+          let limit = null;
+          if (params.get('limit')) {
+            limit = params.get('limit');
+            if(params.get('limit') == "true"){
+              limit = this._g.userPrefs.queryNeighborLimit.getValue()
+            }
+          }      
           const cb = (x) => {
-            this._cyService.loadElementsFromDatabaseInitial(x);
+            const elementId = x.data[0][0];
+            this._dbService.getNeighbors(
+              [elementId],
+                (x) => {
+                  this._cyService.loadElementsFromDatabase(x, true);
+                },
+                {},
+                limit
+              );
+            console.log(elementId)
           };
-          this._dbService.runQuery(`MATCH (n1{name:'${this.paramValue}'})-[e]-(n2) RETURN n1,n2,e `, cb);
+          this._dbService.runQuery(`MATCH (n {name:'${this.paramValue}'}) RETURN elementId(n)  `, cb, DbResponseType.table);
         }
       }
       if (params.get('setup')) {
@@ -54,12 +70,12 @@ export class AppComponent {
         const cb = (x) => {
           if (x.nodes.length != 0) {
             this._cyService.loadElementsFromDatabaseInitial(x);
-            this._g.cy.$id(`n${x.nodes[0].elementId}`)[0].select();      
+            this._g.cy.$id(`n${x.nodes[0].elementId}`)[0].select();
           }
-          else{
+          else {
             alert('There is no pull request register with the given name')
           }
-          
+
         };
         this._dbService.runQuery(`MATCH (n{name:'${this.queryValue}'}) RETURN n`, cb);
       }
@@ -68,12 +84,12 @@ export class AppComponent {
         this.queryValue = params.get('issue');
         const cb = (x) => {
           if (x.nodes.length != 0) {
-            this._cyService.loadElementsFromDatabaseInitial(x); 
+            this._cyService.loadElementsFromDatabaseInitial(x);
           }
-          else{
+          else {
             alert('There is no pull request register with the given name')
           }
-          
+
         };
         this._dbService.runQuery(`MATCH (n1{name:'${this.queryValue}'})-[e]-(n2) RETURN n1,n2,e `, cb);
       }

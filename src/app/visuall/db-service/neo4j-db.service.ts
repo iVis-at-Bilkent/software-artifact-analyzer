@@ -142,7 +142,6 @@ export class Neo4jDb implements DbService {
                   tooltip: type
                 });
                 if (addPriorityBadge) {
-                  console.log(element)
                   element.addCue({
                     htmlElem: div2,
                     imgData: { width: 20, height: 20, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
@@ -248,26 +247,32 @@ export class Neo4jDb implements DbService {
     const idFilter = this.buildIdFilter(elemIds, false, isEdgeQuery);
     let edgeCql = "";
     let recencyProduct ="";
+    let withClause = "";
     if (meta && meta.edgeType != undefined && typeof meta.edgeType == 'string' && meta.edgeType.length > 0) {
       edgeCql = `-[e:${meta.edgeType}`;
       recencyProduct = "e.recency";
+      withClause = ",e"
     } else if (meta && meta.edgeType != undefined && typeof meta.edgeType == 'object') {
       if (meta.isMultiLength) {
         for (let i = 0; i < meta.edgeType.length; i++) {
           if (i != meta.edgeType.length - 1) {
             edgeCql += `-[e${i}:${meta.edgeType[i]}]-()`;
             recencyProduct += `e${i}.recency * `;
+            withClause = `,e${i} ,`
           } else {
             edgeCql += `-[e${i}:${meta.edgeType[i]}`;
             recencyProduct += `e${i}.recency`;
+            withClause = `,e${i} `
           }
         }
       } else {
         edgeCql = `-[e:${meta.edgeType.join('|')}`;
         recencyProduct = `e.recency`
+        withClause = ",e"
       }
     } else {
       recencyProduct = `e.recency`
+      withClause = ",e"
       edgeCql = `-[e`;
     }
     let targetCql = '';
@@ -284,11 +289,23 @@ export class Neo4jDb implements DbService {
     } else {
       f2 += this.dateFilterFromUserPref('e', false);
     }
-    if(limit){
-      console.log(limit)
-      this.runQuery(`MATCH p=(n)${edgeCql}(${targetCql}) WHERE ${idFilter} ${f2} RETURN p  ORDER BY ${recencyProduct} DESC LIMIT ${limit} `, callback);    
-    }else{
-      console.log(limit)
+    if(limit>0){
+      const callbackLimit  = (x) => {
+        const limitedIds = []
+        for (const  key in x.data){
+          if(limitedIds.length >= limit){
+            break
+          }
+          if(this._g.cy.$id(`n${x.data[key][0]}`).length == 0  || !this._g.cy.$id(`n${x.data[key][0]}`)[0].visible()){
+            limitedIds.push(x.data[key][0])
+          }
+        }
+        const idFilterlimit = `elementId(t) in ['${limitedIds.join("','")}'] `
+        this.runQuery(`MATCH p=(n)${edgeCql}(t ${targetCql}) WHERE ${idFilter} AND (${idFilterlimit} ) ${f2} RETURN p  ORDER BY ${recencyProduct} DESC `, callback);  
+      }
+      this.runQuery(`MATCH p=(n)${edgeCql}(t ${targetCql}) WHERE ${idFilter} ${f2} WITH t ${withClause}   ORDER BY ${recencyProduct} DESC RETURN  distinct elementId(t) `, callbackLimit, DbResponseType.table );  
+    }
+    else{
       this.runQuery(`MATCH p=(n)${edgeCql}(${targetCql}) WHERE ${idFilter} ${f2} RETURN p`, callback);    
     }
   }

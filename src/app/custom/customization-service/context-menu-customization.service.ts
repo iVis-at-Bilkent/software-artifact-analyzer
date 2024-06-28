@@ -5,8 +5,6 @@ import { GlobalVariableService } from "../../visuall/global-variable.service";
 import { ContextMenuItem } from "../../visuall/context-menu/icontext-menu";
 import { DbQueryMeta, HistoryMetaData } from "../../visuall/db-service/data-types";
 import { HttpClient } from '@angular/common/http';
-import { forEach } from "cypress/types/lodash";
-import { hide } from "@popperjs/core";
 
 @Injectable({
   providedIn: "root",
@@ -63,6 +61,19 @@ export class ContextMenuCustomizationService {
           //Developer pull request submenu
           [
             {
+              id: "showAllWorkRecent",
+              content: "Show Recent Work",
+              selector: "node.Developer",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show developer recent work: " },
+                  {},
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
+            {
               id: "showAllWork",
               content: "Show All Work",
               selector: "node.Developer",
@@ -95,6 +106,19 @@ export class ContextMenuCustomizationService {
         selector: "node.Developer",
         submenu: [
           {
+            id: "showDeveloperIssueReportRecent",
+            content: "Show Issues Recently Reported ",
+            selector: "node.Developer",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show refcently reported issues: " },
+                { edgeType: "REPORTED", targetType: "Issue" },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
+          {
             id: "showDeveloperIssueReport",
             content: "Show Issues Reported",
             selector: "node.Developer",
@@ -110,11 +134,25 @@ export class ContextMenuCustomizationService {
             id: "hideDeveloperIssue",
             content: "Hide Issues Reported",
             selector: "node.Developer",
+            hasTrailingDivider: true,
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Hide reported issues: " },
                 { edgeType: "REPORTED", targetType: "Issue" }
+              );
+            },
+          },
+          {
+            id: "showDeveloperIssueAssignRecent",
+            content: "Show Issues Recently Assigned By",
+            selector: "node.Developer",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show issues recently assigned by: " },
+                { edgeType: "ASSIGNED_BY", targetType: "Issue" },
+                this._g.userPrefs.queryNeighborLimit.getValue()
               );
             },
           },
@@ -129,16 +167,30 @@ export class ContextMenuCustomizationService {
                 { edgeType: "ASSIGNED_BY", targetType: "Issue" }
               );
             },
-          },
+          },      
           {
             id: "hideDeveloperIssueAssign",
             content: "Hide Issues Assigned By",
             selector: "node.Developer",
+            hasTrailingDivider: true,
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Hide issues assigned by: " },
                 { edgeType: "ASSIGNED_BY", targetType: "Issue" }
+              );
+            },
+          },
+          {
+            id: "showDeveloperIssueAssignedRecent",
+            content: "Show Issues Recently  Assigned To",
+            selector: "node.Developer",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show issues recently assigned to: " },
+                { edgeType: "ASSIGNED", targetType: "Issue" },
+                this._g.userPrefs.queryNeighborLimit.getValue()
               );
             },
           },
@@ -154,15 +206,30 @@ export class ContextMenuCustomizationService {
               );
             },
           },
+
           {
             id: "hideDeveloperIssueAssigned",
             content: "Hide Issues Assigned To",
             selector: "node.Developer",
+            hasTrailingDivider: true,
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Hide issues assigned to: " },
                 { edgeType: "ASSIGNED", targetType: "Issue" }
+              );
+            },
+          },
+          {
+            id: "showDeveloperIssueRecentlyResolve",
+            content: "Show Issues Recently Resolved",
+            selector: "node.Developer",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show issues recently resolved: " },
+                { edgeType: "RESOLVED", targetType: "Issue" },
+                this._g.userPrefs.queryNeighborLimit.getValue()
               );
             },
           },
@@ -177,11 +244,12 @@ export class ContextMenuCustomizationService {
                 { edgeType: "RESOLVED", targetType: "Issue" }
               );
             },
-          },
+          },          
           {
             id: "hideDeveloperIssueResolve",
             content: "Hide Issues Resolved",
             selector: "node.Developer",
+            hasTrailingDivider: true,
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
@@ -191,7 +259,20 @@ export class ContextMenuCustomizationService {
             },
           },
           {
-            id: "showDeveloperIssueResolve",
+            id: "showDeveloperIssueCloseRecent",
+            content: "Show Issues Recently Closed",
+            selector: "node.Developer",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show issues recently closed: " },
+                { edgeType: "CLOSED", targetType: "Issue" },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
+          {
+            id: "showDeveloperIssueClose",
             content: "Show Issues Closed",
             selector: "node.Developer",
             onClickFunction: (x) => {
@@ -203,9 +284,10 @@ export class ContextMenuCustomizationService {
             },
           },
           {
-            id: "hideDeveloperIssueResolve",
+            id: "hideDeveloperIssueClose",
             content: "Hide Issues Closed",
             selector: "node.Developer",
+            hasTrailingDivider: true,
             onClickFunction: (x) => {
               this.deleteNeighbors(
                 x,
@@ -224,6 +306,19 @@ export class ContextMenuCustomizationService {
           //Developer pull request submenu
           [
             {
+              id: "showDeveloperPullRequestsOpenRecent",
+              content: "Show Pull Requests Recently Opened",
+              selector: "node.Developer",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show pull requests recently opened: " },
+                  { edgeType: "OPENED", targetType: "PullRequest" },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
+            {
               id: "showDeveloperPullRequestsOpen",
               content: "Show Pull Requests Opened",
               selector: "node.Developer",
@@ -239,11 +334,25 @@ export class ContextMenuCustomizationService {
               id: "hideDeveloperPullRequestsOpen",
               content: "Hide Pull Requests Opened",
               selector: "node.Developer",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
                   { isNode: true, customTxt: "Hide pull requests opened: " },
                   { edgeType: "OPENED", targetType: "PullRequest" }
+                );
+              },
+            },
+            {
+              id: "showDeveloperPullRequestsMergeRecent",
+              content: "Show  Pull Requests Recently Merged ",
+              selector: "node.Developer",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show pull requests recently merged: " },
+                  { edgeType: "MERGED", targetType: "PullRequest" },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
                 );
               },
             },
@@ -263,11 +372,25 @@ export class ContextMenuCustomizationService {
               id: "hideDeveloperPullRequestsMerge",
               content: "Hide Pull Requests Merged",
               selector: "node.Developer",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
                   { isNode: true, customTxt: "Hide pull requests merged: " },
                   { edgeType: " MERGED", targetType: "PullRequest" }
+                );
+              },
+            },
+            {
+              id: "showDeveloperPullRequestsReviewRecent",
+              content: "Show Pull Requests Recently Reviewed ",
+              selector: "node.Developer",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show pull requests recently reviewed: " },
+                  { edgeType: "REVIEWED", targetType: "PullRequest" },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
                 );
               },
             },
@@ -287,11 +410,29 @@ export class ContextMenuCustomizationService {
               id: "hideDeveloperPullRequestsReview",
               content: "Hide Pull Requests Reviewed",
               selector: "node.Developer",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
                   { isNode: true, customTxt: "Hide pull requests reviewed: " },
                   { edgeType: "REVIEWED", targetType: "PullRequest" }
+                );
+              },
+            },
+            {
+              id: "showDeveloperCommitPullRequestsRecent",
+              content: "Show Pull Requests Recently Committed",
+              selector: "node.Developer",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show pull requests recently committed: " },
+                  {
+                    isMultiLength: true,
+                    edgeType: this._developer_commit_pull_request,
+                    targetType: "PullRequest"
+                  },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
                 );
               },
             },
@@ -315,6 +456,7 @@ export class ContextMenuCustomizationService {
               id: "hideDeveloperCommitPullRequests",
               content: "Hide Pull Requests Committed",
               selector: "node.Developer",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -334,7 +476,23 @@ export class ContextMenuCustomizationService {
         content: "Commit",
         selector: "node.Developer",
         submenu: [
-
+          {
+            id: "showDeveloperCommitsRecent",
+            content: "Show Recent Commits",
+            selector: "node.Developer",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show recent commits: " },
+                {
+                  isMultiLength: false,
+                  edgeType: this._developer_commits,
+                  targetType: "Commit"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
           {
             id: "showDeveloperCommits",
             content: "Show Commits",
@@ -374,6 +532,23 @@ export class ContextMenuCustomizationService {
         content: "File",
         selector: "node.Developer",
         submenu: [
+          {
+            id: "showDeveloperCommitsFileRecent",
+            content: "Show Files Recently Committed Into",
+            selector: "node.Developer",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show files recently committed into: " },
+                {
+                  isMultiLength: true,
+                  edgeType: this._developer_commits_file,
+                  targetType: "File"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
           {
             id: "showDeveloperCommitsFile",
             content: "Show Files Committed Into",
@@ -431,6 +606,23 @@ export class ContextMenuCustomizationService {
             },
           },
           {
+            id: "showDeveloperReviewRecently",
+            content: "Show Developers Recently Reviewed",
+            selector: "node.Developer",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show developers recently reviewed: " },
+                {
+                  isMultiLength: true,
+                  edgeType: this._developers_reviewBy_developer,
+                  targetType: "Developer"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
+          {
             id: "hideDeveloperReview",
             content: "Hide Developers Reviewed",
             selector: "node.Developer",
@@ -455,6 +647,19 @@ export class ContextMenuCustomizationService {
         content: "All Related",
         selector: "node.Commit",
         submenu: [
+          {
+            id: "showCommitRelatedRecent",
+            content: "Show Recently Related",
+            selector: "node.Commit",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show all related: " },
+                {},
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
           {
             id: "showCommitRelated",
             content: "Show All Related",
@@ -526,12 +731,28 @@ export class ContextMenuCustomizationService {
         submenu: [
           {
             id: "showCommitFile",
+            content: "Show Some Modified Files ",
+            selector: "node.Commit",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show some modified files: " },
+                {
+                  edgeType: this._commit_file,
+                  targetType: "File"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
+          {
+            id: "showCommitFile",
             content: "Show Modified Files ",
             selector: "node.Commit",
             onClickFunction: (x) => {
               this.getNeighbors(
                 x,
-                { isNode: true, customTxt: "Show files modified: " },
+                { isNode: true, customTxt: "Show modified files: " },
                 {
                   edgeType: this._commit_file,
                   targetType: "File"
@@ -561,6 +782,22 @@ export class ContextMenuCustomizationService {
         content: "Issue",
         selector: "node.Commit",
         submenu: [
+          {
+            id: "showCommitIssue",
+            content: "Show Issue Recently Referenced To",
+            selector: "node.Commit",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show issues recently referenced: " },
+                {
+                  edgeType: this._commit_issue,
+                  targetType: "Issue"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
           {
             id: "showCommitIssue",
             content: "Show Issue Referenced To",
@@ -668,6 +905,19 @@ export class ContextMenuCustomizationService {
         selector: "node.Issue",
         submenu: [
           {
+            id: "showIssueRelatedRecent",
+            content: "Show Recently Related",
+            selector: "node.Issue",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show recently related: " },
+                {},
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
+          {
             id: "showIssueRelated",
             content: "Show All Related",
             selector: "node.Issue",
@@ -698,6 +948,22 @@ export class ContextMenuCustomizationService {
         content: "Pull Request",
         selector: "node.Issue",
         submenu: [
+          {
+            id: "ShowRelatedPRofIssueRecent",
+            content: "Show Pull Requests Recently Referenced",
+            selector: "node.Issue",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show pull request recently referenced: " },
+                {
+                  edgeType: "REFERENCED_PR",
+                  targetType: "PullRequest"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
           {
             id: "ShowRelatedPRofIssue",
             content: "Show Pull Requests Referenced",
@@ -736,8 +1002,25 @@ export class ContextMenuCustomizationService {
         selector: "node.Issue",
         submenu: [
           {
+            id: "ShowRelatedFilesRecent",
+            content: "Show Files Recently Related ",
+            selector: "node.Issue",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show files recently related: " },
+                {
+                  edgeType: this._get_files_for_issue_relation,
+                  isMultiLength: true,
+                  targetType: "File"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
+          {
             id: "ShowRelatedFiles",
-            content: "Show Related Files",
+            content: "Show Files Related ",
             selector: "node.Issue",
             onClickFunction: (x) => {
               this.getNeighbors(
@@ -770,11 +1053,30 @@ export class ContextMenuCustomizationService {
 
         ]
       },
+      
       {
         id: "related_issue_commit",
         content: "Commit",
         selector: "node.Issue",
         submenu: [
+          {
+            id: "ShowRelatedCommitsofIssueRecent",
+            content: "Show Commits Recently Referenced",
+            selector: "node.Issue",
+            onClickFunction: (x) => {
+              const node = x.target || x.cyTarget;
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show commits recently referenced: " },
+                {
+                  edgeType: this._get_commit_for_issue_relation,
+                  isMultiLength: false,
+                  targetType: "Commit"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
           {
             id: "ShowRelatedCommitsofIssue",
             content: "Show Commits Referenced",
@@ -820,6 +1122,23 @@ export class ContextMenuCustomizationService {
           // Commit Developer submenu
           [
             {
+              id: "ShowDevelopersCommitRecent",
+              content: "Show Recently Committed Developers ",
+              selector: "node.Issue",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show developers who worked on the solution: " },
+                  {
+                    edgeType: this._get_developer_for_issue_relation,
+                    isMultiLength: true,
+                    targetType: "Developer"
+                  },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
+            {
               id: "ShowDevelopersCommit",
               content: "Show Committed Developers ",
               selector: "node.Issue",
@@ -839,6 +1158,7 @@ export class ContextMenuCustomizationService {
               id: "HideDevelopersCommit",
               content: "Hide Committed Developers ",
               selector: "node.Issue",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -852,7 +1172,7 @@ export class ContextMenuCustomizationService {
               },
             },
             {
-              id: "ShowRelatedDevelopers1",
+              id: "ShowRelatedDevelopers",
               content: "Show Reporter",
               selector: "node.Issue",
               onClickFunction: (x) => {
@@ -871,6 +1191,7 @@ export class ContextMenuCustomizationService {
               id: "HideRelatedDevelopers1",
               content: "Hide Reporter",
               selector: "node.Issue",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -903,6 +1224,7 @@ export class ContextMenuCustomizationService {
               id: "HideRelatedDevelopers2",
               content: "Hide Assignee",
               selector: "node.Issue",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -935,6 +1257,7 @@ export class ContextMenuCustomizationService {
               id: "HideRelatedDevelopers3",
               content: "Hide Assigner",
               selector: "node.Issue",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -967,6 +1290,7 @@ export class ContextMenuCustomizationService {
               id: "HideRelatedDevelopers",
               content: "Hide Resolver",
               selector: "node.Issue",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -999,6 +1323,7 @@ export class ContextMenuCustomizationService {
               id: "HideRelatedDevelopers",
               content: "Hide Closer",
               selector: "node.Issue",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -1021,6 +1346,22 @@ export class ContextMenuCustomizationService {
         submenu:
           // Commit Developer submenu
           [
+            {
+              id: "ShowIssueRelatedIssueRecent",
+              content: "Show  Recent Related Issues",
+              selector: "node.Issue",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show recent related issues: " },
+                  {
+                    edgeType: this._issue_issue,
+                    targetType: "Issue"
+                  },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
             {
               id: "ShowIssueRelatedIssue",
               content: "Show  Related Issues",
@@ -1073,12 +1414,25 @@ export class ContextMenuCustomizationService {
           [
             {
               id: "showPullRequestRelated",
+              content: "Show Recent Related ",
+              selector: "node.PullRequest",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show recently related: " },
+                  {},
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
+            {
+              id: "showPullRequestRelated",
               content: "Show All Related ",
               selector: "node.PullRequest",
               onClickFunction: (x) => {
                 this.getNeighbors(
                   x,
-                  { isNode: true, customTxt: "Show referenced pull requests: " },
+                  { isNode: true, customTxt: "Show recently related: " },
                   {}
                 );
               },
@@ -1090,7 +1444,7 @@ export class ContextMenuCustomizationService {
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
-                  { isNode: true, customTxt: "Hide referenced pull requests: " },
+                  { isNode: true, customTxt: "Hide related: " },
                   {}
                 );
               },
@@ -1104,6 +1458,22 @@ export class ContextMenuCustomizationService {
         submenu:
           // Commit Developer submenu
           [
+            {
+              id: "showPullRequestIssueRecent",
+              content: "Show Recently Referenced Issue ",
+              selector: "node.PullRequest",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show recently referenced issues: " },
+                  {
+                    edgeType: this._pr_issue,
+                    targetType: "Issue"
+                  },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
             {
               id: "showPullRequestIssue",
               content: "Show Issue Referenced To",
@@ -1162,6 +1532,7 @@ export class ContextMenuCustomizationService {
               id: "hidePullRequestDeveloper",
               content: "Hide Opener",
               selector: "node.PullRequest",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -1192,6 +1563,7 @@ export class ContextMenuCustomizationService {
               id: "hidePullRequestDeveloperMerge",
               content: "Hide Merger",
               selector: "node.PullRequest",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -1222,6 +1594,7 @@ export class ContextMenuCustomizationService {
               id: "hidePullRequestDeveloper",
               content: "Hide Reviewer",
               selector: "node.PullRequest",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -1242,6 +1615,22 @@ export class ContextMenuCustomizationService {
         submenu:
           // Commit Developer submenu
           [
+            {
+              id: "showPullRequestCommit",
+              content: "Show Recent Commits",
+              selector: "node.PullRequest",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show recent commits: " },
+                  {
+                    edgeType: this._pr_commit,
+                    targetType: "Commit"
+                  },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
             {
               id: "showPullRequestCommit",
               content: "Show Commits",
@@ -1282,6 +1671,22 @@ export class ContextMenuCustomizationService {
         submenu:
           [
             {
+              id: "showPullRequestFileRecent",
+              content: "Show Files Recently Modified",
+              selector: "node.PullRequest",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show recently modified files: " },
+                  {
+                    edgeType: this._pr_file, isMultiLength: true,
+                    targetType: "File"
+                  },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
+            {
               id: "showPullRequestFile",
               content: "Show Files Modified",
               selector: "node.PullRequest",
@@ -1320,6 +1725,20 @@ export class ContextMenuCustomizationService {
         selector: "node.File",
         submenu:
           [
+            {
+              id: "showFileRelatedRecent",
+              content: "Show Recently Related",
+              selector: "node.File",
+
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show recently related: " },
+                  {},
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
             {
               id: "showFileRelated",
               content: "Show All  Related",
@@ -1393,6 +1812,19 @@ export class ContextMenuCustomizationService {
         submenu:
           [
             {
+              id: "showFileCommitRecent",
+              content: "Show Recent Commits",
+              selector: "node.File",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show recent commits: " },
+                  { edgeType: this._file_commit },
+                  this._g.userPrefs.queryNeighborLimit.getValue()
+                );
+              },
+            },
+            {
               id: "showFileCommit",
               content: "Show Commits",
               selector: "node.File",
@@ -1426,6 +1858,22 @@ export class ContextMenuCustomizationService {
         content: "Developer",
         selector: "node.File",
         submenu: [
+          {
+            id: "showFileDeveloperRecent",
+            content: "Show Recently Committed Developers",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show developers recently committed into: " },
+                {
+                  edgeType: this._file_developer, isMultiLength: true,
+                  targetType: "Developer"
+                },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
           {
             id: "showFileDeveloper",
             content: "Show Developers",
@@ -1463,7 +1911,19 @@ export class ContextMenuCustomizationService {
         content: "Pull Request ",
         selector: "node.File",
         submenu: [
-
+          {
+            id: "showFilePullRequestsRecent",
+            content: "Show Recent Related PullRequests",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show recent pull requests make change: " },
+                { edgeType: this._file_pull_request, isMultiLength: true, targetType: "PullRequest" },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
           {
             id: "showFilePullRequests",
             content: "Show Related PullRequests",
@@ -1498,6 +1958,19 @@ export class ContextMenuCustomizationService {
         submenu: [
           {
             id: "showFileIssue",
+            content: "Show Recent Related Issues",
+            selector: "node.File",
+            onClickFunction: (x) => {
+              this.getNeighbors(
+                x,
+                { isNode: true, customTxt: "Show recent related issues: " },
+                { edgeType: this._file_issue, isMultiLength: true, targetType: "Issue" },
+                this._g.userPrefs.queryNeighborLimit.getValue()
+              );
+            },
+          },
+          {
+            id: "showFileIssue",
             content: "Show Related Issues",
             selector: "node.File",
             onClickFunction: (x) => {
@@ -1525,7 +1998,7 @@ export class ContextMenuCustomizationService {
     ];
   }
 
-  getNeighbors(event, historyMeta: HistoryMetaData, queryMeta: DbQueryMeta) {
+  getNeighbors(event, historyMeta: HistoryMetaData, queryMeta: DbQueryMeta, limit?: number) {
     const ele = event.target || event.cyTarget;
     const targetNodeId = ele._private.data.id;
     this._dbService.getNeighbors(
@@ -1534,7 +2007,8 @@ export class ContextMenuCustomizationService {
         this._cyService.loadElementsFromDatabase(x, true);
       },
       historyMeta,
-      queryMeta
+      queryMeta,
+      limit
     );
   }
   isAnyHidden() {

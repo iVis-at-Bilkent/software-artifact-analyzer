@@ -777,7 +777,7 @@
     "dataPageSize": 15,
     "dataPageLimit": 15,
     "queryHistoryLimit": 10,
-    "contextMenuLimit": 7,
+    "queryNeighborLimit ": 7,
     "dbTimeout": 30,
     "tableColumnLimit": 3,
     "highlightStyles": [

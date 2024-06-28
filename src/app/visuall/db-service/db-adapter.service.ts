@@ -16,7 +16,7 @@ export class DbAdapterService {
     this._db = CustomizationModule.db;
   }
 
-  getNeighbors(elemId: string[], callback: (x: GraphResponse) => any, historyMeta?: HistoryMetaData, queryMeta?: DbQueryMeta) {
+  getNeighbors(elemId: string[], callback: (x: GraphResponse) => any, historyMeta?: HistoryMetaData, queryMeta?: DbQueryMeta, limit?: number) {
     let s = '';
     if (historyMeta) {
       s = historyMeta.labels;
@@ -30,10 +30,10 @@ export class DbAdapterService {
       txt = historyMeta.customTxt;
     }
     let fn = (x) => { callback(x); this._g.add2GraphHistory(txt + s); };
-    this._db.getNeighbors(elemId, fn, queryMeta);
+    this._db.getNeighbors(elemId, fn, queryMeta, limit);
   }
 
-  getElems(ids: string[], callback: (x: GraphResponse) => any, queryMeta: DbQueryMeta, historyMeta?: HistoryMetaData,) {
+  getElems(ids: string[], callback: (x: GraphResponse) => any, queryMeta: DbQueryMeta, historyMeta?: HistoryMetaData) {
     let s = '';
     if (historyMeta) {
       s = historyMeta.labels;
