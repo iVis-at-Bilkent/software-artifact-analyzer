@@ -89,7 +89,6 @@ export class AppComponent {
           else {
             alert('There is no pull request register with the given name')
           }
-
         };
         this._dbService.runQuery(`MATCH (n1{name:'${this.queryValue}'})-[e]-(n2) RETURN n1,n2,e `, cb);
       }

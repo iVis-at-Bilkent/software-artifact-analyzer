@@ -4,7 +4,7 @@ import { formatNumber } from '@angular/common';
 import { CytoscapeService } from '../../../cytoscape.service';
 import { debounce2, debounce, COLLAPSED_EDGE_CLASS, mapColor } from '../../../constants';
 import { Subscription } from 'rxjs';
-
+import { Neo4jDb } from '../../../db-service/neo4j-db.service';
 @Component({
   selector: 'app-graph-theoretic-properties-tab',
   templateUrl: './graph-theoretic-properties-tab.component.html',
@@ -41,7 +41,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
   currNodeSize = this.NODE_SIZE;
   appDescSubs: Subscription;
 
-  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) { }
+  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService, public _dbService: Neo4jDb) { }
 
   ngOnInit() {
     this._cyService.setRemovePoppersFn(this.destroyCurrentPoppers.bind(this));
@@ -73,6 +73,16 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     this.maxPropValue = m;
     this._cyService.setNodeSizeOnGraphTheoreticProp(m, this.currNodeSize);
     this.setBadgeColorsAndCoords();
+    let b = this.currNodeSize + 20;
+    let a = Math.max(5, this.currNodeSize - 20);
+    this._g.cy.nodes().filter(':visible').forEach( async (element) => {
+      if (element._private.classes.values().next().value == 'Issue') {
+        element.removeCue()
+        const badgeWidth = ((b - a) * element.data('__graphTheoreticProp') / m + a) * 0.5625 ;
+        this._dbService.addIssueBages(badgeWidth)
+        
+        //this._dbService.activateAnomalyCues()
+      }})
   }
 
   private edgeWeightFn(edge) {
