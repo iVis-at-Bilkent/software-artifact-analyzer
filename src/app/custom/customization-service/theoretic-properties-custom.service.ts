@@ -36,42 +36,10 @@ export class TheoreticPropertiesCustomService {
   constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) { 
 
     this._adjustSizeMethods = [{ name: 'By know about score ', fn: (elems, scores) => { this.knowAboutScore(elems, scores) } }];
-    this._cyService.setRemovePoppersFn(this.destroyCurrentPoppers.bind(this));
-    this._g.cy.on('remove', (e) => { this.destroyPopper(e.target.id()) });
-    this._g.appDescription.subscribe(x => {
-      if (x !== null && x.appPreferences.avgNodeSize) {
-        this.currNodeSize = x.appPreferences.avgNodeSize;
-      }
-    });
-  }
-
-
-  runProperty() {
-    this.cySelector = '';
-    if (this.isOnSelected) {
-      this.cySelector = ':selected';
-    }
-    this.destroyCurrentPoppers();
-    if (!this[this.selectedPropFn]) {
-      return;
-    }
-    this[this.selectedPropFn]();
-    let m = Math.max(...this._g.cy.nodes().map(x => x.data('__graphTheoreticProp')));
-    this.maxPropValue = m;
-    this._cyService.setNodeSizeOnGraphTheoreticProp(m, this.currNodeSize);
-    this.setBadgeColorsAndCoords();
-  }
-
-  private edgeWeightFn(edge) {
-    if (this.isConsiderOriginalEdges && edge.hasClass(COLLAPSED_EDGE_CLASS)) {
-      return edge.data('collapsedEdges').length;
-    }
-    return 1;
   }
 
   knowAboutScore (elems, scores){
     this.cySelector = '';
-    this.destroyCurrentPoppers();
     let m = Math.max(...scores);
     this.maxPropValue = m;
     for (let i = 0; i < elems.length; i++) {
@@ -81,6 +49,8 @@ export class TheoreticPropertiesCustomService {
     }
     this._cyService.setNodeSizeOnGraphTheoreticProp(m, this.currNodeSize);
     this.setBadgeColorsAndCoords();
+    elems.removeClass('graphTheoreticDisplay');
+    elems.addClass('graphTheoreticDisplay');
 
   }
 
@@ -169,31 +139,7 @@ export class TheoreticPropertiesCustomService {
     }
   }
 
-  destroyCurrentPoppers() {
-    let size = this.poppedData.length;
-    for (let i = 0; i < size; i++) {
-      this.destroyPopper('', 0);
-    }
-  }
 
-  destroyPopper(id: string, i: number = -1) {
-    if (i < 0) {
-      i = this.poppedData.findIndex(x => x.elem.id() == id);
-      if (i < 0) {
-        return;
-      }
-    }
-    this.poppedData[i].popper.remove();
-    // unbind previously bound functions
-    if (this.poppedData[i].fn) {
-      this.poppedData[i].elem.off('position', this.poppedData[i].fn);
-      this.poppedData[i].elem.off('style', this.poppedData[i].fn2);
-      this._g.cy.off('pan zoom resize', this.poppedData[i].fn);
-    }
-    this.poppedData[i].elem.removeClass('graphTheoreticDisplay');
-    this.poppedData[i].elem.data('__graphTheoreticProp', undefined);
-    this.poppedData.splice(i, 1);
-  }
 
   getHtml(badges: number[]): string {
     let s = '';
