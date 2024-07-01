@@ -12,6 +12,7 @@ import { CyExtService } from './cy-ext.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
+import { Neo4jDb } from './db-service/neo4j-db.service';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class CytoscapeService {
   louvainClusterer: LouvainClustering;
   enums = new BehaviorSubject<any>(null);
   constructor(private _g: GlobalVariableService, private _timebarService: TimebarService, private _cyExtService: CyExtService,
-    private _profile: UserProfileService, private _ngZone: NgZone, private _modalService: NgbModal, protected _http: HttpClient) {
+    private _profile: UserProfileService, private _ngZone: NgZone, private _modalService: NgbModal, protected _http: HttpClient,private _dbService: Neo4jDb) {
     this.userPrefHelper = new UserPrefHelper(this, this._timebarService, this._g, this._profile);
     this.louvainClusterer = new LouvainClustering();
     this._timebarService.hideCompoundsFn = this.hideCompounds.bind(this);
@@ -583,18 +584,22 @@ export class CytoscapeService {
   removeHighlights() {
     this._g.viewUtils.removeHighlights();
     this._g.viewUtils.removeHighlights(this._g.filterRemovedElems(() => true));
+    console.log(this._g.cy.nodes())
     this.removePopperFn();
+    
     this._g.cy.nodes().filter(':visible').forEach(element => {
       if (element._private.classes.values().next().value == 'Issue') {
         this._g.viewUtils.removeHighlights(element)
         const elementCueValue = element.getCueData()
         //Remove anomaly cues if exist
-        if (elementCueValue && elementCueValue[Object.keys(elementCueValue)[0]].hasOwnProperty(element._private.data.name)) {
-          element.removeCue(element._private.data.name)
+        if (elementCueValue) {
+          element.removeCue()
         }
       }
     }
+    
     );
+    this._dbService.addIssueBages()
   }
 
   unbindHighlightOnHoverListeners() {
