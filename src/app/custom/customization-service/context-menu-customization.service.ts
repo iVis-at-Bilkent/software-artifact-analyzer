@@ -534,7 +534,7 @@ export class ContextMenuCustomizationService {
         submenu: [
           {
             id: "showDeveloperCommitsFileRecent",
-            content: "Show Files Recently Committed Into",
+            content: "Show Files Recently Committed To",
             selector: "node.Developer",
             onClickFunction: (x) => {
               this.getNeighbors(
@@ -551,7 +551,7 @@ export class ContextMenuCustomizationService {
           },
           {
             id: "showDeveloperCommitsFile",
-            content: "Show Files Committed Into",
+            content: "Show Files Committed To",
             selector: "node.Developer",
             onClickFunction: (x) => {
               this.getNeighbors(
@@ -784,7 +784,7 @@ export class ContextMenuCustomizationService {
         submenu: [
           {
             id: "showCommitIssue",
-            content: "Show Issue Recently Referenced To",
+            content: "Show Issues Recently Referencing",
             selector: "node.Commit",
             onClickFunction: (x) => {
               this.getNeighbors(
@@ -800,7 +800,7 @@ export class ContextMenuCustomizationService {
           },
           {
             id: "showCommitIssue",
-            content: "Show Issue Referenced To",
+            content: "Show Issues Referencing",
             selector: "node.Commit",
             onClickFunction: (x) => {
               this.getNeighbors(
@@ -1123,7 +1123,7 @@ export class ContextMenuCustomizationService {
           [
             {
               id: "ShowDevelopersCommitRecent",
-              content: "Show Recently Committed Developers ",
+              content: "Show Recently Committing Developers",
               selector: "node.Issue",
               onClickFunction: (x) => {
                 this.getNeighbors(
@@ -1140,7 +1140,7 @@ export class ContextMenuCustomizationService {
             },
             {
               id: "ShowDevelopersCommit",
-              content: "Show Committed Developers ",
+              content: "Show Committing Developers",
               selector: "node.Issue",
               onClickFunction: (x) => {
                 this.getNeighbors(
@@ -1460,7 +1460,7 @@ export class ContextMenuCustomizationService {
           [
             {
               id: "showPullRequestIssueRecent",
-              content: "Show Recently Referenced Issue ",
+              content: "Show Issues Recently Referenced",
               selector: "node.PullRequest",
               onClickFunction: (x) => {
                 this.getNeighbors(
@@ -1476,7 +1476,7 @@ export class ContextMenuCustomizationService {
             },
             {
               id: "showPullRequestIssue",
-              content: "Show Issue Referenced To",
+              content: "Show Issues Referenced",
               selector: "node.PullRequest",
               onClickFunction: (x) => {
                 this.getNeighbors(
@@ -1860,7 +1860,7 @@ export class ContextMenuCustomizationService {
         submenu: [
           {
             id: "showFileDeveloperRecent",
-            content: "Show Recently Committed Developers",
+            content: "Show Recently Committing Developers",
             selector: "node.File",
             onClickFunction: (x) => {
               this.getNeighbors(
@@ -1876,7 +1876,7 @@ export class ContextMenuCustomizationService {
           },
           {
             id: "showFileDeveloper",
-            content: "Show Developers",
+            content: "Show Committing Developers",
             selector: "node.File",
             onClickFunction: (x) => {
               this.getNeighbors(
