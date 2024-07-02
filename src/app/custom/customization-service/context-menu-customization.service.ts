@@ -567,7 +567,7 @@ export class ContextMenuCustomizationService {
           },
           {
             id: "hideDeveloperCommitsFile",
-            content: "Hide Files Committed Into",
+            content: "Hide Files Committed To",
             selector: "node.Developer",
             onClickFunction: (x) => {
               this.deleteNeighbors(
@@ -815,7 +815,7 @@ export class ContextMenuCustomizationService {
           },
           {
             id: "hideCommitIssue",
-            content: "Hide Issue Referenced To",
+            content: "Hide Issues Referencing",
             selector: "node.Commit",
             onClickFunction: (x) => {
               this.deleteNeighbors(
@@ -1156,7 +1156,7 @@ export class ContextMenuCustomizationService {
             },
             {
               id: "HideDevelopersCommit",
-              content: "Hide Committed Developers ",
+              content: "Hide Committing Developers ",
               selector: "node.Issue",
               hasTrailingDivider: true,
               onClickFunction: (x) => {
@@ -1491,7 +1491,7 @@ export class ContextMenuCustomizationService {
             },
             {
               id: "hidePullRequestIssue",
-              content: "Hide Issue Referenced To",
+              content: "Hide Issues Referenced",
               selector: "node.PullRequest",
               onClickFunction: (x) => {
                 this.deleteNeighbors(
@@ -1891,7 +1891,7 @@ export class ContextMenuCustomizationService {
           },
           {
             id: "hideFileDeveloper",
-            content: "Hide Developers ",
+            content: "Hide Committing Developers ",
             selector: "node.File",
             onClickFunction: (x) => {
               this.deleteNeighbors(
