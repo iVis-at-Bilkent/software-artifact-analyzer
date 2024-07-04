@@ -241,6 +241,7 @@ export class Neo4jDb implements DbService {
     } else {
       f2 += this.dateFilterFromUserPref('e', false);
     }
+    let totalIds = []
     if(limit>0){
       const callbackLimit  = (x) => {
         const limitedIds = []
@@ -251,8 +252,12 @@ export class Neo4jDb implements DbService {
           if(this._g.cy.$id(`n${x.data[key][0]}`).length == 0  || !this._g.cy.$id(`n${x.data[key][0]}`)[0].visible()){
             limitedIds.push(x.data[key][0])
           }
+          else {
+            totalIds.push(x.data[key][0])
+          }
         }
-        const idFilterlimit = `elementId(t) in ['${limitedIds.join("','")}'] `
+        totalIds = [...totalIds,...limitedIds]
+        const idFilterlimit = `elementId(t) in ['${totalIds.join("','")}'] `
         this.runQuery(`MATCH p=(n)${edgeCql}(t ${targetCql}) WHERE ${idFilter} AND (${idFilterlimit} ) ${f2} RETURN p  ORDER BY ${recencyProduct} DESC `, callback);  
       }
       this.runQuery(`MATCH p=(n)${edgeCql}(t ${targetCql}) WHERE ${idFilter} ${f2} WITH t ${withClause}   ORDER BY ${recencyProduct} DESC RETURN  distinct elementId(t) `, callbackLimit, DbResponseType.table );  

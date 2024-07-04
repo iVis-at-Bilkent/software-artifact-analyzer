@@ -266,7 +266,7 @@ export class GlobalVariableService {
     });
   }
 
-  getFcoseOptions() {
+  getFcoseOptions(fitValue:boolean=true) {
     let p = 4;
     if (this.userPrefsFromFiles.tilingPadding) {
       p = this.userPrefsFromFiles.tilingPadding.getValue();
@@ -280,7 +280,7 @@ export class GlobalVariableService {
       animate: true,
       // duration of animation in ms, if enabled
       animationDuration: LAYOUT_ANIM_DUR,
-      fit: true,
+      fit: fitValue,
       // padding around layout
       padding: 10,
       // whether to include labels in node dimensions. Valid in 'proof' quality
@@ -400,13 +400,13 @@ export class GlobalVariableService {
     }
   }
 
-  private performLayoutFn(isRandomize: boolean, isDirectCommand: boolean = false, animationDuration: number = LAYOUT_ANIM_DUR) {
+  private performLayoutFn(isRandomize: boolean, isDirectCommand: boolean = false, animationDuration: number = LAYOUT_ANIM_DUR, fit: boolean = true) {
     if (!this.userPrefs.isAutoIncrementalLayoutOnChange.getValue() && !isRandomize && !isDirectCommand) {
       this.cy.fit();
       return;
     }
     if (this.userPrefs.groupingOption.getValue() != GroupingOptionTypes.clusterId) {
-      this.layout = this.getFcoseOptions();
+      this.layout = this.getFcoseOptions(fit);
     }
     this.layout.animationDuration = animationDuration;
     this.layout.tile = this.userPrefs.isTileDisconnectedOnLayout.getValue();

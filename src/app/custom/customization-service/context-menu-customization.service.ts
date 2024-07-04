@@ -857,6 +857,7 @@ export class ContextMenuCustomizationService {
               id: "hideCommitDeveloper",
               content: "Hide Author",
               selector: "node.Commit",
+              hasTrailingDivider: true,
               onClickFunction: (x) => {
                 this.deleteNeighbors(
                   x,
@@ -2004,7 +2005,7 @@ export class ContextMenuCustomizationService {
     this._dbService.getNeighbors(
       [ele.id().substr(1)],
       (x) => {
-        this._cyService.loadElementsFromDatabase(x, true);
+        this._cyService.loadElementsFromDatabase(x, true,false);
       },
       historyMeta,
       queryMeta,
@@ -2038,8 +2039,7 @@ export class ContextMenuCustomizationService {
         this._cyService.hideCompounds(hideSet);
         this._g.applyClassFiltering();
         if (hideSet.length > 0) {
-          console.log("sss")
-          this._g.performLayout(false);
+          this._g.performLayout(false,false,500, false);
         }
       },
       historyMeta,

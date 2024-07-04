@@ -146,7 +146,7 @@ export class CytoscapeService {
     this._cyExtService.setNavigatorPosition();
   }
 
-  loadElementsFromDatabase(data: GraphResponse, isIncremental: boolean) {
+  loadElementsFromDatabase(data: GraphResponse, isIncremental: boolean, fit:boolean=true) {
     if (!data || !data.nodes || !data.edges) {
       this._g.showErrorModal('Empty Graph', 'Empty response from database!')
       return;
@@ -226,63 +226,14 @@ export class CytoscapeService {
       const shouldRandomize = !isIncremental || wasEmpty;
       const hasNew = this.hasNewElem(elemIds, prevElems);
       if (hasNew) {
-        this._g.performLayout(shouldRandomize);
+        this._g.performLayout(shouldRandomize,false,500, fit);
       }
       this.highlightElems(isIncremental, elemIds);
       this._g.isLoadFromDB = true;
     }
-    this._http.get('/app/custom/config/enums.json').subscribe(x => {
-      this.enums.next(x);
-      let addPriorityBadge = false;
-      this._g.cy.nodes().forEach(async (element) => {
+    this._dbService.addIssueBages()
+   
 
-        if (element._private.classes.values().next().value == 'Issue') {
-          const div1 = document.createElement("div");
-
-          let type = element._private.data.issueType
-          let priority = element._private.data.priority
-          if (!Object.values(this.enums.getValue().issueType).includes(element._private.data.issueType)) {
-            type = 'Other';
-          }
-          for (let priorityList of Object.values(this.enums.getValue().priority)) {
-            if (Array.isArray(priorityList) && priorityList.includes(priority)) {
-              priority = priorityList[0]
-              addPriorityBadge = true;
-              break
-            }
-          }
-          if (Object.keys(element.getCueData()).length === 0) {
-            element.addCue({
-              htmlElem: div1,
-              imgData: { width: 20, height: 20, src: "app/custom/assets/issue-types/" + type + ".svg" },
-              id: element._private.data.name + element._private.data.issueType,
-              show: "always",
-              position: "top-left",
-              marginX: 3,
-              marginY: 3,
-              cursor: "pointer",
-              zIndex: 1000,
-              tooltip: type
-            });
-            if (addPriorityBadge) {
-              element.addCue({
-                htmlElem: div1,
-                imgData: { width: 25, height: 25, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
-                id: element._private.data.name + element._private.data.priority,
-                show: "always",
-                position: "left",
-                marginX: 0,
-                marginY: 0,
-                cursor: "pointer",
-                zIndex: 1000,
-                tooltip: element._private.data.priority
-              });
-            }
-
-          }
-        }
-      });
-    });
   }
 
   hasNewElem(newElemIds: string[], prevElems: any) {
