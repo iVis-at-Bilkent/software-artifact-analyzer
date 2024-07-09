@@ -535,7 +535,6 @@ export class CytoscapeService {
   removeHighlights() {
     this._g.viewUtils.removeHighlights();
     this._g.viewUtils.removeHighlights(this._g.filterRemovedElems(() => true));
-    console.log(this._g.cy.nodes())
     this.removePopperFn();
     
     this._g.cy.nodes().filter(':visible').forEach(element => {

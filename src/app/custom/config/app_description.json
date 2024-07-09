@@ -138,8 +138,8 @@
         "background-image": "app/custom/assets/pull-request.svg",
         "shape": "ellipse",
         "background-fit": "contain",
-        "width": "20px",
-        "height": "20px",
+        "width": "24px",
+        "height": "24px",
         "text-outline-color": "#ffffff",
         "color": "#71aa9f",
         "text-outline-width": "1px"
