@@ -48,8 +48,12 @@ export class GroupCustomizationService {
         let name = this._g.cy.elements(`[id = "${id}"]`).data().id;
         // for each developer, generate a compound node
         this._cyService.addParentNode(name);
+        this._g.cy.elements(`[id = 'c${id}']`).data()["name"] = this._g.cy.elements(`[id = "${id}"]`).data()["name"] 
+        this._g.cy.elements(`[id = 'c${id}']`)[0]._private.classes.add("clusterByDeveloper")
+        console.log(this._g.cy.elements(`[id = 'c${id}']`)[0]._private.classes)
         // add the developer to the compound node
         this._g.cy.elements(`[id = "${id}"]`).move({ parent: 'c' + id });
+
       }
 
       // assign nodes to parents
@@ -72,6 +76,7 @@ export class GroupCustomizationService {
           clusters[v[0]].push(k);
         }
       }
+      
       this._g.layout.clusters = Object.values(clusters);
     }
   }
