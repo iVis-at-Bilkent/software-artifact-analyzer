@@ -4,6 +4,10 @@ Software Artifact Analyzer (SAA) was built on a [fork](https://help.github.com/e
 
 ![Screenshot](https://github.com/iVis-at-Bilkent/software-artifact-analyzer/assets/59064089/4118240f-9942-4cc5-a61d-e268bf3740b3)
 
+## License
+
+*SAA* and its base library *Visu*all* are open source repositories but **not** free software for commercial use. Please contact [i-Vis Research Lab](http://www.cs.bilkent.edu.tr/~ivis/) and [BILSEN Research Group](https://bilsen.cs.bilkent.edu.tr/) for terms of use of this software.
+
 ## Key Features
 
 - **Context Menu**: Implemented using the [cytoscape.js-context-menus](https://github.com/iVis-at-Bilkent/cytoscape.js-context-menus) library, the context menu is node-specific, allowing users to perform operations tailored to each node type. Relation-based queries enable users to reveal connections between different node types.
@@ -54,7 +58,7 @@ A User Guide for SAA can be found [here](https://docs.google.com/document/d/1MHo
 SAA is being developed by [i-Vis Research Lab](http://www.cs.bilkent.edu.tr/~ivis/)  and [BILSEN Research Group](https://bilsen.cs.bilkent.edu.tr/)  at Bilkent University.
 
 ## Team
-[Lara Merdol](https://github.com/LaraMerdol), [Eray Tüzün](https://github.com/eraytuzun), [Uğur Doğrusöz](https://github.com/ugurdogrusoz)
+[Lara Merdol](https://github.com/LaraMerdol), [Eray Tüzün](https://github.com/eraytuzun) and [Ugur Dogrusoz](https://github.com/ugurdogrusoz)
 
 ## Maintenance
 You might want to get updates from [the original Visuall repository](https://github.com/ugurdogrusoz/visuall). To do that, first, add the base project as a remote repo using `git remote add base https://github.com/ugurdogrusoz/visuall.git`,
