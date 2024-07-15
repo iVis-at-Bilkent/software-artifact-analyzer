@@ -6,7 +6,7 @@ Software Artifact Analyzer (SAA) was built on a [fork](https://help.github.com/e
 
 ## License
 
-*SAA* and its base library *Visu*all* are open source repositories but **not** free software for commercial use. Please contact [i-Vis Research Lab](http://www.cs.bilkent.edu.tr/~ivis/) and [BILSEN Research Group](https://bilsen.cs.bilkent.edu.tr/) for terms of use of this software.
+SAA and its base library Visu*all* are open-source repositories but **not** free software for commercial use. Please contact [i-Vis Research Lab](http://www.cs.bilkent.edu.tr/~ivis/) and [BILSEN Research Group](https://bilsen.cs.bilkent.edu.tr/) for terms of use of this software.
 
 ## Key Features
 
