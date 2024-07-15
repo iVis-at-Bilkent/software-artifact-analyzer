@@ -22,7 +22,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     { text: 'Betweenness Centrality', fn: 'betweennessCentrality', arg: '' },
     { text: 'Normalized Betweenness Centrality', fn: 'betweennessCentralityNormalized', arg: '' },
     { text: 'Page Rank', fn: 'pageRank', arg: '' },
-    { text: 'Pull Requests: Change Line of Code', fn: 'lineOfCode', arg: '' }
+    { text: 'Pull Requests: Changed Lines of Code', fn: 'lineOfCode', arg: '' }
   ];
   isOnSelected = false;
   isDirectedGraph = false;
@@ -96,6 +96,9 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
         } else {
           element.removeCue();
           this._dbService.addIssueBages();
+        }
+        if(element._private.classes.has("anomalyBadgeDisplay")){
+          this._dbService.activateAnomalyCues();
         }
       }
     });
