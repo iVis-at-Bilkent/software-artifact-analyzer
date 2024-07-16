@@ -29,10 +29,14 @@ export class ContextMenuCustomizationService {
   private _pr_issue = "REFERENCED_PR";
   private _pr_commit = "INCLUDES";
   private _pr_file = ["INCLUDES", "CONTAINS"]
+  private _pr_developer = ["INCLUDES", "COMMITTED"]
   //Issue
+  private _get_pr_for_issue_relation =  "REFERENCED_PR";
   private _get_commit_for_issue_relation = "REFERENCED_COMMIT";
-  private _get_developer_for_issue_relation = ["REFERENCED_COMMIT", "COMMITTED"]
-  private _get_files_for_issue_relation = ["REFERENCED_COMMIT", "CONTAINS"]
+  private _get_developer_for_issue_relation_pr = ["REFERENCED_PR", "INCLUDES", "COMMITTED"]
+  private _get_files_for_issue_relation_pr = ["REFERENCED_PR", "INCLUDES","CONTAINS"]
+  private _get_developer_for_issue_relation_commit= ["REFERENCED_COMMIT", "COMMITTED"]
+  private _get_files_for_issue_relation_commit = ["REFERENCED_COMMIT", "CONTAINS"]
   private _issue_issue = ["FIXES", "DEPENDS_UPON", "DUPLICATES", "BLOCKS", "INCORPORATES", "INCORPORATES", "RELATES_TO", "SUPERSEDES"]
   //Developer
   private _developer_commit_pull_request = ["COMMITTED", "INCLUDES"];
@@ -1004,54 +1008,127 @@ export class ContextMenuCustomizationService {
         submenu: [
           {
             id: "ShowRelatedFilesRecent",
-            content: "Show Files Recently Related ",
+            content: "Show Files Recently Related",
             selector: "node.Issue",
-            onClickFunction: (x) => {
-              this.getNeighbors(
-                x,
-                { isNode: true, customTxt: "Show files recently related: " },
-                {
-                  edgeType: this._get_files_for_issue_relation,
-                  isMultiLength: true,
-                  targetType: "File"
+            submenu:[
+              {
+                id: "ShowRelatedFilesRecentCommit",
+                content: "Commit",
+                selector: "node.Issue",
+                onClickFunction: (x) => {
+                  this.getNeighbors(
+                    x,
+                    { isNode: true, customTxt: "Show files recently related (commit): " },
+                    {
+                      edgeType: this._get_files_for_issue_relation_commit,
+                      isMultiLength: true,
+                      targetType: "File"
+                    },
+                    this._g.userPrefs.queryNeighborLimit.getValue()
+                  );
                 },
-                this._g.userPrefs.queryNeighborLimit.getValue()
-              );
-            },
+              },  
+              {
+                id: "ShowRelatedFilesRecentPr",
+                content: "Pull Request",
+                selector: "node.Issue",
+                onClickFunction: (x) => {
+                  this.getNeighbors(
+                    x,
+                    { isNode: true, customTxt: "Show files recently related (pr): " },
+                    {
+                      edgeType: this._get_files_for_issue_relation_pr,
+                      isMultiLength: true,
+                      targetType: "File"
+                    },
+                    this._g.userPrefs.queryNeighborLimit.getValue()
+                  );
+                },
+              },        
+              
+            ]
           },
           {
             id: "ShowRelatedFiles",
-            content: "Show Files Related ",
+            content: "Show Files Related",
             selector: "node.Issue",
-            onClickFunction: (x) => {
-              this.getNeighbors(
-                x,
-                { isNode: true, customTxt: "Show related files: " },
-                {
-                  edgeType: this._get_files_for_issue_relation,
-                  isMultiLength: true,
-                  targetType: "File"
-                }
-              );
-            },
+            submenu:[
+              {
+                id: "ShowRelatedFilesCommit",
+                content: "Commit",
+                selector: "node.Issue",
+                onClickFunction: (x) => {
+                  this.getNeighbors(
+                    x,
+                    { isNode: true, customTxt: "Show related files (commit): " },
+                    {
+                      edgeType: this._get_files_for_issue_relation_commit,
+                      isMultiLength: true,
+                      targetType: "File"
+                    }
+                  );
+                },
+              },
+              {
+                id: "ShowRelatedFilesPr",
+                content: "Pull Request",
+                selector: "node.Issue",
+                onClickFunction: (x) => {
+                  this.getNeighbors(
+                    x,
+                    { isNode: true, customTxt: "Show related files (pr): " },
+                    {
+                      edgeType: this._get_files_for_issue_relation_pr,
+                      isMultiLength: true,
+                      targetType: "File"
+                    }
+                  );
+                },
+              }
+            ]
           },
           {
             id: "HideRelatedFiles",
             content: "Hide  Related Files",
             selector: "node.Issue",
-            onClickFunction: (x) => {
-              this.deleteNeighbors(
-                x,
-                { isNode: true, customTxt: "Hide related files: " },
-                {
-                  edgeType: this._get_files_for_issue_relation,
-                  isMultiLength: true,
-                  targetType: "File"
-                }
-              );
-            },
-          },
-
+            hasTrailingDivider: true,
+            submenu:[
+              {
+                id: "HideRelatedFilesCommit",
+                content: "Commit",
+                selector: "node.Issue",
+                hasTrailingDivider: true,
+                onClickFunction: (x) => {
+                  this.deleteNeighbors(
+                    x,
+                    { isNode: true, customTxt: "Hide related files (commit): " },
+                    {
+                      edgeType: this._get_files_for_issue_relation_commit,
+                      isMultiLength: true,
+                      targetType: "File"
+                    }
+                  );
+                },
+              },
+              {
+                id: "HideRelatedFilesPr",
+                content: "Pull Request",
+                selector: "node.Issue",
+                hasTrailingDivider: true,
+                onClickFunction: (x) => {
+                  this.deleteNeighbors(
+                    x,
+                    { isNode: true, customTxt: "Hide related files (pull request): " },
+                    {
+                      edgeType: this._get_files_for_issue_relation_pr,
+                      isMultiLength: true,
+                      targetType: "File"
+                    }
+                  );
+                },
+              },
+            ]
+          }
         ]
       },
       
@@ -1126,51 +1203,126 @@ export class ContextMenuCustomizationService {
               id: "ShowDevelopersCommitRecent",
               content: "Show Recently Committing Developers",
               selector: "node.Issue",
-              onClickFunction: (x) => {
-                this.getNeighbors(
-                  x,
-                  { isNode: true, customTxt: "Show developers who worked on the solution: " },
-                  {
-                    edgeType: this._get_developer_for_issue_relation,
-                    isMultiLength: true,
-                    targetType: "Developer"
+              submenu:
+              [
+                {
+                  id: "ShowDevelopersCommitRecentCommit",
+                  content: "Commit",
+                  selector: "node.Issue",
+                  onClickFunction: (x) => {
+                    this.getNeighbors(
+                      x,
+                      { isNode: true, customTxt: "Show developers who worked on the solution (commit): " },
+                      {
+                        edgeType: this._get_developer_for_issue_relation_commit,
+                        isMultiLength: true,
+                        targetType: "Developer"
+                      },
+                      this._g.userPrefs.queryNeighborLimit.getValue()
+                    );
                   },
-                  this._g.userPrefs.queryNeighborLimit.getValue()
-                );
-              },
+                },
+                {
+                  id: "ShowDevelopersCommitRecentPr",
+                  content: "Pull Request",
+                  selector: "node.Issue",
+                  onClickFunction: (x) => {
+                    this.getNeighbors(
+                      x,
+                      { isNode: true, customTxt: "Show developers who worked on the solution (pr): " },
+                      {
+                        edgeType: this._get_developer_for_issue_relation_pr,
+                        isMultiLength: true,
+                        targetType: "Developer"
+                      },
+                      this._g.userPrefs.queryNeighborLimit.getValue()
+                    );
+                  },
+                },
+              ]
             },
             {
               id: "ShowDevelopersCommit",
               content: "Show Committing Developers",
               selector: "node.Issue",
-              onClickFunction: (x) => {
-                this.getNeighbors(
-                  x,
-                  { isNode: true, customTxt: "Show developers who worked on the solution: " },
-                  {
-                    edgeType: this._get_developer_for_issue_relation,
-                    isMultiLength: true,
-                    targetType: "Developer"
-                  }
-                );
-              },
+              submenu:[
+                {
+                  id: "ShowDevelopersCommitCommit",
+                  content: "Commit",
+                  selector: "node.Issue",
+                  onClickFunction: (x) => {
+                    this.getNeighbors(
+                      x,
+                      { isNode: true, customTxt: "Show developers who worked on the solution: " },
+                      {
+                        edgeType: this._get_developer_for_issue_relation_commit,
+                        isMultiLength: true,
+                        targetType: "Developer"
+                      }
+                    );
+                  },
+                },
+                {
+                  id: "ShowDevelopersCommitPr",
+                  content: "Pull Request",
+                  selector: "node.Issue",
+                  onClickFunction: (x) => {
+                    this.getNeighbors(
+                      x,
+                      { isNode: true, customTxt: "Show developers who worked on the solution: " },
+                      {
+                        edgeType: this._get_developer_for_issue_relation_pr,
+                        isMultiLength: true,
+                        targetType: "Developer"
+                      }
+                    );
+                  },
+                }
+              ]
+
+ 
             },
             {
               id: "HideDevelopersCommit",
-              content: "Hide Committing Developers ",
+              content: "Hide Committing Developers",
               selector: "node.Issue",
               hasTrailingDivider: true,
-              onClickFunction: (x) => {
-                this.deleteNeighbors(
-                  x,
-                  { isNode: true, customTxt: "Hide developers who worked on the solution: " },
-                  {
-                    edgeType: this._get_developer_for_issue_relation,
-                    isMultiLength: true,
-                    targetType: "Developer"
-                  }
-                );
-              },
+              submenu:[
+                {
+                  id: "HideDevelopersCommitCommit",
+                  content: "Commit",
+                  selector: "node.Issue",
+                  hasTrailingDivider: true,
+                  onClickFunction: (x) => {
+                    this.deleteNeighbors(
+                      x,
+                      { isNode: true, customTxt: "Hide developers who worked on the solution: " },
+                      {
+                        edgeType: this._get_developer_for_issue_relation_commit,
+                        isMultiLength: true,
+                        targetType: "Developer"
+                      }
+                    );
+                  },
+                },
+                {
+                  id: "HideDevelopersCommitPr",
+                  content: "Pull Request",
+                  selector: "node.Issue",
+                  hasTrailingDivider: true,
+                  onClickFunction: (x) => {
+                    this.deleteNeighbors(
+                      x,
+                      { isNode: true, customTxt: "Hide developers who worked on the solution: " },
+                      {
+                        edgeType: this._get_developer_for_issue_relation_pr,
+                        isMultiLength: true,
+                        targetType: "Developer"
+                      }
+                    );
+                  },
+                },
+              ]
             },
             {
               id: "ShowRelatedDevelopers",
@@ -1602,6 +1754,39 @@ export class ContextMenuCustomizationService {
                   { isNode: true, customTxt: "Hide reviewer: " },
                   {
                     edgeType: "REVIEWED",
+                    targetType: "Developer"
+                  }
+                );
+              },
+            },
+            {
+              id: "showPullRequestDeveloperCommitters",
+              content: "Show Committers",
+              selector: "node.PullRequest",
+              onClickFunction: (x) => {
+                this.getNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Show committers: " },
+                  {
+                    isMultiLength: true,
+                    edgeType: this._pr_developer,
+                    targetType: "Developer"
+                  }
+                );
+              },
+            },
+            {
+              id: "hidePullRequestCommitter",
+              content: "Hide Committers",
+              selector: "node.PullRequest",
+              hasTrailingDivider: true,
+              onClickFunction: (x) => {
+                this.deleteNeighbors(
+                  x,
+                  { isNode: true, customTxt: "Hide committers: " },
+                  {
+                    isMultiLength: true,
+                    edgeType: this._pr_developer,
                     targetType: "Developer"
                   }
                 );
