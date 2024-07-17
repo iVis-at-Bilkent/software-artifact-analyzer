@@ -788,7 +788,7 @@ export class ContextMenuCustomizationService {
         submenu: [
           {
             id: "showCommitIssue",
-            content: "Show Issues Recently Referencing",
+            content: "Show Recently Referencing Issues",
             selector: "node.Commit",
             onClickFunction: (x) => {
               this.getNeighbors(
@@ -804,7 +804,7 @@ export class ContextMenuCustomizationService {
           },
           {
             id: "showCommitIssue",
-            content: "Show Issues Referencing",
+            content: "Show Referencing Issues",
             selector: "node.Commit",
             onClickFunction: (x) => {
               this.getNeighbors(
@@ -819,7 +819,7 @@ export class ContextMenuCustomizationService {
           },
           {
             id: "hideCommitIssue",
-            content: "Hide Issues Referencing",
+            content: "Hide Referencing Issues",
             selector: "node.Commit",
             onClickFunction: (x) => {
               this.deleteNeighbors(
@@ -1613,7 +1613,7 @@ export class ContextMenuCustomizationService {
           [
             {
               id: "showPullRequestIssueRecent",
-              content: "Show Issues Recently Referenced",
+              content: "Show Recently Referencing Issues",
               selector: "node.PullRequest",
               onClickFunction: (x) => {
                 this.getNeighbors(
@@ -1629,7 +1629,7 @@ export class ContextMenuCustomizationService {
             },
             {
               id: "showPullRequestIssue",
-              content: "Show Issues Referenced",
+              content: "Show Referencing Issues",
               selector: "node.PullRequest",
               onClickFunction: (x) => {
                 this.getNeighbors(
@@ -1644,7 +1644,7 @@ export class ContextMenuCustomizationService {
             },
             {
               id: "hidePullRequestIssue",
-              content: "Hide Issues Referenced",
+              content: "Hide Referencing Issues",
               selector: "node.PullRequest",
               onClickFunction: (x) => {
                 this.deleteNeighbors(
