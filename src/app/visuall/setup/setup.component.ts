@@ -29,7 +29,7 @@
     private redirectUrlFlowJira: string = '';
     //Neo4j Credentials
     private boltUrl: string = "bolt://ivis.cs.bilkent.edu.tr:3006";
-    private httpUrl: string = "http://ivis.cs.bilkent.edu.tr:3004";
+    private httpUrl: string = "http://saa.cs.bilkent.edu.tr/browser";
     private neo4jUsername: string ="neo4j" ;
     private neo4jUserPassword: string="01234567" ;
   constructor(private _g: GlobalVariableService, private route: ActivatedRoute, private http: HttpClient, private _http: HttpClient, private router: Router) { }
@@ -49,7 +49,7 @@
     this.landingTool = "Github"
     const state = Math.random().toString(36).substring(2);
     //Will be change after production
-    const url = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=s8vxvG5qiNGENrtsijGbheoFuihyjCa2&scope=offline_access%20read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20write%3Ajira-work%20read%3Ajira-user%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=https%3A%2F%2Fsaa.cs.bilkent.edu.tr%2F%3Fsetup%3DJira&state=${state}&response_type=code&prompt=consent`
+    const url = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=1hhyJZpRf4z9Esrk8w1SW9jSfNh4n9Ez&scope=offline_access%20read%3Ajira-work%20manage%3Ajira-project%20manage%3Ajira-configuration%20read%3Ajira-user%20write%3Ajira-work%20manage%3Ajira-webhook%20manage%3Ajira-data-provider&redirect_uri=https%3A%2F%2Fsaa.cs.bilkent.edu.tr%2F%3Fsetup%3DJira&state=${state}&response_type=code&prompt=consent`
     window.location.href = url;
   }
   directToGitHub() {
