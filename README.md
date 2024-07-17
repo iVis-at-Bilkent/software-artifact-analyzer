@@ -4,6 +4,9 @@ Software Artifact Analyzer (SAA) was built on a [fork](https://help.github.com/e
 
 ![Screenshot](https://github.com/iVis-at-Bilkent/software-artifact-analyzer/assets/59064089/4118240f-9942-4cc5-a61d-e268bf3740b3)
 
+# Demo
+A sample demo deployment can be found [here](http://saa.cs.bilkent.edu.tr/).
+
 ## License
 
 SAA and its base library Visu*all* are open-source repositories but **not** free software for commercial use. Please contact [i-Vis Research Lab](http://www.cs.bilkent.edu.tr/~ivis/) and [BILSEN Research Group](https://bilsen.cs.bilkent.edu.tr/) for terms of use of this software.
