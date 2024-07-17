@@ -1,5 +1,3 @@
-[Go to Coding Page](/coding)
-
 # Software Artifact Analyzer
 
 Software Artifact Analyzer (SAA) was built on a [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) of the repository of the tool [Visuall](https://github.com/ugurdogrusoz/visuall) to visually analyze different software artifacts, including source code files, pull requests, issues, and commits, as well as their relationships with developers in the software projects.
