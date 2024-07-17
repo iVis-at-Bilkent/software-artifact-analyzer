@@ -6,6 +6,7 @@ Software Artifact Analyzer (SAA) was built on a [fork](https://help.github.com/e
 
 # Demo
 A sample demo deployment can be found [here](http://saa.cs.bilkent.edu.tr/).
+
 ## Key Features
 
 - **Context Menu**: Implemented using the [cytoscape.js-context-menus](https://github.com/iVis-at-Bilkent/cytoscape.js-context-menus) library, the context menu is node-specific, allowing users to perform operations tailored to each node type. Relation-based queries enable users to reveal connections between different node types.
@@ -48,6 +49,10 @@ This tool empowers developers with the ability to detect anomalies, make informe
 ## User Guide
 
 A User Guide for the Software Artifact Analyzer can be found [here](https://docs.google.com/document/d/1MHoBk2O2AREYiKwqZuDkHLkdlWwUkYMHzeuugqnVxFY/edit?usp=sharing). 
+
+## Developer Guide
+
+A Developer Guide for SAA can be found [here](https://docs.google.com/document/d/1dIasoHNoGYy6klZOnmUMzOE7RvM-fN7DOcEf7w9jS70/edit?usp=sharing). 
 
 ## Credits
 
