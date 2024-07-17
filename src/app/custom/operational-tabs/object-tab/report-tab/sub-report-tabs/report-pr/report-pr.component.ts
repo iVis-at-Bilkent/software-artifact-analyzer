@@ -147,7 +147,7 @@ export class ReportPrComponent implements OnInit {
         let ignoredDevelopers = x.data[0][0]
         possibleDevelopers = possibleDevelopers.filter(dev => !ignoredDevelopers.includes(dev));
         if (possibleDevelopers.length > 0) {
-          this._dbService.runQuery(`CALL findNodesWithMostPathBetweenTable(['${fileIds.join("','")}'], ['COMMENTED'],['${possibleDevelopers.join("','")}'],'recency',3,3, false,
+          this._dbService.runQuery(`CALL findNodesWithMostPathBetween(['${fileIds.join("','")}'], ['COMMENTED'],['${possibleDevelopers.join("','")}'],'recency',3,3, false,
        225, 1, null, false, 'score', 0,${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, null)`, cb, DbResponseType.table, false);
         }
       }
@@ -170,7 +170,6 @@ export class ReportPrComponent implements OnInit {
       //If add graph is selected
       if (this.commentInput.addGraph) {
         await this.updateFile().subscribe(response => {
-          console.log('Comment posted successfully:', response);
           this.imageUrl = response["content"]["download_url"]
           commentBody = {
             body: `### ${this.comment.header}\n${this.comment.body}\n![image](${this.imageUrl})`
