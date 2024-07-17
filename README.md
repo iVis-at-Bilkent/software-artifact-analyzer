@@ -51,6 +51,10 @@ This tool empowers developers with the ability to detect anomalies, make informe
 
 A User Guide for SAA can be found [here](https://docs.google.com/document/d/1MHoBk2O2AREYiKwqZuDkHLkdlWwUkYMHzeuugqnVxFY/edit?usp=sharing). 
 
+## Developer Guide
+
+A Developer Guide for SAA can be found [here](https://docs.google.com/document/d/1dIasoHNoGYy6klZOnmUMzOE7RvM-fN7DOcEf7w9jS70/edit?usp=sharing). 
+
 ## Credits
 [Visuall](https://github.com/ugurdogrusoz/visuall) and dependencies including cytoscape.js.
 
