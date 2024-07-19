@@ -782,7 +782,7 @@ export class Neo4jDb implements DbService {
             let badgeWidth = 1;
             if(element._private.classes.has("graphTheoreticDisplay")){
               position = "right"
-              badgeWidth =  element.data('__graphTheoreticProp')  * 0.4;
+              badgeWidth =  element.data('__TheoreticPropNodeSize')/16;
             }
             let color = (number <= 5) ? colors[number - 1] : colors[4];
             let listOfAnomalies = x.data[0][0];
@@ -804,11 +804,11 @@ export class Neo4jDb implements DbService {
                 htmlElem: div1,
                 id: element._private.data.name,
                 show: "always",
-                position: position,
-                marginX: "%0",
-                marginY: "%8",
+                position: "right",
+                marginX: "%5",
+                marginY: "%5",
                 cursor: "pointer",
-                zIndex: 5,
+                zIndex: 999,
                 tooltip: listOfAnomalies.join('\n')
               });
             }
