@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GlobalVariableService } from '../global-variable.service';
-import { GraphResponse, TableResponse, DbService, DbQueryMeta, Neo4jEdgeDirection, DbResponse, DbResponseType } from './data-types';
+import { GraphResponse, TableResponse, DbService, DbQueryMeta, Neo4jEdgeDirection, DbResponse, DbResponseType, CyNode } from './data-types';
 import { Rule, ClassBasedRules, RuleNode } from '../operation-tabs/map-tab/query-types';
 import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from '../constants';
 import { TableFiltering } from '../../shared/table-view/table-view-types';
@@ -109,7 +109,7 @@ export class Neo4jDb implements DbService {
         //const elapsedTime = endTime.getTime() - startTime.getTime();
         //console.log(`Elapsed Time: ${elapsedTime} milliseconds for graph`);
         callback(this.extractGraph(x));
-        this.addIssueBages();
+        this.addIssueBadges();
 
         
        
@@ -713,111 +713,112 @@ export class Neo4jDb implements DbService {
     }
     return cql;
   }
-  addIssueBages(size: number = 18) {
+  addIssueBadges(size: number = 18) {
     let addPriorityBadge = false;
     this._g.cy.nodes().forEach(async (element) => {
-      if (element._private.classes.values().next().value == 'Issue') {
-        const div1 = document.createElement("div");
-        const div2 = document.createElement("div");
-        let type = element._private.data.issueType
-        let priority = element._private.data.priority
-        if (!Object.values(this.enums.getValue().issueType).includes(element._private.data.issueType)) {
-          type = 'Other';
-        }
-        if (!Object.values(this.enums.getValue().priority).includes(element._private.data.priority)) {
-          type = 'Other';
-        }
-        if (Object.keys(element.getCueData()).length === 0) {
-          element.addCue({
-            htmlElem: div1,
-            imgData: { width: size, height: size, src: "app/custom/assets/issue-types/" + type + ".svg" },
-            id: element._private.data.name + element._private.data.issueType,
-            show: "always",
-            position: "top-left",
-            marginY: "%21.3",
-            marginX: "%24.3",
-            cursor: "pointer",
-            zIndex: 1,
-            tooltip: type
-          });
-
-          element.addCue({
-            htmlElem: div2,
-            imgData: { width: size, height: size, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
-            id: element._private.data.name + element._private.data.priority,
-            show: "always",
-            position: "left",
-            marginX: "%24.3",
-            marginY: "%7.8",
-            cursor: "pointer",
-            zIndex: 1,
-            tooltip: priority
-          });
-
-
-        }
-      }
+      this.addIssueBadge(element, size)
     });
 
   }
+  addIssueBadge(element:any, size:number  = 18 ){
+    if (element._private.classes.values().next().value == 'Issue') {
+      const div1 = document.createElement("div");
+      const div2 = document.createElement("div");
+      let type = element._private.data.issueType
+      let priority = element._private.data.priority
+      if (!Object.values(this.enums.getValue().issueType).includes(element._private.data.issueType)) {
+        type = 'Other';
+      }
+      if (!Object.values(this.enums.getValue().priority).includes(element._private.data.priority)) {
+        type = 'Other';
+      }
+      if (Object.keys(element.getCueData()).length === 0) {
+        element.addCue({
+          htmlElem: div1,
+          imgData: { width: size, height: size, src: "app/custom/assets/issue-types/" + type + ".svg" },
+          id: element._private.data.name + element._private.data.issueType,
+          show: "always",
+          position: "top-left",
+          marginY: "%21.3",
+          marginX: "%24.3",
+          cursor: "pointer",
+          zIndex: 999,
+          tooltip: type
+        });
 
-  private generateRedShades() {
-    let colors = [];
-    colors = [
+        element.addCue({
+          htmlElem: div2,
+          imgData: { width: size, height: size, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
+          id: element._private.data.name + element._private.data.priority,
+          show: "always",
+          position: "left",
+          marginX: "%24.3",
+          marginY: "%7.8",
+          cursor: "pointer",
+          zIndex: 999,
+          tooltip: priority
+        });
+
+
+      }
+    }
+  }
+
+  activateAnomalyCues() {
+    this._g.cy.nodes().filter(':visible').forEach(async (element) => {
+     this.activateAnomalyCue(element)
+    });
+  }
+
+  activateAnomalyCue(element:any){
+    const colors = [
       "#FF9999", "#fe5050", "#FE0022", "#BC0000", "#9a0000"
     ]
-    return colors;
-  }
-  activateAnomalyCues() {
-    const colors = this.generateRedShades()
-   
-    this._g.cy.nodes().filter(':visible').forEach(async (element) => {
-      if (element._private.classes.values().next().value == 'Issue') {
-        const cb = (x) => {
-          const div1 = document.createElement("div");
-          let number = x.data[0][1];
-          if (number > 0) {
-            element.addClass("anomalyBadgeDisplay")
-            let position = "top-right";
-            let badgeWidth = 1;
-            if(element._private.classes.has("graphTheoreticDisplay")){
-              position = "right"
-              badgeWidth =  element.data('__TheoreticPropNodeSize')/16;
-            }
-            let color = (number <= 5) ? colors[number - 1] : colors[4];
-            let listOfAnomalies = x.data[0][0];
-            const size_x = 0.60 + 2 * badgeWidth * Math.log(3 * listOfAnomalies.length + 1) / 15;
-            const size_y = 0.10 + 2 *badgeWidth * Math.log(3 * listOfAnomalies.length + 1) / 15;
-            const font_size = 0.75 + Math.log(3 * badgeWidth * listOfAnomalies.length + 1) / 15;
-            div1.style.backgroundColor = color;
-            div1.style.color = "#fff";
-            div1.style.fontSize = font_size + 'em';
-            div1.style.paddingBottom = size_y + 'em';
-            div1.style.paddingTop = size_y + 'em';
-            div1.style.paddingRight = size_x + 'em';
-            div1.style.paddingLeft = size_x + 'em';
-            div1.style.borderRadius = '100%';
-            div1.innerHTML = `<span  >${number}</span>`;
-            let elementCueValue = element.getCueData()
-            if (elementCueValue && !elementCueValue[Object.keys(elementCueValue)[0]].hasOwnProperty(element._private.data.name)) {
-              element.addCue({
-                htmlElem: div1,
-                id: element._private.data.name,
-                show: "always",
-                position: "right",
-                marginX: "%5",
-                marginY: "%5",
-                cursor: "pointer",
-                zIndex: 999,
-                tooltip: listOfAnomalies.join('\n')
-              });
-            }
+    if (element._private.classes.values().next().value == 'Issue') {
+      const cb = (x) => {
+        const div1 = document.createElement("div");
+        let number = x.data[0][1];
+        if (number > 0) {
+          element.addClass("anomalyBadgeDisplay")
+          let position = "top-right";
+          let badgeWidth = 1;
+          if(element._private.classes.has("graphTheoreticDisplay")){
+            position = "right"
+            badgeWidth =  element.data('__TheoreticPropNodeSize')/16;
+          }
+          let color = (number <= 5) ? colors[number - 1] : colors[4];
+          let listOfAnomalies = x.data[0][0];
+          const size_x = 0.60 + 2 * badgeWidth * Math.log(3 * listOfAnomalies.length + 1) / 15;
+          const size_y = 0.10 + 2 *badgeWidth * Math.log(3 * listOfAnomalies.length + 1) / 15;
+          const font_size = 0.75 + Math.log(3 * badgeWidth * listOfAnomalies.length + 1) / 15;
+          div1.style.backgroundColor = color;
+          div1.style.color = "#fff";
+          div1.style.fontSize = font_size + 'em';
+          div1.style.paddingBottom = size_y + 'em';
+          div1.style.paddingTop = size_y + 'em';
+          div1.style.paddingRight = size_x + 'em';
+          div1.style.paddingLeft = size_x + 'em';
+          div1.style.borderRadius = '100%';
+          div1.innerHTML = `<span  >${number}</span>`;
+          let elementCueValue = element.getCueData()
+          if (elementCueValue && !elementCueValue[Object.keys(elementCueValue)[0]].hasOwnProperty(element._private.data.name)) {
+            element.addCue({
+              htmlElem: div1,
+              id: element._private.data.name,
+              show: "always",
+              position: "right",
+              marginX: "%5",
+              marginY: "%5",
+              cursor: "pointer",
+              zIndex: 999,
+              tooltip: listOfAnomalies.join('\n')
+            });
           }
         }
-        const cql = `MATCH (n:Issue {name:'${element._private.data.name}'}) RETURN n.anomalyList as anomalyList , n.anomalyCount as anomalyCount`;
-        this.runQuery(cql, cb, DbResponseType.table);
       }
-    });
+      const cql = `MATCH (n:Issue {name:'${element._private.data.name}'}) RETURN n.anomalyList as anomalyList , n.anomalyCount as anomalyCount`;
+      this.runQuery(cql, cb, DbResponseType.table);
+    }
   }
   // ------------------------------------------------- end of methods for conversion to CQL -------------------------------------------------
 }

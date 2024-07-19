@@ -231,7 +231,7 @@ export class CytoscapeService {
       this.highlightElems(isIncremental, elemIds);
       this._g.isLoadFromDB = true;
     }
-    this._dbService.addIssueBages()
+    this._dbService.addIssueBadges()
    
 
   }
@@ -549,7 +549,7 @@ export class CytoscapeService {
     }
     
     );
-    this._dbService.addIssueBages()
+    this._dbService.addIssueBadges()
   }
 
   unbindHighlightOnHoverListeners() {

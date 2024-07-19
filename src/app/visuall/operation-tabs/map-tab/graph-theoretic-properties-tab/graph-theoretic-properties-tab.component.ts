@@ -93,13 +93,13 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
           const badgeWidth = ((b - a) * element.data('__graphTheoreticProp') / m + a) * 0.5625;
           console.log(b,a,m,  element.data('__graphTheoreticProp'), badgeWidth)
           element.data('__TheoreticPropNodeSize',badgeWidth )
-          this._dbService.addIssueBages(badgeWidth);
+          this._dbService.addIssueBadge(element, badgeWidth);
         } else {
           element.removeCue();
-          this._dbService.addIssueBages();
+          this._dbService.addIssueBadge(element);
         }
         if(element._private.classes.has("anomalyBadgeDisplay")){
-          this._dbService.activateAnomalyCues();
+          this._dbService.activateAnomalyCue(element);
         }
       }
     });
