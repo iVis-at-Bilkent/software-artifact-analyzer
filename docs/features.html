@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Features - Software Artifact Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="assets/logo.svg" alt="SAA Logo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="features.html" class="active">Key Features</a></li>
+                    <li><a href="guides.html">Guides</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main id="content">
+            <!-- Key Features Page Content -->
+            <h1>Key Features</h1>
+            <ul>
+                <li><strong>Context Menu:</strong> Implemented using the <a href="https://github.com/iVis-at-Bilkent/cytoscape.js-context-menus">cytoscape.js-context-menus</a> library, the context menu is node-specific, allowing users to perform operations tailored to each node type. Relation-based queries enable users to reveal connections between different node types.
+                <br><img src="assets/figure1.png" alt="Context Menu"></li>
+                <li><strong>Grouping Nodes:</strong> SAA facilitates the grouping of nodes based on developers, enhancing visualization to understand relationships and dynamics within a software project.</li>
+                <li><strong>Reviewer Recommendation:</strong> Utilizing the RSTrace+ [1] algorithm, SAA assists in making reviewer assignments, offering a visual representation of analysis results to boost confidence in decision-making.
+                <br><img src="assets/figure8.png" alt="Reviewer Recommendation"></li>
+                <li><strong>Bug Tracking Process Anomaly Detection:</strong> SAA detects 11 types of bug-tracking process anomalies, as categorized by Qamar et al. [2], contributing to process evaluation and anomaly prevention. <br><img src="assets/figure9.png" alt="Anomaly Detection"> </li>
+                <li><strong>Report Component:</strong> SAA allows users to report analysis results or observations directly on GitHub or Jira platforms, promoting seamless integration and practicality. Users can submit reports as comments under pull requests in GitHub or issue comments in Jira, enhancing collaboration and communication.
+                <br><img src="assets/figure3.png" alt="Report Component"></li>
+                <p>This tool empowers developers with the ability to detect anomalies, make informed decisions, and collaborate effectively within the context of their software projects.</p>
+                <p><a href="#1">[1]</a> E. Sülün, E. Tüzün, and U. Doğrusöz, “RSTrace+: Reviewer suggestion using software artifact traceability graphs,” Information and Software Technology, vol. 130, p. 106455, 2021.</p>
+                <p><a href="#2">[2]</a> K. A. Qamar, E. Sülün, and E. Tüzün, “Taxonomy of bug tracking process smells: Perceptions of practitioners and an empirical analysis,” Information and Software Technology, vol. 150, p. 106972, 2022. doi:10.1016/j.infsof.2022.106972</p>
+            </ul>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

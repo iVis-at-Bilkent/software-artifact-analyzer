@@ -1,0 +1,121 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #f5f5f5, #e0e0e0); /* Light gradient for a soft background */
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px; /* Shorter padding for a shorter header */
+    background: #0e273f; /* Dark blue background for a professional look */
+    color: #ffffff; /* White text for contrast */
+    border-bottom: 2px solid #0c1b2b; /* Darker blue border for separation */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly more pronounced shadow for depth */
+}
+
+.logo {
+    max-width: 120px; /* Adjust logo size */
+    margin: 0;
+
+}
+
+nav {
+    margin-left: auto; 
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Flexbox for alignment */
+}
+ul {
+    list-style: none;
+}
+nav ul li {
+    margin: 0 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #e0e0e0; /* Light grey color for links */
+    font-size: 1.2em; /* Slightly larger font size for prominence */
+    font-weight: 500; /* Slightly bold for readability */
+    transition: color 0.3s, text-shadow 0.3s; /* Smooth transitions */
+}
+
+nav ul li a:hover {
+    color: #FF9800; /* White color on hover for better visibility */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow on hover */
+}
+nav ul li a.active {
+    color: #cccac6; /* White color on hover for better visibility */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow on hover */
+}
+
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9); /* Slightly opaque for a clean look */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Matches header shadow */
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5em; /* Larger font size for prominence */
+}
+
+p {
+    line-height: 1.6;
+    color: #555;
+}
+
+a {
+    color: #FF9800;; /* Dark blue for links to match header */
+    text-decoration: none;
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+a:hover {
+    color: #ff6f00;; /* Slightly darker blue for hover effect */
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+}
+#demo {
+    text-align: center; /* Center the text and button */
+    margin: 40px 0; /* Add vertical spacing */
+}
+
+.demo-button-container {
+    margin-top: 20px; /* Space above the button */
+}
+
+.demo-button {
+    display: inline-block; /* Keep the button inline with other elements */
+    padding: 15px 30px; /* Adjust padding for size */
+    font-size: 1.5em; /* Make the font larger */
+    font-weight: bold; /* Bold text for emphasis */
+    color: #fff; /* White text color */
+    background-color: #ff9804; /* Orange background color */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+.demo-button:hover {
+    background-color: #e68903; /* Darker orange for hover effect */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+    color: #ffffff;
+}

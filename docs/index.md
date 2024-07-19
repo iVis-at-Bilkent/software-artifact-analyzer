@@ -30,21 +30,6 @@ This tool empowers developers with the ability to detect anomalies, make informe
 
 [2] K. A. Qamar, E. Sülün, and E. Tüzün, “Taxonomy of bug tracking process smells: Perceptions of practitioners and an empirical analysis,” Information and Software Technology, vol. 150, p. 106972, 2022. doi:10.1016/j.infsof.2022.106972
 
-## Running a local instance
-
-`npm install` for loading dependencies
-
-`node style-generator.js {application description filename}` to generate customized application, this changes [styles.css](src/styles.css) and [index.html](src/index.html). Notice that the application description file is inside the `assets` folder.
-
-`npm run ng serve` for development and debugging
-
-`npm run serve-public` for making development server accesible on network
-
-`npm run ng test` for unit tests
-
-`npm run ng build` to generate a production build, `npm run build-prod` to generate a minified, uglified production build
-
-`npm run ng build` and `npm run build-prod` commands generate files inside ***dist\ng-visuall*** folder. An HTTP server should serve these files. You should use [server.js](server.js) file to run a server with command `node server.js`. 
 
 ## User Guide
 
@@ -53,29 +38,4 @@ A User Guide for the Software Artifact Analyzer can be found [here](https://docs
 ## Developer Guide
 
 A Developer Guide for SAA can be found [here](https://docs.google.com/document/d/1dIasoHNoGYy6klZOnmUMzOE7RvM-fN7DOcEf7w9jS70/edit?usp=sharing). 
-
-## Credits
-
-Icons made by [Freepik](http://www.freepik.com), 
-[Daniel Bruce](http://www.flaticon.com/authors/daniel-bruce), 
-[TutsPlus](http://www.flaticon.com/authors/tutsplus),
-[Robin Kylander](http://www.flaticon.com/authors/robin-kylander),
-[Catalin Fertu](http://www.flaticon.com/authors/catalin-fertu),
-[Yannick](http://www.flaticon.com/authors/yannick),
-[Icon Works](http://www.flaticon.com/authors/icon-works),
-[Flaticon](http://www.flaticon.com) and licensed with 
-[Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
-
-Third-party libraries:
-[Cytoscape.js](https://github.com/cytoscape/cytoscape.js) and many of its extensions,
-[Angular](https://angular.io/),
-[Google Charts](https://developers.google.com/chart/) and npm dependecies inside package.json file.
-
-## About
-Software Artifact Analyzer is being developed by [i-Vis Research Lab](http://www.cs.bilkent.edu.tr/~ivis/)  and [BILSEN Research Group](https://bilsen.cs.bilkent.edu.tr/)  at Bilkent University.
-## Team
-[Lara Merdol](), [Eray Tüzün](https://github.com/eraytuzun), [Uğur Doğrusöz](https://github.com/ugurdogrusoz)
-## Maintenance
-You might want to get updates from [the original Visuall repository](https://github.com/ugurdogrusoz/visuall). To do that, first add base project as a remote repo using `git remote add base https://github.com/ugurdogrusoz/visuall.git`,
-then fetch commits for that project with `git fetch base` and then transfer changes of commits using a command such as `git cherry-pick fe75f -n`.
 
