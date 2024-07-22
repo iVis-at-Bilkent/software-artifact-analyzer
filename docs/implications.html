@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Practitioner Insights</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        main {
+            padding: 20px;
+        }
+        #practitioner-insights {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card:hover h3 {
+            color: #e68903;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .card p {
+            color: #555;
+            text-align: -webkit-center;
+        }
+    </style>
+</head>
+<body>  
+     <div class="container">
+    <header>
+        <img src="assets/logo.svg" alt="SAA Logo" class="logo">
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="features.html" >Key Features</a></li>
+                <li><a href="guides.html" class="active">Guides</a></li>
+                <li><a href="implications.html" class="active">Practitioner Insights</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="practitioner-insights">
+            <h2>Practitioner Insights</h2>
+            <div class="card-container">
+                <div class="card">
+                    <h3>Intuitive Visualization</h3>
+                    <p>The software artifact traceability graph helps you see and understand complex relationships between artifacts.</p>
+                </div>
+                <div class="card">
+                    <h3>Anomaly Detection</h3>
+                    <p>The anomaly detection and reporting features keep developers informed about potential issues in the tracking process without the need for constant manual checks. Visual cues provide intuitive results.</p>
+                </div>
+                <div class="card">
+                    <h3>Reviewer and Expert Recommendations</h3>
+                    <p>The reviewer recommendation application guides developers to the best reviewers, preventing and reducing code review issues and making the process more efficient. Expert recommendation helps identify who is an expert in specific areas.</p>
+                </div>
+                <div class="card">
+                    <h3>Easy Implementation of Analytics</h3>
+                    <p>Developers can leverage the SAA tool to easily implement various software analytics applications, such as bus factor analysis and knowledge islands, minimizing the need for extensive implementation efforts.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

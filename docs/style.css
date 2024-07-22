@@ -75,7 +75,16 @@ p {
     line-height: 1.6;
     color: #555;
 }
-
+li{
+    line-height: 1.6;
+    color: #555;
+    text-align: -webkit-center;
+}
+li strong{
+    line-height: 1.6;
+    color: #333;
+    text-align: -webkit-center;
+}
 a {
     color: #FF9800;; /* Dark blue for links to match header */
     text-decoration: none;
@@ -118,4 +127,10 @@ img {
     background-color: #e68903; /* Darker orange for hover effect */
     transform: scale(1.05); /* Slightly enlarge the button on hover */
     color: #ffffff;
+}
+
+.embedded-demo{
+display: flex;
+width: 100%;
+justify-content: center;
 }
