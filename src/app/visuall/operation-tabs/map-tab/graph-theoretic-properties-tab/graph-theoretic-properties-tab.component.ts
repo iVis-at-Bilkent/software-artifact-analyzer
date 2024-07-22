@@ -422,6 +422,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       this._g.cy.off('pan zoom resize', this.poppedData[i].fn);
     }
     this.poppedData[i].elem.removeClass('graphTheoreticDisplay');
+    this.poppedData[i].elem.removeClass('anomalyBadgeDisplay');
     this.poppedData[i].elem.data('__graphTheoreticProp', undefined);
     this.poppedData.splice(i, 1);
   }
