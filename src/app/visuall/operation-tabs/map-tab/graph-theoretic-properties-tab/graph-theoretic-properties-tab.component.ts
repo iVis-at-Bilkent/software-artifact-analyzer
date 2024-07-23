@@ -399,15 +399,13 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
   }
 
   destroyCurrentPoppers() {
-    console.log("s3sss")
     let size = this.poppedData.length;
     for (let i = 0; i < size; i++) {
       this.destroyPopper('', 0);
     }
   }
 
-  destroyPopper(id: string, i: number = -1) {
-    
+  destroyPopper(id: string, i: number = -1) {  
     if (i < 0) {
       i = this.poppedData.findIndex(x => x.elem.id() == id);
       if (i < 0) {
@@ -422,7 +420,6 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       this._g.cy.off('pan zoom resize', this.poppedData[i].fn);
     }
     this.poppedData[i].elem.removeClass('graphTheoreticDisplay');
-    this.poppedData[i].elem.removeClass('anomalyBadgeDisplay');
     this.poppedData[i].elem.data('__graphTheoreticProp', undefined);
     this.poppedData.splice(i, 1);
   }

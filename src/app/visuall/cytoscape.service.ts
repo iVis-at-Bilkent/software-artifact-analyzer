@@ -536,7 +536,6 @@ export class CytoscapeService {
     this._g.viewUtils.removeHighlights();
     this._g.viewUtils.removeHighlights(this._g.filterRemovedElems(() => true));
     this.removePopperFn();
-    
     this._g.cy.nodes().filter(':visible').forEach(element => {
       if (element._private.classes.values().next().value == 'Issue') {
         this._g.viewUtils.removeHighlights(element)
@@ -544,6 +543,9 @@ export class CytoscapeService {
         //Remove anomaly cues if exist
         if (elementCueValue) {
           element.removeCue()
+          if(element.hasClass('anomalyBadgeDisplay')){
+            element.removeClass('anomalyBadgeDisplay');
+          } 
         }
       }
     }

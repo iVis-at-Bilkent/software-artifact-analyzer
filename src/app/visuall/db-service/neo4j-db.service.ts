@@ -766,6 +766,7 @@ export class Neo4jDb implements DbService {
 
   activateAnomalyCues() {
     this._g.cy.nodes().filter(':visible').forEach(async (element) => {
+     element.addClass("anomalyBadgeDisplay")
      this.activateAnomalyCue(element)
     });
   }
