@@ -1,8 +1,0 @@
-.loading-div {
-  position: absolute;
-  z-index: 100000;
-  right: calc(50% - 2.5vh);
-  top: 35vh;
-  width: 5vh;
-  height: 5vh;
-}
