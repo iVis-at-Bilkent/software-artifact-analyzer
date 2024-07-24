@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.19841596"
-     inkscape:cx="-1897.5288"
-     inkscape:cy="950.02438"
+     inkscape:zoom="0.24845286"
+     inkscape:cx="-10.062271"
+     inkscape:cy="464.87692"
      inkscape:window-width="1792"
      inkscape:window-height="1067"
      inkscape:window-x="0"
@@ -38,6 +38,61 @@
      fit-margin-bottom="0" />
   <defs
      id="defs2">
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect7200"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect7194"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6672"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6148"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect5042"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
     <inkscape:path-effect
        effect="bspline"
        id="path-effect1600"
@@ -120,7 +175,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-748.50458,31.724875)">
+     transform="translate(-748.50458,31.724876)">
     <path
        style="fill:#bb1717;fill-opacity:1;fill-rule:evenodd;stroke-width:7.50148;stroke-linecap:round;stroke-linejoin:round"
        d=""
@@ -159,26 +214,24 @@
          x="158.59663"
          y="235.64595" /></text>
     <g
-       id="g56586"
-       transform="translate(481.41834,-65.031523)">
+       id="g11284">
       <circle
          style="fill:#eaeaea;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.897434;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
          id="circle49657"
-         cx="331.08624"
-         cy="97.306648"
+         cx="812.50458"
+         cy="32.275124"
          r="64" />
-      <text
-         xml:space="preserve"
-         style="font-size:105.818px;line-height:1.45;font-family:sans-serif;fill:#6a6a6a;fill-opacity:1;stroke-width:0.248011"
-         x="294.34894"
-         y="137.50012"
+      <g
+         aria-label="?"
+         transform="matrix(1.0097723,0,0,0.99032228,7.6563061e-6,-0.52916571)"
          id="text53719"
-         transform="scale(1.0097723,0.99032228)"><tspan
-           sodipodi:role="line"
-           id="tspan53717"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:105.818px;font-family:'.SF Hebrew Rounded';-inkscape-font-specification:'.SF Hebrew Rounded Bold';fill:#6a6a6a;fill-opacity:1;stroke-width:0.248011"
-           x="294.34894"
-           y="137.50012">?</tspan></text>
+         style="font-size:105.818px;line-height:1.45;fill:#6a6a6a;stroke:#6a6a6a;stroke-width:6;stroke-linecap:round;stroke-linejoin:round">
+        <path
+           d="m 799.37167,52.548759 v -5.814841 c 0,-2.503613 0.50476,-4.74475 1.51428,-6.723411 1.0499,-2.019042 2.36228,-3.896751 3.93713,-5.633127 1.57485,-1.776757 3.25066,-3.472753 5.02742,-5.087987 1.81714,-1.615233 3.51313,-3.291038 5.08798,-5.027415 1.57485,-1.776757 2.86704,-3.674656 3.87657,-5.693699 1.0499,-2.019042 1.57485,-4.280369 1.57485,-6.783981 0,-2.0998041 -0.30286,-4.0784655 -0.90857,-5.9359843 -0.60571,-1.8978997 -1.55466,-3.5333238 -2.84685,-4.90627248 -1.25181,-1.37294868 -2.84685,-2.46323142 -4.78513,-3.27084832 -1.8979,-0.8076169 -4.13904,-1.2114253 -6.72341,-1.2114253 -2.38247,0 -4.56304,0.4845701 -6.5417,1.4537103 -1.97866,0.9691403 -3.69484,2.32189855 -5.14855,4.0582748 -1.45371,1.6959955 -2.60457,3.7554185 -3.45257,6.1782691 -0.84799,2.4228512 -1.33257,3.4849732 -1.45371,6.3923932 l -4.67317,1.603014 -3.62509,-2.671689 c 0.16152,-3.9977035 0.86818,-4.9804807 2.11999,-8.2917102 1.29219,-3.3112292 3.02856,-6.13788825 5.20913,-8.4799772 2.22095,-2.3824697 4.80532,-4.2197981 7.75312,-5.5119851 2.98819,-1.2921875 6.25904,-1.9382805 9.81255,-1.9382805 4.32075,0 7.9954,0.646093 11.02397,1.9382805 3.02856,1.292187 5.49179,2.9881824 7.38969,5.0879863 1.93829,2.0998039 3.33143,4.50246405 4.17942,7.2079806 0.88838,2.7055165 1.33257,5.4716044 1.33257,8.2982636 0,2.624755 -0.48457,5.007224 -1.45371,7.147409 -0.92876,2.099804 -2.0998,4.078465 -3.51313,5.935984 -1.41333,1.817138 -2.94781,3.573705 -4.60342,5.2697 -1.65561,1.655615 -3.19009,3.35161 -4.60342,5.087986 -1.41333,1.736377 -2.60456,3.573705 -3.5737,5.511986 -0.92876,1.93828 -1.39314,4.098655 -1.39314,6.481125 v 5.330271 l -5.2697,1.068676 z m 10.5394,12.659395 1.04809,5.360557 -1.04809,5.360557 -5.2697,1.068676 -5.2697,-1.068676 -1.04809,-5.360557 1.04809,-5.360557 5.2697,-1.068676 z"
+           style="font-weight:bold;font-family:'Oriya Sangam MN';-inkscape-font-specification:'Oriya Sangam MN Bold'"
+           id="path9230"
+           sodipodi:nodetypes="cscccccscccsscsccccccssccscccscscccccccccccc" />
+      </g>
     </g>
   </g>
 </svg>
