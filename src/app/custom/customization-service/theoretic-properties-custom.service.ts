@@ -36,9 +36,11 @@ export class TheoreticPropertiesCustomService {
   constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) { 
 
     this._adjustSizeMethods = [{ name: 'By know about score ', fn: (elems, scores) => { this.knowAboutScore(elems, scores) } }];
+    this._g.cy.on('remove', (e) => { this.destroyPopper(e.target.id()) });
   }
 
   knowAboutScore (elems, scores){
+    this.destroyCurrentPoppers();
     this.cySelector = '';
     let m = Math.max(...scores);
     this.maxPropValue = m;
@@ -51,7 +53,33 @@ export class TheoreticPropertiesCustomService {
     this.setBadgeColorsAndCoords();
     elems.removeClass('graphTheoreticDisplay');
     elems.addClass('graphTheoreticDisplay');
+    console.log(this.poppedData)
 
+  }
+  destroyCurrentPoppers() {
+    let size = this.poppedData.length;
+    for (let i = 0; i < size; i++) {
+      this.destroyPopper('', 0);
+    }
+  }
+
+  destroyPopper(id: string, i: number = -1) {
+    if (i < 0) {
+      i = this.poppedData.findIndex(x => x.elem.id() == id);
+      if (i < 0) {
+        return;
+      }
+    }
+    this.poppedData[i].popper.remove();
+    // unbind previously bound functions
+    if (this.poppedData[i].fn) {
+      this.poppedData[i].elem.off('position', this.poppedData[i].fn);
+      this.poppedData[i].elem.off('style', this.poppedData[i].fn2);
+      this._g.cy.off('pan zoom resize', this.poppedData[i].fn);
+    }
+    this.poppedData[i].elem.removeClass('graphTheoreticDisplay');
+    this.poppedData[i].elem.data('__graphTheoreticProp', undefined);
+    this.poppedData.splice(i, 1);
   }
 
   generateBadge4Elem(e, badges: number[]) {
