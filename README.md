@@ -1,10 +1,15 @@
 # Software Artifact Analyzer
 
-Software Artifact Analyzer (SAA) was built on a [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) of the [Visuall](https://github.com/ugurdogrusoz/visuall) toolkit to visually analyze varying software artifacts including source code files, pull requests, issues, and commits, as well as their links and their relationships with developers in a software project.
+Software Artifact Analyzer (SAA) is a tool that uses the SAA framework [1], which was developed to quickly build visual analysis tools for software artifact graphs with the aim to improve the software development process.
+A software artifact graph consists of software artifacts including source code files, pull requests, issues, and commits, as well as their links and their relationships with developers in a software project. Analyzing these graphs provides useful insights into the development process, enabling applications such as expert or reviewer recommendations and detecting process anomalies.
+
+SAA web page, including a demo, a video tutorial, and instructions on usage & customization, may be found [here](https://ivis-at-bilkent.github.io/software-artifact-analyzer/).
 
 ![Screenshot](https://github.com/iVis-at-Bilkent/software-artifact-analyzer/assets/59064089/4118240f-9942-4cc5-a61d-e268bf3740b3)
 
-SAA web page, including instructions on usage and customization, may be found [here](https://ivis-at-bilkent.github.io/software-artifact-analyzer/) 
+SAA was built on a [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) of the [Visuall](https://github.com/ugurdogrusoz/visuall) toolkit.
+
+[1] Lara Merdol, Eray Tüzün and Ugur Dogrusoz, "SAA: a framework for improving the software development process via visualization-based software analytics", under review, 2024.
 
 ## Running a local instance
 
@@ -23,7 +28,7 @@ SAA web page, including instructions on usage and customization, may be found [h
 `npm run ng build` and `npm run build-prod` commands generate files inside ***dist\ng-visuall*** folder. An HTTP server should serve these files. You should use [server.js](server.js) file to run a server with command `node server.js`. 
 
 ## Credits
-[Visuall](https://github.com/ugurdogrusoz/visuall) and dependencies including cytoscape.js.
+[Visuall](https://github.com/ugurdogrusoz/visuall) and its dependencies including cytoscape.js.
 
 ## About
 SAA is being developed by [i-Vis Research Lab](http://www.cs.bilkent.edu.tr/~ivis/)  and [BILSEN Research Group](https://bilsen.cs.bilkent.edu.tr/)  at Bilkent University.
