@@ -193,7 +193,7 @@ export class ContextMenuCustomizationService {
               this.getNeighbors(
                 x,
                 { isNode: true, customTxt: "Show issues recently assigned to: " },
-                { edgeType: "ASSIGNED", targetType: "Issue" },
+                { edgeType: "ASSIGNED_TO", targetType: "Issue" },
                 this._g.userPrefs.queryNeighborLimit.getValue()
               );
             },
@@ -206,7 +206,7 @@ export class ContextMenuCustomizationService {
               this.getNeighbors(
                 x,
                 { isNode: true, customTxt: "Show issues assigned to: " },
-                { edgeType: "ASSIGNED", targetType: "Issue" }
+                { edgeType: "ASSIGNED_TO", targetType: "Issue" }
               );
             },
           },
@@ -220,7 +220,7 @@ export class ContextMenuCustomizationService {
               this.deleteNeighbors(
                 x,
                 { isNode: true, customTxt: "Hide issues assigned to: " },
-                { edgeType: "ASSIGNED", targetType: "Issue" }
+                { edgeType: "ASSIGNED_TO", targetType: "Issue" }
               );
             },
           },

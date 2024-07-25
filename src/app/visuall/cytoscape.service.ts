@@ -585,6 +585,7 @@ export class CytoscapeService {
       try {
         if (this._g.cy.$().length == 0) {
           this._g.expandCollapseApi.loadJson(txt, false);
+          this._dbService.addIssueBadges()
         } else {
           const modal = this._modalService.open(LoadGraphFromFileModalComponent);
           modal.componentInstance.txt = txt;

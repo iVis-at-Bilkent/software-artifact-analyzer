@@ -4,5 +4,5 @@ spawn ./gitpull.sh
 expect -exact "Username for 'https://github.com': "
 send -- "saanalyzer\r"
 expect -exact "Password for 'https://saanalyzer@github.com':"
-send -- "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\r"
+send -- "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\r"
 expect eof
