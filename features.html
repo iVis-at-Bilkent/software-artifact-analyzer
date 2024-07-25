@@ -10,37 +10,91 @@
     <div class="container">
         <header>
             <img src="assets/logo.svg" alt="SAA Logo" class="logo">
+            <p class="name"> Software Artifact Analyzer </p>
             <nav>
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="features.html" class="active">Key Features</a></li>
-                    <li><a href="guides.html">Guides</a></li>
-                    <li><a href="implications.html">Practitioner Insights</a></li>
+                    <li><a href="guides.html">User & Developer Guides</a></li>
+                    <li><a href="highlights.html">Highlights</a></li>
+                    <li><a href="about.html">About</a></li>
                 </ul>
             </nav>
         </header>
         <main id="content">
             <!-- Key Features Page Content --> 
             <h1>Key Features</h1>
-            <ul>
-                <li><strong>Context Menu:</strong> Implemented using the <a href="https://github.com/iVis-at-Bilkent/cytoscape.js-context-menus">cytoscape.js-context-menus</a> library. The context menu is specific to each node, allowing users to perform operations tailored to each software artifact and developer. Relation-based queries are used to  reveal connections between different software artifacts or developers.<bold> For instance, users can access source code files modified by the pull requests from the context menu of the  pull requests.</bold>
-                <br><img src="assets/figure1.png" alt="Context Menu"></li><br><hr>
-                <li><strong>Grouping Nodes:</strong> SAA facilitates the grouping of nodes based on developers, enhancing visualization to understand relationships and dynamics within a software project.</li>
-                <br><hr>
-                <li><strong>Reviewer Recommendation:</strong> Utilizing the RSTrace+ [1] algorithm, SAA assists in making reviewer assignments, offering a visual representation of analysis results to boost confidence in decision-making.
-                <br>
-                <img src="assets/figure8.png" alt="Reviewer Recommendation">
-                <br>Users can customize their view by choosing the number of recommendations to display and incorporating a recency factor for calculation.
-               The table results furnish a list of recommended reviewers, each accompanied by their respective scores. The graph results provide the choice to display the graph either clustered by recommended developers or not.
-            </li><hr>
-            <br><br>
-                <li><strong>Bug Tracking Process Anomaly Detection:</strong> SAA detects 11 types of bug-tracking process anomalies, as categorized by Qamar et al. [2], contributing to process evaluation and anomaly prevention. <br><img src="assets/figure9.png" alt="Anomaly Detection"> </li><hr>
-                <li><strong>Report Component:</strong> SAA allows users to report analysis results or observations directly on GitHub or Jira platforms, promoting seamless integration and practicality. Users can submit reports as comments under pull requests in GitHub or issue comments in Jira, enhancing collaboration and communication.
-                <br><img src="assets/figure3.png" alt="Report Component"></li> <br><br><hr>
-                <p>This tool empowers developers with the ability to detect anomalies, make informed decisions, and collaborate effectively within the context of their software projects.</p>
-                <p><a href="#1">[1]</a> E. Sülün, E. Tüzün, and U. Doğrusöz, “RSTrace+: Reviewer suggestion using software artifact traceability graphs,” Information and Software Technology, vol. 130, p. 106455, 2021.</p>
-                <p><a href="#2">[2]</a> K. A. Qamar, E. Sülün, and E. Tüzün, “Taxonomy of bug tracking process smells: Perceptions of practitioners and an empirical analysis,” Information and Software Technology, vol. 150, p. 106972, 2022. doi:10.1016/j.infsof.2022.106972</p>
-            </ul>
+            <p>Software Artifact Analyzer (SAA) was designed to visually analyze a software's artifact traceability graph to
+                gain insight into the development process and improve it <a href="#1">[1]</a>.</p>
+
+            <h2>Initial artifact traceability graph of interest</h2>
+            <p>The user may initiate their analysis either through an issue tracking tool such as GitHub and Jira or directly
+                launch SAA and construct a query. A query might be an SQL-like query (e.g., all issues with a type of bug and
+                priority of equal) or a more advanced graph-based query (e.g., any files that developers all A, B and C
+                contributed to).
+            </p>
+            <p>This basically forms a "landing" artifact traceability graph of interest, which may be further extended
+                through additional queries or via context menus of artifacts in the graph.
+            </p>
+            <p>The context menus are specific to each node type, allowing users to perform operations tailored to that specific
+                software artifact and developer. For instance, one might be interested in finding <bold>any source code files
+                modified by a particular pull request</bold> from the context menu of that pull request as exemplified below.
+                <img width="800" src="assets/context-menus.png" alt="Context Menu">
+            </p>
+            <h2>Inspecting graph content</h2>
+            <p>By selecting an artifact or developer or a relation among them, you may get detailed information about that entity
+                or the relationship through object inspectors.
+                <img width="800" src="assets/inspector.png" alt="Object Inspector">
+            </p>
+
+            <h2>Complexity management through grouping</h2>
+            <p>SAA facilitates the grouping of nodes either manually or automatically based on topology or developers, 
+                enhancing analysis and reducing complexity. Below is an example of a traceability graph grouped by developer.
+                <img width="800" src="assets/grouping.png" alt="Grouping by Developer">
+            </p>
+
+            <p>SAA hosts some readily available software analytic methods described below to illustrate how such methods may be
+                integrated into the framework quickly.
+            </p>
+
+            <h2>Reviewer recommendation</h2>
+            <p>Utilizing the RSTrace+ algorithm <a href="#2">[2]</a>, SAA assists in making reviewer assignments, offering 
+                a visual representation of analysis results to boost confidence in decision-making.
+                <img width="1000" src="assets/reviewer-recommendation.png" alt="Reviewer Recommendation">
+            </p>
+            
+            <p>Users can customize their view by choosing the number of recommendations to display and incorporating a recency
+                factor for calculation. The table results furnish a list of recommended reviewers, each accompanied by their
+                respective scores. The graph results provide the choice to display the graph either clustered by recommended 
+                developers or not.
+            </p>
+
+            <h2>Expert recommendation</h2>
+            <p>A similar technique to the RSTrace+ algorithm can also be used to identify experts or suitable developers on
+                a specific source code file or a group of such files.
+            </p>
+
+            <h2>Bug tracking process anomaly detection</h2>
+            <p>SAA detects a high number of types of bug-tracking process anomalies, as categorized by Qamar et al. 
+                in <a href="#3">[3]</a>, contributing to process evaluation and anomaly prevention.
+                <img width=1000 src="assets/anomaly-detection.png" alt="Anomaly Detection">
+            </p>
+            <p>Visual cues on each issue aid in quickly identifying issues with higher number of anomalies, with the tooltips
+                summarizing the type of anomalies detected.
+            </p>
+            
+            <h2>Integration with issue tracking tools</h2> 
+            <p>SAA allows users to report analysis results or observations directly on GitHub or Jira platforms, promoting seamless
+                integration and practicality. Users can submit reports as comments under <i>pull requests</i> in GitHub or 
+                as comments under <i>issues</i> in Jira, enhancing collaboration and communication.
+                <img width=1000 src="assets/reporting.png" alt="Report Component">
+            </p>
+            <p>This empowers developers with the ability to detect anomalies, make informed decisions, and collaborate effectively within the context of their software projects.</p>
+
+            <h3>References</h3>
+            <p><a href="#1">[1]</a> L. Merdol, E. Tüzün and U. Dogrusoz, "SAA: a framework for improving the software development process via visualization-based software analytics", under review, 2024.</p>
+            <p><a href="#2">[2]</a> E. Sülün, E. Tüzün, and U. Doğrusöz, “<a href="https://doi.org/10.1145/3345629.3345637" target="_blank">RSTrace+: Reviewer suggestion using software artifact traceability graphs</a>,” Information and Software Technology, vol. 130, p. 106455, 2021.</p>
+            <p><a href="#3">[3]</a> K. A. Qamar, E. Sülün, and E. Tüzün, “<a href="https://doi.org/10.1016/j.infsof.2022.106972" target="_blank">Taxonomy of bug tracking process smells: Perceptions of practitioners and an empirical analysis</a>,” Information and Software Technology, vol. 150, p. 106972, 2022. doi:10.1016/j.infsof.2022.106972</p>
         </main>
     </div>
     

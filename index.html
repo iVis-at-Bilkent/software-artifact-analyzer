@@ -10,30 +10,44 @@
     <div class="container">
         <header>
             <img src="assets/logo.svg" alt="SAA Logo" class="logo">
+            <p class="name"> Software Artifact Analyzer </p>
             <nav>
                 <ul>
                     <li><a href="index.html" class="active" >Home</a></li>
                     <li><a href="features.html">Key Features</a></li>
-                    <li><a href="guides.html">Guides</a></li>
-                    <li><a href="implications.html">Practitioner Insights</a></li>
+                    <li><a href="guides.html">User & Developer Guides</a></li>
+                    <li><a href="highlights.html">Highlights</a></li>
+                    <li><a href="about.html">About</a></li>
                 </ul>
             </nav>
         </header>
         <main id="content">
             <!-- Home Page Content -->
             <h1>Software Artifact Analyzer</h1>
-            <p>Software Artifact Analyzer (SAA) was built on a <a href="https://help.github.com/en/github/getting-started-with-github/fork-a-repo">fork</a> of the repository of the tool <a href="https://github.com/ugurdogrusoz/visuall">Visuall</a> to visually analyze different software artifacts, including source code files, pull requests, issues, and commits, as well as their relationships with developers in the software projects.</p>
-            <img src="assets/figure5.png" alt="Screenshot">
-            <section id="demo">
-                <h2>Demo</h2>
-                <p>A sample demo deployment can be found below:</p>
-                <div class="demo-button-container">
-                    <a href="http://saa.cs.bilkent.edu.tr/" class="demo-button">View Demo</a>
-                </div>
-            </section>
+            <p>Software artifacts contain essential project information. Analyzing these artifacts and their relationships
+                via so-called <i>software artifact traceability graphs</i> provides valuable insights. 
+                Metadata from modern tracking tools can be mined to create comprehensive traceability graphs, which aid in
+                software development decision-making.  
+                With the hope to highlight more issues and enhance understanding in software development projects, we introduce 
+                Software Artifact Analyzer (SAA) <a href="#1">[1]</a>. SAA employs a unified and comprehensive traceability graph and many interactive 
+                visualization features. It is specifically designed for easy extension with additional software analytics 
+                applications beyond those already included.</p>
+
+            <!-- <img src="assets/figure5.png" alt="Screenshot"> --->
+
+            <p>Here is a video tutorial:</p>
+            <div class="embedded-video">
+                <iframe src="https://youtu.be/dr1gqSR8OGM?si=EErbPuCBERCxLU24" width="640" height="480" allow="autoplay"></iframe>
+            </div>
+
+            <br><p>Here is a sample demo deployment:</p>
+            <p id="demo" class="demo-button-container">
+                <a href="http://saa.cs.bilkent.edu.tr/" class="demo-button">Launch Demo</a></p>    
+
+            <br><p>Please cite the following when using SAA:<br>
+            <a href="#1">[1]</a> L. Merdol, E. Tüzün and U. Dogrusoz, "SAA: a framework for improving the software development process via visualization-based software analytics", under review, 2024.</p>
         </main>
     </div>
-    <div class="embedded-demo">   <iframe src="https://drive.google.com/file/d/1V6huUSazXYkD60ueEugm5V0ua47cluXL/view?usp=sharing" width="640" height="480" allow="autoplay"></iframe></div>
     <script src="main.js"></script>
 </body>
 </html>
