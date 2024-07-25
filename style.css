@@ -174,7 +174,7 @@ width: 100%;
 justify-content: center;
 }
 
-#practitioner-insights {
+#highlights {
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -199,6 +199,7 @@ justify-content: center;
     color: #A87D1A;
 }
 .card h3 {
+    text-align: -webkit-center;
     margin-top: 0;
     color: #333;
 }
