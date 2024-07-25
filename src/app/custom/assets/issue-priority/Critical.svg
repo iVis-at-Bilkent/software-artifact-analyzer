@@ -15,21 +15,21 @@
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
      id="namedview7"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.19841596"
-     inkscape:cx="1574.9741"
-     inkscape:cy="950.02438"
+     inkscape:zoom="0.23156318"
+     inkscape:cx="1034.275"
+     inkscape:cy="434.00682"
      inkscape:window-width="1792"
      inkscape:window-height="1067"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:window-x="138"
+     inkscape:window-y="30"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1"
      fit-margin-top="0"
@@ -38,6 +38,61 @@
      fit-margin-bottom="0" />
   <defs
      id="defs2">
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect7200"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect7194"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6672"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6148"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect5042"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
     <inkscape:path-effect
        effect="bspline"
        id="path-effect1600"
@@ -147,7 +202,7 @@
        id="path4723"
        transform="scale(0.26458333)" />
     <circle
-       style="fill:#ebe0e0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.897434;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.897434;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
        id="circle56467"
        cx="-48.525898"
        cy="32.275124"
@@ -155,21 +210,17 @@
        inkscape:export-filename="/Users/ugur/Desktop/saa-priorities-old/Critical.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
-    <text
-       xml:space="preserve"
-       style="font-size:216.7px;line-height:1.45;font-family:sans-serif;fill:#bb1717;fill-opacity:1;stroke-width:0.507891"
-       x="-57.571426"
-       y="131.36452"
+    <g
+       aria-label="!"
+       transform="matrix(1.6916732,0,0,0.59113072,-0.1612072,-2.645835)"
        id="text33391"
-       transform="scale(1.6916732,0.59113072)"
-       inkscape:export-filename="/Users/ugur/Desktop/saa-priorities-old/Critical.png"
-       inkscape:export-xdpi="300"
-       inkscape:export-ydpi="300"><tspan
-         sodipodi:role="line"
-         id="tspan33389"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:216.7px;font-family:'.SF Hebrew Rounded';-inkscape-font-specification:'.SF Hebrew Rounded';fill:#bb1717;fill-opacity:1;stroke-width:0.507891"
-         x="-57.571426"
-         y="131.36452">!</tspan></text>
+       style="font-size:216.7px;line-height:1.45;fill:#bb1717;stroke-width:0.507891">
+      <path
+         d="m -28.685148,82.162614 c -2.609993,0 -4.655664,-0.775944 -6.137011,-2.327832 -1.410807,-1.622429 -2.151481,-3.77391 -2.222022,-6.454444 l -1.058105,-87.082079 v 0 0 c 0,-2.892155 0.917025,-5.184716 2.751074,-6.877685 1.834049,-1.763509 4.056071,-2.645264 6.666064,-2.645264 2.680534,0 4.902556,0.881755 6.666065,2.645264 1.834049,1.692969 2.751074,3.98553 2.751074,6.877685 v 0 0 l -1.058105,87.082079 c -0.07054,2.680534 -0.846485,4.832015 -2.327832,6.454444 -1.410807,1.551888 -3.421208,2.327832 -6.031202,2.327832 z m 0,59.211776 c -3.385937,0 -6.242822,-10.11569 -8.570654,-12.44352 -2.327832,-2.32783 -1.302101,-5.18471 -1.302101,-8.57065 0,-3.45648 -1.025731,-6.31336 1.302101,-8.57065 2.327832,-2.32783 5.184717,-12.443521 8.570654,-12.443521 3.456478,0 6.313363,10.115691 8.570655,12.443521 2.327832,2.25729 1.614908,5.11417 1.614908,8.57065 0,3.38594 0.712924,6.24282 -1.614908,8.57065 -2.257292,2.32783 -5.114177,12.44352 -8.570655,12.44352 z"
+         style="font-family:'.SF Hebrew Rounded';-inkscape-font-specification:'.SF Hebrew Rounded'"
+         id="path2726"
+         sodipodi:nodetypes="sccccscscsccccsssscscscs" />
+    </g>
     <text
        xml:space="preserve"
        style="font-size:223.4px;line-height:1.45;font-family:sans-serif;fill:#bb1717;fill-opacity:1;stroke-width:0.523594"

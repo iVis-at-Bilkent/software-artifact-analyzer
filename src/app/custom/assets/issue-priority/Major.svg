@@ -15,17 +15,17 @@
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
      id="namedview7"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.19841596"
-     inkscape:cx="-83.158633"
-     inkscape:cy="950.02438"
+     inkscape:zoom="0.23156318"
+     inkscape:cx="1504.9888"
+     inkscape:cy="563.5611"
      inkscape:window-width="1792"
      inkscape:window-height="1067"
      inkscape:window-x="0"
@@ -38,6 +38,61 @@
      fit-margin-bottom="0" />
   <defs
      id="defs2">
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect7200"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect7194"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6672"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6148"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect5042"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
     <inkscape:path-effect
        effect="bspline"
        id="path-effect1600"
@@ -147,7 +202,7 @@
        id="path4723"
        transform="scale(0.26458333)" />
     <circle
-       style="fill:#ebe0e0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.897434;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.897434;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
        id="circle24585"
        cx="94.979187"
        cy="32.275124"
@@ -156,7 +211,7 @@
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
     <rect
-       style="fill:#e48282;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#e66767;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
        id="rect24593"
        width="28.357342"
        height="15.064834"
@@ -168,7 +223,7 @@
        inkscape:export-ydpi="300" />
     <path
        sodipodi:type="star"
-       style="opacity:1;fill:#e48282;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.77953;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
+       style="opacity:1;fill:#e66767;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.77953;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="path24803"
        inkscape:flatsided="true"
        sodipodi:sides="3"
@@ -188,7 +243,7 @@
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
     <rect
-       style="fill:#e48282;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#e66767;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
        id="rect25908"
        width="28.357342"
        height="15.064834"
@@ -199,7 +254,7 @@
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
     <rect
-       style="fill:#e48282;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#e66767;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
        id="rect25910"
        width="28.357342"
        height="15.064834"

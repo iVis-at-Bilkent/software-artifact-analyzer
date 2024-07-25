@@ -15,17 +15,17 @@
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
      id="namedview7"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.19841596"
-     inkscape:cx="-7.5598757"
-     inkscape:cy="960.10422"
+     inkscape:zoom="0.23156318"
+     inkscape:cx="-518.2171"
+     inkscape:cy="347.63731"
      inkscape:window-width="1792"
      inkscape:window-height="1067"
      inkscape:window-x="0"
@@ -38,6 +38,61 @@
      fit-margin-bottom="0" />
   <defs
      id="defs2">
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect7200"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect7194"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6672"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6148"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect5042"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
     <inkscape:path-effect
        effect="bspline"
        id="path-effect1600"
@@ -120,7 +175,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-317.98934,31.724879)">
+     transform="translate(-317.98935,31.72488)">
     <path
        style="fill:#bb1717;fill-opacity:1;fill-rule:evenodd;stroke-width:7.50148;stroke-linecap:round;stroke-linejoin:round"
        d=""
@@ -146,37 +201,29 @@
        d=""
        id="path4723"
        transform="scale(0.26458333)" />
-    <g
-       id="g56602"
-       transform="translate(57.125596,-238.57046)">
-      <circle
-         style="fill:#eaeaea;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.897434;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
-         id="circle27199"
-         cx="324.86374"
-         cy="270.84558"
-         r="64" />
-      <g
-         id="g49655"
-         transform="translate(0,16.921265)">
-        <rect
-           style="fill:#82cbe4;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
-           id="rect27423"
-           width="28.357342"
-           height="15.064834"
-           x="310.68506"
-           y="-271.63498"
-           ry="3.5281646"
-           transform="scale(1,-1)" />
-        <rect
-           style="fill:#e48282;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
-           id="rect49651"
-           width="28.357342"
-           height="15.064834"
-           x="310.68506"
-           y="236.21365"
-           ry="3.5281646" />
-      </g>
-    </g>
+    <circle
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.897434;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       id="circle27199"
+       cx="381.98935"
+       cy="32.27512"
+       r="64" />
+    <rect
+       style="fill:#3fa4c6;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       id="rect27423"
+       width="28.357342"
+       height="15.064834"
+       x="367.81067"
+       y="-49.98579"
+       ry="3.5281646"
+       transform="scale(1,-1)" />
+    <rect
+       style="fill:#e66767;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.39623;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       id="rect49651"
+       width="28.357342"
+       height="15.064834"
+       x="367.81067"
+       y="14.564464"
+       ry="3.5281646" />
     <text
        xml:space="preserve"
        style="font-size:223.4px;line-height:1.45;font-family:sans-serif;fill:#bb1717;fill-opacity:1;stroke-width:0.523594"
