@@ -113,7 +113,7 @@ export class CustomizationModule {
   constructor(private _db: Neo4jDb) {
     CustomizationModule.db = _db;
     CustomizationModule.defaultTimebarMetrics = [
-      { incrementFn: null, name: 'Serious Issue', className: 'Issue', rules: this.seriousIssues(), color: '#3366cc' },
+      { incrementFn: null, name: 'Serious Issues', className: 'Issue', rules: this.seriousIssues(), color: '#3366cc' },
       { incrementFn: null, name: 'Overloaded Developers', className: 'Developer', rules: this.overloadedDevelopers(), color: '#cc3333' },
       { incrementFn: null, name: 'Open Pull Requests', className: 'PullRequest', rules: this.openPullRequests(), color: '#33cc33' },
       { incrementFn: null, name: 'Merged Pull Requests', className: 'MERGED', rules: this.mergedPullRequests(), color: '#ff9933' },
