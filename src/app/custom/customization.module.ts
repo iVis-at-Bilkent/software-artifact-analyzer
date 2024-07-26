@@ -113,10 +113,10 @@ export class CustomizationModule {
   constructor(private _db: Neo4jDb) {
     CustomizationModule.db = _db;
     CustomizationModule.defaultTimebarMetrics = [
-      { incrementFn: null, name: 'Serious Issue Count', className: 'Issue', rules: this.seriousIssues(), color: '#3366cc' },
-      { incrementFn: null, name: 'Overloaded Developers Count', className: 'Developer', rules: this.overloadedDevelopers(), color: '#cc3333' },
-      { incrementFn: null, name: 'Open Pull Requests Count', className: 'PullRequest', rules: this.openPullRequests(), color: '#33cc33' },
-      { incrementFn: null, name: 'Closed Pull Requests Count', className: 'MERGED', rules: this.mergedPullRequests(), color: '#ff9933' },
+      { incrementFn: null, name: 'Serious Issue', className: 'Issue', rules: this.seriousIssues(), color: '#3366cc' },
+      { incrementFn: null, name: 'Overloaded Developers', className: 'Developer', rules: this.overloadedDevelopers(), color: '#cc3333' },
+      { incrementFn: null, name: 'Open Pull Requests', className: 'PullRequest', rules: this.openPullRequests(), color: '#33cc33' },
+      { incrementFn: null, name: 'Merged Pull Requests', className: 'MERGED', rules: this.mergedPullRequests(), color: '#ff9933' },
       { incrementFn: null, name: 'Highly Commented Issues', className: 'Issue', rules: this.highlyCommentedIssues(), color: '#9933cc' }
     ];
   }
@@ -129,7 +129,7 @@ export class CustomizationModule {
     return root1;
   }
   overloadedDevelopers(): RuleNode {
-    const issueCond1: Rule = { propertyOperand: 'ASSIGNED_TO', propertyType: 'edge', rawInput: '2', inputOperand: '2', ruleOperator: null, operator: '>=' };
+    const issueCond1: Rule = { propertyOperand: 'ASSIGNED_TO', propertyType: 'edge', rawInput: '2', inputOperand: '2', ruleOperator: null, operator: '>' };
     const root1: RuleNode = { r: issueCond1, parent: null, children: [] };
     return root1;
   }
