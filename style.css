@@ -179,11 +179,29 @@ justify-content: center;
     margin: 0 auto;
 }
 
+.flex-container {
+    display: flex;
+    justify-content: space-around;
+}
+
 .card-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
 }
+
+.flex_text_container {
+    width: 44%;
+}
+
+.flex_text_img_separator {
+    width: 14%;
+}
+
+.flex_img_container {
+    width: 42%;
+}
+
 .card {
     background-color: #fff;
     border: 1px solid #ddd;

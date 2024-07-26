@@ -28,30 +28,43 @@
                 gain insight into the development process and improve it <a href="#1">[1]</a>.</p>
 
             <h2>Initial artifact traceability graph of interest</h2>
-            <p>The user may initiate their analysis either through an issue tracking tool such as GitHub and Jira or directly
-                launch SAA and construct a query. A query might be an SQL-like query (e.g., all issues with a type of bug and
-                priority of equal) or a more advanced graph-based query (e.g., any files that developers all A, B and C
-                contributed to).
-            </p>
-            <p>This basically forms a "landing" artifact traceability graph of interest, which may be further extended
-                through additional queries or via context menus of artifacts in the graph.
-            </p>
-            <p>The context menus are specific to each node type, allowing users to perform operations tailored to that specific
-                software artifact and developer. For instance, one might be interested in finding <bold>any source code files
-                modified by a particular pull request</bold> from the context menu of that pull request as exemplified below.
-                <img width="70%" src="assets/context-menus.png" alt="Context Menu">
-            </p>
+            <div class="flex-container">
+                <div class="flex_text_container">
+                    <p>The user may initiate their analysis either through an issue tracking tool such as GitHub and Jira or directly
+                        launch SAA and construct a query. A query might be an SQL-like query (e.g., all issues with a type of bug and
+                        priority of equal) or a more advanced graph-based query (e.g., any files that developers all A, B and C
+                        contributed to).
+                    </p>
+                    <p>This basically forms a "landing" artifact traceability graph of interest, which may be further extended
+                        through additional queries or via context menus of artifacts in the graph.
+                    </p>
+                    <p>The context menus are specific to each node type, allowing users to perform operations tailored to that specific
+                        software artifact or developer. For instance, one might be interested in finding <b>any source code files
+                        modified by a particular pull request</b>, followed by <b>author(s) of the related commit</b> from the context menu of that pull request as exemplified below.
+                    </p>
+                </div>
+                <div class="flex_text_img_separator"></div>
+                <div class="flex_img_container">
+                    <img src="assets/context-menus.gif" alt="Context Menu">
+                </div>
+            </div>
             <h2>Inspecting graph content</h2>
             <p>By selecting an artifact or developer or a relation among them, you may get detailed information about that entity
-                or the relationship through object inspectors.
+                or the relationship through object inspectors. When applicable, the inspector will link the artifact to associated
+                any GitHub or Jira page.
                 <img width="70%" src="assets/inspector.png" alt="Object Inspector">
             </p>
 
             <h2>Complexity management through grouping</h2>
             <p>SAA facilitates the grouping of nodes either manually or automatically based on topology or developers, 
                 enhancing analysis and reducing complexity. Below is an example of a traceability graph grouped by developer.
-                <img width="70%" src="assets/grouping.png" alt="Grouping by Developer">
             </p>
+
+            <div>
+            <img width="45%" src="assets/grouping-developer.gif" style="display:inline-block" alt="Grouping by Developer">
+            <img width="6%" style="display:inline-block"/>
+            <img width="45%" src="assets/grouping-louvain.gif" style="display:inline-block" alt="Grouping by Topology (Louvain Clustering)">
+            </div>
 
             <p>SAA hosts some readily available software analytic methods described below to illustrate how such methods may be
                 integrated into the framework quickly.
