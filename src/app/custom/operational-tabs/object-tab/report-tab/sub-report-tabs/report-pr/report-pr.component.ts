@@ -45,18 +45,22 @@ export class ReportPrComponent implements OnInit {
       { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
       { label: 'Reviewer Recommendation ', value: this.commentInput.addReviewer, function: "addReviewer()" },
     ]
-    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
-    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
-    `http://${window.location.hostname}:4445/getAuthentication`;
-    this.http.get(url).subscribe(data => {
-      this.authentication = data;
-      this.githubHttpOptions = {
-        headers: new HttpHeaders({
-          'Authorization': `Bearer ${this.authentication.github.access_token}`,
-          'Accept': 'application/vnd.github.v3+json'
-        })
-      };
-    });
+    if( window.location.hostname === "saa.cs.bilkent.edu.tr"){
+      this.authentication = null;
+      this.githubHttpOptions = null
+
+    }else{
+      let url =`http://${window.location.hostname}:4445/getAuthentication`;
+      this.http.get(url).subscribe(data => {
+        this.authentication = data;
+        this.githubHttpOptions = {
+          headers: new HttpHeaders({
+            'Authorization': `Bearer ${this.authentication.github.access_token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          })
+        };
+      });
+    }
   }
 
   addGraph() {
@@ -163,7 +167,7 @@ export class ReportPrComponent implements OnInit {
   }
 
   async postComment() {
-    if (this.authentication.authenticated) {
+    if (this.authentication && this.authentication.authenticated) {
       let commentBody = {
         body: `### ${this.comment.header}\n${this.comment.body}`
       };
@@ -193,7 +197,12 @@ export class ReportPrComponent implements OnInit {
         });
       }
     } else {
-      this.openModal("", "", 'error')
+      const modalRef = this.modalService.open(ModalContentComponent);
+      modalRef.componentInstance.name = 'Shared Database Demo Restrictions'; // Pass data to the modal component
+      modalRef.componentInstance.url = '';
+      modalRef.componentInstance.templateType = 'error';
+      modalRef.componentInstance.message = "This is a shared database demo version of SAA. Certain functionalities, such as reporting on GitHub and Jira, are disabled.";
+      modalRef.componentInstance.title = 'Shared Database Demo Restrictions';
     }
   }
 

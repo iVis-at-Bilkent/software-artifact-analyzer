@@ -6,6 +6,7 @@ import { ProjectAboutModalComponent } from '../../popups/project-about-modal/pro
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Neo4jDb } from '../../db-service/neo4j-db.service';
 import { DbResponseType, GraphResponse } from 'src/app/visuall/db-service/data-types';
+import { ModalContentComponent } from '../../../custom/operational-tabs/object-tab/modal-content/modal-content.component';
 /**
  * @title Dialog elements
  */
@@ -18,14 +19,25 @@ export class ProjectBuilderDialogComponent {
   constructor(public dialog: MatDialog, private _modalService: NgbModal, public _dbService: Neo4jDb) { }
 
   openNewDialog() {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      width: '90vw',
-      height: '90vh',
-    });
+    const hostname = window.location.hostname;
+    if (hostname === 'saa.cs.bilkent.edu.tr') {
+      const modalRef = this._modalService.open(ModalContentComponent);
+      modalRef.componentInstance.name = 'Shared Database Demo Restrictions'; // Pass data to the modal component
+      modalRef.componentInstance.url = '';
+      modalRef.componentInstance.templateType = 'error';
+      modalRef.componentInstance.message = 'This is a shared database demo version of SAA and creating a new project from your own repositories is disabled. For the same reason, you will not be able to use certain other functionality such as reporting on GitHub and Jira and assigning reviewers to a particular Pull Request directly from SAA.';
+      modalRef.componentInstance.title = 'Shared Database Demo Restrictions';
+    }else{
+      const dialogRef = this.dialog.open(DialogComponent, {
+        width: '90vw',
+        height: '90vh',
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+    }
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
   }
 
   openAboutDialog() {

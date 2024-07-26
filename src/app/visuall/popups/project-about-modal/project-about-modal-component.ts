@@ -24,16 +24,21 @@ export class ProjectAboutModalComponent implements OnInit, AfterViewChecked, OnD
 
   ngOnInit() {
     this.statistic =this.modalConfig;
-    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
-    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
-    `http://${window.location.hostname}:4445/getAuthentication`;
-    this.http.get(url).subscribe(data => {
-      if (data) {
-        this.projectName = data["github"]["github_repo"];
-        this.githubUrl = "https://github.com/" + data["github"]["github_repo"];
-        this.jiraUrl = data["jira"]["jira_url"] + "/projects/" + data["jira"]["jira_key"];
-      }
-    });
+    if( window.location.hostname === "saa.cs.bilkent.edu.tr"){
+      this.projectName = "Any23";
+      this.githubUrl = "https://github.com/apache/any23";
+      this.jiraUrl = "https://issues.apache.org/jira/projects/ANY23";
+    }else{
+      let url =`http://${window.location.hostname}:4445/getAuthentication`;
+      this.http.get(url).subscribe(data => {
+        if (data) {
+          this.projectName = data["github"]["github_repo"];
+          this.githubUrl = "https://github.com/" + data["github"]["github_repo"];
+          this.jiraUrl = data["jira"]["jira_url"] + "/projects/" + data["jira"]["jira_key"];
+        }
+      });
+    }
+
   }
   ngAfterViewChecked() {
     this.closeBtnRef.nativeElement.blur();

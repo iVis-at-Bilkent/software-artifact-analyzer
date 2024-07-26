@@ -523,48 +523,57 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   }
 
   assign() {
-    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ?
-      "http://saa.cs.bilkent.edu.tr/api/getAuthentication" :
-      `http://${window.location.hostname}:4445/getAuthentication`;
-    this.http.get(url).subscribe(data => {
-      this.authentication = data;
-      this.githubHttpOptions = {
-        headers: new HttpHeaders({
-          'Authorization': `Bearer ${this.authentication.github.access_token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          "X-GitHub-Api-Version": "2022-11-28",
-          'Content-Type': 'application/json'
-        })
-      };
-      if (this.authentication.authenticated) {
-        this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
-        const url = `https://api.github.com/repos/${this.authentication.github.github_repo}/pulls/${this.pr}/requested_reviewers`;
-        const headers = {
-          'Accept': 'application/vnd.github+json',
-          'Authorization': `Bearer ${this.authentication.github.access_token}`,
-          'X-GitHub-Api-Version': '2022-11-28',
-          'Content-Type': 'application/json'
-        };
-        const body = {
-          reviewers: this.reviewers
-        };
+    if( window.location.hostname === "saa.cs.bilkent.edu.tr"){
+      const modalRef = this.modalService.open(ModalContentComponent);
+      modalRef.componentInstance.name = 'Shared Database Demo Restrictions'; // Pass data to the modal component
+      modalRef.componentInstance.url = '';
+      modalRef.componentInstance.templateType = 'error';
+      modalRef.componentInstance.message = "This is a shared database demo version of SAA. Certain functionalities, such as assigning reviewers to a particular Pull Request directly from SAA are disabled.";
+      modalRef.componentInstance.title = 'Shared Database Demo Restrictions';
 
-        this.http.post(url, body, { headers }).subscribe(
-          (response) => {
-            this.openModal('assigned', "Pull Request  " + this.pr, response["html_url"]);
-            console.log('Reviewers added successfully:', response);
-          },
-          (error) => {
-            console.log(error.error.message);
-            this.openModal('error', undefined, undefined, "Assignment error", error.error.message);
-          }
-
-        );
-      } else {
-        this.openModal('error', undefined, undefined, "You are not authenticated", "You are not authenticated for performing this task")
+    }else{
+      let url =  `http://${window.location.hostname}:4445/getAuthentication`;
+      this.http.get(url).subscribe(data => {
+        this.authentication = data;
+        this.githubHttpOptions = {
+          headers: new HttpHeaders({
+            'Authorization': `Bearer ${this.authentication.github.access_token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            "X-GitHub-Api-Version": "2022-11-28",
+            'Content-Type': 'application/json'
+          })
+        };
+        if (this.authentication.authenticated) {
+          this.reviewers = this.tableInput.results.filter((_, i) => this.tableInput.results2[i]).map(x => x[1].val) as string[];
+          const url = `https://api.github.com/repos/${this.authentication.github.github_repo}/pulls/${this.pr}/requested_reviewers`;
+          const headers = {
+            'Accept': 'application/vnd.github+json',
+            'Authorization': `Bearer ${this.authentication.github.access_token}`,
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json'
+          };
+          const body = {
+            reviewers: this.reviewers
+          };
+  
+          this.http.post(url, body, { headers }).subscribe(
+            (response) => {
+              this.openModal('assigned', "Pull Request  " + this.pr, response["html_url"]);
+              console.log('Reviewers added successfully:', response);
+            },
+            (error) => {
+              console.log(error.error.message);
+              this.openModal('error', undefined, undefined, "Assignment error", error.error.message);
+            }
+  
+          );
+        } else {
+          this.openModal('error', undefined, undefined, "You are not authenticated", "You are not authenticated for performing this task")
+        }
       }
+      );
     }
-    );
+  
   }
 
 }

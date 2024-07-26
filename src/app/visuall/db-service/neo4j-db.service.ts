@@ -6,8 +6,7 @@ import { Rule, ClassBasedRules, RuleNode } from '../operation-tabs/map-tab/query
 import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from '../constants';
 import { TableFiltering } from '../../shared/table-view/table-view-types';
 import { TimebarGraphInclusionTypes } from '../user-preference';
-import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 interface Config {
   httpURL: string;
   neo4jUsername: string;
@@ -27,18 +26,25 @@ export class Neo4jDb implements DbService {
     });
   }
 
-  loadConf(): Observable<Config> {
-    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ?
-      "http://saa.cs.bilkent.edu.tr/api/getNeo4j" :
-      `http://${window.location.hostname}:4445/getNeo4j`;
-    return this._http.get<Config>(url);
 
+
+  loadConf(): Observable<Config> {
+    if (window.location.hostname === "saa.cs.bilkent.edu.tr") {
+      return of({
+        httpURL: "http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit",
+        neo4jUsername: "neo4j",
+        neo4jUserPassword: "01234567"
+      });
+    } else {
+      const url = `http://${window.location.hostname}:4445/getNeo4j`;
+      return this._http.get<Config>(url);
+    }
   }
 
   async runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
     const conf = await this.loadConf().toPromise();
+    console.log(conf);
     const url = conf.httpURL;
-    //console.log(query)
     const username = conf.neo4jUsername;
     const password = conf.neo4jUserPassword;
 

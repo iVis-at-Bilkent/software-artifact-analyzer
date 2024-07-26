@@ -5,6 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 @Component({
   selector: 'dialog-component',
   styleUrls: ['project-builder-dialog-component.css'],
@@ -16,13 +17,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class DialogComponent implements OnInit {
   public safeSrc: SafeResourceUrl;
   private timeoutRef: any;
-  constructor(private http: HttpClient, private elRef: ElementRef, private router: Router, private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<DialogComponent>) {
+  constructor(private http: HttpClient, private elRef: ElementRef, private router: Router, private sanitizer: DomSanitizer, 
+    public dialogRef: MatDialogRef<DialogComponent>) {
   }
-
   ngOnInit() {
     const hostname = window.location.hostname;
     if (hostname === 'saa.cs.bilkent.edu.tr') {
-        this.safeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`http://saa.cs.bilkent.edu.tr/ui/`);
+        //this.safeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`http://saa.cs.bilkent.edu.tr/ui/`);
+
+
     } else {
         this.safeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`http://${hostname}:4450`);
     }

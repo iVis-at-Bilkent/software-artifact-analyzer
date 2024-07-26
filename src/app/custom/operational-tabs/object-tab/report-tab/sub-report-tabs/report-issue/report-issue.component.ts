@@ -64,13 +64,15 @@ export class ReportIssueComponent implements OnInit {
       { label: 'Graph', value: this.commentInput.addGraph, function: "addGraph()" },
       { label: 'Anomaly', value: this.commentInput.addAnomaly, function: "addAnomaly()" },
     ]
-    let url = window.location.hostname == "saa.cs.bilkent.edu.tr" ? 
-    "http://saa.cs.bilkent.edu.tr/api/getAuthentication" : 
-    `http://${window.location.hostname}:4445/getAuthentication`;
-    this.http.get(url).subscribe(data => {
-      this.authentication = data;
-    });
+    if( window.location.hostname === "saa.cs.bilkent.edu.tr"){
+      this.authentication = null;
 
+    }else{
+      let url =`http://${window.location.hostname}:4445/getAuthentication`;
+      this.http.get(url).subscribe(data => {
+        this.authentication = data;
+      });
+    }
     if(this._g.openReportTab.getValue()){
       this.commentInput={
         addGraph: false,  addAnomaly: true
@@ -145,7 +147,7 @@ export class ReportIssueComponent implements OnInit {
   }
 
   async postComment() {
-    if (this.authentication.authenticated) { 
+    if (this.authentication && this.authentication.authenticated) { 
       let body = {
         "header": this.comment.header,
         "text": this.comment.body.substring(this.comment.body.indexOf("]") + 1),
@@ -170,7 +172,12 @@ export class ReportIssueComponent implements OnInit {
         );
     }
     else {
-      this.openModal("", "", 'error')
+      const modalRef = this.modalService.open(ModalContentComponent);
+      modalRef.componentInstance.name = 'Shared Database Demo Restrictions'; // Pass data to the modal component
+      modalRef.componentInstance.url = '';
+      modalRef.componentInstance.templateType = 'error';
+      modalRef.componentInstance.message = "This is a shared database demo version of SAA. Certain functionalities, such as reporting on GitHub and Jira, are disabled.";
+      modalRef.componentInstance.title = 'Shared Database Demo Restrictions';
     }
   }
 
