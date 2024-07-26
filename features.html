@@ -28,14 +28,24 @@
                 gain insight into the development process and improve it <a href="#1">[1]</a>.</p>
 
             <h2>Initial artifact traceability graph of interest</h2>
+            <p>Assuming they agreed to create landing comments, users may initiate their analysis through the links in 
+                the associated comment of an issue tracking tool such as GitHub or Jira.
+                <img src="assets/landing-comments.png" alt="Launching SAA from a comment">
+            </p>
+            <p>Alternatively, a user may launch SAA with a specific artifact or developer in the URL. For instance,
+                <code>http://saa.cs.bilkent.edu.tr/?name=ANY23-245</code>
+                launches SAA with <b>the issue named ANY23-245 and other artifacts/developers that it is directly in relation
+                with</b>.
+            </p>
+            <p>Furthermore, SAA may be started with an empty drawing canvas and a query may be constructed.
+                A query might be an SQL-like query (e.g., all issues with a type of bug and
+                priority of equal) or a more advanced graph-based query (e.g., any files that developers all A, B and C
+                contributed to).
+            </p>
+            <img width="70%" src="assets/query-by-rule.png" alt="Composing and executing a query by rule">
             <div class="flex-container">
                 <div class="flex_text_container">
-                    <p>The user may initiate their analysis either through an issue tracking tool such as GitHub and Jira or directly
-                        launch SAA and construct a query. A query might be an SQL-like query (e.g., all issues with a type of bug and
-                        priority of equal) or a more advanced graph-based query (e.g., any files that developers all A, B and C
-                        contributed to).
-                    </p>
-                    <p>This basically forms a "landing" artifact traceability graph of interest, which may be further extended
+                    <p>Once a "landing" artifact traceability graph of interest is somehow formed, it may be further extended
                         through additional queries or via context menus of artifacts in the graph.
                     </p>
                     <p>The context menus are specific to each node type, allowing users to perform operations tailored to that specific
@@ -43,16 +53,16 @@
                         modified by a particular pull request</b>, followed by <b>author(s) of the related commit</b> from the context menu of that pull request as exemplified below.
                     </p>
                 </div>
-                <div class="flex_text_img_separator"></div>
+                <div class="flex_separator"></div>
                 <div class="flex_img_container">
-                    <img src="assets/context-menus.gif" alt="Context Menu">
+                    <img src="assets/context-menus.gif" alt="Context menus">
                 </div>
             </div>
             <h2>Inspecting graph content</h2>
             <p>By selecting an artifact or developer or a relation among them, you may get detailed information about that entity
                 or the relationship through object inspectors. When applicable, the inspector will link the artifact to associated
                 any GitHub or Jira page.
-                <img width="70%" src="assets/inspector.png" alt="Object Inspector">
+                <img width="70%" src="assets/inspector.png" alt="Object inspector">
             </p>
 
             <h2>Complexity management through grouping</h2>
@@ -60,11 +70,7 @@
                 enhancing analysis and reducing complexity. Below is an example of a traceability graph grouped by developer.
             </p>
 
-            <div>
-            <img width="45%" src="assets/grouping-developer.gif" style="display:inline-block" alt="Grouping by Developer">
-            <img width="6%" style="display:inline-block"/>
-            <img width="45%" src="assets/grouping-louvain.gif" style="display:inline-block" alt="Grouping by Topology (Louvain Clustering)">
-            </div>
+            <img width="60%" src="assets/grouping.gif" alt="Grouping by developer or topology (Louvain clustering)">
 
             <p>SAA hosts some readily available software analytic methods described below to illustrate how such methods may be
                 integrated into the framework quickly.
@@ -73,7 +79,7 @@
             <h2>Reviewer recommendation</h2>
             <p>Utilizing the RSTrace+ algorithm <a href="#2">[2]</a>, SAA assists in making reviewer assignments, offering 
                 a visual representation of analysis results to boost confidence in decision-making.
-                <img width="70%" src="assets/reviewer-recommendation.png" alt="Reviewer Recommendation">
+                <img width="74%" src="assets/reviewer-recommendation.png" alt="Reviewer recommendation">
             </p>
             
             <p>Users can customize their view by choosing the number of recommendations to display and incorporating a recency
@@ -90,7 +96,7 @@
             <h2>Bug tracking process anomaly detection</h2>
             <p>SAA detects a high number of types of bug-tracking process anomalies, as categorized by Qamar et al. 
                 in <a href="#3">[3]</a>, contributing to process evaluation and anomaly prevention.
-                <img width=70% src="assets/anomaly-detection.png" alt="Anomaly Detection">
+                <img width=70% src="assets/anomaly-detection.png" alt="Anomaly detection">
             </p>
             <p>Visual cues on each issue aid in quickly identifying issues with higher number of anomalies, with the tooltips
                 summarizing the type of anomalies detected.
@@ -100,7 +106,7 @@
             <p>SAA allows users to report analysis results or observations directly on GitHub or Jira platforms, promoting seamless
                 integration and practicality. Users can submit reports as comments under <i>pull requests</i> in GitHub or 
                 as comments under <i>issues</i> in Jira, enhancing collaboration and communication.
-                <img width=70% src="assets/reporting.png" alt="Report Component">
+                <img width=70% src="assets/reporting.png" alt="Reporting component">
             </p>
             <p>This empowers developers with the ability to detect anomalies, make informed decisions, and collaborate effectively within the context of their software projects.</p>
 

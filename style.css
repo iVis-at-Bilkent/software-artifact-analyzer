@@ -191,15 +191,15 @@ justify-content: center;
 }
 
 .flex_text_container {
-    width: 44%;
+    width: 50%;
 }
 
-.flex_text_img_separator {
+.flex_separator {
     width: 14%;
 }
 
 .flex_img_container {
-    width: 42%;
+    width: 46%;
 }
 
 .card {
