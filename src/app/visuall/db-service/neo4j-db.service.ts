@@ -32,9 +32,9 @@ export class Neo4jDb implements DbService {
     if (window.location.hostname === "saa.cs.bilkent.edu.tr") {
       return of({
         boltURL: "bolt://ivis.cs.bilkent.edu.tr:3006",
-        httpURL:"http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit",
+        httpURL:"http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit",  
+        neo4jUserPassword: "01234567",
         neo4jUsername: "neo4j",
-        neo4jUserPassword: "01234567"
       });
     } else {
       const url = `http://${window.location.hostname}:4445/getNeo4j`;
@@ -91,7 +91,20 @@ export class Neo4jDb implements DbService {
         this._g.statusMsg.next('Database query execution raised an error!');
         this._g.showErrorModal('Database Query Execution Error', err.message);
       }
+
       this._g.setLoadingStatus(false);
+
+      if (window.location.hostname === "saa.cs.bilkent.edu.tr") {
+
+        this._http.post('http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit', requestBody, {
+          headers: {
+            'Accept': 'application/json; charset=UTF-8',
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + btoa('neo4j' + ':' + '01234567')
+          }})
+
+
+      }
     };
     this._http.post(url, requestBody, {
       headers: {
