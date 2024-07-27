@@ -30,7 +30,7 @@
             <h2>Initial artifact traceability graph of interest</h2>
             <p>Assuming they agreed to create landing comments, users may initiate their analysis through the links in 
                 the associated comment of an issue tracking tool such as GitHub or Jira.
-                <img src="assets/landing-comments.png" alt="Launching SAA from a comment">
+                <img width="90%" src="assets/landing-comments.png" alt="Launching SAA from a comment">
             </p>
             <p>Alternatively, a user may launch SAA with a specific artifact or developer in the URL. For instance,
                 <code>http://saa.cs.bilkent.edu.tr/?name=ANY23-245</code>
@@ -45,12 +45,13 @@
             <img width="70%" src="assets/query-by-rule.png" alt="Composing and executing a query by rule">
             <div class="flex-container">
                 <div class="flex_text_container">
-                    <p>Once a "landing" artifact traceability graph of interest is somehow formed, it may be further extended
+                    <p>Once an initial artifact traceability graph of interest is somehow formed, it may be further extended
                         through additional queries or via context menus of artifacts in the graph.
                     </p>
                     <p>The context menus are specific to each node type, allowing users to perform operations tailored to that specific
                         software artifact or developer. For instance, one might be interested in finding <b>any source code files
-                        modified by a particular pull request</b>, followed by <b>author(s) of the related commit</b> from the context menu of that pull request as exemplified below.
+                        modified by a particular pull request</b>, followed by <b>author(s) of the related commit</b> from the context 
+                        menu of that pull request as exemplified on the right.
                     </p>
                 </div>
                 <div class="flex_separator"></div>
@@ -60,20 +61,21 @@
             </div>
             <h2>Inspecting graph content</h2>
             <p>By selecting an artifact or developer or a relation among them, you may get detailed information about that entity
-                or the relationship through object inspectors. When applicable, the inspector will link the artifact to associated
-                any GitHub or Jira page.
+                or the relationship through object inspectors. When applicable, the inspector will link the artifact to the 
+                associated GitHub or Jira page.
                 <img width="70%" src="assets/inspector.png" alt="Object inspector">
             </p>
 
             <h2>Complexity management through grouping</h2>
             <p>SAA facilitates the grouping of nodes either manually or automatically based on topology or developers, 
-                enhancing analysis and reducing complexity. Below is an example of a traceability graph grouped by developer.
+                enhancing analysis and reducing complexity. Below is an example of a traceability graph grouped first by
+                developers and then by topology using Louvain's clustering algorithm.
             </p>
 
             <img width="60%" src="assets/grouping.gif" alt="Grouping by developer or topology (Louvain clustering)">
 
-            <p>SAA hosts some readily available software analytic methods described below to illustrate how such methods may be
-                integrated into the framework quickly.
+            <p>SAA hosts some readily available software analytic methods described below. Other software analytics methods may be
+                integrated into the existing tool quickly using our well-defined methodology and framework.
             </p>
 
             <h2>Reviewer recommendation</h2>
@@ -93,20 +95,19 @@
                 a specific source code file or a group of such files.
             </p>
 
-            <h2>Bug tracking process anomaly detection</h2>
-            <p>SAA detects a high number of types of bug-tracking process anomalies, as categorized by Qamar et al. 
+            <h2>Issue tracking process anomaly detection</h2>
+            <p>SAA detects a high number of types of issue-tracking process anomalies, as categorized by Qamar et al. 
                 in <a href="#3">[3]</a>, contributing to process evaluation and anomaly prevention.
-                <img width=70% src="assets/anomaly-detection.png" alt="Anomaly detection">
-            </p>
-            <p>Visual cues on each issue aid in quickly identifying issues with higher number of anomalies, with the tooltips
+                Visual cues on each issue aid in quickly identifying issues with higher number of anomalies, with the tooltips
                 summarizing the type of anomalies detected.
             </p>
+            <img width=74% src="assets/anomaly-detection.gif" alt="Anomaly detection">
             
             <h2>Integration with issue tracking tools</h2> 
             <p>SAA allows users to report analysis results or observations directly on GitHub or Jira platforms, promoting seamless
                 integration and practicality. Users can submit reports as comments under <i>pull requests</i> in GitHub or 
                 as comments under <i>issues</i> in Jira, enhancing collaboration and communication.
-                <img width=70% src="assets/reporting.png" alt="Reporting component">
+                <img width=80% src="assets/reporting.png" alt="Reporting component">
             </p>
             <p>This empowers developers with the ability to detect anomalies, make informed decisions, and collaborate effectively within the context of their software projects.</p>
 
