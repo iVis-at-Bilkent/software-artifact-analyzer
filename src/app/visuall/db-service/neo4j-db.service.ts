@@ -202,6 +202,7 @@ export class Neo4jDb implements DbService {
     }, errFn);
   }
   getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, meta?: DbQueryMeta, limit?: number) {
+    console.log(elemIds)
     let isEdgeQuery = meta && meta.isEdgeQuery;
     const idFilter = this.buildIdFilter(elemIds, false, isEdgeQuery);
     let edgeCql = "";
