@@ -418,12 +418,13 @@ export class Neo4jDb implements DbService {
   }
 
   private dateFilterFromUserPref(varName: string, isNode: boolean): string {
-    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
+    console.log(this._g.userPrefs.isLimitDbQueries2range.getValue())
+    if (this._g.userPrefs.isLimitDbQueries2range.getValue() === false) {
+      console.log("ssksskk")
       return '';
     }
     let s = '';
     let keys = [];
-    console.log("ssksskk")
     if (isNode) {
       keys = Object.keys(this._g.appDescription.getValue().objects);
     } else {
