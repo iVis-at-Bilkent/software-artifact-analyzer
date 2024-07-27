@@ -39,6 +39,7 @@ export class AppComponent {
           }      
           const cb = (x) => {
             const elementId = x.data[0][0];
+            console.log(elementId)
             this._dbService.getNeighbors(
               [elementId],
                 (x) => {

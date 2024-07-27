@@ -31,7 +31,8 @@ export class Neo4jDb implements DbService {
   loadConf(): Observable<Config> {
     if (window.location.hostname === "saa.cs.bilkent.edu.tr") {
       return of({
-        httpURL: "http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit",
+        boltURL: "bolt://ivis.cs.bilkent.edu.tr:3006",
+        httpURL:"http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit",
         neo4jUsername: "neo4j",
         neo4jUserPassword: "01234567"
       });
@@ -43,7 +44,7 @@ export class Neo4jDb implements DbService {
 
   async runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
     const conf = await this.loadConf().toPromise();
-    console.log(conf);
+    console.log(conf)
     const url = conf.httpURL;
     const username = conf.neo4jUsername;
     const password = conf.neo4jUserPassword;
