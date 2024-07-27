@@ -418,48 +418,64 @@ export class Neo4jDb implements DbService {
   }
 
   private dateFilterFromUserPref(varName: string, isNode: boolean): string {
-    console.log(this._g.userPrefs.isLimitDbQueries2range.getValue())
-    if (this._g.userPrefs.isLimitDbQueries2range.getValue() === false) {
-      console.log("ssksskk")
+    try {
+      console.log(this._g.userPrefs.isLimitDbQueries2range.getValue());
+  
+      // Check if DB queries are limited
+      if (this._g.userPrefs.isLimitDbQueries2range.getValue() === false) {
+        console.log("Query limit is false");
+        return '';
+      }
+  
+      let s = '';
+      let keys = [];
+  
+      // Determine keys based on whether it's a node or not
+      if (isNode) {
+        keys = Object.keys(this._g.appDescription.getValue().objects);
+      } else {
+        keys = Object.keys(this._g.appDescription.getValue().relations);
+      }
+  
+      // Get date range and inclusion type
+      const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
+      const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
+      const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
+      const mapping = this._g.appDescription.getValue().timebarDataMapping;
+  
+      // Return empty string if mapping is empty or undefined
+      if (!mapping || Object.keys(mapping).length < 1) {
+        return '';
+      }
+  
+      s = ' AND (';
+      for (const k of keys) {
+        if (!mapping[k]) {
+          continue;
+        }
+  
+        const p1 = `COALESCE(${varName}.${mapping[k].begin_datetime}, ${LONG_MIN})`;
+        const p2 = `COALESCE(${varName}.${mapping[k].end_datetime}, ${LONG_MAX})`;
+        const bothNull = `(${varName}.${mapping[k].end_datetime} IS NULL AND ${varName}.${mapping[k].begin_datetime} IS NULL)`;
+  
+        if (inclusionType == TimebarGraphInclusionTypes.overlaps) {
+          s += `(${bothNull} OR (${p1} <= ${d2} AND ${p2} >= ${d1})) AND`;
+        } else if (inclusionType == TimebarGraphInclusionTypes.contains) {
+          s += `(${bothNull} OR (${d1} <= ${p1} AND ${d2} >= ${p2})) AND`;
+        } else if (inclusionType == TimebarGraphInclusionTypes.contained_by) {
+          s += `(${bothNull} OR (${p1} <= ${d1} AND ${p2} >= ${d2})) AND`;
+        }
+      }
+  
+      // Remove the trailing 'AND'
+      s = s.slice(0, -4);
+      s += ')';
+  
+      return s;
+    } catch (error) {
+      console.error("Error generating date filter:", error);
       return '';
     }
-    let s = '';
-    let keys = [];
-    if (isNode) {
-      keys = Object.keys(this._g.appDescription.getValue().objects);
-    } else {
-      keys = Object.keys(this._g.appDescription.getValue().relations);
-    }
-
-    const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
-    const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
-    const mapping = this._g.appDescription.getValue().timebarDataMapping;
-
-    if (!mapping || Object.keys(mapping).length < 1) {
-      return '';
-    }
-
-    s = ' AND (';
-    for (const k of keys) {
-      if (!mapping[k]) {
-        continue;
-      }
-      const p1 = `COALESCE(${varName}.${mapping[k].begin_datetime}, ${LONG_MIN})`;
-      const p2 = `COALESCE(${varName}.${mapping[k].end_datetime}, ${LONG_MAX})`;
-      const bothNull = `(${varName}.${mapping[k].end_datetime} IS NULL AND ${varName}.${mapping[k].begin_datetime} IS NULL)`
-      if (inclusionType == TimebarGraphInclusionTypes.overlaps) {
-        s += `(${bothNull} OR (${p1} <= ${d2} AND ${p2} >= ${d1})) AND`;
-      } else if (inclusionType == TimebarGraphInclusionTypes.contains) {
-        s += `(${bothNull} OR (${d1} <= ${p1} AND ${d2} >= ${p2})) AND`;
-      } else if (inclusionType == TimebarGraphInclusionTypes.contained_by) {
-        s += `(${bothNull} OR (${p1} <= ${d1} AND ${p2} >= ${d2})) AND`;
-      }
-
-    }
-    s = s.slice(0, -4)
-    s += ')'
-    return s;
   }
 
   private extractGraph(response): GraphResponse {
