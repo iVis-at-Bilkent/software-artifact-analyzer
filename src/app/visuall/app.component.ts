@@ -30,6 +30,7 @@ export class AppComponent {
         if (this.paramValue != "") {
           this._g.userPrefs.isLimitDbQueries2range.next(false)
           this._profile.saveUserPrefs();
+          console.log(this._g.userPrefs.isLimitDbQueries2range.getValue())
           let limit = null;
           if (params.get('limit')) {
             limit = params.get('limit');
