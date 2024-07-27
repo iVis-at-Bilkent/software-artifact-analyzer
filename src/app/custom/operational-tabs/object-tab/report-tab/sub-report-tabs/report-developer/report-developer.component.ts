@@ -216,11 +216,11 @@ export class ReportDeveloperComponent implements OnInit {
       }
     } else {
       const modalRef = this.modalService.open(ModalContentComponent);
-      modalRef.componentInstance.name = 'Shared Database Demo Restrictions'; // Pass data to the modal component
+      modalRef.componentInstance.name = 'Demo Restrictions'; // Pass data to the modal component
       modalRef.componentInstance.url = '';
       modalRef.componentInstance.templateType = 'error';
       modalRef.componentInstance.message = "This is a shared database demo version of SAA. Certain functionalities, such as reporting on GitHub and Jira, are disabled.";
-      modalRef.componentInstance.title = 'Shared Database Demo Restrictions';
+      modalRef.componentInstance.title = 'Demo Restrictions';
     }
   }
 

@@ -22,11 +22,11 @@ export class ProjectBuilderDialogComponent {
     const hostname = window.location.hostname;
     if (hostname === 'saa.cs.bilkent.edu.tr') {
       const modalRef = this._modalService.open(ModalContentComponent);
-      modalRef.componentInstance.name = 'Shared Database Demo Restrictions'; // Pass data to the modal component
+      modalRef.componentInstance.name = 'Demo Restrictions'; // Pass data to the modal component
       modalRef.componentInstance.url = '';
       modalRef.componentInstance.templateType = 'error';
-      modalRef.componentInstance.message = 'This is a shared database demo version of SAA and creating a new project from your own repositories is disabled. For the same reason, you will not be able to use certain other functionality such as reporting on GitHub and Jira and assigning reviewers to a particular Pull Request directly from SAA.';
-      modalRef.componentInstance.title = 'Shared Database Demo Restrictions';
+      modalRef.componentInstance.message = 'This is a shared database demo version of SAA and creating a new project from your own repositories is disabled. For the same reason, you will not be able to use certain other functionality such as reporting on GitHub and Jira and assigning reviewers to a particular Pull Request directly from SAA. In this version, you will be using the sample Apache project Any23. For more details, please check the Project-> About... tab.';
+      modalRef.componentInstance.title = 'Demo Restrictions';
     }else{
       const dialogRef = this.dialog.open(DialogComponent, {
         width: '90vw',

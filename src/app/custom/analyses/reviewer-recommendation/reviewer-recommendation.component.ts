@@ -525,11 +525,11 @@ export class ReviewerRecommendationComponent implements OnInit, QueryComponent<D
   assign() {
     if( window.location.hostname === "saa.cs.bilkent.edu.tr"){
       const modalRef = this.modalService.open(ModalContentComponent);
-      modalRef.componentInstance.name = 'Shared Database Demo Restrictions'; // Pass data to the modal component
+      modalRef.componentInstance.name = 'Demo Restrictions'; // Pass data to the modal component
       modalRef.componentInstance.url = '';
       modalRef.componentInstance.templateType = 'error';
       modalRef.componentInstance.message = "This is a shared database demo version of SAA. Certain functionalities, such as assigning reviewers to a particular Pull Request directly from SAA are disabled.";
-      modalRef.componentInstance.title = 'Shared Database Demo Restrictions';
+      modalRef.componentInstance.title = 'Demo Restrictions';
 
     }else{
       let url =  `http://${window.location.hostname}:4445/getAuthentication`;
