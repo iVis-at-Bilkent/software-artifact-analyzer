@@ -27,6 +27,22 @@ SAA was built on a [fork](https://help.github.com/en/github/getting-started-with
 
 `npm run ng build` and `npm run build-prod` commands generate files inside ***dist\ng-visuall*** folder. An HTTP server should serve these files. You should use [server.js](server.js) file to run a server with command `node server.js`. 
 
+### Run Software-Artifact-Analyzer-Configuration Repository:
+
+`git clone https://github.com/LaraMerdol/software-artifact-analyzer-configuration.git` clone [software-artifact-analyzer-configuration](https://github.com/LaraMerdol/software-artifact-analyzer-configuration) repository.
+
+`pip install -r requirements.txt install` loading python module dependencies
+
+`python3 server.py` to run the Python module
+
+`cd ui` go to UI component folder
+ 
+`npm install`  loading dependencies
+
+`npm run build` to generate a production build
+
+`npm start`   to run
+
 ## Credits
 [Visuall](https://github.com/ugurdogrusoz/visuall) and its dependencies including cytoscape.js.
 
