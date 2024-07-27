@@ -94,6 +94,15 @@ export class Neo4jDb implements DbService {
 
       this._g.setLoadingStatus(false);
 
+    };
+    this._http.post(url, requestBody, {
+      headers: {
+        'Accept': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa(username + ':' + password)
+      }
+    }).subscribe(x => {
+      console.log(x)
       if (window.location.hostname === "saa.cs.bilkent.edu.tr") {
 
         this._http.post('http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit', requestBody, {
@@ -105,14 +114,6 @@ export class Neo4jDb implements DbService {
 
 
       }
-    };
-    this._http.post(url, requestBody, {
-      headers: {
-        'Accept': 'application/json; charset=UTF-8',
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(username + ':' + password)
-      }
-    }).subscribe(x => {
       if (isTimeout) {
         clearTimeout(timeoutId); // Clear the timeout if the request completed before the timeout
       }
@@ -148,6 +149,7 @@ export class Neo4jDb implements DbService {
       }
     }, errFn);
   }
+
 
   async runQueryWithoutTimeBoxed(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
     const conf = await this.loadConf().toPromise();
