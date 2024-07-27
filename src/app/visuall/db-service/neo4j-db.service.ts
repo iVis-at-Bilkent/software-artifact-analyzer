@@ -103,17 +103,6 @@ export class Neo4jDb implements DbService {
       }
     }).subscribe(x => {
       console.log(x)
-      if (window.location.hostname === "saa.cs.bilkent.edu.tr") {
-
-        this._http.post('http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit', requestBody, {
-          headers: {
-            'Accept': 'application/json; charset=UTF-8',
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa('neo4j' + ':' + '01234567')
-          }})
-
-
-      }
       if (isTimeout) {
         clearTimeout(timeoutId); // Clear the timeout if the request completed before the timeout
       }
@@ -434,7 +423,7 @@ export class Neo4jDb implements DbService {
     }
     let s = '';
     let keys = [];
-
+    console.log("ssksskk")
     if (isNode) {
       keys = Object.keys(this._g.appDescription.getValue().objects);
     } else {

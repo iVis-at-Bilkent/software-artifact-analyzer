@@ -44,7 +44,7 @@ export class TimebarMetricEditorComponent implements OnInit, OnDestroy {
 
     this.currMetrics = CustomizationModule.defaultTimebarMetrics;
     //CHANGE
-   // this.setCurrMetricsFromLocalStorage();
+    this.setCurrMetricsFromLocalStorage();
     this.setFnsForMetrics();
     this._timeBarService.shownMetrics.next(this.currMetrics);
 
