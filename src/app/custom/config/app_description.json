@@ -764,7 +764,7 @@
     "isStoreUserProfile": true,
     "isCollapseEdgesBasedOnType": false,
     "isCollapseMultiEdgesOnLoad": true,
-    "isLimitDbQueries2range": true,
+    "isLimitDbQueries2range": false,
     "dbQueryTimeRange": {
       "start": -5364669352000,
       "end": 4102434000000
