@@ -67,7 +67,6 @@ buildIdFilter(ids: string[] | number[], hasEnd = false, isEdgeQuery = false): st
 }
 
 preprocessTableDataZip(data, uiColumns): any[] {
-  console.log(data)
   const dbColumns = data.columns as string[];
   let columnMapping = [];
   for (let i = 0; i < uiColumns.length; i++) {

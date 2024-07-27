@@ -147,7 +147,6 @@ export class CytoscapeService {
   }
 
   loadElementsFromDatabase(data: GraphResponse, isIncremental: boolean, fit:boolean=true) {
-    console.log(data)
     if (!data || !data.nodes || !data.edges) {
       this._g.showErrorModal('Empty Graph', 'Empty response from database!')
       return;

@@ -44,7 +44,8 @@ export class Neo4jDb implements DbService {
 
   async runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
     const conf = await this.loadConf().toPromise();
-    console.log(conf)
+
+
     const url = conf.httpURL;
     const username = conf.neo4jUsername;
     const password = conf.neo4jUserPassword;
@@ -102,7 +103,6 @@ export class Neo4jDb implements DbService {
         'Authorization': 'Basic ' + btoa(username + ':' + password)
       }
     }).subscribe(x => {
-      console.log(x)
       if (isTimeout) {
         clearTimeout(timeoutId); // Clear the timeout if the request completed before the timeout
       }
@@ -206,7 +206,6 @@ export class Neo4jDb implements DbService {
     }, errFn);
   }
   getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, meta?: DbQueryMeta, limit?: number) {
-    console.log(elemIds)
     let isEdgeQuery = meta && meta.isEdgeQuery;
     const idFilter = this.buildIdFilter(elemIds, false, isEdgeQuery);
     let edgeCql = "";
@@ -419,11 +418,9 @@ export class Neo4jDb implements DbService {
 
   private dateFilterFromUserPref(varName: string, isNode: boolean): string {
     try {
-      console.log(this._g.userPrefs.isLimitDbQueries2range.getValue());
   
       // Check if DB queries are limited
       if (this._g.userPrefs.isLimitDbQueries2range.getValue() === false) {
-        console.log("Query limit is false");
         return '';
       }
   

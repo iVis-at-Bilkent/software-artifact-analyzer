@@ -53,7 +53,6 @@ export class TheoreticPropertiesCustomService {
     this.setBadgeColorsAndCoords();
     elems.removeClass('graphTheoreticDisplay');
     elems.addClass('graphTheoreticDisplay');
-    console.log(this.poppedData)
 
   }
   destroyCurrentPoppers() {
