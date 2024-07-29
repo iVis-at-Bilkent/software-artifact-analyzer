@@ -259,7 +259,6 @@ export class ReportDeveloperComponent implements OnInit {
 
   onItemSelected(item: string) {
     this.pr_key = item;
-    console.log('Selected Item:', item);
   }
 
   

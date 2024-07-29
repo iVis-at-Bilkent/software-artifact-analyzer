@@ -89,7 +89,6 @@ export function getClassNameFromProperties(properties, propNames: string[]): str
       return edgeClass;
     }
   }
-  console.log('could not find class from')
   return null;
 }
 

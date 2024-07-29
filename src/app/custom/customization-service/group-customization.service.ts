@@ -50,7 +50,6 @@ export class GroupCustomizationService {
         this._cyService.addParentNode(name);
         this._g.cy.elements(`[id = 'c${id}']`).data()["name"] = this._g.cy.elements(`[id = "${id}"]`).data()["name"] 
         this._g.cy.elements(`[id = 'c${id}']`)[0]._private.classes.add("clusterByDeveloper")
-        console.log(this._g.cy.elements(`[id = 'c${id}']`)[0]._private.classes)
         // add the developer to the compound node
         this._g.cy.elements(`[id = "${id}"]`).move({ parent: 'c' + id });
 

@@ -143,7 +143,6 @@ export class Neo4jDb implements DbService {
   async runQueryWithoutTimeBoxed(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
     const conf = await this.loadConf().toPromise();
     const url = conf.httpURL;
-    //console.log(query)
     const username = conf.neo4jUsername;
     const password = conf.neo4jUserPassword;
     const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
