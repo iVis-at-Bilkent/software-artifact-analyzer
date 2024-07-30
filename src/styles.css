@@ -380,3 +380,65 @@ body {
   margin-top: calc((80vh - 500px)/2);
   margin-bottom: calc((80vh - 500px)/2);
 }
+
+/* Angular Material UI Auto Complete Component Changed Style*/
+
+.mat-option {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  line-height: 28px !important;
+  height: 28px !important;
+  width: max-content !important;
+  padding: 0 16px;
+  text-align: left;
+  text-decoration: none;
+  max-width: 100%;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+  max-width: 150px !important;
+}
+
+.mat-option.large {
+  max-width: 20vw !important;
+}
+
+.mat-autocomplete-panel {
+  scrollbar-width: none !important;
+  min-width: max-content !important;
+  border: 1px solid #ccc !important;
+  background-color: #ececec !important;
+  border-radius: 5px !important;
+}
+
+.mat-autocomplete-panel .mat-option.mat-selected:not(.mat-active):not(:hover)::before {
+  content: '✓';
+  /* Unicode checkmark character */
+  display: inline-block;
+  position: absolute;
+  left: 5px;
+  /* Adjust the left position of the checkmark */
+  top: 50%;
+  transform: translateY(-50%);
+  color: black;
+  background: #ececec !important;
+  /* Adjust the color of the checkmark */
+}
+
+.mat-autocomplete-panel .mat-option.mat-selected:not(.mat-active):not(:hover) {
+  background: #ececec !important;
+}
+
+.mat-option:hover:not(.mat-option-disabled),
+.mat-option:focus:not(.mat-option-disabled) {
+  background: rgb(0 0 0 / 4%);
+  border-radius: 5px !important;
+}

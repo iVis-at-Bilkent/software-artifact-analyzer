@@ -7,7 +7,7 @@ import { isPrimitiveType, debounce, LAYOUT_ANIM_DUR, COLLAPSED_EDGE_CLASS, COLLA
 import { GraphHistoryItem, GraphElem } from './db-service/data-types';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorModalComponent } from './popups/error-modal/error-modal.component';
-import { CyStyleCustomizationService } from '../custom/cy-style-customization.service';
+import { CyStyleCustomizationService } from '../custom/customization-service/cy-style-customization.service';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +41,7 @@ export class GlobalVariableService {
   cyNaviPositionSetter: any;
   appDescription = new BehaviorSubject<any>(null);
   dataModel = new BehaviorSubject<any>(null);
+  endPoints = new BehaviorSubject<any>(null); 
   enums = new BehaviorSubject<any>(null);
   initialQuery: string="";
   //The anomaly settings
@@ -74,6 +75,10 @@ export class GlobalVariableService {
 
     this._http.get('./assets/generated/properties.json').subscribe(x => {
       this.dataModel.next(x);
+    }, this.showErr.bind(this));
+
+    this._http.get('./assets/generated/endpoints.json').subscribe(x => {
+      this.endPoints.next(x);
     }, this.showErr.bind(this));
 
     this._http.get('/app/custom/config/enums.json').subscribe(x => {
@@ -139,7 +144,7 @@ export class GlobalVariableService {
 
     hiddenSelector = hiddenSelector.substr(0, hiddenSelector.length - 1);
 
-    if (hiddenSelector.length > 1) {
+    if (hiddenSelector.length > 1 && this.cy.$(hiddenSelector).length>0 ) {
       this.viewUtils.hide(this.cy.$(hiddenSelector));
     }
 
@@ -202,11 +207,11 @@ export class GlobalVariableService {
     }, this.HISTORY_SNAP_DELAY);
   }
 
-  getLabels4Elems(elemIds: string[] | number[], isNode: boolean = true, objDatas: GraphElem[] = null): string {
+  getLabels4Elems(elemIds: string[] , isNode: boolean = true, objDatas: GraphElem[] = null): string {
     return this.getLabels4ElemsAsArray(elemIds, isNode, objDatas).join(',');
   }
 
-  getLabels4ElemsAsArray(elemIds: string[] | number[], isNode: boolean = true, objDatas: GraphElem[] = null): string[] {
+  getLabels4ElemsAsArray(elemIds: string[] , isNode: boolean = true, objDatas: GraphElem[] = null): string[] {
     let cyIds: string[] = [];
     let idChar = 'n';
     if (!isNode) {
@@ -228,7 +233,7 @@ export class GlobalVariableService {
     for (let i = 0; i < cyIds.length; i++) {
       let cName = '';
       if (!objDatas) {
-        cName = this.cy.$('#' + cyIds[i]).className()[0];
+        cName = this.cy.elements(`[id = "${cyIds[i]}"]`).className()[0];
       } else {
         cName = objDatas[i].classes.split(' ')[0];
       }
@@ -239,7 +244,7 @@ export class GlobalVariableService {
       } else {
         let propName = s.slice(s.indexOf('(') + 1, s.indexOf(')'));
         if (!objDatas) {
-          labels.push(this.cy.$('#' + cyIds[i]).data(propName));
+          labels.push(this.cy.elements(`[id = "${cyIds[i]}"]`).data(propName));
         } else {
           const currData = objDatas[i].data;
           let l = currData[propName];
@@ -261,7 +266,7 @@ export class GlobalVariableService {
     });
   }
 
-  getFcoseOptions() {
+  getFcoseOptions(fitValue:boolean=true) {
     let p = 4;
     if (this.userPrefsFromFiles.tilingPadding) {
       p = this.userPrefsFromFiles.tilingPadding.getValue();
@@ -275,7 +280,7 @@ export class GlobalVariableService {
       animate: true,
       // duration of animation in ms, if enabled
       animationDuration: LAYOUT_ANIM_DUR,
-      fit: true,
+      fit: fitValue,
       // padding around layout
       padding: 10,
       // whether to include labels in node dimensions. Valid in 'proof' quality
@@ -395,13 +400,13 @@ export class GlobalVariableService {
     }
   }
 
-  private performLayoutFn(isRandomize: boolean, isDirectCommand: boolean = false, animationDuration: number = LAYOUT_ANIM_DUR) {
+  private performLayoutFn(isRandomize: boolean, isDirectCommand: boolean = false, animationDuration: number = LAYOUT_ANIM_DUR, fit: boolean = true) {
     if (!this.userPrefs.isAutoIncrementalLayoutOnChange.getValue() && !isRandomize && !isDirectCommand) {
       this.cy.fit();
       return;
     }
     if (this.userPrefs.groupingOption.getValue() != GroupingOptionTypes.clusterId) {
-      this.layout = this.getFcoseOptions();
+      this.layout = this.getFcoseOptions(fit);
     }
     this.layout.animationDuration = animationDuration;
     this.layout.tile = this.userPrefs.isTileDisconnectedOnLayout.getValue();
@@ -549,9 +554,9 @@ export class GlobalVariableService {
   }
 
   private addStyle4Emphasize() {
-    const color = '#da14ff';
-    const wid = this.userPrefs.highlightStyles[0].wid.getValue();
-    const OPACITY_DIFF = 0.05;
+    const color = '#ff8a00';
+    const wid = this.userPrefs.highlightStyles[0].wid.getValue() + 4;
+    const OPACITY_DIFF = 0.06;
 
     this.cy.style().selector('node.emphasize')
       .style({

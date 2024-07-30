@@ -4,16 +4,16 @@
     "html_header": "Software Artifact Analyzer",
     "icon": "app/custom/assets/logo.svg",
     "version": "1.0.0 beta",
-    "company_name": "i-Vis at Bilkent",
+    "company_name": "Developed by i-Vis at Bilkent and BILSEN Bilkent University",
     "company_contact": "ivis@cs.bilkent.edu.tr"
   },
   "objects": {
     "Commit": {
       "properties": {
-        "id":"string",
-        "createdAt": "datetime",
         "name": "string",
-        "end": "datetime"
+        "createdAt": "datetime",
+        "end": "datetime",
+        "url":"string"
       },
       "style": {
         "label": "data(name)",
@@ -24,111 +24,109 @@
         "background-image": "app/custom/assets/commit.svg",
         "shape": "diamond",
         "background-fit": "contain",
-        "width": "34px",
-        "height": "34px",
+        "width": "27px",
+        "height": "27px",
         "text-width": "100px",
         "text-outline-color": "#ffffff",
-        "color":"#bd7ebe",
+        "color": "#bd7ebe",
         "text-outline-width": "1px"
       }
     },
     "Developer": {
       "properties": {
-        "id":"string",
-        "name":"string",
-        "authorEmail":"string",
-        "start":"datetime",
-        "end":"datetime"
+        "name": "string",
+        "email": "string",
+        "start": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "data(name)",
         "text-valign": "bottom",
-       "text-margin-y": "-5px",
-         "font-size": "11px",
+        "text-margin-y": "-5px",
+        "font-size": "11px",
         "background-image": "app/custom/assets/developer.svg",
         "shape": "ellipse",
         "background-fit": "contain",
-         "width": "30px",
-        "height": "30px",
+        "width": "24px",
+        "height": "24px",
         "text-max-width": "60px",
         "text-outline-color": "#ffffff",
-        "color":"#976e6e",
+        "color": "#976e6e",
         "text-outline-width": "1px"
       }
-    },    
+    },
     "File": {
       "properties": {
-        "name":"string",
-        "id": "string",
-        "createdAt":"datetime",
-        "end":"datetime"
+        "name": "string",
+        "createdAt": "datetime",
+        "end": "datetime",
+        "url":"string"
       },
       "style": {
         "label": "data(name)",
         "text-valign": "bottom",
-       "text-margin-y": "-5px",
-         "font-size": "11px",
+        "text-margin-y": "-5px",
+        "font-size": "11px",
         "background-image": "app/custom/assets/file.svg",
         "shape": "rectangle",
         "text-wrap": "ellipsis",
         "background-fit": "contain",
-        "width": "24px",
-        "height": "30px",
+        "width": "20px",
+        "height": "24px",
         "text-max-width": "60px",
         "text-outline-color": "#ffffff",
-        "color":"#6988a5",
+        "color": "#6988a5",
         "text-outline-width": "1px"
       }
-    },    
+    },
     "Issue": {
       "properties": {
-        "name":"string",
-        "issueType":"enum,string",
-        "priority":"enum,string",
-        "status":"enum,string",
+        "name": "string",
+        "issueType": "enum,string",
+        "priority": "enum,string",
+        "status": "enum,string",
         "createdAt": "datetime",
         "closeDate": "datetime",
-        "resolutionDate":"datetime",
-        "id": "string",
+        "resolutionDate": "datetime",
+
         "title": "string",
         "url": "string",
-        "reporter":"string",
-        "assigner":"string",
-        "assignee":"string",
-        "resolver": "string", 
-        "closer":"string",
-        "duplicate":"string",
-        "assigneeChangeCount":"integer",
-        "environment":"string",
-        "reopenCount":"integer",
-        "affectedVersion":"string"
-
+        "reporter": "string",
+        "assigner": "string",
+        "assignee": "string",
+        "resolver": "string",
+        "closer": "string",
+        "duplicate": "string",
+        "assigneeChangeCount": "integer",
+        "environment": "string",
+        "reopenCount": "integer",
+        "affectedVersion": "string"
       },
       "style": {
         "label": "data(name)",
         "text-valign": "bottom",
-       "text-margin-y": "-5px",
+        "text-margin-y": "-5px",
         "text-outline-color": "#ffffff",
-        "color":"#4C5F7A",
+        "color": "#4C5F7A",
         "text-outline-width": "1px",
-         "font-size": "11px",
-        "shape": "ellipse",
+        "font-size": "11px",
+        "shape": "rectangle",
         "background-fit": "contain",
         "background-image": "app/custom/assets/issue.svg",
-        "width": "30px",
-        "height": "30px"
+        "width": "32px",
+        "height": "32px"
       }
-    },    
+    },
     "PullRequest": {
       "properties": {
-        "name":"string",
-        "mergeStatus":"enum,string",
-        "headBranch":"string",
+        "name": "string",
+        "mergeStatus": "enum,string",
+        "headBranch": "string",
         "createdAt": "datetime",
-        "closeDate":"datetime",
-        "changeLineOfCode":"int",
-        "numberOfCommits":"int",
-        "id": "string",
+        "closeDate": "datetime",
+        "changeLineOfCode": "int",
+        "numberOfCommits": "int",
+        "numberOfChangeFiles": "int",
         "title": "string",
         "url": "string"
       },
@@ -136,14 +134,14 @@
         "label": "data(name)",
         "text-valign": "bottom",
         "text-margin-y": "-5px",
-         "font-size": "11px",
+        "font-size": "11px",
         "background-image": "app/custom/assets/pull-request.svg",
         "shape": "ellipse",
         "background-fit": "contain",
-        "width": "30px",
-        "height": "30px",
+        "width": "24px",
+        "height": "24px",
         "text-outline-color": "#ffffff",
-        "color":"#71aa9f",
+        "color": "#71aa9f",
         "text-outline-width": "1px"
       }
     }
@@ -153,10 +151,9 @@
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+      "properties": { "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "blocks",
@@ -167,17 +164,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
     },
     "ASSIGNED_TO": {
       "source": "Issue",
       "target": "Developer",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "end":"datetime",
-        "createdAt":"datetime"
+      "properties": { 
+        "recency":"float",
+        "end": "datetime",
+        "createdAt": "datetime"
       },
       "style": {
         "label": "assigned to",
@@ -188,17 +185,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
-    },   
+    },
     "RESOLVED": {
       "source": "Developer",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "end":"datetime",
-        "createdAt":"datetime"
+      "properties": { 
+        "recency":"float",
+        "end": "datetime",
+        "createdAt": "datetime"
       },
       "style": {
         "label": "resolved",
@@ -209,17 +206,18 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#976e6e",
         "text-rotation": "autorotate",
-        "color":"#976e6e"
+        "color": "#976e6e"
       }
-    },"COMMENTED": {
+    },
+    "COMMENTED": {
       "source": "Developer",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime",
-        "commentCount":"string"
+      "properties": { 
+        "recency":"float", 
+        "createdAt": "datetime",
+        "end": "datetime",
+        "commentCount": "string"
       },
       "style": {
         "label": "commented",
@@ -230,17 +228,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#976e6e",
         "text-rotation": "autorotate",
-        "color":"#976e6e"
+        "color": "#976e6e"
       }
-    }, 
+    },
     "ASSIGNED_BY": {
       "source": "Issue",
       "target": "Developer",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+      "properties": { 
+        "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "assigned by",
@@ -251,17 +249,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#976e6e",
         "text-rotation": "autorotate",
-        "color":"#976e6e"
+        "color": "#976e6e"
       }
-    }, 
+    },
     "COMMITTED": {
       "source": "Developer",
       "target": "Commit",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+      "properties": { 
+        "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "committed",
@@ -272,17 +270,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#976e6e",
         "text-rotation": "autorotate",
-        "color":"#976e6e"
+        "color": "#976e6e"
       }
     },
     "DEPENDS_UPON": {
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+      "properties": { 
+        "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "depends_upon",
@@ -293,18 +291,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
-      
     },
     "DUPLICATES": {
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+      "properties": { 
+        "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "duplicates",
@@ -315,7 +312,7 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
     },
     "FIXES": {
@@ -323,9 +320,9 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "fixes",
@@ -336,18 +333,18 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
     },
     "CONTAINS": {
       "source": "Commit",
       "target": "File",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
-
+      "properties": { 
+        "recency":"float",
+        "changeLOC": "integer",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "contains",
@@ -358,7 +355,7 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#bd7ebe",
         "text-rotation": "autorotate",
-        "color":"#bd7ebe"
+        "color": "#bd7ebe"
       }
     },
     "INCLUDES": {
@@ -366,9 +363,9 @@
       "target": "Commit",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "includes",
@@ -379,7 +376,7 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#71aa9f",
         "text-rotation": "autorotate",
-        "color":"#71aa9f"
+        "color": "#71aa9f"
       }
     },
     "INCORPORATES": {
@@ -387,9 +384,9 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+        "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "incorporates",
@@ -400,7 +397,7 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
     },
     "IS_A_CLONE_OF": {
@@ -408,9 +405,9 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "is a clone of",
@@ -421,7 +418,7 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
     },
     "OPENED": {
@@ -429,9 +426,9 @@
       "target": "PullRequest",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "opened",
@@ -442,17 +439,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#976e6e",
         "text-rotation": "autorotate",
-        "color":"#976e6e"
+        "color": "#976e6e"
       }
     },
-    "REFERENCED": {
+    "REFERENCED_PR": {
       "source": "Issue",
-      "target": "Commit",
+      "target": "PullRequest",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime" ,
-        "end":"datetime"  
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "referenced",
@@ -463,17 +460,38 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
+      }
+    },"REFERENCED_COMMIT": {
+      "source": "Issue",
+      "target": "Commit",
+      "isBidirectional": false,
+      "properties": {
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
+      },
+      "style": {
+        "label": "referenced",
+        "width": "1px",
+        "font-size": "11px",
+        "line-color": "#4C5F7A",
+        "line-style": "solid",
+        "target-arrow-shape": "triangle",
+        "target-arrow-color": "#4C5F7A",
+        "text-rotation": "autorotate",
+        "color": "#4C5F7A"
       }
     },
+    
     "RELATES_TO": {
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+      "properties": { 
+        "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "relates to",
@@ -484,17 +502,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
     },
     "MERGED": {
       "source": "Developer",
       "target": "PullRequest",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+      "properties": { 
+        "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "merged",
@@ -505,17 +523,17 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#976e6e",
         "text-rotation": "autorotate",
-        "color":"#976e6e"
+        "color": "#976e6e"
       }
     },
     "RENAMED_TO": {
       "source": "File",
       "target": "File",
       "isBidirectional": false,
-      "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+      "properties": { 
+        "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "renamed to",
@@ -526,7 +544,7 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#6988a5",
         "text-rotation": "autorotate",
-        "color":"#6988a5"
+        "color": "#6988a5"
       }
     },
     "REPORTED": {
@@ -534,9 +552,9 @@
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "reported",
@@ -547,38 +565,39 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#976e6e",
         "text-rotation": "autorotate",
-        "color":"#976e6e"
+        "color": "#976e6e"
       }
-  },
-  "CLOSED": {
-    "source": "Developer",
-    "target": "Issue",
-    "isBidirectional": false,
-    "properties": {
-      "id":"string",
-      "createdAt":"datetime",
-      "end":"datetime"
     },
-    "style": {
-      "label": "closed",
-      "width": "1px",
-      "font-size": "11px",
-      "line-color": "#976e6e",
-      "line-style": "solid",
-      "target-arrow-shape": "triangle",
-      "target-arrow-color": "#976e6e",
-      "text-rotation": "autorotate",
-      "color":"#976e6e"
-    }
-  },
+    "CLOSED": {
+      "source": "Developer",
+      "target": "Issue",
+      "isBidirectional": false,
+      "properties": {
+         "recency":"float",
+
+        "createdAt": "datetime",
+        "end": "datetime"
+      },
+      "style": {
+        "label": "closed",
+        "width": "1px",
+        "font-size": "11px",
+        "line-color": "#976e6e",
+        "line-style": "solid",
+        "target-arrow-shape": "triangle",
+        "target-arrow-color": "#976e6e",
+        "text-rotation": "autorotate",
+        "color": "#976e6e"
+      }
+    },
     "REVIEWED": {
       "source": "Developer",
       "target": "PullRequest",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime",
-        "end":"datetime"
+         "recency":"float",
+        "createdAt": "datetime",
+        "end": "datetime"
       },
       "style": {
         "label": "reviewed",
@@ -589,16 +608,16 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#976e6e",
         "text-rotation": "autorotate",
-        "color":"#976e6e"
+        "color": "#976e6e"
       }
-    },    
+    },
     "SUPERSEDES": {
       "source": "Issue",
       "target": "Issue",
       "isBidirectional": false,
       "properties": {
-        "id":"string",
-        "createdAt":"datetime",
+        "recency":"float",
+        "createdAt": "datetime",
         "end": "datetime"
       },
       "style": {
@@ -610,22 +629,20 @@
         "target-arrow-shape": "triangle",
         "target-arrow-color": "#4C5F7A",
         "text-rotation": "autorotate",
-        "color":"#4C5F7A"
+        "color": "#4C5F7A"
       }
     }
   },
-
   "enumMapping": {
     "Issue": {
-      "issueType":"issueType",
+      "issueType": "issueType",
       "priority": "priority",
       "status": "status"
     },
     "PullRequest": {
       "mergeStatus": "mergeStatus"
-    }  
+    }
   },
-
   "timebarDataMapping": {
     "Commit": {
       "begin_datetime": "createdAt",
@@ -646,7 +663,7 @@
     "PullRequest": {
       "begin_datetime": "createdAt",
       "end_datetime": "closeDate"
-    },    
+    },
     "ASSIGNED_TO": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
@@ -682,51 +699,55 @@
     "DEPENDS_UPON": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
+    },
     "DUPLICATES": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
+    },
     "FIXES": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
+    },
     "INCORPORATES": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
+    },
     "MERGED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
+    },
     "OPENED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    },   
+    },
     "IS_A_CLONE_OF": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    },   
+    },
     "RELATES_TO": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
-    "REFERENCED": {
+    },
+    "REFERENCED_COMMIT": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
+    },
+    "REFERENCED_PR": {
+      "begin_datetime": "createdAt",
+      "end_datetime": "end"
+    },
     "REVIEWED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
+    },
     "CLOSED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    }, 
+    },
     "REPORTED": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
-    },    
+    },
     "SUPERSEDES": {
       "begin_datetime": "createdAt",
       "end_datetime": "end"
@@ -738,12 +759,12 @@
     "isShowOverviewWindow": false,
     "isShowEdgeLabels": true,
     "isTileDisconnectedOnLayout": true,
-    "isIgnoreCaseInText": false,  
+    "isIgnoreCaseInText": false,
     "isOnlyHighlight4LatestQuery": true,
     "isStoreUserProfile": true,
     "isCollapseEdgesBasedOnType": false,
     "isCollapseMultiEdgesOnLoad": true,
-    "isLimitDbQueries2range": true,
+    "isLimitDbQueries2range": false,
     "dbQueryTimeRange": {
       "start": -5364669352000,
       "end": 4102434000000
@@ -756,7 +777,8 @@
     "dataPageSize": 15,
     "dataPageLimit": 15,
     "queryHistoryLimit": 10,
-    "dbTimeout": 10,
+    "queryNeighborLimit ": 7,
+    "dbTimeout": 30,
     "tableColumnLimit": 3,
     "highlightStyles": [
       {
@@ -782,10 +804,10 @@
     "edgeCollapseLimit": 2,
     "avgNodeSize": 40,
     "objectInclusionType": 0,
-    "anomalyDefaultValues":{
-      "ignoreBug":5,
-      "assigneeChangeCount":2,
-      "reopenCount":2
+    "anomalyDefaultValues": {
+      "ignoreBug": 5,
+      "assigneeChangeCount": 2,
+      "reopenCount": 2
     },
     "queryResultPagination": "Client",
     "tilingPadding": 4,
@@ -823,7 +845,7 @@
     ".va-small-text": {
       "font-size": "11px"
     },
-    "svg":{
+    "svg": {
       "background-color": "rgba(0, 0, 0, 0.5)"
     }
   }

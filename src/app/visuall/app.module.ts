@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Routes, RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
-import {MatDialog} from '@angular/material/dialog';
+
 import {MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -15,7 +15,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { CytoscapeComponent } from './cytoscape/cytoscape.component';
 import { SaveAsPngModalComponent } from './popups/save-as-png-modal/save-as-png-modal.component';
 import { QuickHelpModalComponent } from './popups/quick-help-modal/quick-help-modal.component';
+import { LegendModalComponent } from './popups/legend-modal/legend-modal.component';
 import { AboutModalComponent } from './popups/about-modal/about-modal.component';
+import {ProjectAboutModalComponent} from './popups/project-about-modal/project-about-modal-component';
 import { ObjectTabComponent } from './operation-tabs/object-tab/object-tab.component';
 import { MapTabComponent } from './operation-tabs/map-tab/map-tab.component';
 import { SettingsTabComponent } from './operation-tabs/settings-tab/settings-tab.component';
@@ -38,10 +40,15 @@ import { CustomizationModule } from '../custom/customization.module';
 import { PanelContainerComponent } from './panel-container/panel-container.component';
 import { LoadGraphFromFileModalComponent } from './popups/load-graph-from-file-modal/load-graph-from-file-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {DialogElementsExample} from './navbar/dialog-elements-example';
+import {ProjectBuilderDialogComponent} from './navbar/project-builder/project-builder-dialog-component';
+import { SetupComponent } from './setup/setup.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 @NgModule({
   declarations: [
-    DialogElementsExample,
+    ProjectBuilderDialogComponent,
     AppComponent,
     NavbarComponent,
     ToolbarComponent,
@@ -50,7 +57,9 @@ import {DialogElementsExample} from './navbar/dialog-elements-example';
     CytoscapeComponent,
     SaveAsPngModalComponent,
     QuickHelpModalComponent,
+    LegendModalComponent,
     AboutModalComponent,
+    ProjectAboutModalComponent,
     ObjectTabComponent,
     MapTabComponent,
     SettingsTabComponent,
@@ -67,13 +76,15 @@ import {DialogElementsExample} from './navbar/dialog-elements-example';
     RuleTreeComponent,
     RuleDropdownComponent,
     PanelContainerComponent,
-    LoadGraphFromFileModalComponent
+    LoadGraphFromFileModalComponent,
+    SetupComponent
   ],
   imports: [
     MatDialogModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     NgbModule,
     AutoSizeInputModule,
     AngularDraggableModule,
@@ -81,6 +92,9 @@ import {DialogElementsExample} from './navbar/dialog-elements-example';
     SharedModule,
     RouterModule.forRoot([]),
     BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   exports: [RouterModule,
     HttpClientModule],

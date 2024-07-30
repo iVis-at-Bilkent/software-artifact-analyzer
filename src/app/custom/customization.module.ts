@@ -2,46 +2,54 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Neo4jDb } from '../visuall/db-service/neo4j-db.service';
 import { DbService } from '../visuall/db-service/data-types';
-import { Query1Component } from './queries/query1/query1.component';
-import { Query3Component } from './queries/query3/query3.component';
-import { Query5Component } from './queries/query5/query5.component';
-import { Query6Component } from './queries/query6/query6.component';
+import { DeveloperCommitsComponent } from './analyses/developer-commits/developer-commits.component';
+import { ReviewerRecommendationComponent } from './analyses/reviewer-recommendation/reviewer-recommendation.component';
+import { AnomalyComponent } from './analyses/anomalies/anomaly/anomaly.component';
+import { AnomalyStatisticComponent } from './analyses/anomalies/anomaly-statistic/anomaly-statistic.component';
 import { SharedModule } from '../shared/shared.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Rule, RuleNode, TimebarMetric } from '../visuall/operation-tabs/map-tab/query-types';
-import { ReportComponentComponent } from './report-component/report-component.component';
-import { ObjectQueriesComponent } from './object-queries/object-queries.component'
+import { ReportComponent } from './operational-tabs/object-tab/report-tab/report.component';
+import { ObjectQueriesComponent } from './operational-tabs/object-tab/object-queries-tab/object-queries.component'
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { UnassignedBugsComponent } from './anomalies/unassigned-bugs/unassigned-bugs.component';
-import { NoLinkToBugFixingCommitComponent } from './anomalies/no-link-to-bug-fixing-commit/no-link-to-bug-fixing-commit.component';
-import { IgnoredBugsComponent } from './anomalies/ignored-bugs/ignored-bugs.component';
-import { MissingPriorityComponent } from './anomalies/missing-priority/missing-priority.component';
-import { NotReferencedDuplicatesComponent } from './anomalies/not-referenced-duplicates/not-referenced-duplicates.component';
-import { MissingEnvironmentInformationComponent } from './anomalies/missing-environment-information/missing-environment-information.component';
-import { ReassignmentBugAssigneeComponent } from './anomalies/reassignment-bug-assignee/reassignment-bug-assignee.component';
-import { NoCommentBugsComponent } from './anomalies/no-comment-bugs/no-comment-bugs.component';
-import { NoAssigneeResolverBugComponent } from './anomalies/no-assignee-resolver-bug/no-assignee-resolver-bug.component';
-import { ClosedReopenPingPongComponent } from './anomalies/closed-reopen-ping-pong/closed-reopen-ping-pong.component';
-import { SameResolverCloserComponent } from './anomalies/same-resolver-closer/same-resolver-closer.component';
+import { UnassignedBugsComponent } from './analyses/anomalies/unassigned-bugs/unassigned-bugs.component';
+import { NoLinkToBugFixingCommitComponent } from './analyses/anomalies/no-link-to-bug-fixing-commit/no-link-to-bug-fixing-commit.component';
+import { IgnoredBugsComponent } from './analyses/anomalies/ignored-bugs/ignored-bugs.component';
+import { MissingPriorityComponent } from './analyses/anomalies/missing-priority/missing-priority.component';
+import { NotReferencedDuplicatesComponent } from './analyses/anomalies/not-referenced-duplicates/not-referenced-duplicates.component';
+import { MissingEnvironmentInformationComponent } from './analyses/anomalies/missing-environment-information/missing-environment-information.component';
+import { ReassignmentBugAssigneeComponent } from './analyses/anomalies/reassignment-bug-assignee/reassignment-bug-assignee.component';
+import { NoCommentBugsComponent } from './analyses/anomalies/no-comment-bugs/no-comment-bugs.component';
+import { NoAssigneeResolverBugComponent } from './analyses/anomalies/no-assignee-resolver-bug/no-assignee-resolver-bug.component';
+import { ClosedReopenPingPongComponent } from './analyses/anomalies/closed-reopen-ping-pong/closed-reopen-ping-pong.component';
+import { SameResolverCloserComponent } from './analyses/anomalies/same-resolver-closer/same-resolver-closer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ModalContentComponent } from './modal-content/modal-content.component';
-import { Query4Component } from './queries/query4/query4.component';
-import { Query2Component } from './queries/query2/query2.component';
-import { Query7Component } from './queries/query7/query7.component';
-import { Query8Component } from './queries/query8/query8.component';
+import { ModalContentComponent } from './operational-tabs/object-tab/modal-content/modal-content.component';
+import { ExpertRecommendationComponent } from './analyses/expert-recommendation/expert-recommendation.component';
+import { CommentContributorsComponent } from './analyses/comment-contributors/comment-contributors.component';
+import { CollaboratorsComponent } from './analyses/collaborators/collaborators.component';
+import { CommentCollaboratorsComponent } from './analyses/comment-collaborators/comment-collaborators.component';
+import { ReportIssueComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-issue/report-issue.component';
+import { ReportPrComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-pr/report-pr.component';
+import { ReportDeveloperComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-developer/report-developer.component';
+import { ReportCommitComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-commit/report-commit.component';
+import { ReportFileComponent } from './operational-tabs/object-tab/report-tab/sub-report-tabs/report-file/report-file.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete'
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { AsdComponent } from './asd/asd.component';
 // import statements for custom components should be here
 
 @NgModule({
   // custom components should be inside declarations
   declarations: [
-    Query1Component,
-    Query3Component,
-    Query6Component,
-    ReportComponentComponent,
+    DeveloperCommitsComponent,
+    ReviewerRecommendationComponent,
+    AnomalyStatisticComponent,
+    ReportComponent,
     ObjectQueriesComponent,
-    Query5Component,
+    AnomalyComponent,
     UnassignedBugsComponent,
     NoLinkToBugFixingCommitComponent,
     IgnoredBugsComponent,
@@ -54,29 +62,38 @@ import { Query8Component } from './queries/query8/query8.component';
     ClosedReopenPingPongComponent,
     SameResolverCloserComponent,
     ModalContentComponent,
-    Query4Component,
-    Query2Component,
-    Query7Component,
-    Query8Component],
-  // declarations: [AsdComponent],
+    ExpertRecommendationComponent,
+    CommentContributorsComponent,
+    CollaboratorsComponent,
+    CommentCollaboratorsComponent,
+    ReportIssueComponent,
+    ReportPrComponent,
+    ReportDeveloperComponent,
+    ReportCommitComponent,
+    ReportFileComponent],
   imports: [
     HttpClientModule,
     BrowserModule,
     CommonModule,
     SharedModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    ReactiveFormsModule
   ]
 })
 
 export class CustomizationModule {
-  // static operationTabs: { component: any, text: string }[] = [{ component: AsdComponent, text: 'Dummy' }];
-  // static operationTabs: { component: any, text: string }[] = [{ component: Query5Component, text: 'Get Anomalies' }];
+
   static operationTabs: { component: any, text: string }[] = [];
-  static reportTab: { component: any, text: string }[] = [
-    { component: ReportComponentComponent, text: 'Report' }
-  ];
-  static objSubTabs: { component: any, text: string }[] = [
+
+  static objSubTabs: { component: any, text: string }[] = [];
+
+  static objSubTabsOne: { component: any, text: string }[] = [
+    { component: ReportComponent, text: 'Report' },
     { component: ObjectQueriesComponent, text: 'Queries' }
   ];
 
@@ -84,39 +101,52 @@ export class CustomizationModule {
   static databaseSubTabs: { component: any, text: string }[] = [];
   static settingsSubTabs: { component: any, text: string }[] = [];
   static queries: { component: any, text: string }[] = [
-    { component: Query1Component, text: 'Get Commits of Developer' },
-    { component: Query3Component, text: 'Get Recommended Reviewers' },
-    { component: Query5Component, text: 'Get Anomalies' },
-    { component: Query6Component, text: 'Get Anomaly Statistics' }
-
+    { component: DeveloperCommitsComponent, text: 'Get Commits of Developer' },
+    { component: ReviewerRecommendationComponent, text: 'Get Recommended Reviewers' },
+    { component: ExpertRecommendationComponent, text: 'Get Experts' },
+    { component: AnomalyComponent, text: 'Get Anomalies' },
+    { component: AnomalyStatisticComponent, text: 'Get Anomaly Statistics' }
   ];
-  static anomalies: { component: any, text: string }[] = [
-    { component: UnassignedBugsComponent, text: 'Unassigned Bugs' },
-    { component: NoLinkToBugFixingCommitComponent, text: 'No Link to Bug-Fixing Commit' },
-    { component: IgnoredBugsComponent, text: 'Ignored Bugs' },
-    { component: MissingPriorityComponent, text: 'Missing Priority' },
-    { component: NotReferencedDuplicatesComponent, text: 'Not referenced duplicates' },
-    { component: MissingEnvironmentInformationComponent, text: 'Missing Environment Information' },
-    { component: ReassignmentBugAssigneeComponent, text: 'Reassignment of Bug Assignee' },
-    { component: NoCommentBugsComponent, text: 'No comment bugs' },
-    { component: NoAssigneeResolverBugComponent, text: 'Non-Assignee Resolver of Bug' },
-    { component: ClosedReopenPingPongComponent, text: 'Closed-Reopen Ping Pong' },
-    { component: SameResolverCloserComponent, text: 'Same Resolver and Closer' },
 
-  ];
   static db: DbService;
   static defaultTimebarMetrics: TimebarMetric[];
   constructor(private _db: Neo4jDb) {
     CustomizationModule.db = _db;
-    const andCond: Rule = { ruleOperator: 'OR' };
-    const issueCond1: Rule = { propertyOperand: 'priority', propertyType: 'string', rawInput: 'Critical', inputOperand: 'Critical', ruleOperator: null, operator: '=' };
-    const issueCond2: Rule = { propertyOperand: 'priority', propertyType: 'string', rawInput: 'Blocker', inputOperand: 'Blocker', ruleOperator: null, operator: '=' };
-    const root1: RuleNode = { r: andCond, parent: null, children: [] };
-    const child1: RuleNode = { r: issueCond1, parent: root1, children: [] };
-    const child2: RuleNode = { r: issueCond2, parent: root1, children: [] };
-    root1.children = [child1, child2];
     CustomizationModule.defaultTimebarMetrics = [
-      { incrementFn: null, name: 'serious issue', className: 'Issue', rules: root1, color: '#3366cc' },
+      { incrementFn: null, name: 'Serious Issues', className: 'Issue', rules: this.seriousIssues(), color: '#3366cc' },
+      { incrementFn: null, name: 'Overloaded Developers', className: 'Developer', rules: this.overloadedDevelopers(), color: '#cc3333' },
+      { incrementFn: null, name: 'Open Pull Requests', className: 'PullRequest', rules: this.openPullRequests(), color: '#33cc33' },
+      { incrementFn: null, name: 'Merged Pull Requests', className: 'MERGED', rules: this.mergedPullRequests(), color: '#ff9933' },
+      { incrementFn: null, name: 'Highly Commented Issues', className: 'Issue', rules: this.highlyCommentedIssues(), color: '#9933cc' }
     ];
   }
+  seriousIssues(): RuleNode {
+    const andCond: Rule = { ruleOperator: 'OR' };
+    const root1: RuleNode = { r: andCond, parent: null, children: [] };
+    const child1: RuleNode = { r: { propertyOperand: 'priority', propertyType: 'string', rawInput: 'Critical', inputOperand: 'Critical', ruleOperator: null, operator: '=' }, parent: root1, children: [] };
+    const child2: RuleNode = { r: { propertyOperand: 'priority', propertyType: 'string', rawInput: 'Blocker', inputOperand: 'Blocker', ruleOperator: null, operator: '=' }, parent: root1, children: [] };
+    root1.children = [child1, child2]
+    return root1;
+  }
+  overloadedDevelopers(): RuleNode {
+    const issueCond1: Rule = { propertyOperand: 'ASSIGNED_TO', propertyType: 'edge', rawInput: '2', inputOperand: '2', ruleOperator: null, operator: '>' };
+    const root1: RuleNode = { r: issueCond1, parent: null, children: [] };
+    return root1;
+  }
+  openPullRequests(): RuleNode {
+    const issueCond1: Rule = { propertyOperand: '', propertyType: '', rawInput: '', inputOperand: '', ruleOperator: null, operator: '' };
+    const root1: RuleNode = { r: issueCond1, parent: null, children: [] };
+    return root1;
+  }
+  mergedPullRequests(): RuleNode {
+    const issueCond1: Rule = { propertyOperand: '', propertyType: '', rawInput: '', inputOperand: '', ruleOperator: null, operator: '' };
+    const root1: RuleNode = { r: issueCond1, parent: null, children: [] };
+    return root1;
+  }
+  highlyCommentedIssues(): RuleNode {
+    const issueCond1: Rule = { propertyOperand: 'COMMENTED', propertyType: 'edge', rawInput: '5', inputOperand: '5', ruleOperator: null, operator: '>=' };
+    const root1: RuleNode = { r: issueCond1, parent: null, children: [] };
+    return root1;
+  }
+  
 }

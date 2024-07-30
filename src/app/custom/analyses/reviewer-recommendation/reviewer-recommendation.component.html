@@ -1,0 +1,59 @@
+<div class="custom-query">
+  <div class="va-text">
+    <div class="d-flex align-items-center justify-content-center">
+      Pull Request 
+      <input type = "text" 
+      value = {{pr}}
+      placeholder=""
+      [(ngModel)]="pr" 
+      aria-label = "name" 
+      matInput 
+      class="form-select tight-select filter-form va-small-text m-1 pr-select" 
+      (input)="filterOptions($event.target.value)"
+      [matAutocomplete] = "auto">
+   <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="file" classList="form-select tight-select filter-form va-small-text m-1 pr-select" >
+      <mat-option *ngFor = "let pr of filteredPrs"  class=" va-small-text" [value] = "pr"><span>#{{pr}}</span></mat-option>
+   </mat-autocomplete>  
+    </div>
+  </div>
+</div>
+<div class="d-flex align-items-center justify-content-center">
+  <label class=" va-text">Number of Reviewers</label>
+  <input type="number" class="va-small-text m-2" [(ngModel)]="number" min="1" max="5" />  
+</div>
+<hr class="dashed">
+
+<div class="d-flex align-items-center justify-content-center">
+  <div class="form-check form-check-inline m-1">
+    <label class=" va-text">Cluster By Developer</label>
+    <input type="checkbox" class="form-check-input" [(ngModel)]="cluster"  />   
+  </div>
+  <div class="form-check form-check-inline m-1">
+    <label class=" va-text">Adjust Developer Size</label>
+    <input type="checkbox" class="form-check-input" [(ngModel)]="size"  />   
+  </div>
+  <div class="form-check form-check-inline m-1">
+    <label class=" va-text">Consider Recency</label>
+    <input type="checkbox" class="form-check-input" [(ngModel)]="recency"/>   
+  </div>
+</div>
+<div class="d-flex align-items-center justify-content-center m-1">
+  <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="prepareQuery()" value="Execute">
+  <div class="form-check m-1">
+    <input type="checkbox" class="form-check-input" [(ngModel)]="tableInput.isLoadGraph" />
+    <label class="form-label va-text">Graph</label>
+  </div>
+  <div class="form-check form-check-inline m-1">
+    <input type="checkbox" class="form-check-input" [(ngModel)]="tableInput.isMergeGraph" />
+    <label class="form-label va-text">Merge</label>
+  </div>
+</div>
+
+
+<app-table-view *ngIf="!empty"  [params]="tableInput" [tableFilled]="tableFilled" (onDataForQueryResult)="getDataForQueryResult($event)"
+  (onFilteringChanged)="filterTable($event)" [clearFilter]="clearTableFilter">
+</app-table-view>
+<div *ngIf="empty" class="va-text empty">No reviewer recommendation can be provided.</div>
+<div class="d-flex align-items-center justify-content-center" *ngIf="assigned">
+  <input class="btn btn-sm btn-dark va-text m-2 center" type="button" (click)="assign()" value="Assign">
+</div>

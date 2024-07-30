@@ -18,7 +18,7 @@ function parseAppDescription(app_desc, cy_style) {
 
   let stylesheet = [];
   let properties = { nodes: {}, edges: {} };
-
+  let endpoints = {};
   updateHtmlCss(app_desc);
 
   // Apply styles that should be at the base
@@ -27,11 +27,12 @@ function parseAppDescription(app_desc, cy_style) {
   // Generate stylesheet.json & properties.json for nodes and edges
   setCyStyles(app_desc['objects'], stylesheet, properties, false);
   setCyStyles(app_desc['relations'], stylesheet, properties);
-
+  setEndpoints(app_desc['relations'], endpoints);
   let path = 'assets/generated/';
   // Beautify JSON output with 2 space tabs and write to file
   writeFile(path + 'stylesheet.json', JSON.stringify(stylesheet, null, 2));
   writeFile(path + 'properties.json', JSON.stringify(properties, null, 2));
+  writeFile(path + 'endpoints.json', JSON.stringify(endpoints, null, 2));
 }
 
 function updateHtmlCss(data) {
@@ -69,6 +70,22 @@ function setFixedStyles(stylesheet, generalStyles) {
   generalStyles.forEach(element => {
     stylesheet.push(element);
   });
+}
+
+function setEndpoints(relations, endpoints) {
+  for (let edgeClass in relations) {
+    let relation = relations[edgeClass];
+
+    // Extract source and target node types from the relation
+    let sourceNodeType = relation.source;
+    let targetNodeType = relation.target;
+
+    // Populate endpoints dictionary
+    endpoints[edgeClass] = {
+      sourceNodeType: sourceNodeType,
+      targetNodeType: targetNodeType,
+    };
+  }
 }
 
 function setCyStyles(graphElems, stylesheet, properties, isEdge = true) {

@@ -1,21 +1,25 @@
 {
-
-        "issueType": {
-            "Task": "Task",
-            "Sub-task": "Sub-task",
-            "Improvement": "Improvement",
-            "New Feature": "New Feature",
-            "Bug": "Bug",
-            "Wish": "Wish"
-        },
-        "priority": {
-            "Major": "Major",
-            "Blocker": "Blocker",
-            "Critical": "Critical",
-            "Minor": "Minor",
-            "Trivial": "Trivial",
-            "Task": "Task"
-        },
+    "issueType": {
+        "Epic": "Epic",
+        "Bug": "Bug",
+        "Story": "Story",
+        "Task": "Task",
+        "Sub-task": "Sub-task",
+        "New Feature":"New Feature",
+        "Improvement": "Improvement"
+      },
+      "priority": {
+        "Blocker": "Blocker",
+        "Critical": "Critical",
+        "Highest" : "Highest",
+        "Major": "Major",
+        "High" : "High",
+        "Medium": "Medium",
+        "Low": "Low", 
+        "Minor":"Minor",
+        "Lowest": "Lowest",
+        "Trivial": "Trivial"
+      },
         "status": {
             "Done": "Done",
             "To Do": "To Do",

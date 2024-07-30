@@ -1,34 +1,66 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GlobalVariableService } from '../global-variable.service';
-import { GraphResponse, TableResponse, DbService, DbQueryMeta, Neo4jEdgeDirection, DbResponse, DbResponseType } from './data-types';
+import { GraphResponse, TableResponse, DbService, DbQueryMeta, Neo4jEdgeDirection, DbResponse, DbResponseType, CyNode } from './data-types';
 import { Rule, ClassBasedRules, RuleNode } from '../operation-tabs/map-tab/query-types';
 import { GENERIC_TYPE, LONG_MAX, LONG_MIN } from '../constants';
 import { TableFiltering } from '../../shared/table-view/table-view-types';
 import { TimebarGraphInclusionTypes } from '../user-preference';
-import { environment } from 'src/environments/environment';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+interface Config {
+  httpURL: string;
+  neo4jUsername: string;
+  neo4jUserPassword: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class Neo4jDb implements DbService {
+  enums = new BehaviorSubject<any>(null);
+  constructor(protected _http: HttpClient, protected _g: GlobalVariableService) {
 
-  constructor(protected _http: HttpClient, protected _g: GlobalVariableService) { }
+    this._http.get('/app/custom/config/enums.json').subscribe(x => {
+      this.enums.next(x)
+    });
+  }
 
-  runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
-    const conf = environment.dbConfig;
-    const url = conf.url;
-    console.log(query)
-    const username = conf.username;
-    const password = conf.password;
+
+
+  loadConf(): Observable<Config> {
+    if (window.location.hostname === "saa.cs.bilkent.edu.tr") {
+      return of({
+        boltURL: "bolt://ivis.cs.bilkent.edu.tr:3006",
+        httpURL:"http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit",  
+        neo4jUserPassword: "01234567",
+        neo4jUsername: "neo4j",
+      });
+    } else {
+      const url = `http://${window.location.hostname}:4445/getNeo4j`;
+      return this._http.get<Config>(url);
+    }
+  }
+
+  async runQuery(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
+    const conf = await this.loadConf().toPromise();
+
+
+    const url = conf.httpURL;
+    const username = conf.neo4jUsername;
+    const password = conf.neo4jUserPassword;
+
+    //For experiment
+    // Start time
+    //const startTime = new Date();
     const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
     this._g.setLoadingStatus(true);
-    const timeout = this._g.userPrefs.dbTimeout.getValue() * 10000;
-    let q = `CALL apoc.cypher.runTimeboxed("${query}", {}, ${timeout}) YIELD value RETURN value`;
-    if (!isTimeboxed) {
-      q = query;
-    }
-    console.log(q)
+    const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
+    const q = isTimeboxed
+      ? `CALL apoc.cypher.run("${query}", null ) YIELD value RETURN value`
+      : query;
+    console.log(q);
+
     this._g.statusMsg.next('Executing database query...');
     const requestBody = {
       statements: [{
@@ -38,25 +70,31 @@ export class Neo4jDb implements DbService {
       }]
     };
     let isTimeout = true;
+    let timeoutId;
+
     if (isTimeboxed) {
-      setTimeout(() => {
-        if (isTimeout) {
-          this._g.showErrorModal('Database Timeout', 'Your query took too long! <br> Consider adjusting timeout setting.');
-        }
+      timeoutId = setTimeout(() => {
+        isTimeout = true;
+        this._g.showErrorModal('Database Timeout', 'Your query took too long! <br> Consider adjusting timeout setting.');
       }, timeout);
     }
 
     const errFn = (err) => {
+      if (isTimeout) {
+        clearTimeout(timeoutId); // Clear the timeout if the request has already timed out
+      }
       isTimeout = false;
-      // It means our user-defined stored procedure intentionally throws exception to signal timeout
+      // Handle errors
       if (err.message.includes('Timeout occurred! It takes longer than')) {
         this._g.statusMsg.next('');
         this._g.showErrorModal('Database Timeout', 'Your query took too long!  <br> Consider adjusting timeout setting.');
       } else {
-        this._g.statusMsg.next('Database query execution raised error!');
-        this._g.showErrorModal('Database Query Qxecution Error', err.message);
+        this._g.statusMsg.next('Database query execution raised an error!');
+        this._g.showErrorModal('Database Query Execution Error', err.message);
       }
+
       this._g.setLoadingStatus(false);
+
     };
     this._http.post(url, requestBody, {
       headers: {
@@ -65,6 +103,9 @@ export class Neo4jDb implements DbService {
         'Authorization': 'Basic ' + btoa(username + ':' + password)
       }
     }).subscribe(x => {
+      if (isTimeout) {
+        clearTimeout(timeoutId); // Clear the timeout if the request completed before the timeout
+      }
       isTimeout = false;
       this._g.setLoadingStatus(false);
       if (x['errors'] && x['errors'].length > 0) {
@@ -73,20 +114,37 @@ export class Neo4jDb implements DbService {
       }
       this._g.statusMsg.next('');
       if (responseType == DbResponseType.graph) {
+        //const endTime = new Date();
+        // Calculate the time difference
+        //const elapsedTime = endTime.getTime() - startTime.getTime();
+        //console.log(`Elapsed Time: ${elapsedTime} milliseconds for graph`);
         callback(this.extractGraph(x));
+        this.addIssueBadges();
+
+        
+       
       } else if (responseType == DbResponseType.table || responseType == DbResponseType.count) {
+        //const endTime = new Date();
+        // Calculate the time difference
+        // const elapsedTime = endTime.getTime() - startTime.getTime();
+        //console.log(`Elapsed Time: ${elapsedTime} milliseconds for table`);
         callback(this.extractTable(x, isTimeboxed));
       } else if (responseType == DbResponseType.generic) {
+        //const endTime = new Date();
+        // Calculate the time difference
+        //const elapsedTime = endTime.getTime() - startTime.getTime();
+        //console.log(`Elapsed Time: ${elapsedTime} milliseconds`);
         callback(this.extractGenericData(x, isTimeboxed));
       }
     }, errFn);
   }
 
-  runQueryWithoutTimeBoxed(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
-    const conf = environment.dbConfig;
-    const url = conf.url;
-    const username = conf.username;
-    const password = conf.password;
+
+  async runQueryWithoutTimeBoxed(query: string, callback: (x: any) => any, responseType: DbResponseType = 0, isTimeboxed = true) {
+    const conf = await this.loadConf().toPromise();
+    const url = conf.httpURL;
+    const username = conf.neo4jUsername;
+    const password = conf.neo4jUserPassword;
     const requestType = responseType == DbResponseType.graph ? 'graph' : 'row';
     this._g.setLoadingStatus(true);
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 10000;
@@ -146,25 +204,37 @@ export class Neo4jDb implements DbService {
       }
     }, errFn);
   }
-  getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, meta?: DbQueryMeta) {
+  getNeighbors(elemIds: string[] | number[], callback: (x: GraphResponse) => any, meta?: DbQueryMeta, limit?: number) {
     let isEdgeQuery = meta && meta.isEdgeQuery;
     const idFilter = this.buildIdFilter(elemIds, false, isEdgeQuery);
-    let edgeCql = '';
+    let edgeCql = "";
+    let recencyProduct = "";
+    let withClause = "";
     if (meta && meta.edgeType != undefined && typeof meta.edgeType == 'string' && meta.edgeType.length > 0) {
       edgeCql = `-[e:${meta.edgeType}`;
+      recencyProduct = "e.recency";
+      withClause = ",e"
     } else if (meta && meta.edgeType != undefined && typeof meta.edgeType == 'object') {
       if (meta.isMultiLength) {
         for (let i = 0; i < meta.edgeType.length; i++) {
           if (i != meta.edgeType.length - 1) {
             edgeCql += `-[e${i}:${meta.edgeType[i]}]-()`;
+            recencyProduct += `e${i}.recency * `;
+            withClause = `,e${i} ,`
           } else {
             edgeCql += `-[e${i}:${meta.edgeType[i]}`;
+            recencyProduct += `e${i}.recency`;
+            withClause = `,e${i} `
           }
         }
       } else {
         edgeCql = `-[e:${meta.edgeType.join('|')}`;
+        recencyProduct = `e.recency`
+        withClause = ",e"
       }
     } else {
+      recencyProduct = `e.recency`
+      withClause = ",e"
       edgeCql = `-[e`;
     }
     let targetCql = '';
@@ -181,8 +251,30 @@ export class Neo4jDb implements DbService {
     } else {
       f2 += this.dateFilterFromUserPref('e', false);
     }
-
-    this.runQuery(`MATCH p=(n)${edgeCql}(${targetCql}) WHERE ${idFilter} ${f2} RETURN p`, callback);
+    let totalIds = []
+    if (limit > 0) {
+      const callbackLimit = (x) => {
+        const limitedIds = []
+        for (const key in x.data) {
+          if (limitedIds.length >= limit) {
+            break
+          }
+          if (this._g.cy.$id(`n${x.data[key][0]}`).length == 0 || !this._g.cy.$id(`n${x.data[key][0]}`)[0].visible()) {
+            limitedIds.push(x.data[key][0])
+          }
+          else {
+            totalIds.push(x.data[key][0])
+          }
+        }
+        totalIds = [...totalIds, ...limitedIds]
+        const idFilterlimit = `elementId(t) in ['${totalIds.join("','")}'] `
+        this.runQuery(`MATCH p=(n)${edgeCql}(t ${targetCql}) WHERE ${idFilter} AND (${idFilterlimit} ) ${f2} RETURN p  ORDER BY ${recencyProduct} DESC `, callback);
+      }
+      this.runQuery(`MATCH p=(n)${edgeCql}(t ${targetCql}) WHERE ${idFilter} ${f2} WITH t ${withClause}   ORDER BY ${recencyProduct} DESC RETURN  distinct elementId(t) `, callbackLimit, DbResponseType.table);
+    }
+    else {
+      this.runQuery(`MATCH p=(n)${edgeCql}(${targetCql}) WHERE ${idFilter} ${f2} RETURN p`, callback);
+    }
   }
 
   getElems(ids: string[] | number[], callback: (x: GraphResponse) => any, meta: DbQueryMeta) {
@@ -203,7 +295,7 @@ export class Neo4jDb implements DbService {
     if (f2.length > 0) {
       f += f2;
     }
-    this.runQuery(`MATCH (n)-[e]-() ${f} RETURN n,e , rand() as r ORDER BY r limit 20`, callback);
+    this.runQuery(`MATCH (n)-[e]-() ${f} RETURN n,e , rand() as r ORDER BY r limit 50`, callback);
   }
 
   getFilteringResult(rules: ClassBasedRules, filter: TableFiltering, skip: number, limit: number, type: DbResponseType, callback: (x: GraphResponse | TableResponse) => any) {
@@ -234,9 +326,9 @@ export class Neo4jDb implements DbService {
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     let idf = 'null';
     if (idFilter) {
-      idf = `[${idFilter.join()}]`;
+      idf = `[${idFilter.map(element => `'${element}'`).join()}]`;
     }
-    this.runQuery(`CALL graphOfInterest([${dbIds.join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${isDirected},
+    this.runQuery(`CALL graphOfInterest([${dbIds.map(element => `'${element}'`).join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${isDirected},
       ${pageSize}, ${currPage}, '${t}', ${isIgnoreCase}, ${orderBy}, ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, ${idf})`, cb, type, false);
   }
 
@@ -263,13 +355,13 @@ export class Neo4jDb implements DbService {
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
     let idf = 'null';
     if (idFilter) {
-      idf = `[${idFilter.join()}]`;
+      idf = `[${idFilter.map(element => `'${element}'`).join()}]`;
     }
     if (type == DbResponseType.count) {
-      this.runQuery(`CALL commonStreamCount([${dbIds.join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${dir}, '${t}', ${isIgnoreCase},
+      this.runQuery(`CALL commonStreamCount([${dbIds.map(element => `'${element}'`).join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${dir}, '${t}', ${isIgnoreCase},
        ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, ${idf})`, cb, type, false);
     } else if (type == DbResponseType.table) {
-      this.runQuery(`CALL commonStream([${dbIds.join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${dir}, ${pageSize}, ${currPage},
+      this.runQuery(`CALL commonStream([${dbIds.map(element => `'${element}'`).join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${dir}, ${pageSize}, ${currPage},
        '${t}', ${isIgnoreCase}, ${orderBy}, ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, ${idf})`, cb, type, false);
     }
   }
@@ -295,11 +387,11 @@ export class Neo4jDb implements DbService {
     }
     let idf = 'null';
     if (idFilter) {
-      idf = `[${idFilter.join()}]`;
+      idf = `[${idFilter.map(element => `'${element}'`).join()}]`;
     }
     const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
     const timeout = this._g.userPrefs.dbTimeout.getValue() * 1000;
-    this.runQuery(`CALL neighborhood([${dbIds.join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${isDirected},
+    this.runQuery(`CALL neighborhood([${dbIds.map(element => `'${element}'`).join()}], [${ignoredTypes.join()}], ${lengthLimit}, ${isDirected},
       ${pageSize}, ${currPage}, '${t}', ${isIgnoreCase}, ${orderBy}, ${orderDir}, ${timeMap}, ${d1}, ${d2}, ${inclusionType}, ${timeout}, ${idf})`, cb, DbResponseType.table, false);
   }
 
@@ -324,53 +416,67 @@ export class Neo4jDb implements DbService {
   }
 
   private dateFilterFromUserPref(varName: string, isNode: boolean): string {
-    if (!this._g.userPrefs.isLimitDbQueries2range.getValue()) {
+    try {
+  
+      // Check if DB queries are limited
+      if (this._g.userPrefs.isLimitDbQueries2range.getValue() === false) {
+        return '';
+      }
+  
+      let s = '';
+      let keys = [];
+  
+      // Determine keys based on whether it's a node or not
+      if (isNode) {
+        keys = Object.keys(this._g.appDescription.getValue().objects);
+      } else {
+        keys = Object.keys(this._g.appDescription.getValue().relations);
+      }
+  
+      // Get date range and inclusion type
+      const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
+      const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
+      const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
+      const mapping = this._g.appDescription.getValue().timebarDataMapping;
+  
+      // Return empty string if mapping is empty or undefined
+      if (!mapping || Object.keys(mapping).length < 1) {
+        return '';
+      }
+  
+      s = ' AND (';
+      for (const k of keys) {
+        if (!mapping[k]) {
+          continue;
+        }
+  
+        const p1 = `COALESCE(${varName}.${mapping[k].begin_datetime}, ${LONG_MIN})`;
+        const p2 = `COALESCE(${varName}.${mapping[k].end_datetime}, ${LONG_MAX})`;
+        const bothNull = `(${varName}.${mapping[k].end_datetime} IS NULL AND ${varName}.${mapping[k].begin_datetime} IS NULL)`;
+  
+        if (inclusionType == TimebarGraphInclusionTypes.overlaps) {
+          s += `(${bothNull} OR (${p1} <= ${d2} AND ${p2} >= ${d1})) AND`;
+        } else if (inclusionType == TimebarGraphInclusionTypes.contains) {
+          s += `(${bothNull} OR (${d1} <= ${p1} AND ${d2} >= ${p2})) AND`;
+        } else if (inclusionType == TimebarGraphInclusionTypes.contained_by) {
+          s += `(${bothNull} OR (${p1} <= ${d1} AND ${p2} >= ${d2})) AND`;
+        }
+      }
+  
+      // Remove the trailing 'AND'
+      s = s.slice(0, -4);
+      s += ')';
+  
+      return s;
+    } catch (error) {
+      console.error("Error generating date filter:", error);
       return '';
     }
-    let s = '';
-    let keys = [];
-
-    if (isNode) {
-      keys = Object.keys(this._g.appDescription.getValue().objects);
-    } else {
-      keys = Object.keys(this._g.appDescription.getValue().relations);
-    }
-
-    const d1 = this._g.userPrefs.dbQueryTimeRange.start.getValue();
-    const d2 = this._g.userPrefs.dbQueryTimeRange.end.getValue();
-    const inclusionType = this._g.userPrefs.objectInclusionType.getValue();
-    const mapping = this._g.appDescription.getValue().timebarDataMapping;
-
-    if (!mapping || Object.keys(mapping).length < 1) {
-      return '';
-    }
-
-    s = ' AND (';
-    for (const k of keys) {
-      if (!mapping[k]) {
-        continue;
-      }
-      const p1 = `COALESCE(${varName}.${mapping[k].begin_datetime}, ${LONG_MIN})`;
-      const p2 = `COALESCE(${varName}.${mapping[k].end_datetime}, ${LONG_MAX})`;
-      const bothNull = `(${varName}.${mapping[k].end_datetime} IS NULL AND ${varName}.${mapping[k].begin_datetime} IS NULL)`
-      if (inclusionType == TimebarGraphInclusionTypes.overlaps) {
-        s += `(${bothNull} OR (${p1} <= ${d2} AND ${p2} >= ${d1})) AND`;
-      } else if (inclusionType == TimebarGraphInclusionTypes.contains) {
-        s += `(${bothNull} OR (${d1} <= ${p1} AND ${d2} >= ${p2})) AND`;
-      } else if (inclusionType == TimebarGraphInclusionTypes.contained_by) {
-        s += `(${bothNull} OR (${p1} <= ${d1} AND ${p2} >= ${d2})) AND`;
-      }
-
-    }
-    s = s.slice(0, -4)
-    s += ')'
-    return s;
   }
 
   private extractGraph(response): GraphResponse {
     let nodes = [];
     let edges = [];
-
     const results = response.results[0];
     if (!results) {
       this._g.showErrorModal('Invalid Query', response.errors[0]);
@@ -409,7 +515,7 @@ export class Neo4jDb implements DbService {
       const cols = Object.keys(obj[0].row[0]);
       const data = obj.map(x => Object.values(x.row[0]));
       // put id to first
-      const idxId = cols.indexOf('ID(x)');
+      const idxId = cols.indexOf('ElementId(x)');
       if (idxId > -1) {
         const tmp = cols[idxId];
         cols[idxId] = cols[0];
@@ -434,16 +540,16 @@ export class Neo4jDb implements DbService {
     }
     if (isTimeboxed) {
       const obj = response.results[0].data[0].row[0];
-      const r: DbResponse = { tableData: { columns: ['ID(x)', 'x'], data: [] }, graphData: { nodes: [], edges: [] }, count: obj.count };
+      const r: DbResponse = { tableData: { columns: ['elementId(x)', 'x'], data: [] }, graphData: { nodes: [], edges: [] }, count: obj.count };
       // response is a node response
       if (obj.nodeIds) {
         r.tableData.data = obj.nodeIds.map((x, i) => [x, obj.nodes[i]]);
-        r.graphData.nodes = obj.nodeIds.map((x, i) => { return { properties: obj.nodes[i], labels: obj.nodeTypes[i], id: x }; });
+        r.graphData.nodes = obj.nodeIds.map((x, i) => { return { properties: obj.nodes[i], labels: obj.nodeTypes[i], elementId: x }; });
       } else {
         r.tableData.data = obj.edgeIds.map((x, i) => [x, obj.edges[i]]);
-        r.graphData.nodes = r.graphData.nodes.concat(obj.srcNodeIds.map((x, i) => { return { properties: obj.srcNodes[i], labels: obj.srcNodeTypes[i], id: x }; }));
-        r.graphData.nodes = r.graphData.nodes.concat(obj.tgtNodeIds.map((x, i) => { return { properties: obj.tgtNodes[i], labels: obj.tgtNodeTypes[i], id: x }; }));
-        r.graphData.edges = obj.edgeIds.map((x, i) => { return { properties: obj.edges[i], type: obj.edgeTypes[i], id: x, startNode: obj.srcNodeIds[i], endNode: obj.tgtNodeIds[i] }; });
+        r.graphData.nodes = r.graphData.nodes.concat(obj.srcNodeIds.map((x, i) => { return { properties: obj.srcNodes[i], labels: obj.srcNodeTypes[i], elementId: x }; }));
+        r.graphData.nodes = r.graphData.nodes.concat(obj.tgtNodeIds.map((x, i) => { return { properties: obj.tgtNodes[i], labels: obj.tgtNodeTypes[i], elementId: x }; }));
+        r.graphData.edges = obj.edgeIds.map((x, i) => { return { properties: obj.edges[i], type: obj.edgeTypes[i], elementId: x, startNodeElementId: obj.srcNodeIds[i], endNodeElementId: obj.tgtNodeIds[i] }; });
       }
 
       return r;
@@ -554,11 +660,11 @@ export class Neo4jDb implements DbService {
       return `(${inputOp} IN x.${rule.propertyOperand})`;
     } else if (rule.propertyType == 'edge') {
       if (!rule.operator || !rule.inputOperand || rule.inputOperand.length < 1) {
-        return `( size((x)-[:${rule.propertyOperand}]-()) > 0 )`;
+        return `( COUNT{(x)-[:${rule.propertyOperand}]-()}> 0 )`;
       }
       const i = this.transformInp(rule, rule.inputOperand);
       const op = rule.operator != 'One of' ? rule.operator : 'IN';
-      return `( size((x)-[:${rule.propertyOperand}]-()) ${op} ${i} )`;
+      return `( COUNT{(x)-[:${rule.propertyOperand}]-()} ${op} ${i} )`;
     } else {
       if (rule.propertyType == 'string' && this._g.userPrefs.isIgnoreCaseInText.getValue()) {
         inputOp = inputOp.toLowerCase();
@@ -594,12 +700,12 @@ export class Neo4jDb implements DbService {
         orderExp = `WITH x ORDER BY x.${filter.orderBy} ${filter.orderDirection}`;
       }
       if (isEdge) {
-        return `${orderExp} RETURN collect(ID(x))${r} as edgeIds, collect(type(x))${r} as edgeTypes, collect(x)${r} as edges, 
-        collect(ID(startNode(x)))${r} as srcNodeIds, collect(labels(startNode(x)))${r} as srcNodeTypes, collect(startNode(x))${r} as srcNodes,
-        collect(ID(endNode(x)))${r} as tgtNodeIds, collect(labels(endNode(x)))${r} as tgtNodeTypes, collect(endNode(x))${r} as tgtNodes,
+        return `${orderExp} RETURN collect(ElementId(x))${r} as edgeIds, collect(type(x))${r} as edgeTypes, collect(x)${r} as edges, 
+        collect(ElementId(startNode(x)))${r} as srcNodeIds, collect(labels(startNode(x)))${r} as srcNodeTypes, collect(startNode(x))${r} as srcNodes,
+        collect(ElementId(endNode(x)))${r} as tgtNodeIds, collect(labels(endNode(x)))${r} as tgtNodeTypes, collect(endNode(x))${r} as tgtNodes,
         size(collect(x)) as count`;
       }
-      return `${orderExp} RETURN collect(ID(x))${r} as nodeIds, collect(labels(x))${r} as nodeTypes, collect(x)${r} as nodes, size(collect(x)) as count`;
+      return `${orderExp} RETURN collect(ElementId(x))${r} as nodeIds, collect(labels(x))${r} as nodeTypes, collect(x)${r} as nodes, size(collect(x)) as count`;
     } else if (type == DbResponseType.count) {
       return `RETURN COUNT(x)`;
     }
@@ -619,7 +725,7 @@ export class Neo4jDb implements DbService {
       cql = '(';
     }
     for (let i = 0; i < ids.length; i++) {
-      cql += `ID(${varName})=${ids[i]} OR `
+      cql += `ElementId(${varName})='${ids[i]}' OR `
     }
 
     if (ids.length > 0) {
@@ -631,6 +737,114 @@ export class Neo4jDb implements DbService {
       }
     }
     return cql;
+  }
+  addIssueBadges(size: number = 18) {
+    let addPriorityBadge = false;
+    this._g.cy.nodes().forEach(async (element) => {
+      this.addIssueBadge(element, size)
+    });
+
+  }
+  addIssueBadge(element:any, size:number  = 18 ){
+    if (element._private.classes.values().next().value == 'Issue') {
+      const div1 = document.createElement("div");
+      const div2 = document.createElement("div");
+      let type = element._private.data.issueType
+      let priority = element._private.data.priority
+      if (!Object.values(this.enums.getValue().issueType).includes(element._private.data.issueType)) {
+        type = 'Other';
+      }
+      if (!Object.values(this.enums.getValue().priority).includes(element._private.data.priority)) {
+        type = 'Other';
+      }
+      if (Object.keys(element.getCueData()).length === 0) {
+        element.addCue({
+          htmlElem: div1,
+          imgData: { width: size, height: size, src: "app/custom/assets/issue-types/" + type + ".svg" },
+          id: element._private.data.name + element._private.data.issueType,
+          show: "always",
+          position: "top-left",
+          marginY: "%21.3",
+          marginX: "%24.3",
+          cursor: "pointer",
+          zIndex: 999,
+          tooltip: type
+        });
+
+        element.addCue({
+          htmlElem: div2,
+          imgData: { width: size, height: size, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
+          id: element._private.data.name + element._private.data.priority,
+          show: "always",
+          position: "left",
+          marginX: "%24.3",
+          marginY: "%7.8",
+          cursor: "pointer",
+          zIndex: 999,
+          tooltip: priority
+        });
+
+
+      }
+    }
+  }
+
+  activateAnomalyCues() {
+    this._g.cy.nodes().filter(':visible').forEach(async (element) => {
+     element.addClass("anomalyBadgeDisplay")
+     this.activateAnomalyCue(element)
+    });
+  }
+
+  activateAnomalyCue(element:any){
+    const colors = [
+      "#FF9999", "#fe5050", "#FE0022", "#BC0000", "#9a0000"
+    ]
+    if (element._private.classes.values().next().value == 'Issue') {
+      const cb = (x) => {
+        const div1 = document.createElement("div");
+        let number = x.data[0][1];
+        if (number > 0) {
+          element.addClass("anomalyBadgeDisplay")
+          let position = "top-right";
+          let badgeWidth = 1;
+          if(element._private.classes.has("graphTheoreticDisplay")){
+            position = "right"
+            badgeWidth =  element.data('__TheoreticPropNodeSize')/16;
+          }
+          let color = (number <= 5) ? colors[number - 1] : colors[4];
+          let listOfAnomalies = x.data[0][0];
+          const size_x = 0.60 + 2 * badgeWidth * Math.log(3 * listOfAnomalies.length + 1) / 15;
+          const size_y = 0.10 + 2 *badgeWidth * Math.log(3 * listOfAnomalies.length + 1) / 15;
+          const font_size = 0.75 + Math.log(3 * badgeWidth * listOfAnomalies.length + 1) / 15;
+          div1.style.backgroundColor = color;
+          div1.style.color = "#fff";
+          div1.style.fontSize = font_size + 'em';
+          div1.style.paddingBottom = size_y + 'em';
+          div1.style.paddingTop = size_y + 'em';
+          div1.style.paddingRight = size_x + 'em';
+          div1.style.paddingLeft = size_x + 'em';
+          div1.style.borderRadius = '100%';
+          div1.innerHTML = `<span  >${number}</span>`;
+          let elementCueValue = element.getCueData()
+          if (elementCueValue && !elementCueValue[Object.keys(elementCueValue)[0]].hasOwnProperty(element._private.data.name)) {
+            element.addCue({
+              htmlElem: div1,
+              id: element._private.data.name,
+              show: "always",
+              position: "right",
+              marginX: "%5",
+              marginY: "%5",
+              cursor: "pointer",
+              zIndex: 999,
+              tooltip: listOfAnomalies.join('\n')
+            });
+          }
+        }
+      }
+      const cql = `MATCH (n:Issue {name:'${element._private.data.name}'}) RETURN n.anomalyList as anomalyList , n.anomalyCount as anomalyCount`;
+      this.runQuery(cql, cb, DbResponseType.table);
+    }
   }
   // ------------------------------------------------- end of methods for conversion to CQL -------------------------------------------------
 }

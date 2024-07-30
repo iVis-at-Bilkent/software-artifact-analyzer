@@ -86,6 +86,23 @@
     }
   },
   {
+    "selector": "node.clusterByDeveloper",
+    "style": {
+      "label": "data(name)",
+      "background-opacity": 0.07,
+      "background-color": "#555",
+      "shape": "barrel",
+      "border-color": "black",
+      "overlay-padding": 30,
+      "font-size": "16px",
+      "text-valign": "top",
+      "text-halign": "center",
+      "text-outline-color": "#555",
+      "text-outline-width": "2px",
+      "color": "#fff"
+    }
+  },
+  {
     "selector": "node.Commit",
     "style": {
       "label": "data(name)",
@@ -96,8 +113,8 @@
       "background-image": "app/custom/assets/commit.svg",
       "shape": "diamond",
       "background-fit": "contain",
-      "width": "34px",
-      "height": "34px",
+      "width": "27px",
+      "height": "27px",
       "text-width": "100px",
       "text-outline-color": "#ffffff",
       "color": "#bd7ebe",
@@ -114,8 +131,8 @@
       "background-image": "app/custom/assets/developer.svg",
       "shape": "ellipse",
       "background-fit": "contain",
-      "width": "30px",
-      "height": "30px",
+      "width": "24px",
+      "height": "24px",
       "text-max-width": "60px",
       "text-outline-color": "#ffffff",
       "color": "#976e6e",
@@ -133,8 +150,8 @@
       "shape": "rectangle",
       "text-wrap": "ellipsis",
       "background-fit": "contain",
-      "width": "24px",
-      "height": "30px",
+      "width": "20px",
+      "height": "24px",
       "text-max-width": "60px",
       "text-outline-color": "#ffffff",
       "color": "#6988a5",
@@ -151,11 +168,11 @@
       "color": "#4C5F7A",
       "text-outline-width": "1px",
       "font-size": "11px",
-      "shape": "ellipse",
+      "shape": "rectangle",
       "background-fit": "contain",
       "background-image": "app/custom/assets/issue.svg",
-      "width": "30px",
-      "height": "30px"
+      "width": "32px",
+      "height": "32px"
     }
   },
   {
@@ -168,8 +185,8 @@
       "background-image": "app/custom/assets/pull-request.svg",
       "shape": "ellipse",
       "background-fit": "contain",
-      "width": "30px",
-      "height": "30px",
+      "width": "24px",
+      "height": "24px",
       "text-outline-color": "#ffffff",
       "color": "#71aa9f",
       "text-outline-width": "1px"
@@ -372,7 +389,21 @@
     }
   },
   {
-    "selector": "edge.REFERENCED",
+    "selector": "edge.REFERENCED_PR",
+    "style": {
+      "label": "referenced",
+      "width": "1px",
+      "font-size": "11px",
+      "line-color": "#4C5F7A",
+      "line-style": "solid",
+      "target-arrow-shape": "triangle",
+      "target-arrow-color": "#4C5F7A",
+      "text-rotation": "autorotate",
+      "color": "#4C5F7A"
+    }
+  },
+  {
+    "selector": "edge.REFERENCED_COMMIT",
     "style": {
       "label": "referenced",
       "width": "1px",

@@ -4,7 +4,7 @@ import { formatNumber } from '@angular/common';
 import { CytoscapeService } from '../../../cytoscape.service';
 import { debounce2, debounce, COLLAPSED_EDGE_CLASS, mapColor } from '../../../constants';
 import { Subscription } from 'rxjs';
-
+import { Neo4jDb } from '../../../db-service/neo4j-db.service';
 @Component({
   selector: 'app-graph-theoretic-properties-tab',
   templateUrl: './graph-theoretic-properties-tab.component.html',
@@ -22,7 +22,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     { text: 'Betweenness Centrality', fn: 'betweennessCentrality', arg: '' },
     { text: 'Normalized Betweenness Centrality', fn: 'betweennessCentralityNormalized', arg: '' },
     { text: 'Page Rank', fn: 'pageRank', arg: '' },
-    { text: 'Pull requests: Change line of code', fn: 'lineOfCode', arg: '' }
+    { text: 'Pull Requests: Changed Lines of Code', fn: 'lineOfCode', arg: '' }
   ];
   isOnSelected = false;
   isDirectedGraph = false;
@@ -41,7 +41,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
   currNodeSize = this.NODE_SIZE;
   appDescSubs: Subscription;
 
-  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService) { }
+  constructor(private _g: GlobalVariableService, private _cyService: CytoscapeService, public _dbService: Neo4jDb) { }
 
   ngOnInit() {
     this._cyService.setRemovePoppersFn(this.destroyCurrentPoppers.bind(this));
@@ -69,12 +69,40 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       return;
     }
     this[this.selectedPropFn]();
-    let m = Math.max(...this._g.cy.nodes().map(x => x.data('__graphTheoreticProp')));
+  
+    // Filter nodes that have the __graphTheoreticProp property
+    const nodesWithProp = this._g.cy.nodes().filter(x => (x.data('__graphTheoreticProp') !== undefined)) ;
+    if (nodesWithProp.length === 0) {
+      console.warn('No nodes with __graphTheoreticProp found');
+      return;
+    }
+    let m = Math.max(...nodesWithProp.map(x => x.data('__graphTheoreticProp')));
+    if (m <= 0) {
+      m = 1;
+    }  
     this.maxPropValue = m;
     this._cyService.setNodeSizeOnGraphTheoreticProp(m, this.currNodeSize);
     this.setBadgeColorsAndCoords();
+    let b = this.currNodeSize + 20;
+    let a = Math.max(5, this.currNodeSize - 20);
+   
+    this._g.cy.nodes().filter(':visible').forEach(async (element) => {
+      if (element._private.classes.values().next().value === 'Issue') {  
+        if (element._private.classes.has("graphTheoreticDisplay") ) {
+          element.removeCue();
+          const badgeWidth = ((b - a) * element.data('__graphTheoreticProp') / m + a) * 0.5625;
+          element.data('__TheoreticPropNodeSize',badgeWidth )
+          this._dbService.addIssueBadge(element, badgeWidth);
+        } else {
+          element.removeCue();
+          this._dbService.addIssueBadge(element);
+        }
+        if(element._private.classes.has("anomalyBadgeDisplay")){
+          this._dbService.activateAnomalyCue(element);
+        }
+      }
+    });
   }
-
   private edgeWeightFn(edge) {
     if (this.isConsiderOriginalEdges && edge.hasClass(COLLAPSED_EDGE_CLASS)) {
       return edge.data('collapsedEdges').length;
@@ -273,13 +301,12 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       let badges = [0];
       if ([...elemsPr[i]._private.classes][0] =="PullRequest"){
         badges = [elemsPr[i]._private.data.changeLineOfCode ];
-        this.generateBadge4Elem(elemsPr[i], badges);
+        this.generateBadge4Elem(elemsPr[i], badges, 3);
       }
       
     }
   }
   knowAboutScore (elems, scores: number []){
-
     for (let i = 0; i < elems.length; i++) {
       let badges = [0];
       badges = [scores[i]];
@@ -289,7 +316,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     }
   }
 
-  generateBadge4Elem(e, badges: number[]) {
+  generateBadge4Elem(e, badges: number[], ratio:number=1) {
     const div = document.createElement('div');
     div.innerHTML = this.getHtml(badges);
     div.style.position = 'absolute';
@@ -301,7 +328,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       for (let i = 0; i < badges.length; i++) {
         sum += badges[i];
       }
-      e.data('__graphTheoreticProp', sum / badges.length);
+      e.data('__graphTheoreticProp',Math.pow( sum / badges.length, 1 / ratio));
     }
     if (this.isMapNodeSizes) {
       e.removeClass('graphTheoreticDisplay');
@@ -318,7 +345,6 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
         this.showHideBadge(false, div);
       }).bind(this);
     const styleHandlerFn = debounce(() => { this.setBadgeVisibility(e, div); }, this.UPDATE_POPPER_WAIT * 2).bind(this);
-
     e.on('position', positionHandlerFn);
     e.on('style', styleHandlerFn);
     this._g.cy.on('pan zoom resize', positionHandlerFn);
@@ -332,7 +358,6 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
       if (this.isMapBadgeSizes) {
         let b = this.currNodeSize + 20;
         let a = Math.max(5, this.currNodeSize - 20);
-        
         let x = e.data('__graphTheoreticProp');
         ratio = ((b - a) * x / this.maxPropValue + a) / this.currNodeSize;
       } else {
@@ -379,7 +404,7 @@ export class GraphTheoreticPropertiesTabComponent implements OnInit, OnDestroy {
     }
   }
 
-  destroyPopper(id: string, i: number = -1) {
+  destroyPopper(id: string, i: number = -1) {  
     if (i < 0) {
       i = this.poppedData.findIndex(x => x.elem.id() == id);
       if (i < 0) {

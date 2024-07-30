@@ -1,23 +1,22 @@
 {
   "nodes": {
     "Commit": {
-      "id": "string",
-      "createdAt": "datetime",
       "name": "string",
-      "end": "datetime"
+      "createdAt": "datetime",
+      "end": "datetime",
+      "url": "string"
     },
     "Developer": {
-      "id": "string",
       "name": "string",
-      "authorEmail": "string",
+      "email": "string",
       "start": "datetime",
       "end": "datetime"
     },
     "File": {
       "name": "string",
-      "id": "string",
       "createdAt": "datetime",
-      "end": "datetime"
+      "end": "datetime",
+      "url": "string"
     },
     "Issue": {
       "name": "string",
@@ -27,7 +26,6 @@
       "createdAt": "datetime",
       "closeDate": "datetime",
       "resolutionDate": "datetime",
-      "id": "string",
       "title": "string",
       "url": "string",
       "reporter": "string",
@@ -49,120 +47,126 @@
       "closeDate": "datetime",
       "changeLineOfCode": "int",
       "numberOfCommits": "int",
-      "id": "string",
+      "numberOfChangeFiles": "int",
       "title": "string",
       "url": "string"
     }
   },
   "edges": {
     "BLOCKS": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "ASSIGNED_TO": {
-      "id": "string",
+      "recency": "float",
       "end": "datetime",
       "createdAt": "datetime"
     },
     "RESOLVED": {
-      "id": "string",
+      "recency": "float",
       "end": "datetime",
       "createdAt": "datetime"
     },
     "COMMENTED": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime",
       "commentCount": "string"
     },
     "ASSIGNED_BY": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "COMMITTED": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "DEPENDS_UPON": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "DUPLICATES": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "FIXES": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "CONTAINS": {
-      "id": "string",
+      "recency": "float",
+      "changeLOC": "integer",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "INCLUDES": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "INCORPORATES": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "IS_A_CLONE_OF": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "OPENED": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
-    "REFERENCED": {
-      "id": "string",
+    "REFERENCED_PR": {
+      "recency": "float",
+      "createdAt": "datetime",
+      "end": "datetime"
+    },
+    "REFERENCED_COMMIT": {
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "RELATES_TO": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "MERGED": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "RENAMED_TO": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "REPORTED": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "CLOSED": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "REVIEWED": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     },
     "SUPERSEDES": {
-      "id": "string",
+      "recency": "float",
       "createdAt": "datetime",
       "end": "datetime"
     }

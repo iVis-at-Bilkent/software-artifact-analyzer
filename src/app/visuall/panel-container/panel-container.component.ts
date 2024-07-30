@@ -11,8 +11,11 @@ export class PanelContainerComponent implements OnInit {
 
   @Input() panels: { component: any, text: string }[];
   @Input() containerId: string;
-
+  @Input() isOpen = false;
   ngOnInit(): void {
+  }
+  toggleContainer() {
+    this.isOpen = !this.isOpen;
   }
 
 }

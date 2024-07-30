@@ -26,6 +26,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
   @ViewChild('dbQueryDate2', { static: false }) dbQueryDate2: ElementRef;
   dataPageSize: number;
   dataPageLimit: number;
+  queryNeighborLimit: number;
   queryHistoryLimit: number;
   dbTimeout: number;
   tableColumnLimit: number;
@@ -141,6 +142,7 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
     this.groupingOption = up.groupingOption.getValue();
     this.dataPageSize = up.dataPageSize.getValue();
     this.dataPageLimit = up.dataPageLimit.getValue();
+    this.queryNeighborLimit = up.queryNeighborLimit.getValue();
     this.queryHistoryLimit = up.queryHistoryLimit.getValue();
     this.dbTimeout = up.dbTimeout.getValue();
     this.tableColumnLimit = up.tableColumnLimit.getValue();
@@ -222,10 +224,11 @@ export class SettingsTabComponent implements OnInit, OnDestroy {
                   END,
                   n.anomalyList = [x IN n.anomalyList WHERE x <> 'Ignored bug']
                   WITH n
-                  WHERE exists(n.history) AND size(n.history) >= 2
+                  WHERE n.history IS NOT NULL AND size(n.history) >= 2
                   WITH n, range(0, size(n.history)-2) as index_range
                   UNWIND index_range as i
-                  WITH n, i, datetime(n.history[i]) as from, datetime(n.history[i+1]) as to
+                  WITH n, i, toInteger(n.history[i]) as fromMillis, toInteger(n.history[i+1]) as toMillis\
+                  WITH n, i, datetime({epochMillis: fromMillis}) as from, datetime({epochMillis: toMillis}) as to\
                   WHERE duration.between(from, to).months > ${val}
                   WITH DISTINCT n
                   SET n.anomalyList = coalesce(n.anomalyList, []) + ['Ignored bug'], n.anomalyCount = coalesce(n.anomalyCount, 0) + 1

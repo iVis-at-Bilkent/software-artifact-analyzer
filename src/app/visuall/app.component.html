@@ -1,10 +1,16 @@
-<div class="root">
-  <app-navbar></app-navbar>
-  <app-toolbar></app-toolbar>
-  <app-cytoscape></app-cytoscape>
-  <app-timebar></app-timebar>
-  <app-operation-tabs></app-operation-tabs>
-  <div class="spinner-border loading-div" *ngIf="isLoading" role="status">
-    <span class="visually-hidden">Loading...</span>
+<div *ngIf="setupValue !== ''">
+  <app-setup [setupValue]="setupValue"></app-setup>
+</div>
+<div  *ngIf="setupValue === ''">
+  <div class="root">
+    <app-navbar></app-navbar>
+    <app-toolbar></app-toolbar>
+    <app-cytoscape></app-cytoscape>
+    <app-timebar></app-timebar>
+    <app-operation-tabs></app-operation-tabs>
+    <div class="spinner-border loading-div" *ngIf="isLoading" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
   </div>
 </div>
+

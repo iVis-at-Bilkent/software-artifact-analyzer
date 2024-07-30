@@ -4,9 +4,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SaveAsPngModalComponent } from '../popups/save-as-png-modal/save-as-png-modal.component';
 import { AboutModalComponent } from '../popups/about-modal/about-modal.component';
 import { QuickHelpModalComponent } from '../popups/quick-help-modal/quick-help-modal.component';
+import { LegendModalComponent } from '../popups/legend-modal/legend-modal.component';
 import { GlobalVariableService } from '../global-variable.service';
 import { getPropNamesFromObj } from '../constants';
-import { ToolbarCustomizationService } from '../../custom/toolbar-customization.service';
+import { ToolbarCustomizationService } from '../../custom/customization-service/toolbar-customization.service';
 import { ToolbarDiv, ToolbarAction } from './itoolbar';
 import { Subscription } from 'rxjs';
 import { UserProfileService } from '../user-profile.service';
@@ -58,7 +59,8 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
         { imgSrc: 'assets/img/toolbar/layout-static.svg', title: 'Recalculate Layout', fn: 'reLayout', isStd: true, isRegular: true }]
       },
       {
-        div: 5, items: [{ imgSrc: 'assets/img/toolbar/quick-help.svg', title: 'Quick Help', fn: 'openQuickHelp', isStd: true, isRegular: true },
+        div: 5, items: [{ imgSrc: 'assets/img/toolbar/quick-help.svg', title: 'Quick Help', fn: 'openQuickHelp', isStd: true, isRegular: true }, 
+        { imgSrc: 'assets/img/toolbar/legend.svg', title: 'Legend', fn: 'openLegend', isStd: true, isRegular: true },
         { imgSrc: 'assets/img/toolbar/about.svg', title: 'About', fn: 'openAbout', isStd: true, isRegular: true }]
       },
     ];
@@ -187,6 +189,8 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
   openQuickHelp() { this.modalService.open(QuickHelpModalComponent); }
 
   openAbout() { this.modalService.open(AboutModalComponent); }
+
+  openLegend() { this.modalService.open(LegendModalComponent); }
 
   showHideGraphHistory() {
     const v = this._g.showHideGraphHistory.getValue();

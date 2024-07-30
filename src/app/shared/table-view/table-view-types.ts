@@ -10,7 +10,7 @@ export interface TableData {
 export interface TableViewInput {
   // first property of every result must be ID
   results: TableData[][];
-  results2: number[];
+  results2?: number[];
   columns: string[];
   isLoadGraph: boolean;
   isMergeGraph: boolean;
@@ -40,7 +40,7 @@ export interface TableFiltering {
 }
 
 export interface TableRowMeta {
-  dbIds: number[] | string[];
+  dbIds:  string[];
   tableIdx: number[];
 }
 
@@ -89,7 +89,6 @@ export function getClassNameFromProperties(properties, propNames: string[]): str
       return edgeClass;
     }
   }
-  console.log('could not find class from')
   return null;
 }
 

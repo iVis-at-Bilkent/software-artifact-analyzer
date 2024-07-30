@@ -12,10 +12,11 @@ export class TypesViewComponent implements OnInit, OnDestroy {
   showNodeClass = {};
   edgeClasses: Set<string>;
   showEdgeClass = {};
+  endPoints: { [key: string]: {} } = {};
   @Output() onFilterByType = new EventEmitter<{ className: string, willBeShowed: boolean }>();
   @Input() classList: string[];
   dataModelSubs: Subscription;
-
+  endPointsSubs: Subscription;
   constructor(private _g: GlobalVariableService) {
     this.nodeClasses = new Set([]);
     this.edgeClasses = new Set([]);
@@ -38,9 +39,15 @@ export class TypesViewComponent implements OnInit, OnDestroy {
           }
         }
       }
-      this.filterElesByClass('COMMENTED',false)
+      this.filterElesByClass('COMMENTED', false)
     });
-    
+    this.endPointsSubs =  this._g.endPoints.subscribe(x => {
+      if (x) {
+        for (const key in x){
+          this.endPoints[key] = x[key]
+        }
+      }
+    });
   }
 
   filterElesByClass(className: string, isNode: boolean) {
@@ -58,6 +65,9 @@ export class TypesViewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.dataModelSubs) {
       this.dataModelSubs.unsubscribe();
+    }
+    if (this.endPointsSubs) {
+      this.endPointsSubs.unsubscribe();
     }
   }
 

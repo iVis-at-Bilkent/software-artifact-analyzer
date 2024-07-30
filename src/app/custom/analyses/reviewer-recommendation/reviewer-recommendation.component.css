@@ -1,0 +1,9 @@
+.pr-select{
+  width: 50px !important;
+}
+.empty{
+  border: 1px solid #c9cacb;
+  padding: 10px;
+  border-radius: 0.375rem;
+  text-align: center;
+}

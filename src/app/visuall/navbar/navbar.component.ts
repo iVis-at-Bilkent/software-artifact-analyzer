@@ -6,7 +6,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SaveAsPngModalComponent } from '../popups/save-as-png-modal/save-as-png-modal.component';
 import { AboutModalComponent } from '../popups/about-modal/about-modal.component';
 import { QuickHelpModalComponent } from '../popups/quick-help-modal/quick-help-modal.component';
-import { NavbarCustomizationService } from '../../custom/navbar-customization.service';
+import { LegendModalComponent } from '../popups/legend-modal/legend-modal.component';
+import { NavbarCustomizationService } from '../../custom/customization-service/navbar-customization.service';
 import { NavbarDropdown, NavbarAction } from './inavbar';
 import { UserProfileService } from '../user-profile.service';
 import { readTxtFile, CLUSTER_CLASS } from '../constants';
@@ -14,9 +15,7 @@ import { SaveProfileModalComponent } from '../popups/save-profile-modal/save-pro
 import { URLLoadService } from '../load-from-url.service';
 import { GroupingOptionTypes } from '../user-preference';
 import { Subscription } from 'rxjs';
-import { DialogElementsExample } from './dialog-elements-example';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialog} from '@angular/material/dialog';
+import { ProjectBuilderDialogComponent } from './project-builder/project-builder-dialog-component';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -25,10 +24,10 @@ import {MatDialog} from '@angular/material/dialog';
 export class NavbarComponent implements OnInit, OnDestroy {
   @ViewChild('file', { static: false }) file;
   @NgModule({
-    imports: [DialogElementsExample],
-    declarations: [DialogElementsExample],
+    imports: [ProjectBuilderDialogComponent],
+    declarations: [ProjectBuilderDialogComponent],
     providers: [],
-    bootstrap: [DialogElementsExample]
+    bootstrap: [ProjectBuilderDialogComponent]
  })
  
   menu: NavbarDropdown[];
@@ -82,7 +81,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
       },
       {
         dropdown: 'Help', actions: [{ txt: 'Quick Help', id: 'nbi50', fn: 'openQuickHelp', isStd: true },
-        { txt: 'About', id: 'nbi51', fn: 'openAbout', isStd: true }]
+        { txt: 'Legend', id: 'nbi51', fn: 'openLegend', isStd: true },
+        { txt: 'About', id: 'nbi52', fn: 'openAbout', isStd: true }]
       },
       {
         dropdown: 'Data', actions: [{ txt: 'Sample Data', id: 'nbi60', fn: 'getSampleData', isStd: true },
@@ -186,6 +186,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   recalculateLayout() { this._g.performLayout(true); }
 
   openQuickHelp() { this._modalService.open(QuickHelpModalComponent); }
+
+  openLegend() { this._modalService.open(LegendModalComponent); }
 
   openAbout() { this._modalService.open(AboutModalComponent); }
 
