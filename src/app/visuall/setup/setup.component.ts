@@ -28,10 +28,10 @@
     private jiraCode: string = '';
     private redirectUrlFlowJira: string = '';
     //Neo4j Credentials
-    private boltUrl: string = "bolt://ivis.cs.bilkent.edu.tr:3006";
-    private httpUrl: string = "http://saa.cs.bilkent.edu.tr/browser";
-    private neo4jUsername: string ="neo4j" ;
-    private neo4jUserPassword: string="01234567" ;
+    private boltUrl: string = "";
+    private httpUrl: string = "";
+    private neo4jUsername: string ="" ;
+    private neo4jUserPassword: string="" ;
   constructor(private _g: GlobalVariableService, private route: ActivatedRoute, private http: HttpClient, private _http: HttpClient, private router: Router) { }
 
   async ngOnInit(): Promise<void> {
