@@ -755,7 +755,7 @@ export class Neo4jDb implements DbService {
         type = 'Other';
       }
       if (!Object.values(this.enums.getValue().priority).includes(element._private.data.priority)) {
-        type = 'Other';
+        priority = 'Other';
       }
       if (Object.keys(element.getCueData()).length === 0) {
         element.addCue({
