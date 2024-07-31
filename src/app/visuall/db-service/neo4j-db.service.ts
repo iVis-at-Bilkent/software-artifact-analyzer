@@ -752,16 +752,16 @@ export class Neo4jDb implements DbService {
       let type = element._private.data.issueType
       let priority = element._private.data.priority
       if (!Object.values(this.enums.getValue().issueType).includes(element._private.data.issueType)) {
-        type = 'Other';
+        type = 'OtherType';
       }
       if (!Object.values(this.enums.getValue().priority).includes(element._private.data.priority)) {
-        priority = 'Other';
+        priority = 'OtherPriority';
       }
       if (Object.keys(element.getCueData()).length === 0) {
         element.addCue({
           htmlElem: div1,
           imgData: { width: size, height: size, src: "app/custom/assets/issue-types/" + type + ".svg" },
-          id: element._private.data.name + element._private.data.issueType,
+          id: element._private.data.name + type,
           show: "always",
           position: "top-left",
           marginY: "%21.3",
@@ -774,7 +774,7 @@ export class Neo4jDb implements DbService {
         element.addCue({
           htmlElem: div2,
           imgData: { width: size, height: size, src: "app/custom/assets/issue-priority/" + priority + ".svg" },
-          id: element._private.data.name + element._private.data.priority,
+          id: element._private.data.name + priority ,
           show: "always",
           position: "left",
           marginX: "%24.3",
