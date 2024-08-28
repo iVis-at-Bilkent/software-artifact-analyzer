@@ -11,6 +11,10 @@ SAA was built on a [fork](https://help.github.com/en/github/getting-started-with
 
 [1] Lara Merdol, Eray Tüzün and Ugur Dogrusoz, "SAA: a framework for improving the software development process via visualization-based software analytics", under review, 2024.
 
+## License
+
+SAA is open source and is **free for academic/non-commercial use only**. Please contact developers regarding the terms of use of this software.
+
 ## Running a local instance
 
 `npm install` for loading dependencies
