@@ -13,7 +13,6 @@ import { GroupingOptionTypes } from '../../../visuall/user-preference';
 import { GroupCustomizationService } from 'src/app/custom/customization-service/group-customization.service';
 import { TheoreticPropertiesCustomService } from 'src/app/custom/customization-service/theoretic-properties-custom.service'
 import { QueryComponent } from '../query.component.interface';
-import { trimEnd } from 'cypress/types/lodash';
 
 export interface DeveloperData {
   name: string;
