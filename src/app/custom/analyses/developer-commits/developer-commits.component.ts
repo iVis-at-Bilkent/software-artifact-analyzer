@@ -24,7 +24,7 @@ export class DeveloperCommitsComponent implements OnInit, QueryComponent<CommitD
   filteredDevelopers: string[] = [];
   tableInput: TableViewInput = {
     columns: ['commit'], results: [], results2: [], isEmphasizeOnHover: true, tableTitle: 'Query Results', classNameOfObjects: 'Commit', isShowExportAsCSV: true,
-    resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: true, isNodeData: true
+    resultCnt: 0, currPage: 1, pageSize: 0, isLoadGraph: false, isMergeGraph: false, isNodeData: true
   };
   tableFilled = new Subject<boolean>();
   tableResponse = null;
