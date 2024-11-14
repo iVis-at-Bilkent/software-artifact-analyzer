@@ -32,7 +32,7 @@ export class Neo4jDb implements DbService {
     if (window.location.hostname === "saa.cs.bilkent.edu.tr") {
       return of({
         boltURL: "bolt://ivis.cs.bilkent.edu.tr:3006",
-        httpURL:"http://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit",  
+        httpURL:"https://saa.cs.bilkent.edu.tr/browser/db/neo4j/tx/commit",  
         neo4jUserPassword: "01234567",
         neo4jUsername: "neo4j",
       });
