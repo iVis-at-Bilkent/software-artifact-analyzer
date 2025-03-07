@@ -5,11 +5,15 @@ A software artifact graph consists of software artifacts including source code f
 
 SAA web page, including a demo, a video tutorial, and instructions on usage & customization, may be found [here](https://ivis-at-bilkent.github.io/software-artifact-analyzer/).
 
-![Screenshot](https://github.com/iVis-at-Bilkent/software-artifact-analyzer/assets/59064089/4118240f-9942-4cc5-a61d-e268bf3740b3)
+![Screenshot](https://github.com/user-attachments/assets/baa7d0b3-b39b-4efe-b8a1-bce5119958ea)
 
 SAA was built on a [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) of the [Visuall](https://github.com/ugurdogrusoz/visuall) toolkit.
 
 [1] Lara Merdol, Eray Tüzün and Ugur Dogrusoz, "SAA: a framework for improving the software development process via visualization-based software analytics", under review, 2024.
+
+## License
+
+SAA is open source and is **free for academic/non-commercial use only**. Please contact developers regarding the terms of use of this software.
 
 ## Running a local instance
 

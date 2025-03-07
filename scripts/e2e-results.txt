@@ -1,0 +1,578 @@
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        10.11.0                                                                        │
+  │ Browser:        Electron 106 (headless)                                                        │
+  │ Node Version:   v18.14.0 (/Users/lara/.nvm/versions/node/v18.14.0/bin/node)                    │
+  │ Specs:          8 found (app.cy.js, filterByType.cy.js, generalQueries.cy.js, graphTheoreticPr │
+  │                 operty.cy.js, groupNodes.cy.js, navbar.cy.js, queryByRule.cy.js, timebar.cy.js │
+  │                 )                                                                              │
+  │ Searched:       cypress/e2e/**/*.cy.{js,jsx,ts,tsx}                                            │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  app.cy.js                                                                       (1 of 8)
+
+
+  Global properties about Visuall
+    1) "before each" hook: open for "TC1: Can show object properties by selecting"
+
+
+  0 passing (820ms)
+  1 failing
+
+  1) Global properties about Visuall
+       "before each" hook: open for "TC1: Can show object properties by selecting":
+     CypressError: `cy.visit()` failed trying to load:
+
+http://visuall.herokuapp.com/
+
+The response we received from your web server was:
+
+  > 503: Service Unavailable
+
+This was considered a failure because the status code was not `2xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Global properties about Vis...`
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142324:84)
+      at visitFailedByErr (http://localhost:62082/__cypress/runner/cypress_runner.js:141629:12)
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142304:13)
+      at tryCatcher (http://localhost:62082/__cypress/runner/cypress_runner.js:11318:23)
+      at Promise._settlePromiseFromHandler (http://localhost:62082/__cypress/runner/cypress_runner.js:9253:31)
+      at Promise._settlePromise (http://localhost:62082/__cypress/runner/cypress_runner.js:9310:18)
+      at Promise._settlePromise0 (http://localhost:62082/__cypress/runner/cypress_runner.js:9355:10)
+      at Promise._settlePromises (http://localhost:62082/__cypress/runner/cypress_runner.js:9431:18)
+      at _drainQueueStep (http://localhost:62082/__cypress/runner/cypress_runner.js:6025:12)
+      at _drainQueue (http://localhost:62082/__cypress/runner/cypress_runner.js:6018:9)
+      at ../../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:6034:5)
+      at Async.drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:5904:14)
+  From Your Spec Code:
+      at Context.open (webpack:///./cypress/helper.js:5:5)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      1                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     app.cy.js                                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/lara/Desktop/BILKENT/SAA/software-artifact-analyzer/scripts/cypress/scree    (2560x1440)
+     nshots/app.cy.js/Global properties about Visuall -- TC1 Can show object properti               
+     es by selecting -- before each hook open (failed).png                                          
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  filterByType.cy.js                                                              (2 of 8)
+
+
+  Filter By Node/Edge Type
+    1) "before each" hook: open for "TC1: Filter by node/edge type should show or hide based on type"
+
+
+  0 passing (560ms)
+  1 failing
+
+  1) Filter By Node/Edge Type
+       "before each" hook: open for "TC1: Filter by node/edge type should show or hide based on type":
+     CypressError: `cy.visit()` failed trying to load:
+
+http://visuall.herokuapp.com/
+
+The response we received from your web server was:
+
+  > 503: Service Unavailable
+
+This was considered a failure because the status code was not `2xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Filter By Node/Edge Type`
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142324:84)
+      at visitFailedByErr (http://localhost:62082/__cypress/runner/cypress_runner.js:141629:12)
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142304:13)
+      at tryCatcher (http://localhost:62082/__cypress/runner/cypress_runner.js:11318:23)
+      at Promise._settlePromiseFromHandler (http://localhost:62082/__cypress/runner/cypress_runner.js:9253:31)
+      at Promise._settlePromise (http://localhost:62082/__cypress/runner/cypress_runner.js:9310:18)
+      at Promise._settlePromise0 (http://localhost:62082/__cypress/runner/cypress_runner.js:9355:10)
+      at Promise._settlePromises (http://localhost:62082/__cypress/runner/cypress_runner.js:9431:18)
+      at _drainQueueStep (http://localhost:62082/__cypress/runner/cypress_runner.js:6025:12)
+      at _drainQueue (http://localhost:62082/__cypress/runner/cypress_runner.js:6018:9)
+      at ../../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:6034:5)
+      at Async.drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:5904:14)
+  From Your Spec Code:
+      at Context.open (webpack:///./cypress/helper.js:5:5)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     filterByType.cy.js                                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/lara/Desktop/BILKENT/SAA/software-artifact-analyzer/scripts/cypress/scree    (2560x1440)
+     nshots/filterByType.cy.js/Filter By NodeEdge Type -- TC1 Filter by nodeedge type               
+      should show or hide based on type -- before each hook open (failed).png                       
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  generalQueries.cy.js                                                            (3 of 8)
+
+
+  General Queries implemented in the backend side
+    1) "before each" hook: open for "TC1: "Get Neigborhood" query should bring some nodes and edges"
+
+
+  0 passing (545ms)
+  1 failing
+
+  1) General Queries implemented in the backend side
+       "before each" hook: open for "TC1: "Get Neigborhood" query should bring some nodes and edges":
+     CypressError: `cy.visit()` failed trying to load:
+
+http://visuall.herokuapp.com/
+
+The response we received from your web server was:
+
+  > 503: Service Unavailable
+
+This was considered a failure because the status code was not `2xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `General Queries implemented...`
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142324:84)
+      at visitFailedByErr (http://localhost:62082/__cypress/runner/cypress_runner.js:141629:12)
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142304:13)
+      at tryCatcher (http://localhost:62082/__cypress/runner/cypress_runner.js:11318:23)
+      at Promise._settlePromiseFromHandler (http://localhost:62082/__cypress/runner/cypress_runner.js:9253:31)
+      at Promise._settlePromise (http://localhost:62082/__cypress/runner/cypress_runner.js:9310:18)
+      at Promise._settlePromise0 (http://localhost:62082/__cypress/runner/cypress_runner.js:9355:10)
+      at Promise._settlePromises (http://localhost:62082/__cypress/runner/cypress_runner.js:9431:18)
+      at _drainQueueStep (http://localhost:62082/__cypress/runner/cypress_runner.js:6025:12)
+      at _drainQueue (http://localhost:62082/__cypress/runner/cypress_runner.js:6018:9)
+      at ../../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:6034:5)
+      at Async.drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:5904:14)
+  From Your Spec Code:
+      at Context.open (webpack:///./cypress/helper.js:5:5)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      2                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     generalQueries.cy.js                                                             │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/lara/Desktop/BILKENT/SAA/software-artifact-analyzer/scripts/cypress/scree    (2560x1440)
+     nshots/generalQueries.cy.js/General Queries implemented in the backend side -- T               
+     C1 Get Neigborhood query should bring some nodes and edges -- before each hook o               
+     pen (failed).png                                                                               
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  graphTheoreticProperty.cy.js                                                    (4 of 8)
+
+
+  Calculate Theoretic Property
+    1) "before each" hook: open for "TC1: Can calculate degree centrality and set widths"
+
+
+  0 passing (550ms)
+  1 failing
+
+  1) Calculate Theoretic Property
+       "before each" hook: open for "TC1: Can calculate degree centrality and set widths":
+     CypressError: `cy.visit()` failed trying to load:
+
+http://visuall.herokuapp.com/
+
+The response we received from your web server was:
+
+  > 503: Service Unavailable
+
+This was considered a failure because the status code was not `2xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Calculate Theoretic Property`
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142324:84)
+      at visitFailedByErr (http://localhost:62082/__cypress/runner/cypress_runner.js:141629:12)
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142304:13)
+      at tryCatcher (http://localhost:62082/__cypress/runner/cypress_runner.js:11318:23)
+      at Promise._settlePromiseFromHandler (http://localhost:62082/__cypress/runner/cypress_runner.js:9253:31)
+      at Promise._settlePromise (http://localhost:62082/__cypress/runner/cypress_runner.js:9310:18)
+      at Promise._settlePromise0 (http://localhost:62082/__cypress/runner/cypress_runner.js:9355:10)
+      at Promise._settlePromises (http://localhost:62082/__cypress/runner/cypress_runner.js:9431:18)
+      at _drainQueueStep (http://localhost:62082/__cypress/runner/cypress_runner.js:6025:12)
+      at _drainQueue (http://localhost:62082/__cypress/runner/cypress_runner.js:6018:9)
+      at ../../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:6034:5)
+      at Async.drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:5904:14)
+  From Your Spec Code:
+      at Context.open (webpack:///./cypress/helper.js:5:5)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     graphTheoreticProperty.cy.js                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/lara/Desktop/BILKENT/SAA/software-artifact-analyzer/scripts/cypress/scree    (2560x1440)
+     nshots/graphTheoreticProperty.cy.js/Calculate Theoretic Property -- TC1 Can calc               
+     ulate degree centrality and set widths -- before each hook open (failed).png                   
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  groupNodes.cy.js                                                                (5 of 8)
+
+
+  Group Nodes
+    1) "before each" hook: open for "TC1: Can group with Louvain using compounds"
+
+
+  0 passing (540ms)
+  1 failing
+
+  1) Group Nodes
+       "before each" hook: open for "TC1: Can group with Louvain using compounds":
+     CypressError: `cy.visit()` failed trying to load:
+
+http://visuall.herokuapp.com/
+
+The response we received from your web server was:
+
+  > 503: Service Unavailable
+
+This was considered a failure because the status code was not `2xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Group Nodes`
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142324:84)
+      at visitFailedByErr (http://localhost:62082/__cypress/runner/cypress_runner.js:141629:12)
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142304:13)
+      at tryCatcher (http://localhost:62082/__cypress/runner/cypress_runner.js:11318:23)
+      at Promise._settlePromiseFromHandler (http://localhost:62082/__cypress/runner/cypress_runner.js:9253:31)
+      at Promise._settlePromise (http://localhost:62082/__cypress/runner/cypress_runner.js:9310:18)
+      at Promise._settlePromise0 (http://localhost:62082/__cypress/runner/cypress_runner.js:9355:10)
+      at Promise._settlePromises (http://localhost:62082/__cypress/runner/cypress_runner.js:9431:18)
+      at _drainQueueStep (http://localhost:62082/__cypress/runner/cypress_runner.js:6025:12)
+      at _drainQueue (http://localhost:62082/__cypress/runner/cypress_runner.js:6018:9)
+      at ../../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:6034:5)
+      at Async.drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:5904:14)
+  From Your Spec Code:
+      at Context.open (webpack:///./cypress/helper.js:5:5)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     groupNodes.cy.js                                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/lara/Desktop/BILKENT/SAA/software-artifact-analyzer/scripts/cypress/scree    (2560x1440)
+     nshots/groupNodes.cy.js/Group Nodes -- TC1 Can group with Louvain using compound               
+     s -- before each hook open (failed).png                                                        
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  navbar.cy.js                                                                    (6 of 8)
+
+
+  Navbar buttons
+    1) "before each" hook: open for "TC1: should have at least 7 buttons on navbar"
+
+
+  0 passing (553ms)
+  1 failing
+
+  1) Navbar buttons
+       "before each" hook: open for "TC1: should have at least 7 buttons on navbar":
+     CypressError: `cy.visit()` failed trying to load:
+
+http://visuall.herokuapp.com/
+
+The response we received from your web server was:
+
+  > 503: Service Unavailable
+
+This was considered a failure because the status code was not `2xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Navbar buttons`
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142324:84)
+      at visitFailedByErr (http://localhost:62082/__cypress/runner/cypress_runner.js:141629:12)
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142304:13)
+      at tryCatcher (http://localhost:62082/__cypress/runner/cypress_runner.js:11318:23)
+      at Promise._settlePromiseFromHandler (http://localhost:62082/__cypress/runner/cypress_runner.js:9253:31)
+      at Promise._settlePromise (http://localhost:62082/__cypress/runner/cypress_runner.js:9310:18)
+      at Promise._settlePromise0 (http://localhost:62082/__cypress/runner/cypress_runner.js:9355:10)
+      at Promise._settlePromises (http://localhost:62082/__cypress/runner/cypress_runner.js:9431:18)
+      at _drainQueueStep (http://localhost:62082/__cypress/runner/cypress_runner.js:6025:12)
+      at _drainQueue (http://localhost:62082/__cypress/runner/cypress_runner.js:6018:9)
+      at ../../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:6034:5)
+      at Async.drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:5904:14)
+  From Your Spec Code:
+      at Context.open (webpack:///./cypress/helper.js:5:5)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        12                                                                               │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      11                                                                               │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     navbar.cy.js                                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/lara/Desktop/BILKENT/SAA/software-artifact-analyzer/scripts/cypress/scree    (2560x1440)
+     nshots/navbar.cy.js/Navbar buttons -- TC1 should have at least 7 buttons on navb               
+     ar -- before each hook open (failed).png                                                       
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  queryByRule.cy.js                                                               (7 of 8)
+
+
+  Query By Rule
+    1) "before each" hook: open for "TC1: rule for "birth > 1994 AND death < 2020""
+
+
+  0 passing (543ms)
+  1 failing
+
+  1) Query By Rule
+       "before each" hook: open for "TC1: rule for "birth > 1994 AND death < 2020"":
+     CypressError: `cy.visit()` failed trying to load:
+
+http://visuall.herokuapp.com/
+
+The response we received from your web server was:
+
+  > 503: Service Unavailable
+
+This was considered a failure because the status code was not `2xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Query By Rule`
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142324:84)
+      at visitFailedByErr (http://localhost:62082/__cypress/runner/cypress_runner.js:141629:12)
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142304:13)
+      at tryCatcher (http://localhost:62082/__cypress/runner/cypress_runner.js:11318:23)
+      at Promise._settlePromiseFromHandler (http://localhost:62082/__cypress/runner/cypress_runner.js:9253:31)
+      at Promise._settlePromise (http://localhost:62082/__cypress/runner/cypress_runner.js:9310:18)
+      at Promise._settlePromise0 (http://localhost:62082/__cypress/runner/cypress_runner.js:9355:10)
+      at Promise._settlePromises (http://localhost:62082/__cypress/runner/cypress_runner.js:9431:18)
+      at _drainQueueStep (http://localhost:62082/__cypress/runner/cypress_runner.js:6025:12)
+      at _drainQueue (http://localhost:62082/__cypress/runner/cypress_runner.js:6018:9)
+      at ../../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:6034:5)
+      at Async.drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:5904:14)
+  From Your Spec Code:
+      at Context.open (webpack:///./cypress/helper.js:5:5)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        10                                                                               │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      9                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     queryByRule.cy.js                                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/lara/Desktop/BILKENT/SAA/software-artifact-analyzer/scripts/cypress/scree    (2560x1440)
+     nshots/queryByRule.cy.js/Query By Rule -- TC1 rule for birth  1994 AND death  20               
+     20 -- before each hook open (failed).png                                                       
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  timebar.cy.js                                                                   (8 of 8)
+
+
+  Timebar
+    1) "before each" hook: open for "TC1: Timebar metric as AND rule birth > 1994 && death < 2020"
+
+
+  0 passing (514ms)
+  1 failing
+
+  1) Timebar
+       "before each" hook: open for "TC1: Timebar metric as AND rule birth > 1994 && death < 2020":
+     CypressError: `cy.visit()` failed trying to load:
+
+http://visuall.herokuapp.com/
+
+The response we received from your web server was:
+
+  > 503: Service Unavailable
+
+This was considered a failure because the status code was not `2xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Timebar`
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142324:84)
+      at visitFailedByErr (http://localhost:62082/__cypress/runner/cypress_runner.js:141629:12)
+      at <unknown> (http://localhost:62082/__cypress/runner/cypress_runner.js:142304:13)
+      at tryCatcher (http://localhost:62082/__cypress/runner/cypress_runner.js:11318:23)
+      at Promise._settlePromiseFromHandler (http://localhost:62082/__cypress/runner/cypress_runner.js:9253:31)
+      at Promise._settlePromise (http://localhost:62082/__cypress/runner/cypress_runner.js:9310:18)
+      at Promise._settlePromise0 (http://localhost:62082/__cypress/runner/cypress_runner.js:9355:10)
+      at Promise._settlePromises (http://localhost:62082/__cypress/runner/cypress_runner.js:9431:18)
+      at _drainQueueStep (http://localhost:62082/__cypress/runner/cypress_runner.js:6025:12)
+      at _drainQueue (http://localhost:62082/__cypress/runner/cypress_runner.js:6018:9)
+      at ../../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:6034:5)
+      at Async.drainQueues (http://localhost:62082/__cypress/runner/cypress_runner.js:5904:14)
+  From Your Spec Code:
+      at Context.open (webpack:///./cypress/helper.js:5:5)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     timebar.cy.js                                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /Users/lara/Desktop/BILKENT/SAA/software-artifact-analyzer/scripts/cypress/scree    (2560x1440)
+     nshots/timebar.cy.js/Timebar -- TC1 Timebar metric as AND rule birth  1994 && de               
+     ath  2020 -- before each hook open (failed).png                                                
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  app.cy.js                                818ms        2        -        1        -        1 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  filterByType.cy.js                       558ms        1        -        1        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  generalQueries.cy.js                     543ms        3        -        1        -        2 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  graphTheoreticProperty.cy.js             549ms        1        -        1        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  groupNodes.cy.js                         539ms        1        -        1        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  navbar.cy.js                             552ms       12        -        1        -       11 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  queryByRule.cy.js                        541ms       10        -        1        -        9 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  timebar.cy.js                            512ms        1        -        1        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  8 of 8 failed (100%)                     00:04       31        -        8        -       23  
+
