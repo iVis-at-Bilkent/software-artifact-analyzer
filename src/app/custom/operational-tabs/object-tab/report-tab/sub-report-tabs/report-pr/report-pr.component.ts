@@ -108,10 +108,10 @@ export class ReportPrComponent implements OnInit {
       const cb = (x) => {
         this.reviewerData = x.data;
         let recommendation = '';
-        if(x.data[0][1].length>0){
+        if(x.data[0][5].length>0){
           recommendation += 'Recommended developers are;\n';
-          x.data[0][1].forEach((developer, index) => {
-            recommendation += `@${developer.replace(' ', '')} with score ${x.data[0][2][index].toFixed(2)}\n`
+          x.data[0][5].forEach((developer, index) => {
+            recommendation += `@${developer.replace(' ', '')} with score ${x.data[0][6][index].toFixed(2)}\n`
           });
         }
         else{
