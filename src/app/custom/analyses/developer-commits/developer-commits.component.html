@@ -11,7 +11,7 @@
       class="form-select tight-select filter-form va-small-text m-1 developer-select" 
       (input)="filterOptions($event.target.value)"
       [matAutocomplete] = "auto">
-   <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="developer" classList="form-select tight-select filter-form va-small-text m-1 developer-select" >
+   <mat-autocomplete #auto = "matAutocomplete"  classList="form-select tight-select filter-form va-small-text m-1 developer-select" >
       <mat-option *ngFor = "let developer of filteredDevelopers"  class=" va-small-text" [value] = "developer"><span>{{developer}}</span></mat-option>
    </mat-autocomplete>      
     </div>
