@@ -25,7 +25,7 @@
                   (input)="filterOptionsPr($event.target.value)"
                   [(ngModel)]="pr_key" 
                   [matAutocomplete] = "auto">
-               <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="pr_key"  classList="form-select tight-select filter-form va-small-text m-2 pr-select">
+               <mat-autocomplete #auto = "matAutocomplete"   classList="form-select tight-select filter-form va-small-text m-2 pr-select">
                   <mat-option *ngFor = "let pr of filteredPrs"  class=" va-small-text" [value] = "pr"><span>#{{pr}}</span></mat-option>
                </mat-autocomplete>
         </div>
@@ -41,7 +41,7 @@
           (input)="filterOptionsIssue($event.target.value)"
           [(ngModel)]="issue_key" 
           [matAutocomplete] = "auto">
-       <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="issue_key"  classList="form-select tight-select filter-form va-small-text m-2 issue-select">
+       <mat-autocomplete #auto = "matAutocomplete"   classList="form-select tight-select filter-form va-small-text m-2 issue-select">
           <mat-option *ngFor = "let issue of filteredIssues"  class=" va-small-text" [value] = "issue"><span>{{issue}}</span></mat-option>
        </mat-autocomplete>
         </div>

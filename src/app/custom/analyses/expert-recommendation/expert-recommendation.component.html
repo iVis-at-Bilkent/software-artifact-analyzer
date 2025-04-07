@@ -11,7 +11,7 @@
         class="form-select tight-select filter-form va-small-text m-1 file-select" 
         (input)="filterOptions($event.target.value)"
         [matAutocomplete] = "auto">
-     <mat-autocomplete #auto = "matAutocomplete" [(ngModel)]="file" classList="form-select tight-select filter-form va-small-text m-1 file-select" >
+     <mat-autocomplete #auto = "matAutocomplete"  classList="form-select tight-select filter-form va-small-text m-1 file-select" >
         <mat-option *ngFor = "let file of filteredFiles"  class=" va-small-text large" [value] = "file"><span>{{file}}</span></mat-option>
      </mat-autocomplete>    
       </div>
