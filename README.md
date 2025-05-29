@@ -9,6 +9,8 @@ SAA web page, including a demo, a video tutorial, and instructions on usage & cu
 
 SAA was built on a [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) of the [Visuall](https://github.com/ugurdogrusoz/visuall) toolkit.
 
+⚠️ **Note:** To use this tool with your own data, you must create a free Neo4j account and use the **Neo4j Desktop Community Edition**. No paid subscription is required.
+
 [1] Lara Merdol, Eray Tüzün and Ugur Dogrusoz, "SAA: a framework for improving the software development process via visualization-based software analytics", under review, 2024.
 
 ## License
