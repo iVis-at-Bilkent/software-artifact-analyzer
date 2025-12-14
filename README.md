@@ -1,7 +1,7 @@
 # Software Artifact Analyzer
 
 Software Artifact Analyzer (SAA) is a tool that uses the SAA framework [1], which was developed to quickly build visual analysis tools for software artifact graphs with the aim to improve the software development process.
-A software artifact graph consists of software artifacts including source code files, pull requests, issues, and commits, as well as their links and their relationships with developers in a software project. Analyzing these graphs provides useful insights into the development process, enabling applications such as expert or reviewer recommendations and detecting process anomalies.
+A software artifact graph consists of software artifacts, including source code files, pull requests, issues, and commits, as well as their links and their relationships with developers in a software project. Analyzing these graphs provides useful insights into the development process, enabling applications such as expert or reviewer recommendations and detecting process anomalies.
 
 SAA web page, including a demo, a video tutorial, and instructions on usage & customization, may be found [here](https://ivis-at-bilkent.github.io/software-artifact-analyzer/).
 
@@ -11,7 +11,7 @@ SAA was built on a [fork](https://help.github.com/en/github/getting-started-with
 
 ⚠️ **Note:** To use this tool with your own data, you must create a free Neo4j account and use the **Neo4j Desktop Community Edition**. No paid subscription is required.
 
-[1] Lara Merdol, Eray Tüzün and Ugur Dogrusoz, "SAA: a framework for improving the software development process via visualization-based software analytics", under review, 2024.
+[1] Lara Merdol, Eray Tüzün and Ugur Dogrusoz, ["SAA: a framework for improving the software development process via visualization-based software analytics"](https://doi.org/10.1016/j.jss.2025.112589), Journal of Systems and Software, vol. 231, pp. 112589, 2026.
 
 ## License
 
