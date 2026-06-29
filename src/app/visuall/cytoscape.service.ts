@@ -39,7 +39,7 @@ export class CytoscapeService {
     this._ngZone.runOutsideAngular(() => {
       this._g.cy = cytoscape({
         container: containerElem,
-        layout: this._g.layout,
+        layout: { name: 'fcose', ...this._g.layout } as any,
         // initial viewport state:
         zoom: 1,
         pan: { x: 0, y: 0 },

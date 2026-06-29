@@ -36,6 +36,13 @@ export class Neo4jDb implements DbService {
         neo4jUserPassword: "01234567",
         neo4jUsername: "neo4j",
       });
+    } else if (window.location.hostname === "knuth.cs.bilkent.edu.tr") {
+        return of({
+          boltURL: "bolt://knuth.cs.bilkent.edu.tr:3006",
+          httpURL: "http://139.179.114.36:3004/db/neo4j/tx/commit",
+          neo4jUserPassword: "01234567",
+          neo4jUsername: "neo4j",
+        });
     } else {
       const url = `http://${window.location.hostname}:4445/getNeo4j`;
       return this._http.get<Config>(url);
